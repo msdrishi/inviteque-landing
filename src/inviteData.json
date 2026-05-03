@@ -1,0 +1,115 @@
+{
+  "theme": {
+    "name": "royal_wedding",
+    "colors": {
+      "primary": "#8B1E2D",
+      "blush": "#F6E3E0",
+      "ivory": "#FFF6F2",
+      "gold": "#D4AF37"
+    }
+  },
+  "couple": {
+    "groomName": "Abhishek",
+    "brideName": "Meera",
+    "weddingDate": "18 August 2026"
+  },
+  "hero": {
+    "title": "SAVE THE DATE",
+    "backgroundUrl": "",
+    "tagline": "Wedding Day",
+    "scrollLabel": "Scroll",
+    "scrollToId": "story"
+  },
+  "storySection": {
+    "title": "Our Story"
+  },
+  "story": [
+    {
+      "title": "We Met",
+      "description": "It all started with a simple hello and a spark that never faded."
+    },
+    {
+      "title": "We Grew Closer",
+      "description": "From friendship to something deeper, we found comfort in each other."
+    },
+    {
+      "title": "We Fell in Love",
+      "description": "And we realized this was forever."
+    }
+  ],
+  "invitation": {
+    "title": "Dear Family & Friends,",
+    "message": "Please join us as we celebrate our wedding and begin our new journey together.",
+    "cardTitle": "Invitation"
+  },
+  "event": {
+    "sectionTitle": "Venue",
+    "venueName": "Palace sheesh Mahal",
+    "address": "Gate No.7, Palace Grounds, Bellary Rd, Sadashiva Nagar, Armane Nagar, Bengaluru, Karnataka 560080",
+    "mapLabel": "View on Map",
+    "mapUrl": "https://maps.app.goo.gl/RkuYRy1YjG1Ts8UY7"
+  },
+  "scheduleSection": {
+    "title": "Wedding Schedule"
+  },
+  "schedule": [
+    {
+      "time": "3:00 PM",
+      "title": "Guest Arrival"
+    },
+    {
+      "time": "4:00 PM",
+      "title": "Wedding Ceremony"
+    },
+    {
+      "time": "5:30 PM",
+      "title": "Photoshoot"
+    },
+    {
+      "time": "7:00 PM",
+      "title": "Reception Dinner"
+    },
+    {
+      "time": "9:00 PM",
+      "title": "Dance & Celebration"
+    }
+  ],
+  "dressCodeSection": {
+    "title": "Dress Code",
+    "ladiesLabel": "Ladies",
+    "gentsLabel": "Gents",
+    "colorsTitle": "Suggested Colors"
+  },
+  "dressCode": {
+    "ladies": "Cocktail dresses or sarees",
+    "gents": "Formal suit or shirt with trousers",
+    "colors": [
+      {
+        "name": "Blush Pink",
+        "hex": "#F6E3E0"
+      },
+      {
+        "name": "Orange",
+        "hex": "#F4A261"
+      },
+      {
+        "name": "Green",
+        "hex": "#6A994E"
+      },
+      {
+        "name": "Yellow",
+        "hex": "#E9C46A"
+      }
+    ]
+  },
+  "rsvp": {
+    "title": "We’d Love Your Response",
+    "subtitle": "Please confirm your presence before August 1st",
+    "primary": "I’ll Attend",
+    "secondary": "Can’t Make It"
+  },
+  "footer": {
+    "headline": "See You There!",
+    "withLove": "With Love,"
+  }
+}

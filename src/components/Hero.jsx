@@ -1,0 +1,440 @@
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import heroBg from '../assets/hero_bg.png'
+
+/* ─────────────────────────────────────────
+   Animation variants
+───────────────────────────────────────── */
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.15, delayChildren: 0.08 } },
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+}
+
+const nameReveal = {
+  hidden: { opacity: 0, y: 30, filter: 'blur(6px)' },
+  show: {
+    opacity: 1, y: 0, filter: 'blur(0px)',
+    transition: { duration: 1.0, ease: [0.22, 1, 0.36, 1] },
+  },
+}
+
+const nameLetters = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.05, delayChildren: 0.08 } },
+}
+
+const nameLetter = {
+  hidden: { opacity: 0, x: -10 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+}
+
+const ampReveal = {
+  hidden: { opacity: 0, scale: 0.7 },
+  show: { opacity: 1, scale: 1, transition: { duration: 0.55, ease: 'backOut' } },
+}
+
+/* ─────────────────────────────────────────
+   Monogram Badge — diamond frame
+───────────────────────────────────────── */
+function MonogramBadge({ groomInitial = 'G', brideInitial = 'B' }) {
+  return (
+    <motion.div variants={fadeUp} className="flex flex-col items-center">
+      <svg viewBox="0 0 80 80" width="54" height="54" fill="none" aria-hidden="true">
+        <polygon points="40,4 76,40 40,76 4,40"
+          stroke="#7B0F1A" strokeWidth="1.3" fill="none" opacity="0.55" />
+        <polygon points="40,12 68,40 40,68 12,40"
+          stroke="#7B0F1A" strokeWidth="0.7" fill="none" opacity="0.28" />
+        <circle cx="40" cy="4" r="2" fill="#7B0F1A" opacity="0.4" />
+        <circle cx="76" cy="40" r="2" fill="#7B0F1A" opacity="0.4" />
+        <circle cx="40" cy="76" r="2" fill="#7B0F1A" opacity="0.4" />
+        <circle cx="4" cy="40" r="2" fill="#7B0F1A" opacity="0.4" />
+        <text x="40" y="36" textAnchor="middle" fontFamily="'Cinzel', serif"
+          fontSize="12" fontWeight="700" fill="#7B0F1A" opacity="0.88">{groomInitial}</text>
+        <text x="40" y="52" textAnchor="middle" fontFamily="'Cinzel', serif"
+          fontSize="12" fontWeight="700" fill="#7B0F1A" opacity="0.88">{brideInitial}</text>
+        <text x="40" y="44" textAnchor="middle" fontFamily="serif"
+          fontSize="7" fill="#7B0F1A" opacity="0.38">✦</text>
+      </svg>
+    </motion.div>
+  )
+}
+
+/* ─────────────────────────────────────────
+   Decorative heart divider
+───────────────────────────────────────── */
+function HeartRule({ maxW = 160 }) {
+  return (
+    <motion.div
+      variants={fadeUp}
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        gap: 8, width: '100%', maxWidth: maxW
+      }}
+    >
+      <div style={{ height: 1, flex: 1, background: 'rgba(123,15,26,0.28)' }} />
+      <span style={{ fontSize: 8, color: '#7B0F1A', opacity: 0.55 }}>♥</span>
+      <div style={{ height: 1, flex: 1, background: 'rgba(123,15,26,0.28)' }} />
+    </motion.div>
+  )
+}
+
+/* ─────────────────────────────────────────
+   Date row — AUGUST | 18 | 2026
+───────────────────────────────────────── */
+function DateRow({ dateLine }) {
+  const parts = String(dateLine || '').trim().split(/\s+/)
+  let day = '', month = '', year = ''
+  if (parts.length >= 3) {
+    day = parts[0]
+    month = parts.slice(1, -1).join(' ').toUpperCase()
+    year = parts[parts.length - 1]
+  }
+  return (
+    <motion.div variants={fadeUp}
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    >
+      {/* MONTH */}
+      <div style={{ paddingRight: 14 }}>
+        <span style={{
+          fontFamily: "'Cinzel', serif",
+          fontSize: 'clamp(8px, 2.4vw, 11px)',
+          letterSpacing: '0.2em',
+          color: '#7B0F1A',
+          opacity: 0.75,
+        }}>{month}</span>
+      </div>
+      {/* Vertical divider */}
+      <div style={{ width: 1, height: 32, background: '#7B0F1A', opacity: 0.28 }} />
+      {/* DAY */}
+      <div style={{ paddingLeft: 14, paddingRight: 14 }}>
+        <span style={{
+          fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
+          fontSize: 'clamp(26px, 8.5vw, 42px)',
+          fontWeight: 700,
+          lineHeight: 1,
+          color: '#7B0F1A',
+        }}>{day}</span>
+      </div>
+      {/* Vertical divider */}
+      <div style={{ width: 1, height: 32, background: '#7B0F1A', opacity: 0.28 }} />
+      {/* YEAR */}
+      <div style={{ paddingLeft: 14 }}>
+        <span style={{
+          fontFamily: "'Cinzel', serif",
+          fontSize: 'clamp(8px, 2.4vw, 11px)',
+          letterSpacing: '0.2em',
+          color: '#7B0F1A',
+          opacity: 0.75,
+        }}>{year}</span>
+      </div>
+    </motion.div>
+  )
+}
+
+/* ─────────────────────────────────────────
+   Pin icon
+───────────────────────────────────────── */
+function PinIcon() {
+  return (
+    <svg viewBox="0 0 20 26" width="12" height="16" fill="none" aria-hidden="true">
+      <path d="M10 1C6.13 1 3 4.13 3 8c0 5.25 7 16 7 16s7-10.75 7-16c0-3.87-3.13-7-7-7z"
+        stroke="#7B0F1A" strokeWidth="1.4" fill="#7B0F1A" fillOpacity="0.12" />
+      <circle cx="10" cy="8" r="2.5" fill="#7B0F1A" opacity="0.7" />
+    </svg>
+  )
+}
+
+/* ─────────────────────────────────────────
+   Main Hero
+───────────────────────────────────────── */
+export default function Hero({ data, scrollContainerRef }) {
+  const { scrollY } = useScroll(
+    scrollContainerRef ? { container: scrollContainerRef } : undefined,
+  )
+  const rawY = useTransform(scrollY, [0, 800], ['0%', '-14%'])
+  const bgY = useSpring(rawY, { stiffness: 55, damping: 18 })
+
+  if (!data) return null
+
+  return (
+    <section
+      id={data.id}
+      className="relative w-full overflow-hidden"
+      style={{ minHeight: '100svh', background: '#FFF0EC' }}
+    >
+      {/* ── Parallax background — no overlay ── */}
+      <motion.div
+        className="absolute inset-0 z-0 will-change-transform"
+        style={{ y: bgY, scale: 1.14 }}
+      >
+        <img
+          src={heroBg}
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-cover"
+          style={{ objectPosition: 'center top' }}
+          loading="eager"
+        />
+      </motion.div>
+
+      {/* ── Content: locked to the sky/blossom band (top ~52 % of viewport) ── */}
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="relative z-10 flex flex-col items-center text-center"
+        style={{
+          paddingTop: 'clamp(20px, 5svh, 48px)',
+          paddingBottom: 'clamp(10px, 2svh, 24px)',
+          paddingLeft: 'clamp(20px, 6vw, 52px)',
+          paddingRight: 'clamp(20px, 6vw, 52px)',
+        }}
+      >
+
+        {/* Monogram — initials driven by data */}
+        <MonogramBadge
+          groomInitial={(data.groomName?.[0] ?? 'G').toUpperCase()}
+          brideInitial={(data.brideName?.[0] ?? 'B').toUpperCase()}
+        />
+
+        {/* SAVE THE DATE */}
+        <motion.p
+          variants={fadeUp}
+          style={{
+            marginTop: 4,
+            fontFamily: "'Montserrat', sans-serif",
+            fontWeight: 700,
+            fontSize: 'clamp(8.5px, 1.4svh, 13px)',
+            letterSpacing: '0.35em',
+            textTransform: 'uppercase',
+            color: '#7B0F1A',
+            opacity: 0.95,
+          }}
+        >
+          {data.title || 'Save the Date'}
+        </motion.p>
+
+        {/* Divider below SAVE THE DATE */}
+        <div style={{ marginTop: 10, width: '100%', maxWidth: 130 }}>
+          <HeartRule maxW={130} />
+        </div>
+
+        {/* ── Groom name ── */}
+        <motion.div variants={nameReveal} style={{ marginTop: 10 }}>
+          <motion.span
+            variants={nameLetters}
+            style={{
+            fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
+            fontSize: 'clamp(20px, 10svh, 60px)',
+            fontWeight: 100,
+            lineHeight: 0.92,
+            color: '#7B0F1A',
+            display: 'block',
+            textShadow: '0 2px 14px rgba(123,15,26,0.13)',
+            whiteSpace: 'nowrap',
+          }}
+          >
+            {String(data.groomName || '')
+              .split('')
+              .map((ch, idx) => (
+                <motion.span
+                  key={`${ch}-${idx}`}
+                  variants={nameLetter}
+                  style={{ display: 'inline-block' }}
+                >
+                  {ch === ' ' ? '\u00A0' : ch}
+                </motion.span>
+              ))}
+          </motion.span>
+        </motion.div>
+
+        {/* & */}
+        <motion.div variants={ampReveal} style={{ marginTop: -2 }}>
+          <span style={{
+            fontFamily: "'Parisienne', 'Spectral', cursive",
+            fontSize: 'clamp(20px, 10svh, 60px)',
+            fontWeight: 100,
+            lineHeight: 1,
+            color: '#7B0F1A',
+            opacity: 0.88,
+            display: 'block',
+          }}>
+            &amp;
+          </span>
+        </motion.div>
+
+        {/* ── Bride name ── */}
+        <motion.div variants={nameReveal} style={{ marginTop: -4 }}>
+          <motion.span
+            variants={nameLetters}
+            style={{
+            fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
+            fontSize: 'clamp(20px, 10svh, 60px)',
+            fontWeight: 100,
+            lineHeight: 0.92,
+            color: '#7B0F1A',
+            display: 'block',
+            textShadow: '0 2px 14px rgba(123,15,26,0.13)',
+            whiteSpace: 'nowrap',
+          }}
+          >
+            {String(data.brideName || '')
+              .split('')
+              .map((ch, idx) => (
+                <motion.span
+                  key={`${ch}-${idx}`}
+                  variants={nameLetter}
+                  style={{ display: 'inline-block' }}
+                >
+                  {ch === ' ' ? '\u00A0' : ch}
+                </motion.span>
+              ))}
+          </motion.span>
+        </motion.div>
+
+        {/* ARE GETTING MARRIED */}
+        <motion.div
+          variants={fadeUp}
+          style={{
+            marginTop: 4, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', gap: 20, width: '100%'
+          }}
+        >
+          <div style={{ width: '100%', maxWidth: 170 }}>
+            <HeartRule maxW={170} />
+          </div>
+          <p style={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontWeight: 700,
+            fontSize: 'clamp(7px, 1.2svh, 10.5px)',
+            letterSpacing: '0.28em',
+            textTransform: 'uppercase',
+            color: '#7B0F1A',
+            opacity: 0.85,
+          }}>
+            {data.subtitle || 'Are Getting Married'}
+          </p>
+        </motion.div>
+
+        {/* ── Date row ── */}
+        <div style={{ marginTop: 3 }}>
+          <DateRow dateLine={data.dateLine} />
+        </div>
+
+        {/* Day of week */}
+        <motion.div variants={fadeUp} style={{ marginTop: 0 }}>
+          <span style={{
+            fontFamily: "'Parisienne', cursive",
+            fontSize: 'clamp(18px, 4.5svh, 30px)',
+            fontWeight: 400,
+            lineHeight: 1.1,
+            color: '#7B0F1A',
+            opacity: 0.95,
+            display: 'block',
+          }}>
+            {data.dayOfWeek}
+          </span>
+          <svg viewBox="0 0 90 12" width="55" aria-hidden="true" fill="none"
+            style={{ display: 'block', margin: '0 auto' }}>
+            <path d="M5 6 Q22 1 45 6 Q68 11 85 6"
+              stroke="#7B0F1A" strokeWidth="1" strokeLinecap="round" opacity="0.2" />
+          </svg>
+        </motion.div>
+
+        {/* ── Venue ── */}
+        <motion.div
+          variants={fadeUp}
+          style={{
+            marginTop: 4, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', gap: 2
+          }}
+        >
+          <PinIcon />
+
+          {/* Venue name + city on same compact block */}
+          <p style={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontWeight: 800,
+            fontSize: 'clamp(9px, 1.5svh, 13px)',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            color: '#7B0F1A',
+            marginTop: 2,
+            lineHeight: 1.2,
+          }}>
+            {data.venueName}
+          </p>
+
+          <p style={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontWeight: 600,
+            fontSize: 'clamp(7px, 1.1svh, 9.5px)',
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: '#7B0F1A',
+            opacity: 0.8,
+          }}>
+            {data.venueCity}
+          </p>
+
+          {data.hashtag && (
+            <p style={{
+              fontFamily: "'Parisienne', cursive",
+              fontSize: 'clamp(12px, 2.8svh, 18px)',
+              fontWeight: 400,
+              color: '#7B0F1A',
+              opacity: 0.7,
+              marginTop: 1,
+            }}>
+              {data.hashtag}
+            </p>
+          )}
+        </motion.div>
+
+      </motion.div>
+
+      {/* ── Scroll button — floats above the palace centre arch ── */}
+      {data.scrollToId && (
+        <motion.button
+          type="button"
+          onClick={() => {
+            const el = document.getElementById(data.scrollToId)
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }}
+          aria-label="Scroll down"
+          className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 3.0 }}
+        >
+          <motion.div
+            animate={{ y: [0, 5, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: '50%',
+              border: '1.5px solid rgba(123,15,26,0.3)',
+              background: 'rgba(255,255,255,0.58)',
+              backdropFilter: 'blur(6px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <svg viewBox="0 0 18 11" width="13" height="8" fill="none" aria-hidden="true">
+              <path d="M1 1.5 L9 9.5 L17 1.5"
+                stroke="#7B0F1A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+                opacity="0.55"
+              />
+            </svg>
+          </motion.div>
+        </motion.button>
+      )}
+    </section>
+  )
+}
