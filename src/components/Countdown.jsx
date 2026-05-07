@@ -67,13 +67,24 @@ export default function Countdown({ data }) {
         backgroundPosition: 'center',
         position: 'relative',
         width: '100%',
-        padding: '60px 20px',
+        padding: 'clamp(40px, 8vh, 80px) 20px clamp(100px, 12vh, 150px) 20px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         overflow: 'hidden',
+        clipPath: 'url(#countdownCurveClip)',
+        marginBottom: '60px', // Increased gap before footer
       }}
     >
+      <svg aria-hidden="true" width="0" height="0" focusable="false" style={{ position: 'absolute' }}>
+        <defs>
+          <clipPath id="countdownCurveClip" clipPathUnits="objectBoundingBox">
+            {/* Flat top, dramatic curve on bottom only */}
+            <path d="M0 0 L1 0 L1 0.92 C 0.75 1 0.25 1 0 0.92 Z" />
+          </clipPath>
+        </defs>
+      </svg>
+
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}

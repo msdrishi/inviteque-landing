@@ -1,9 +1,34 @@
 import { useState } from 'react'
 import { motion, useTime, useTransform } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import logo from '../assets/inviteque_logo.png'
+import { Link, useNavigate } from 'react-router-dom'
+import logo from '../assets/logo/logo-inviteque.png'
 import { templates } from '../templates/templates.js'
 import { fadeUp, staggerChildren, viewportOnce } from '../motionVariants.js'
+import { useAuth } from '../context/AuthContext'
+
+const templateCardPop = {
+  hidden: { opacity: 0, y: 26, scale: 0.96 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'tween',
+      duration: 2.85,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+}
+
+const templateGridStagger = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.06,
+    },
+  },
+}
 
 function InfiniteCarouselCard({ t, i, total }) {
   const time = useTime();
@@ -17,7 +42,7 @@ function InfiniteCarouselCard({ t, i, total }) {
   // Mathematically perfect circular arc using Trigonometry
   const x = useTransform(pos, p => {
     const angle = (0.5 - p) * Math.PI; // p=0 -> pi/2 (right). p=0.5 -> 0 (center). p=1 -> -pi/2 (left).
-    return Math.sin(angle) * 1200; // Reduced from 1500 to 1200 to bring cards closer
+    return Math.sin(angle) * 1200; // Slightly wider radius to keep a clearer gap between cards
   });
 
   const z = useTransform(pos, p => {
@@ -42,14 +67,20 @@ function InfiniteCarouselCard({ t, i, total }) {
     return 1;
   });
 
-  const zIndex = useTransform(pos, p => Math.round(50 - Math.abs(p - 0.5) * 100));
+  // Stable z-index ordering with a deterministic tie-breaker.
+  // Prevents flicker/overlap when two cards compute the same z-index near the center.
+  const zIndex = useTransform(pos, p => {
+    const closeness = Math.max(0, 1 - Math.abs(p - 0.5) * 2); // 0..1
+    const base = Math.floor(closeness * 1000); // 0..1000
+    return base * 10 + (total - i);
+  });
 
   return (
     <motion.div
-      className="absolute left-1/2 top-1/2 -ml-[130px] -mt-[195px] w-[260px] md:-ml-[170px] md:-mt-[255px] md:w-[340px]"
-      style={{ x, z, rotateY, scale, opacity, zIndex }}
+      className="absolute left-1/2 top-1/2 -ml-[120px] -mt-[180px] w-[240px] md:-ml-[160px] md:-mt-[240px] md:w-[320px]"
+      style={{ x, z, rotateY, scale, opacity, zIndex, transformStyle: 'preserve-3d', willChange: 'transform' }}
     >
-      <article className="group relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] border border-iqBorder bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-4 hover:shadow-[0_30px_60px_rgba(0,0,0,0.25)]">
+      <article className="group relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] border border-iqBorder/30 bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3),0_30px_60px_-30px_rgba(0,0,0,0.3)] transition-all duration-500 hover:-translate-y-6 hover:shadow-[0_70px_120px_-20px_rgba(0,0,0,0.4)]">
         <img
           src={t.thumbnail}
           alt={t.name}
@@ -133,6 +164,8 @@ function ComingSoonPill() {
 
 export default function Landing() {
   const [showAll, setShowAll] = useState(false)
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
 
   return (
     <main className="min-h-[100svh] w-full bg-iqBg font-saas text-iqText">
@@ -159,10 +192,22 @@ export default function Landing() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="hidden text-sm font-semibold text-iqText/70 hover:text-iqText md:block">
-              Log In
-            </button>
-            <PrimaryButton to="/templates/template-1">Get Started</PrimaryButton>
+            {user ? (
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-bold text-iqText">Hi, {user.name}</span>
+                <button 
+                  onClick={logout}
+                  className="text-sm font-semibold text-iqText/50 hover:text-iqText transition-colors"
+                >
+                  Log Out
+                </button>
+              </div>
+            ) : (
+              <Link to="/login" className="hidden text-sm font-semibold text-iqText/70 hover:text-iqText md:block">
+                Log In
+              </Link>
+            )}
+            <PrimaryButton to={user ? "/builder/auraofelegance" : "/login"}>Get Started</PrimaryButton>
           </div>
         </nav>
       </header>
@@ -181,7 +226,7 @@ export default function Landing() {
         >
           <motion.h1
             variants={fadeUp}
-            className="text-balance text-5xl font-bold tracking-tight text-iqText md:text-7xl lg:text-8xl"
+            className="text-balance text-4xl font-bold tracking-tight text-iqText md:text-6xl lg:text-7xl"
           >
             Beautiful Wedding <br className="hidden md:block" /> Websites in Minutes
           </motion.h1>
@@ -232,15 +277,16 @@ export default function Landing() {
           </motion.div>
 
           <motion.div
-            variants={staggerChildren}
+            variants={templateGridStagger}
             initial="hidden"
-            animate="show"
+            whileInView="show"
+            viewport={{ once: false, amount: 0.25 }}
             className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3"
           >
             {templates.map((t, index) => (
               <motion.article
                 key={t.id}
-                variants={fadeUp}
+                variants={templateCardPop}
                 className={[
                   "overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury transition hover:scale-[1.01]",
                   index > 2 ? (showAll ? 'block' : 'hidden md:block') : 'block'
@@ -273,23 +319,26 @@ export default function Landing() {
                     {t.available ? null : <ComingSoonPill />}
                   </div>
 
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    <PrimaryButton to={t.available ? t.href : '#templates'} disabled={!t.available}>
-                      Preview
-                    </PrimaryButton>
-                    <a
-                      href={t.available ? t.href : '#templates'}
-                      className={[
-                        'inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition',
-                        t.available
-                          ? 'border-iqBorder bg-iqCard text-iqText hover:bg-iqText/5'
-                          : 'cursor-not-allowed border-iqBorder bg-iqCard text-iqText/40',
-                      ].join(' ')}
-                      aria-disabled={!t.available}
-                    >
-                      Use Template
-                    </a>
-                  </div>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      <PrimaryButton to={t.available ? t.href : '#templates'} disabled={!t.available}>
+                        Preview
+                      </PrimaryButton>
+                      <button
+                        onClick={() => {
+                          if (user) navigate(`/builder/${t.id}`)
+                          else navigate('/login')
+                        }}
+                        className={[
+                          'inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition',
+                          t.available
+                            ? 'border-iqBorder bg-iqCard text-iqText hover:bg-iqText/5'
+                            : 'cursor-not-allowed border-iqBorder bg-iqCard text-iqText/40',
+                        ].join(' ')}
+                        aria-disabled={!t.available}
+                      >
+                        Use Template
+                      </button>
+                    </div>
                 </div>
               </motion.article>
             ))}

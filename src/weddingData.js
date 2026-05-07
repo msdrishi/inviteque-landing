@@ -26,24 +26,72 @@ function coupleNames(couple) {
 
 const storyImages = [photo1, photo2, photo3]
 
+function getCouple(inviteData) {
+  return inviteData.couple || inviteData.content || {}
+}
+
+function getWeddingDateLine(inviteData) {
+  if (inviteData.couple?.weddingDate) return inviteData.couple.weddingDate
+  const c = inviteData.content
+  if (c?.weddingDate && c?.weddingMonth && c?.weddingYear) {
+    return `${c.weddingDate} ${c.weddingMonth} ${c.weddingYear}`
+  }
+  return ''
+}
+
+function isUsableImageString(value) {
+  if (!value) return false
+  const s = String(value).trim()
+  if (!s) return false
+  if (s.includes('base64_or_url_photo')) return false
+  return (
+    s.startsWith('data:image/') ||
+    s.startsWith('http://') ||
+    s.startsWith('https://') ||
+    s.startsWith('/')
+  )
+}
+
+function buildStoryItems(inviteData) {
+  if (Array.isArray(inviteData.story) && inviteData.story.length > 0) {
+    return inviteData.story.map((s, index) => ({
+      title: s.title,
+      body: s.description,
+      image: s.customImage || storyImages[index] || storyImages[storyImages.length - 1],
+      number: String(index + 1).padStart(2, '0'),
+    }))
+  }
+
+  const gallery = Array.isArray(inviteData.content?.gallery) ? inviteData.content.gallery : []
+  const usableGallery = gallery.filter(isUsableImageString)
+  const images = (usableGallery.length ? usableGallery : storyImages).slice(0, 3)
+
+  return images.map((image, index) => ({
+    title: '',
+    body: '',
+    image,
+    number: String(index + 1).padStart(2, '0'),
+  }))
+}
+
 export const weddingData = {
   hero: {
     id: 'top',
     title: inviteData.hero?.title,
     subtitle: 'Are Getting Married',
-    dateLine: inviteData.couple?.weddingDate,
-    names: coupleNames(inviteData.couple),
-    groomName: inviteData.couple?.groomName || '',
-    brideName: inviteData.couple?.brideName || '',
+    dateLine: getWeddingDateLine(inviteData),
+    names: coupleNames(getCouple(inviteData)),
+    groomName: getCouple(inviteData)?.groomName || '',
+    brideName: getCouple(inviteData)?.brideName || '',
     tagline: inviteData.hero?.tagline,
     dayOfWeek: (() => {
-      const d = new Date(inviteData.couple?.weddingDate || '')
+      const d = new Date(getWeddingDateLine(inviteData) || '')
       return isNaN(d) ? 'Wednesday' : d.toLocaleDateString('en-US', { weekday: 'long' })
     })(),
-    venueName: inviteData.event?.venueName,
+    venueName: inviteData.event?.venueName || inviteData.content?.venueAddress?.split?.(',')?.[0] || '',
     venueCity: 'Bangalore, India',
-    hashtag: `#${inviteData.couple?.groomName || 'Groom'}${inviteData.couple?.brideName || 'Bride'}Forever`,
-    monogram: `${inviteData.couple?.groomName?.[0] || 'A'} & ${inviteData.couple?.brideName?.[0] || 'M'}`,
+    hashtag: `#${getCouple(inviteData)?.groomName || 'Groom'}${getCouple(inviteData)?.brideName || 'Bride'}Forever`,
+    monogram: `${getCouple(inviteData)?.groomName?.[0] || 'A'} & ${getCouple(inviteData)?.brideName?.[0] || 'M'}`,
     backgroundImage: heroBg || heroArch,
     scrollToId: inviteData.hero?.scrollToId,
     scrollLabel: inviteData.hero?.scrollLabel,
@@ -51,15 +99,7 @@ export const weddingData = {
   story: {
     id: 'story',
     title: inviteData.storySection?.title,
-    items: Array.isArray(inviteData.story)
-      ? inviteData.story.map((s, index) => ({
-          title: s.title,
-          body: s.description,
-          // customImage (from JSON) overrides the default asset
-          image: s.customImage || storyImages[index] || storyImages[storyImages.length - 1],
-          number: String(index + 1).padStart(2, '0'),
-        }))
-      : [],
+    items: buildStoryItems(inviteData),
   },
   invitation: {
     id: 'invitation',
@@ -71,34 +111,40 @@ export const weddingData = {
   venue: {
     id: 'venue',
     title: inviteData.event?.sectionTitle,
-    venueName: inviteData.event?.venueName,
-    location: inviteData.event?.address,
+    venueName: inviteData.event?.venueName || inviteData.content?.venueAddress,
+    location: inviteData.event?.address || inviteData.content?.venueAddress,
     mapLabel: inviteData.event?.mapLabel,
-    mapUrl: inviteData.event?.mapUrl,
+    mapUrl: inviteData.event?.mapUrl || inviteData.content?.mapLink,
     backgroundImage: locationImg,
   },
   date: {
     id: 'date',
     title: inviteData.hero?.title,
-    ...parseWeddingDate(inviteData.couple?.weddingDate),
+    ...parseWeddingDate(getWeddingDateLine(inviteData)),
   },
   events: {
     id: 'schedule',
-    title: inviteData.scheduleSection?.title,
-    items: Array.isArray(inviteData.schedule)
-      ? inviteData.schedule.map((s, index) => ({
-          icon: ['✦', '◎', '✿', '◆', '♪'][index % 5],
-          time: s.time,
-          name: s.title,
-        }))
-      : [],
+    title: inviteData.scheduleSection?.title || 'Wedding Schedule',
+    items: (() => {
+      const schedule = Array.isArray(inviteData.schedule)
+        ? inviteData.schedule
+        : Array.isArray(inviteData.content?.schedule)
+          ? inviteData.content.schedule
+          : []
+
+      return schedule.map((s, index) => ({
+        icon: ['✦', '◎', '✿', '◆', '♪'][index % 5],
+        time: s.time,
+        name: s.title,
+      }))
+    })(),
   },
   countdown: {
     id: 'countdown',
     title: 'Countdown',
     // Example format: 2026-08-18T00:00:00.000Z
     // We can parse it from inviteData.couple.weddingDate
-    targetDateTimeISO: new Date(inviteData.couple?.weddingDate || '2026-08-18').toISOString(),
+    targetDateTimeISO: new Date(getWeddingDateLine(inviteData) || '2026-08-18').toISOString(),
     labels: {
       days: 'Days',
       hours: 'Hours',
@@ -125,7 +171,7 @@ export const weddingData = {
   footer: {
     id: 'footer',
     message: `${inviteData.footer?.headline || ''}`.trim(),
-    names: `${inviteData.footer?.withLove || ''}\n${coupleNames(inviteData.couple)}`.trim(),
+    names: `${inviteData.footer?.withLove || ''}\n${coupleNames(getCouple(inviteData))}`.trim(),
     socials: [],
   },
 }

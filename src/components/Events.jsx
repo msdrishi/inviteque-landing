@@ -37,6 +37,8 @@ function Wave({ className }) {
 export default function Events({ data }) {
   if (!data) return null
 
+  const title = String(data.title || '').trim() || 'Wedding Schedule'
+
   return (
     <section id={data.id} className="w-full px-6 py-16">
       <div className="relative">
@@ -52,7 +54,7 @@ export default function Events({ data }) {
             variants={titleLetters}
             className="text-center font-heading text-2xl font-semibold text-primary"
           >
-            {String(data.title || '')
+            {title
               .split('')
               .map((ch, idx) => (
                 <motion.span

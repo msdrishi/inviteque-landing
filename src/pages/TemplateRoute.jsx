@@ -3,6 +3,7 @@ import TemplateRoyalWedding from './TemplateRoyalWedding.jsx'
 
 const TEMPLATE_MAP = {
   'royal-wedding': TemplateRoyalWedding,
+  'auraofelegance': TemplateRoyalWedding,
   'template-1': TemplateRoyalWedding,
 }
 
