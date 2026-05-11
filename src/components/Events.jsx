@@ -1,117 +1,188 @@
-import { motion } from 'framer-motion'
-import { fadeUp, staggerChildren, viewportOnce } from '../motionVariants.js'
+import { useEffect } from 'react'
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
 
-const titleLetters = {
-  hidden: { opacity: 1, y: 0 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { staggerChildren: 0.035, delayChildren: 0.06 },
-  },
+const PITCH = 96;
+
+const letterContainer = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } }
+}
+const letterAnim = {
+  hidden: { opacity: 0, y: 15 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
 }
 
-const titleLetter = {
-  hidden: { opacity: 0, x: -10 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.45, ease: 'easeOut' } },
-}
-
-function Wave({ className }) {
+function AnimatedTitle({ text, className, style }) {
   return (
-    <svg
-      width="1200"
-      height="120"
-      viewBox="0 0 1200 120"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      className={className}
+    <motion.h2 variants={letterContainer} initial="hidden" whileInView="show" viewport={{ once: false, amount: 0.1 }} className={className} style={style}>
+      {text.split('').map((char, index) => (
+        <motion.span key={index} variants={letterAnim} style={{ display: 'inline-block' }}>{char === ' ' ? '\u00A0' : char}</motion.span>
+      ))}
+    </motion.h2>
+  )
+}
+
+function EventItem({ item, index, scrollY }) {
+  const itemY = index * PITCH;
+  
+  // screenY is the physical position of this item inside the 340px frame
+  const screenY = useTransform(scrollY, y => y + itemY);
+  
+  // Center of the 340px frame is roughly 120.
+  const containerOpacity = useTransform(screenY, [-30, 120, 270], [0, 1, 0]);
+
+  return (
+    <motion.div 
+      className="absolute left-0 right-0 mx-auto w-[85%] max-w-[340px] flex justify-center"
+      style={{ y: screenY, opacity: containerOpacity }}
     >
-      <path
-        fill="currentColor"
-        d="M0 56C70 28 130 28 200 56C270 84 330 84 400 56C470 28 530 28 600 56C670 84 730 84 800 56C870 28 930 28 1000 56C1070 84 1130 84 1200 56V120H0V56Z"
-      />
-    </svg>
+      {/* Event Card */}
+      <div 
+        className="relative w-full p-[12px] rounded-[20px] flex items-center gap-3 bg-[#ffffff]/80 border border-[#d5b28c]/40 shadow-[0_5px_15px_rgba(0,0,0,0.04)]"
+      >
+         <div className="w-[44px] h-[44px] rounded-full flex items-center justify-center shrink-0 shadow-inner bg-[#fff0ec] text-[#8B1E2D]">
+           {item.icon}
+         </div>
+         <div>
+           <div className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#8B1E2D] mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+             {item.time}
+           </div>
+           <h3 className="text-[18px] font-bold text-[#5C0A14]" style={{ fontFamily: "'Playfair Display', serif" }}>
+             {item.name}
+           </h3>
+         </div>
+      </div>
+    </motion.div>
   )
 }
 
 export default function Events({ data }) {
   if (!data) return null
 
-  const title = String(data.title || '').trim() || 'Wedding Schedule'
+  const defaultEvents = [
+    {
+      time: "11:00 AM",
+      name: "Haldi Ceremony",
+      icon: (
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 12h16c0 4.4-3.6 8-8 8s-8-3.6-8-8z" />
+          <path d="M12 12V4M9 5l3-1 3 1" />
+          <circle cx="7" cy="8" r="0.5" fill="currentColor" />
+          <circle cx="17" cy="7" r="0.5" fill="currentColor" />
+          <path d="M5 14l14 0" />
+        </svg>
+      )
+    },
+    {
+      time: "04:00 PM",
+      name: "Wedding Vows",
+      icon: (
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="9" cy="12" r="5" />
+          <circle cx="15" cy="12" r="5" />
+          <path d="M9 7l1-2 1 2" />
+        </svg>
+      )
+    },
+    {
+      time: "07:00 PM",
+      name: "Grand Reception",
+      icon: (
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 15c0-4 3.5-7 7-7s7 3 7 7" />
+          <path d="M12 8V6M10 6h4" />
+          <path d="M3 15h18" />
+          <path d="M4 17h16" />
+        </svg>
+      )
+    }
+  ]
+
+  const items = (data.items && data.items.length >= 3) ? data.items.map((item, i) => ({
+    ...defaultEvents[i % defaultEvents.length], 
+    time: item.time || defaultEvents[i % defaultEvents.length].time,
+    name: item.name || defaultEvents[i % defaultEvents.length].name,
+  })) : defaultEvents
+
+  const displayItems = [...items, ...items, ...items, ...items, ...items, ...items]
+  
+  const scrollY = useMotionValue(0)
+  const totalHeight = items.length * PITCH
+
+  useEffect(() => {
+    const controls = animate(scrollY, [0, -totalHeight], {
+      repeat: Infinity,
+      ease: "linear",
+      duration: items.length * 3.5,
+    })
+    return () => controls.stop()
+  }, [totalHeight, scrollY, items.length])
 
   return (
-    <section id={data.id} className="w-full px-6 py-16">
-      <div className="relative">
-        <Wave className="pointer-events-none absolute -top-7 left-0 z-0 w-full text-background" />
-        <motion.div
-          variants={staggerChildren}
-          initial="hidden"
-          whileInView="show"
-          viewport={viewportOnce}
-          className="relative z-10 rounded-panel bg-background/95 p-6 shadow-luxury backdrop-blur"
+    <section 
+      id={data.id || 'events'} 
+      className="w-full px-4 py-24 relative flex flex-col items-center justify-center overflow-hidden"
+      style={{ 
+        backgroundColor: '#fff6f2',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 40c-5-10-15-15-20-15 0 10 10 20 20 20 5-10 15-15 20-15 0 10-10 20-20 20z' fill='%238B1E2D' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`
+      }}
+    >
+      
+      {/* ── Title Section ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.3 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="flex flex-col items-center text-center z-10 mb-12"
+      >
+        <div className="flex items-center gap-2 mb-3 opacity-60">
+          <div className="w-1 h-1 rotate-45 bg-[#b58372]"></div>
+          <svg width="24" height="10" viewBox="0 0 24 10" fill="none">
+            <path d="M12 0C12 5 7 5 0 5C7 5 12 5 12 10C12 5 17 5 24 5C17 5 12 5 12 0Z" fill="#b58372"/>
+          </svg>
+          <div className="w-1 h-1 rotate-45 bg-[#b58372]"></div>
+        </div>
+
+        <AnimatedTitle 
+          text="WEDDING SCHEDULE"
+          style={{ fontFamily: "'Cinzel', serif", color: '#721c24', fontSize: 'clamp(18px, 4vw, 26px)', fontWeight: 700, letterSpacing: '0.08em' }}
+        />
+
+        <div className="flex items-center gap-3 mt-3 opacity-70">
+          <div className="w-1.5 h-1.5 rotate-45 bg-[#b58372]"></div>
+          <p style={{ fontFamily: "'Montserrat', sans-serif", color: '#a07870', fontSize: '10px', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase' }}>
+            Celebrating Love, Together
+          </p>
+          <div className="w-1.5 h-1.5 rotate-45 bg-[#b58372]"></div>
+        </div>
+      </motion.div>
+
+      {/* ── Luxury Roller Frame ── */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: false, amount: 0.2 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="relative w-full max-w-[300px] h-[340px] flex justify-center items-center mt-6"
+      >
+        {/* Inner Glass Frame */}
+        <div 
+          className="relative w-full h-full rounded-[30px] bg-gradient-to-b from-[#fdf8f7]/60 via-transparent to-[#fdf8f7]/60 border-[2px] border-[#d5b28c]/40 overflow-hidden shadow-[inset_0_20px_50px_rgba(0,0,0,0.03),_0_20px_40px_rgba(139,30,45,0.06)] backdrop-blur-sm"
         >
-          <motion.h2
-            variants={titleLetters}
-            className="text-center font-heading text-2xl font-semibold text-primary"
-          >
-            {title
-              .split('')
-              .map((ch, idx) => (
-                <motion.span
-                  key={`${ch}-${idx}`}
-                  variants={titleLetter}
-                  style={{ display: 'inline-block' }}
-                >
-                  {ch === ' ' ? '\u00A0' : ch}
-                </motion.span>
-              ))}
-          </motion.h2>
+          {/* The Roller Items Track */}
+          <div className="absolute inset-0">
+             {displayItems.map((item, index) => (
+               <EventItem key={index} item={item} index={index} scrollY={scrollY} />
+             ))}
+          </div>
+          
+          {/* Top/Bottom Ambient Fade Overlays */}
+          <div className="absolute top-0 left-0 right-0 h-[100px] bg-gradient-to-b from-[#fff6f2] via-[#fff6f2]/80 to-transparent pointer-events-none z-20 rounded-t-[30px]" />
+          <div className="absolute bottom-0 left-0 right-0 h-[100px] bg-gradient-to-t from-[#fff6f2] via-[#fff6f2]/80 to-transparent pointer-events-none z-20 rounded-b-[30px]" />
+        </div>
+      </motion.div>
 
-          <motion.div
-            variants={fadeUp}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
-            className="mx-auto mt-3 flex max-w-[18rem] items-center gap-3 text-gold/70"
-          >
-            <div className="h-px flex-1 bg-gold/30" />
-            <div className="text-xs drop-shadow-gold animate-float-glow">♥</div>
-            <div className="h-px flex-1 bg-gold/30" />
-          </motion.div>
-
-          <motion.div
-            variants={fadeUp}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.08 }}
-            className="relative mt-8"
-          >
-            <div className="absolute left-6 top-2 bottom-2 w-px bg-primary/15" />
-
-            <div className="space-y-6">
-              {Array.isArray(data.items)
-                ? data.items.map((item) => (
-                    <div
-                      key={`${item.time}-${item.name}`}
-                      className="relative flex items-start gap-4"
-                    >
-                      <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/70 shadow-luxury">
-                        <span className="text-sm font-semibold text-primary/70">
-                          {item.icon ? item.icon : ''}
-                        </span>
-                      </div>
-                      <div className="pt-1">
-                        <div className="text-xs uppercase tracking-widest text-primary/60">
-                          {item.time}
-                        </div>
-                        <div className="mt-1 font-heading text-lg font-semibold text-primary">
-                          {item.name}
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                : null}
-            </div>
-          </motion.div>
-        </motion.div>
-        <Wave className="pointer-events-none absolute -bottom-7 left-0 z-0 w-full rotate-180 text-background" />
-      </div>
     </section>
   )
 }

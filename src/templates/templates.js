@@ -6,15 +6,19 @@ import t5 from '../assets/themes/template-5.png'
 import t6 from '../assets/themes/template-6.png'
 import t7 from '../assets/themes/template-7.png'
 import t8 from '../assets/themes/template-8.png'
+import t9 from '../assets/themes/template-9.png'
+import t10 from '../assets/themes/template-10.png'
+import t11 from '../assets/themes/template-11.png'
+import t12 from '../assets/themes/template-12.png'
 
 export const templates = [
   {
-    id: 'auraofelegance',
+    id: 'template-1',
     name: 'Aura of Elegance',
     description: 'A timeless masterpiece designed for those who appreciate the finer details of a grand celebration.',
     priceLabel: '₹999',
     thumbnail: t1,
-    href: '/templates/auraofelegance',
+    href: '/templates/template-1',
     available: true,
     popular: true,
   },
@@ -61,6 +65,60 @@ export const templates = [
     priceLabel: '₹999',
     thumbnail: t6,
     href: '/templates/template-6',
+    available: false,
+  },
+  {
+    id: 'template-7',
+    name: 'Template 7',
+    description: 'Coming soon.',
+    priceLabel: '₹999',
+    thumbnail: t7,
+    href: '/templates/template-7',
+    available: false,
+  },
+  {
+    id: 'template-8',
+    name: 'Template 8',
+    description: 'Coming soon.',
+    priceLabel: '₹999',
+    thumbnail: t8,
+    href: '/templates/template-8',
+    available: false,
+  },
+  {
+    id: 'template-9',
+    name: 'Template 9',
+    description: 'Coming soon.',
+    priceLabel: '₹999',
+    thumbnail: t9,
+    href: '/templates/template-9',
+    available: false,
+  },
+  {
+    id: 'template-10',
+    name: 'Template 10',
+    description: 'Coming soon.',
+    priceLabel: '₹999',
+    thumbnail: t10,
+    href: '/templates/template-10',
+    available: false,
+  },
+  {
+    id: 'template-11',
+    name: 'Template 11',
+    description: 'Coming soon.',
+    priceLabel: '₹999',
+    thumbnail: t11,
+    href: '/templates/template-11',
+    available: false,
+  },
+  {
+    id: 'template-12',
+    name: 'Template 12',
+    description: 'Coming soon.',
+    priceLabel: '₹999',
+    thumbnail: t12,
+    href: '/templates/template-12',
     available: false,
   },
 ]

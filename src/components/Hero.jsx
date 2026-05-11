@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import heroBg from '../assets/hero_bg.png'
+import petalImg from '../assets/texture/rose-petal.png'
 
 /* ─────────────────────────────────────────
    Animation variants
@@ -18,23 +19,62 @@ const nameReveal = {
   hidden: { opacity: 0, y: 30, filter: 'blur(6px)' },
   show: {
     opacity: 1, y: 0, filter: 'blur(0px)',
-    transition: { duration: 1.0, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
   },
 }
 
 const nameLetters = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.05, delayChildren: 0.08 } },
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.08 } },
 }
 
 const nameLetter = {
   hidden: { opacity: 0, x: -10 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, x: 0, transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const ampReveal = {
   hidden: { opacity: 0, scale: 0.7 },
-  show: { opacity: 1, scale: 1, transition: { duration: 0.55, ease: 'backOut' } },
+  show: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: 'backOut' } },
+}
+
+/* ─────────────────────────────────────────
+   Falling Petals
+───────────────────────────────────────── */
+const petalConfig = Array.from({ length: 14 }).map((_, i) => {
+  const isLeft = i % 2 === 0;
+  const leftPos = isLeft ? Math.random() * 20 : 80 + Math.random() * 20; // 0-20% or 80-100%
+  const duration = 6 + Math.random() * 8; // 6 to 14 seconds
+  const delay = Math.random() * 5;
+  const size = 15 + Math.random() * 20; // sizes between 15 and 35
+  return { left: leftPos, duration, delay, size };
+});
+
+function FallingPetals() {
+  return (
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden" style={{ height: '100svh' }}>
+      {petalConfig.map((p, i) => (
+        <motion.img
+          key={i}
+          src={petalImg}
+          alt=""
+          className="absolute top-[-10%]"
+          style={{ left: `${p.left}%`, width: p.size, height: 'auto', opacity: 0.8 }}
+          animate={{
+            y: ['0vh', '110vh'],
+            x: [0, Math.random() * 60 - 30, Math.random() * 60 - 30],
+            rotate: [0, 360],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: 'linear'
+          }}
+        />
+      ))}
+    </div>
+  )
 }
 
 /* ─────────────────────────────────────────
@@ -112,7 +152,7 @@ function DateRow({ dateLine }) {
       {/* DAY */}
       <div style={{ paddingLeft: 14, paddingRight: 14 }}>
         <span style={{
-          fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
+          fontFamily: "'Cinzel', serif",
           fontSize: 'clamp(26px, 8.5vw, 42px)',
           fontWeight: 700,
           lineHeight: 1,
@@ -164,12 +204,12 @@ export default function Hero({ data, scrollContainerRef }) {
     <section
       id={data.id}
       className="relative w-full overflow-hidden"
-      style={{ minHeight: '100svh', background: '#FFF0EC' }}
+      style={{ minHeight: 'calc(100svh + 20px)', background: '#FFF0EC' }}
     >
       {/* ── Parallax background — no overlay ── */}
       <motion.div
         className="absolute inset-0 z-0 will-change-transform"
-        style={{ y: bgY, scale: 1.14 }}
+        style={{ y: bgY, scale: 1.25, transformOrigin: 'center top' }}
       >
         <img
           src={heroBg}
@@ -180,6 +220,8 @@ export default function Hero({ data, scrollContainerRef }) {
           loading="eager"
         />
       </motion.div>
+
+      <FallingPetals />
 
       {/* ── Content: locked to the sky/blossom band (top ~52 % of viewport) ── */}
       <motion.div
@@ -224,19 +266,19 @@ export default function Hero({ data, scrollContainerRef }) {
         </div>
 
         {/* ── Groom name ── */}
-        <motion.div variants={nameReveal} style={{ marginTop: 10 }}>
+        <motion.div variants={nameReveal} style={{ marginTop: 10, position: 'relative' }}>
           <motion.span
             variants={nameLetters}
             style={{
-            fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-            fontSize: 'clamp(20px, 10svh, 60px)',
-            fontWeight: 100,
-            lineHeight: 0.92,
-            color: '#7B0F1A',
-            display: 'block',
-            textShadow: '0 2px 14px rgba(123,15,26,0.13)',
-            whiteSpace: 'nowrap',
-          }}
+              fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
+              fontSize: 'clamp(20px, 10svh, 60px)',
+              fontWeight: 100,
+              lineHeight: 0.92,
+              color: '#7B0F1A',
+              display: 'block',
+              textShadow: '0 2px 14px rgba(123,15,26,0.13)',
+              whiteSpace: 'nowrap',
+            }}
           >
             {String(data.groomName || '')
               .split('')
@@ -250,6 +292,32 @@ export default function Hero({ data, scrollContainerRef }) {
                 </motion.span>
               ))}
           </motion.span>
+          
+          {/* Glassy reflection overlay */}
+          <motion.div
+            animate={{ backgroundPosition: ['200% center', '-200% center'] }}
+            transition={{ repeat: Infinity, duration: 7, ease: 'linear' }}
+            style={{
+              fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
+              fontSize: 'clamp(20px, 10svh, 60px)',
+              fontWeight: 100,
+              lineHeight: 0.92,
+              whiteSpace: 'nowrap',
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.4) 50%, transparent 60%)',
+              backgroundSize: '200% auto',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              color: 'transparent',
+              zIndex: 2,
+            }}
+            aria-hidden="true"
+          >
+            {data.groomName}
+          </motion.div>
         </motion.div>
 
         {/* & */}
@@ -268,19 +336,19 @@ export default function Hero({ data, scrollContainerRef }) {
         </motion.div>
 
         {/* ── Bride name ── */}
-        <motion.div variants={nameReveal} style={{ marginTop: -4 }}>
+        <motion.div variants={nameReveal} style={{ marginTop: -4, position: 'relative' }}>
           <motion.span
             variants={nameLetters}
             style={{
-            fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-            fontSize: 'clamp(20px, 10svh, 60px)',
-            fontWeight: 100,
-            lineHeight: 0.92,
-            color: '#7B0F1A',
-            display: 'block',
-            textShadow: '0 2px 14px rgba(123,15,26,0.13)',
-            whiteSpace: 'nowrap',
-          }}
+              fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
+              fontSize: 'clamp(20px, 10svh, 60px)',
+              fontWeight: 100,
+              lineHeight: 0.92,
+              color: '#7B0F1A',
+              display: 'block',
+              textShadow: '0 2px 14px rgba(123,15,26,0.13)',
+              whiteSpace: 'nowrap',
+            }}
           >
             {String(data.brideName || '')
               .split('')
@@ -294,6 +362,32 @@ export default function Hero({ data, scrollContainerRef }) {
                 </motion.span>
               ))}
           </motion.span>
+
+          {/* Glassy reflection overlay */}
+          <motion.div
+            animate={{ backgroundPosition: ['200% center', '-200% center'] }}
+            transition={{ repeat: Infinity, duration: 7, ease: 'linear', delay: 1 }}
+            style={{
+              fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
+              fontSize: 'clamp(20px, 10svh, 60px)',
+              fontWeight: 100,
+              lineHeight: 0.92,
+              whiteSpace: 'nowrap',
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.4) 50%, transparent 60%)',
+              backgroundSize: '200% auto',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              color: 'transparent',
+              zIndex: 2,
+            }}
+            aria-hidden="true"
+          >
+            {data.brideName}
+          </motion.div>
         </motion.div>
 
         {/* ARE GETTING MARRIED */}
@@ -355,31 +449,67 @@ export default function Hero({ data, scrollContainerRef }) {
         >
           <PinIcon />
 
-          {/* Venue name + city on same compact block */}
-          <p style={{
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: 800,
-            fontSize: 'clamp(9px, 1.5svh, 13px)',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            color: '#7B0F1A',
-            marginTop: 2,
-            lineHeight: 1.2,
-          }}>
-            {data.venueName}
-          </p>
-
-          <p style={{
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: 600,
-            fontSize: 'clamp(7px, 1.1svh, 9.5px)',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: '#7B0F1A',
-            opacity: 0.8,
-          }}>
-            {data.venueCity}
-          </p>
+          {/* Venue details rendered dynamically from address parts */}
+          {data.addressParts && data.addressParts.length > 0 ? (
+            <div className="flex flex-col items-center">
+              <p style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 800,
+                fontSize: 'clamp(9px, 1.5svh, 13px)',
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color: '#7B0F1A',
+                marginTop: 2,
+                lineHeight: 1.2,
+                textAlign: 'center',
+                padding: '0 10px'
+              }}>
+                {data.addressParts[0]}
+              </p>
+              {data.addressParts.length > 1 && (
+                <p style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 600,
+                  fontSize: 'clamp(7px, 1.1svh, 9.5px)',
+                  letterSpacing: '0.22em',
+                  textTransform: 'uppercase',
+                  color: '#7B0F1A',
+                  opacity: 0.8,
+                  textAlign: 'center',
+                  padding: '0 20px',
+                  marginTop: '4px'
+                }}>
+                  {data.addressParts.slice(1).join(', ')}
+                </p>
+              )}
+            </div>
+          ) : (
+            <>
+              <p style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 800,
+                fontSize: 'clamp(9px, 1.5svh, 13px)',
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color: '#7B0F1A',
+                marginTop: 2,
+                lineHeight: 1.2,
+              }}>
+                {data.venueName}
+              </p>
+              <p style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 600,
+                fontSize: 'clamp(7px, 1.1svh, 9.5px)',
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                color: '#7B0F1A',
+                opacity: 0.8,
+              }}>
+                {data.venueCity}
+              </p>
+            </>
+          )}
 
           {data.hashtag && (
             <p style={{
@@ -397,16 +527,22 @@ export default function Hero({ data, scrollContainerRef }) {
 
       </motion.div>
 
-      {/* ── Scroll button — floats above the palace centre arch ── */}
-      {data.scrollToId && (
-        <motion.button
-          type="button"
-          onClick={() => {
+
+
+      {/* ── Scroll button ── */}
+      <motion.button
+        type="button"
+        onClick={() => {
+          if (data.scrollToId) {
             const el = document.getElementById(data.scrollToId)
             if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-          }}
-          aria-label="Scroll down"
-          className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2"
+          } else {
+            window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })
+          }
+        }}
+        aria-label="Scroll down"
+          className="absolute z-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          style={{ bottom: 'clamp(20px, 4vh, 40px)' }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 3.0 }}
@@ -434,7 +570,6 @@ export default function Hero({ data, scrollContainerRef }) {
             </svg>
           </motion.div>
         </motion.button>
-      )}
     </section>
   )
 }

@@ -89,7 +89,8 @@ export const weddingData = {
       return isNaN(d) ? 'Wednesday' : d.toLocaleDateString('en-US', { weekday: 'long' })
     })(),
     venueName: inviteData.event?.venueName || inviteData.content?.venueAddress?.split?.(',')?.[0] || '',
-    venueCity: 'Bangalore, India',
+    fullAddress: inviteData.content?.venueAddress || 'Palace Grounds, Bellary Rd',
+    addressParts: (inviteData.content?.venueAddress || 'Palace Grounds, Bellary Rd').split(',').map(s => s.trim()),
     hashtag: `#${getCouple(inviteData)?.groomName || 'Groom'}${getCouple(inviteData)?.brideName || 'Bride'}Forever`,
     monogram: `${getCouple(inviteData)?.groomName?.[0] || 'A'} & ${getCouple(inviteData)?.brideName?.[0] || 'M'}`,
     backgroundImage: heroBg || heroArch,
@@ -113,6 +114,13 @@ export const weddingData = {
     title: inviteData.event?.sectionTitle,
     venueName: inviteData.event?.venueName || inviteData.content?.venueAddress,
     location: inviteData.event?.address || inviteData.content?.venueAddress,
+    venueCity: (() => {
+      const addr = inviteData.event?.address || inviteData.content?.venueAddress || ''
+      const parts = String(addr).split(',').map(s => s.trim()).filter(Boolean)
+      if (parts.length >= 2) return parts[parts.length - 2]
+      if (parts.length === 1) return parts[0]
+      return ''
+    })(),
     mapLabel: inviteData.event?.mapLabel,
     mapUrl: inviteData.event?.mapUrl || inviteData.content?.mapLink,
     backgroundImage: locationImg,

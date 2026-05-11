@@ -1,10 +1,31 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import texturePink from '../assets/backgrounds/texture_pink.png'
+
+const letterContainer = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } }
+}
+const letterAnim = {
+  hidden: { opacity: 0, y: 15 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+}
+
+function AnimatedTitle({ text, className, style }) {
+  return (
+    <motion.h2 variants={letterContainer} initial="hidden" whileInView="show" viewport={{ once: false, amount: 0.1 }} className={className} style={style}>
+      {text.split('').map((char, index) => (
+        <motion.span key={index} variants={letterAnim} style={{ display: 'inline-block' }}>{char === ' ' ? '\u00A0' : char}</motion.span>
+      ))}
+    </motion.h2>
+  )
+}
 
 const C = {
   primary: '#b95462', // Pinkish red from reference
   text:    '#4a3a3a',
   tape:    'rgba(235, 226, 212, 0.95)',
+  imageOverlay: 'rgba(255, 182, 193, 0.45)'
 }
 
 // Reusable Tape Component
@@ -64,46 +85,40 @@ export default function Story({ data }) {
       style={{
         position: 'relative',
         width: '100%',
-        paddingTop: '24px',
-        paddingBottom: '24px',
+        paddingTop: '0px',
+        paddingBottom: '0px',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
       }}
     >
+      {/* Moments Section with Texture Background */}
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        backgroundImage: `url(${texturePink})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'repeat',
+        backgroundAttachment: 'scroll',
+        paddingTop: '60px',
+        paddingBottom: '80px',
+      }}>
       {/* Header Text */}
       <div style={{ textAlign: 'center', padding: '0 20px', marginBottom: '50px', zIndex: 2 }}>
-        <motion.p
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.1 }}
-          transition={slowTextTransition(0)}
+        <AnimatedTitle 
+          text="OUR MOMENTS"
           style={{
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: 500,
-            fontSize: 'clamp(16px, 4vw, 20px)',
-            color: C.text,
-            margin: 0,
+            fontFamily: "'Cinzel', serif",
+            fontSize: 'clamp(24px, 5.2vw, 34px)',
+            letterSpacing: '0.14em',
+            fontWeight: 600,
+            color: '#7B1E2B',
+            margin: '0 0 12px 0',
+            textShadow: '0 14px 28px rgba(123, 30, 43, 0.16)',
+            textTransform: 'uppercase'
           }}
-        >
-          Our
-        </motion.p>
-        <motion.h2
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.1 }}
-          transition={slowTextTransition(0.2)}
-          style={{
-            fontFamily: "'Parisienne', cursive",
-            fontSize: 'clamp(56px, 16vw, 86px)',
-            color: C.primary,
-            margin: '-10px 0 10px 0',
-            fontWeight: 400,
-          }}
-        >
-          Moments
-        </motion.h2>
+        />
         
         {/* Heart Divider */}
         <motion.div 
@@ -166,6 +181,7 @@ export default function Story({ data }) {
         flexDirection: 'column',
         alignItems: 'center',
         zIndex: 2,
+        marginBottom: '20px',
       }}>
         
         {/* Photo 1 (Top Left) */}
@@ -176,18 +192,20 @@ export default function Story({ data }) {
               x: p1X,
               rotate: -4,
               position: 'relative',
-              background: '#fff',
-              padding: '10px 10px 30px 10px',
-              boxShadow: '0 12px 35px rgba(0,0,0,0.12)',
+              background: 'rgba(255,255,255,0.9)',
+              padding: '8px',
+              boxShadow: '0 24px 60px rgba(0,0,0,0.18), 0 12px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6)',
               width: '75%',
-              marginRight: '20%',
+              borderRadius: 16,
+              marginRight: '18%',
               zIndex: 1,
             }}
           >
             <Tape top={-12} left={30} rotate={-6} />
             <Tape bottom={-12} right={40} rotate={-3} width={85} />
-            <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden' }}>
-              <img src={items[0].image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Memory 1" />
+            <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden', position: 'relative', borderRadius: 12 }}>
+              <img src={items[0].image} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="Memory 1" />
+              <div aria-hidden style={{ position: 'absolute', inset: 0, background: C.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
             </div>
           </motion.div>
         )}
@@ -200,12 +218,13 @@ export default function Story({ data }) {
               x: p2X,
               rotate: 5,
               position: 'relative',
-              background: '#fff',
-              padding: '10px 10px 30px 10px',
-              boxShadow: '0 15px 40px rgba(0,0,0,0.18)',
+              background: 'rgba(255,255,255,0.9)',
+              padding: '8px',
+              boxShadow: '0 32px 80px rgba(0,0,0,0.22), 0 16px 32px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6)',
               width: '80%',
-              marginLeft: '20%',
-              marginTop: '-25%', // Overlap over Photo 1
+              borderRadius: 16,
+              marginLeft: '18%',
+              marginTop: '-22%', // Overlap over Photo 1
               zIndex: 2,
             }}
           >
@@ -228,8 +247,9 @@ export default function Story({ data }) {
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
             </div>
-            <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden' }}>
-              <img src={items[1].image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Memory 2" />
+            <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden', position: 'relative', borderRadius: 12 }}>
+              <img src={items[1].image} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="Memory 2" />
+              <div aria-hidden style={{ position: 'absolute', inset: 0, background: C.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
             </div>
           </motion.div>
         )}
@@ -242,58 +262,28 @@ export default function Story({ data }) {
               x: p3X,
               rotate: -3,
               position: 'relative',
-              background: '#fff',
-              padding: '10px 10px 30px 10px',
-              boxShadow: '0 12px 35px rgba(0,0,0,0.15)',
+              background: 'rgba(255,255,255,0.9)',
+              padding: '8px',
+              boxShadow: '0 24px 55px rgba(0,0,0,0.18), 0 12px 22px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6)',
               width: '78%',
-              marginRight: '22%',
-              marginTop: '-25%', // Overlap over Photo 2
+              borderRadius: 16,
+              marginRight: '20%',
+              marginTop: '-22%', // Overlap over Photo 2
               zIndex: 3,
             }}
           >
             <Tape bottom={-12} left={40} rotate={4} width={75} />
-            <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden' }}>
-              <img src={items[2].image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Memory 3" />
+            <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden', position: 'relative', borderRadius: 12 }}>
+              <img src={items[2].image} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="Memory 3" />
+              <div aria-hidden style={{ position: 'absolute', inset: 0, background: C.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
             </div>
           </motion.div>
         )}
 
       </div>
+      </div>
 
-      {/* Footer Text */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.1 }}
-        transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
-        style={{
-          marginTop: '70px',
-          textAlign: 'center',
-          zIndex: 2,
-        }}
-      >
-        <p style={{
-          fontFamily: "'Parisienne', cursive",
-          fontSize: 'clamp(22px, 6vw, 28px)',
-          color: C.primary,
-          margin: 0,
-        }}>
-          Our story, our journey,
-        </p>
-        <p style={{
-          fontFamily: "'Parisienne', cursive",
-          fontSize: 'clamp(38px, 10vw, 48px)',
-          color: C.primary,
-          margin: '-5px 0 0 0',
-        }}>
-          ours forever
-        </p>
-        
-        {/* Decorative squiggle underneath */}
-        <svg viewBox="0 0 50 20" width="40" height="16" fill="none" style={{ marginTop: '8px' }}>
-          <path d="M5 10 Q20 0 35 10 Q45 18 40 20 Q35 22 30 15" stroke={C.primary} strokeWidth="1.2" strokeLinecap="round" fill="none" opacity="0.8"/>
-        </svg>
-      </motion.div>
+
 
     </section>
   )

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import logo from '../assets/logo/logo-inviteque.png'
 
 /* ── Animation helpers ── */
 const stagger = {
@@ -163,8 +164,16 @@ export default function Footer({ data }) {
         {/* Brand name — Parisienne script + heart swash */}
         <motion.div
           variants={fadeUp}
-          style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginBottom: 12 }}
         >
+          <img
+            src={logo}
+            alt="Inviteque"
+            width={60}
+            height={60}
+            style={{ width: 60, height: 60, objectFit: 'contain' }}
+            loading="lazy"
+          />
           <span
             style={{
               fontFamily: "'Parisienne', cursive",
@@ -177,17 +186,6 @@ export default function Footer({ data }) {
           >
             Inviteque
           </span>
-          {/* Heart swash */}
-          <svg viewBox="0 0 28 26" width="22" height="20" fill="none" aria-hidden="true"
-            style={{ marginTop: 4, flexShrink: 0 }}>
-            <path
-              d="M14 23S3 15.5 3 8.5A5.5 5.5 0 0114 5.8 5.5 5.5 0 0125 8.5C25 15.5 14 23 14 23z"
-              stroke="#C4974A" strokeWidth="1.4" fill="rgba(196,151,74,0.18)"
-            />
-            {/* Small curl tail */}
-            <path d="M22 20 Q28 22 26 26" stroke="#C4974A" strokeWidth="1.1"
-              strokeLinecap="round" fill="none"/>
-          </svg>
         </motion.div>
 
         {/* Tagline */}
@@ -246,15 +244,7 @@ export default function Footer({ data }) {
           www.inviteque.com
         </motion.a>
 
-        {/* Bottom divider heart */}
-        <motion.div variants={fadeUp}>
-          <svg viewBox="0 0 24 22" width="16" height="14" fill="none" aria-hidden="true">
-            <path
-              d="M12 20S2 13 2 7A5 5 0 0112 4.2 5 5 0 0122 7C22 13 12 20 12 20z"
-              fill="#C4974A" opacity="0.5"
-            />
-          </svg>
-        </motion.div>
+
 
       </motion.div>
 

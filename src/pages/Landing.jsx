@@ -1,38 +1,40 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, useTime, useTransform } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../assets/logo/logo-inviteque.png'
 import { templates } from '../templates/templates.js'
 import { fadeUp, staggerChildren, viewportOnce } from '../motionVariants.js'
 import { useAuth } from '../context/AuthContext'
+import MobileNav from '../components/MobileNav'
 
 const templateCardPop = {
-  hidden: { opacity: 0, y: 26, scale: 0.96 },
+  hidden: { opacity: 0, y: 16, scale: 0.98 },
   show: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
       type: 'tween',
-      duration: 2.85,
+      duration: 0.75,
       ease: [0.22, 1, 0.36, 1],
     },
   },
 }
 
-const templateGridStagger = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.06,
-    },
-  },
-}
-
 function InfiniteCarouselCard({ t, i, total }) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   const time = useTime();
-  const duration = 70000; // Adjusted for a balanced, slightly faster, but still elegant pace
+  const duration = 70000;
+  // Reduce orbit spacing on mobile to compress carousel
+  const orbitX = isMobile ? 820 : 1100;
+  const orbitZ = isMobile ? 100 : 1000;
   
   const pos = useTransform(time, tValue => {
     const rawPos = (tValue / duration) + (i / total);
@@ -42,12 +44,12 @@ function InfiniteCarouselCard({ t, i, total }) {
   // Mathematically perfect circular arc using Trigonometry
   const x = useTransform(pos, p => {
     const angle = (0.5 - p) * Math.PI; // p=0 -> pi/2 (right). p=0.5 -> 0 (center). p=1 -> -pi/2 (left).
-    return Math.sin(angle) * 1200; // Slightly wider radius to keep a clearer gap between cards
+    return Math.sin(angle) * orbitX;
   });
 
   const z = useTransform(pos, p => {
     const angle = (0.5 - p) * Math.PI;
-    return (Math.cos(angle) - 1) * 1200; // Deep 1200px pushback at the edges
+    return (Math.cos(angle) - 1) * orbitZ;
   });
 
   const rotateY = useTransform(pos, p => {
@@ -77,7 +79,7 @@ function InfiniteCarouselCard({ t, i, total }) {
 
   return (
     <motion.div
-      className="absolute left-1/2 top-1/2 -ml-[120px] -mt-[180px] w-[240px] md:-ml-[160px] md:-mt-[240px] md:w-[320px]"
+      className="absolute left-1/2 top-[40%] -ml-[100px] -mt-[120px] w-[200px] md:-ml-[140px] md:-mt-[210px] md:w-[280px]"
       style={{ x, z, rotateY, scale, opacity, zIndex, transformStyle: 'preserve-3d', willChange: 'transform' }}
     >
       <article className="group relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] border border-iqBorder/30 bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3),0_30px_60px_-30px_rgba(0,0,0,0.3)] transition-all duration-500 hover:-translate-y-6 hover:shadow-[0_70px_120px_-20px_rgba(0,0,0,0.4)]">
@@ -163,9 +165,22 @@ function ComingSoonPill() {
 }
 
 export default function Landing() {
-  const [showAll, setShowAll] = useState(false)
+  const [displayCount, setDisplayCount] = useState(null)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const carouselTemplates = templates.length >= 10 ? templates : [...templates, ...templates]
+  const initialDisplay = isMobile ? 3 : 6
+  const incrementBy = isMobile ? 3 : 6
+  const currentDisplay = displayCount ?? initialDisplay
+  const visibleTemplates = templates.slice(0, currentDisplay)
 
   return (
     <main className="min-h-[100svh] w-full bg-iqBg font-saas text-iqText">
@@ -173,7 +188,7 @@ export default function Landing() {
         <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-6 w-auto" />
-            <span className="text-xl font-extrabold tracking-tight text-iqText">Inviteque</span>
+            <span className="text-xl font-extrabold tracking-tight text-iqText hidden sm:inline">Inviteque</span>
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">
@@ -191,7 +206,7 @@ export default function Landing() {
             </a>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-4">
                 <span className="text-sm font-bold text-iqText">Hi, {user.name}</span>
@@ -203,17 +218,21 @@ export default function Landing() {
                 </button>
               </div>
             ) : (
-              <Link to="/login" className="hidden text-sm font-semibold text-iqText/70 hover:text-iqText md:block">
+              <Link to="/login" className="text-sm font-semibold text-iqText/70 hover:text-iqText">
                 Log In
               </Link>
             )}
-            <PrimaryButton to={user ? "/builder/auraofelegance" : "/login"}>Get Started</PrimaryButton>
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="flex md:hidden">
+            <MobileNav />
           </div>
         </nav>
       </header>
 
       {/* 1) Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white via-[#FFF9F9] to-iqBg pt-20 pb-24 md:pt-32 md:pb-48">
+      <section className="relative overflow-hidden bg-gradient-to-b from-white via-[#FFF9F9] to-iqBg pt-12 pb-16 md:pt-16 md:pb-24">
         {/* Decorative subtle glow background */}
         <div className="absolute top-0 left-1/2 -z-10 h-[500px] w-[800px] -translate-x-1/2 bg-iqAccent/5 blur-[120px]" />
         
@@ -232,11 +251,11 @@ export default function Landing() {
           </motion.h1>
           <motion.p
             variants={fadeUp}
-            className="mt-8 text-pretty text-lg font-medium leading-relaxed text-iqText/60 md:text-xl"
+            className="mt-6 text-pretty text-lg font-medium leading-relaxed text-iqText/60 md:text-xl"
           >
             Choose a template, add your details, and share <br className="hidden sm:block" /> your love story instantly.
           </motion.p>
-          <motion.div variants={fadeUp} className="mt-12">
+          <motion.div variants={fadeUp} className="mt-8">
             <a
               href="#templates"
               className="inline-flex h-14 items-center justify-center rounded-full bg-black px-10 text-base font-semibold text-white transition-all hover:scale-105 hover:bg-black/90 active:scale-95 shadow-xl"
@@ -247,9 +266,9 @@ export default function Landing() {
         </motion.div>
 
         {/* Infinite Curved Full-Screen Carousel Layout */}
-        <div className="mt-20 relative h-[450px] md:h-[600px] w-full overflow-hidden [perspective:2000px] [transform-style:preserve-3d]">
-          {/* We duplicate the templates to have a dense, continuous loop */}
-          {[...templates, ...templates].map((t, i, arr) => (
+        <div className="mt-8 md:mt-10 relative h-[450px] md:h-[600px] w-full overflow-hidden [perspective:2000px] [transform-style:preserve-3d]">
+          {/* Duplicate only when template count is low (prevents crowding with 12 cards) */}
+          {carouselTemplates.map((t, i, arr) => (
             <InfiniteCarouselCard key={`${t.id}-${i}`} t={t} i={i} total={arr.length} />
           ))}
         </div>
@@ -276,21 +295,15 @@ export default function Landing() {
             </motion.p>
           </motion.div>
 
-          <motion.div
-            variants={templateGridStagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: false, amount: 0.25 }}
-            className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3"
-          >
-            {templates.map((t, index) => (
+          <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+            {visibleTemplates.map((t) => (
               <motion.article
                 key={t.id}
                 variants={templateCardPop}
-                className={[
-                  "overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury transition hover:scale-[1.01]",
-                  index > 2 ? (showAll ? 'block' : 'hidden md:block') : 'block'
-                ].join(' ')}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.3 }}
+                className="overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury transition hover:scale-[1.01]"
               >
                 <div className="relative">
                   <Link to={t.available ? t.href : '#templates'} className="block">
@@ -319,15 +332,27 @@ export default function Landing() {
                     {t.available ? null : <ComingSoonPill />}
                   </div>
 
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      <PrimaryButton to={t.available ? t.href : '#templates'} disabled={!t.available}>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                      <a 
+                        href={t.available ? t.href : '#templates'}
+                        target={t.available ? '_blank' : undefined}
+                        rel={t.available ? 'noopener noreferrer' : undefined}
+                        className={[
+                          'inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition',
+                          t.available
+                            ? 'bg-black text-white hover:scale-105 hover:bg-black/90 active:scale-95 shadow-xl'
+                            : 'cursor-not-allowed bg-black/50 text-white/50'
+                        ].join(' ')}
+                      >
                         Preview
-                      </PrimaryButton>
+                      </a>
                       <button
                         onClick={() => {
+                          if (!t.available) return
                           if (user) navigate(`/builder/${t.id}`)
                           else navigate('/login')
                         }}
+                        disabled={!t.available}
                         className={[
                           'inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition',
                           t.available
@@ -342,19 +367,21 @@ export default function Landing() {
                 </div>
               </motion.article>
             ))}
-          </motion.div>
+          </div>
 
-          <motion.div variants={fadeUp} initial="hidden" whileInView="show" className="mt-12 flex justify-center md:hidden">
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="group flex items-center gap-2 rounded-full border border-iqBorder bg-white px-8 py-3 text-sm font-bold text-iqText shadow-luxury transition hover:bg-iqText hover:text-white"
-            >
-              {showAll ? 'Show Less' : 'Show More Templates'}
-              <span className={`transition-transform duration-300 ${showAll ? 'rotate-180' : 'group-hover:translate-y-1'}`}>
-                ↓
-              </span>
-            </button>
-          </motion.div>
+          {currentDisplay < templates.length ? (
+            <motion.div variants={fadeUp} initial="hidden" whileInView="show" className="mt-12 flex justify-center">
+              <button
+                onClick={() => setDisplayCount(currentDisplay + incrementBy)}
+                className="group flex items-center gap-2 rounded-full border border-iqBorder bg-white px-8 py-3 text-sm font-bold text-iqText shadow-luxury transition hover:bg-iqText hover:text-white"
+              >
+                Show More Templates
+                <span className="transition-transform duration-300 group-hover:translate-y-1">
+                  ↓
+                </span>
+              </button>
+            </motion.div>
+          ) : null}
         </div>
       </section>
 
@@ -693,6 +720,7 @@ export default function Landing() {
                 className="mt-2 flex items-center gap-3"
               >
                 <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                  <img src={logo} alt="Inviteque" className="h-9 w-auto" loading="lazy" />
                   <span className="font-pinyon text-5xl font-normal text-[#FFF6F0] md:text-6xl">
                     Inviteque
                   </span>

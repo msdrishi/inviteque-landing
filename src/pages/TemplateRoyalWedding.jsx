@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDraft } from '../context/DraftContext.jsx'
 import Countdown from '../components/Countdown.jsx'
 import Events from '../components/Events.jsx'
@@ -11,6 +11,7 @@ import { weddingData as staticData } from '../weddingData.js'
 
 export default function TemplateRoyalWedding() {
   const location = useLocation()
+  const { templateId } = useParams()
   const { draftData } = useDraft()
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
@@ -24,13 +25,16 @@ export default function TemplateRoyalWedding() {
       groomName: draftData.groomName,
       brideName: draftData.brideName,
       dateLine: `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear}`,
-      venueName: draftData.venueAddress.split(',')[0],
+      venueName: draftData.mahalName || '',
+        fullAddress: [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
+        addressParts: [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean),
     },
     venue: {
       ...staticData.venue,
-      venueName: draftData.venueAddress.split(',')[0],
-      location: draftData.venueAddress,
+      venueName: draftData.mahalName || '',
+        location: [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
       mapUrl: draftData.mapLink,
+        venueCity: draftData.venueCity || '',
     },
     countdown: {
       ...staticData.countdown,
@@ -80,13 +84,22 @@ export default function TemplateRoyalWedding() {
       {/* Floating Continue Button for Preview */}
       {isPreview && (
         <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-md">
-          <button 
-            onClick={() => navigate('/payment')}
-            className="flex w-full items-center justify-center gap-3 rounded-full bg-black py-4 text-sm font-bold text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
-          >
-            Confirm & Proceed to Payment
-            <span className="text-xs opacity-50">→</span>
-          </button>
+          <div className="flex gap-3">
+            <button 
+              onClick={() => navigate(-1)}
+              className="flex-1 flex items-center justify-center gap-2 rounded-full border border-iqBorder bg-white py-4 text-sm font-bold text-iqText shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition hover:scale-105 active:scale-95"
+            >
+              <span>←</span>
+              Back
+            </button>
+            <button 
+              onClick={() => navigate('/payment', { state: { draftData, templateId } })}
+              className="flex-1 flex items-center justify-center gap-3 rounded-full bg-black py-4 text-sm font-bold text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
+            >
+              Confirm
+              <span className="text-xs opacity-50">→</span>
+            </button>
+          </div>
         </div>
       )}
       
@@ -94,7 +107,7 @@ export default function TemplateRoyalWedding() {
       
       {/* Photo Gallery is optional (Mapped to Story component) */}
       {draftData.showGallery && <Story data={data.story} />}
-      
+
       <Invitation data={data.invitation} />
       
       <Venue data={data.venue} />
