@@ -6,6 +6,7 @@ import Landing from './pages/Landing.jsx'
 import TemplateRoute from './pages/TemplateRoute.jsx'
 import Builder from './pages/Builder.jsx'
 import Payment from './pages/Payment.jsx'
+import PaymentConfirmation from './pages/PaymentConfirmation.jsx'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/builder/:templateId" element={<Builder />} />
           <Route path="/templates/:templateId" element={<TemplateRoute />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </DraftProvider>

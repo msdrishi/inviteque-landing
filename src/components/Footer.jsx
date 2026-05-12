@@ -22,18 +22,18 @@ function LeafSprig({ flip = false }) {
       aria-hidden="true"
       style={{
         transform: flip ? 'scaleX(-1)' : undefined,
-        opacity: 0.55,
+        opacity: 0.35,
       }}
     >
       {/* Main stem */}
-      <path d="M10 42 Q35 28 80 10" stroke="#C4974A" strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M10 42 Q35 28 80 10" stroke="#7B1E2B" strokeWidth="1.2" strokeLinecap="round"/>
       {/* Leaves */}
-      <path d="M22 36 Q18 22 32 20 Q28 34 22 36Z" fill="#C4974A" opacity="0.7"/>
-      <path d="M38 28 Q36 14 50 13 Q46 27 38 28Z" fill="#C4974A" opacity="0.7"/>
-      <path d="M54 20 Q54 6 68 6 Q63 19 54 20Z" fill="#C4974A" opacity="0.6"/>
+      <path d="M22 36 Q18 22 32 20 Q28 34 22 36Z" fill="#7B1E2B" opacity="0.6"/>
+      <path d="M38 28 Q36 14 50 13 Q46 27 38 28Z" fill="#7B1E2B" opacity="0.5"/>
+      <path d="M54 20 Q54 6 68 6 Q63 19 54 20Z" fill="#7B1E2B" opacity="0.4"/>
       {/* Small berries */}
-      <circle cx="18" cy="38" r="2.2" fill="#C4974A" opacity="0.5"/>
-      <circle cx="70" cy="9"  r="2"   fill="#C4974A" opacity="0.45"/>
+      <circle cx="18" cy="38" r="2.2" fill="#7B1E2B" opacity="0.35"/>
+      <circle cx="70" cy="9"  r="2"   fill="#7B1E2B" opacity="0.3"/>
     </svg>
   )
 }
@@ -50,20 +50,20 @@ function SocialIcon({ href = '#', label, children }) {
         width: 40,
         height: 40,
         borderRadius: '50%',
-        border: '1.5px solid rgba(255,246,240,0.35)',
+        border: '1.5px solid rgba(123, 30, 43, 0.25)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: 'rgba(255,246,240,0.85)',
+        color: 'rgba(123, 30, 43, 0.65)',
         textDecoration: 'none',
         transition: 'border-color 0.2s, background 0.2s',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.borderColor = 'rgba(255,246,240,0.7)'
-        e.currentTarget.style.background = 'rgba(255,246,240,0.1)'
+        e.currentTarget.style.borderColor = 'rgba(123, 30, 43, 0.5)'
+        e.currentTarget.style.background = 'rgba(123, 30, 43, 0.05)'
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.borderColor = 'rgba(255,246,240,0.35)'
+        e.currentTarget.style.borderColor = 'rgba(123, 30, 43, 0.25)'
         e.currentTarget.style.background = 'transparent'
       }}
     >
@@ -111,20 +111,22 @@ export default function Footer({ data }) {
     <footer
       id={data.id}
       style={{
-        background: 'linear-gradient(160deg, #5C0A14 0%, #7B0F1A 50%, #5C0A14 100%)',
+        background: '#FFF6F2',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 30 Q15 15, 30 30 T59 30' stroke='rgba(123, 30, 43, 0.06)' stroke-width='1' fill='none' stroke-linecap='round'/%3E%3Cpath d='M30 1 Q45 15, 30 30 T30 59' stroke='rgba(123, 30, 43, 0.04)' stroke-width='1' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='15' cy='15' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='45' cy='15' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='15' cy='45' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='45' cy='45' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(216, 178, 110, 0.06)'/%3E%3C/svg%3E")`,
+        backgroundSize: '60px 60px',
         padding: '36px 24px 28px',
         position: 'relative',
         overflow: 'hidden',
         width: '100%',
       }}
     >
-      {/* Subtle radial glow in the centre */}
+      {/* Subtle radial glow overlay */}
       <div
         aria-hidden="true"
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(ellipse 70% 60% at 50% 40%, rgba(196,151,74,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 70% 60% at 50% 40%, rgba(216, 178, 110, 0.04) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -154,7 +156,7 @@ export default function Footer({ data }) {
             fontSize: 'clamp(9px, 2.6vw, 11px)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: 'rgba(255,246,240,0.65)',
+            color: 'rgba(123, 30, 43, 0.65)',
             marginBottom: 6,
           }}
         >
@@ -179,7 +181,7 @@ export default function Footer({ data }) {
               fontFamily: "'Parisienne', cursive",
               fontSize: 'clamp(34px, 9vw, 50px)',
               fontWeight: 400,
-              color: '#FFF6F0',
+              color: '#7B1E2B',
               lineHeight: 1,
               letterSpacing: '0.02em',
             }}
@@ -195,7 +197,7 @@ export default function Footer({ data }) {
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: 400,
             fontSize: 'clamp(9.5px, 2.8vw, 12px)',
-            color: 'rgba(255,246,240,0.6)',
+            color: 'rgba(123, 30, 43, 0.7)',
             lineHeight: 1.6,
             marginBottom: 18,
             maxWidth: 260,
@@ -236,7 +238,7 @@ export default function Footer({ data }) {
             fontWeight: 500,
             fontSize: 'clamp(9.5px, 2.8vw, 12px)',
             letterSpacing: '0.06em',
-            color: 'rgba(255,246,240,0.6)',
+            color: 'rgba(123, 30, 43, 0.7)',
             textDecoration: 'none',
             marginBottom: 20,
           }}

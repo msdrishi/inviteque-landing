@@ -32,8 +32,18 @@ export default function Payment() {
   }
 
   const handlePaymentClick = () => {
-    // TODO: Integrate Razorpay here
-    alert('Razorpay integration coming soon!')
+    // Generate dummy order for now
+    const orderId = 'ORD-' + Date.now()
+    const inviteUrl = `${window.location.origin}/invite/${orderId}`
+    navigate('/payment-confirmation', { 
+      state: { 
+        orderId, 
+        inviteUrl, 
+        draftData, 
+        template,
+        amount: TEMPLATE_PRICE
+      } 
+    })
   }
 
   return (
@@ -144,17 +154,9 @@ export default function Payment() {
 
                 {/* Price */}
                 <div className="space-y-3">
-                  <div className="flex justify-between items-end">
-                    <span className="text-iqText/60">Subtotal</span>
-                    <span className="font-semibold">₹{TEMPLATE_PRICE}</span>
-                  </div>
-                  <div className="flex justify-between items-end">
-                    <span className="text-iqText/60">GST (18%)</span>
-                    <span className="font-semibold">₹{Math.round(TEMPLATE_PRICE * 0.18)}</span>
-                  </div>
                   <div className="flex justify-between items-end border-t border-iqBorder pt-3">
                     <span className="font-bold">Total Amount</span>
-                    <span className="text-2xl font-bold text-iqText">₹{TEMPLATE_PRICE + Math.round(TEMPLATE_PRICE * 0.18)}</span>
+                    <span className="text-2xl font-bold text-iqText">₹{TEMPLATE_PRICE}</span>
                   </div>
                 </div>
               </div>

@@ -80,7 +80,7 @@ export default function Countdown({ data }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.2 }}
         transition={{ duration: 0.9, ease: "easeOut" }}
-        className="relative w-[130%] sm:w-[115%] md:w-full max-w-[950px] z-10 flex justify-center items-center"
+        className="relative w-full max-w-[430px] z-10 flex justify-center items-center"
       >
         {/* The Beautiful Banner Background Image */}
         <img 
@@ -91,45 +91,45 @@ export default function Countdown({ data }) {
         />
 
         {/* The Overlay Content bounded strictly to the empty red space of the banner */}
-        <div className="absolute top-[30%] bottom-[22%] left-[10%] right-[10%] flex flex-col items-center justify-between py-[1%]">
+        <div className="absolute top-[32%] bottom-[24%] left-[12%] right-[12%] flex flex-col items-center justify-between py-[1%]">
           
           <div className="flex flex-col items-center justify-center w-full">
             <AnimatedTitle 
               text="COUNTDOWN"
-              style={{ fontFamily: "'Cinzel', serif", color: '#ffffff', fontSize: 'clamp(20px, 5vw, 34px)', fontWeight: 600, letterSpacing: '0.15em', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
+              style={{ fontFamily: "'Cinzel', serif", color: '#ffffff', fontSize: 'clamp(14px, 4vw, 22px)', fontWeight: 600, letterSpacing: '0.15em', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
             />
-            <p style={{ fontFamily: "'Montserrat', sans-serif", color: '#e8c9a3', fontSize: 'clamp(5px, 1vw, 10px)', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase', marginTop: '2%' }}>
+            <p style={{ fontFamily: "'Montserrat', sans-serif", color: '#e8c9a3', fontSize: 'clamp(4px, 1.5vw, 8px)', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase', marginTop: '2%' }}>
               THE BIG DAY IS ALMOST HERE
             </p>
           </div>
 
           {/* Tiles Wrapper - Flex container taking the remaining height */}
-          <div className="flex items-center justify-center gap-1 sm:gap-2 md:gap-3 w-full h-[55%] mt-auto mb-auto">
+          <div className="flex items-center justify-center gap-1 w-full h-[50%] mt-auto mb-auto">
             {boxes.map((box, i) => (
               <div key={box.key} className="flex items-center h-full">
                 
-                {/* Light Color Number Tile with Strong Shadow */}
+                {/* Light Color Number Tile */}
                 <div 
-                  className="bg-[#fdf8f7] relative flex flex-col items-center justify-center h-full aspect-[1/1.25] max-h-[110px] max-w-[85px] rounded-[12px]"
+                  className="bg-[#fdf8f7] relative flex flex-col items-center justify-center h-full aspect-[1/1.25] max-h-[70px] max-w-[55px] rounded-[8px]"
                   style={{
                     boxShadow: '0 4px 10px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.9)'
                   }}
                 >
-                  <div className="absolute inset-[3px] border-[1px] border-[#d5b28c] opacity-40 rounded-[9px] pointer-events-none"></div>
+                  <div className="absolute inset-[2px] border-[1px] border-[#d5b28c] opacity-40 rounded-[6px] pointer-events-none"></div>
 
-                  <span style={{ fontFamily: "'Cinzel', serif", fontSize: 'clamp(20px, 5vw, 38px)', fontWeight: 600, color: '#721c24', lineHeight: 1, marginTop: '4px' }}>
+                  <span style={{ fontFamily: "'Cinzel', serif", fontSize: 'clamp(16px, 4vw, 26px)', fontWeight: 600, color: '#721c24', lineHeight: 1, marginTop: '2px' }}>
                     {box.key === 'days' ? String(box.value) : String(box.value).padStart(2, '0')}
                   </span>
                   
-                  <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 'clamp(5px, 1vw, 9px)', fontWeight: 700, color: '#a07870', marginTop: '12%', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+                  <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 'clamp(4px, 1.5vw, 7px)', fontWeight: 700, color: '#a07870', marginTop: '10%', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
                     {box.label}
                   </span>
                 </div>
 
                 {/* Single Gold Dot Separator */}
                 {i < boxes.length - 1 && (
-                  <div className="flex ml-2 sm:ml-4 md:ml-5 -mr-[3px] sm:-mr-[4px] md:-mr-[5px]">
-                    <div className="w-[3px] h-[3px] sm:w-[4px] sm:h-[4px] rounded-full bg-[#e8c9a3]"></div>
+                  <div className="flex ml-1 -mr-[2px]">
+                    <div className="w-[3px] h-[3px] rounded-full bg-[#e8c9a3]"></div>
                   </div>
                 )}
               </div>

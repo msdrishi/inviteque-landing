@@ -114,6 +114,12 @@ export default function Builder() {
     }))
   }
 
+  const handleRemovePhoto = (index) => {
+    const newPhotos = [...(formData.photos || [])]
+    newPhotos[index] = null
+    setFormData(prev => ({ ...prev, photos: newPhotos }))
+  }
+
   const nextStep = () => setStep(s => s + 1)
   const prevStep = () => setStep(s => s - 1)
 
@@ -390,27 +396,42 @@ export default function Builder() {
 
                     {formData.showGallery && (
                       <div className="ml-0 md:ml-9 space-y-4 rounded-2xl border border-dashed border-iqBorder p-4 md:p-6 bg-iqBg/30">
-                        <p className="text-xs font-bold uppercase tracking-wider opacity-50">Upload 3 Photos (Mandatory)</p>
+                        <p className="text-xs font-bold uppercase tracking-wider opacity-50">Upload Photos (Optional)</p>
                         <div className="grid grid-cols-3 gap-3 md:gap-4">
                           {[0, 1, 2].map(i => (
-                            <label key={i} className="group relative aspect-square cursor-pointer overflow-hidden rounded-xl border-2 border-dashed border-iqBorder bg-white transition-all hover:border-iqText">
-                              {formData.photos?.[i] ? (
-                                <img src={formData.photos[i]} alt={`photo-${i}`} className="h-full w-full object-cover" />
-                              ) : (
-                                <div className="flex h-full w-full items-center justify-center text-iqText/20 transition-colors group-hover:text-iqText">
-                                  <span className="text-2xl md:text-3xl">+</span>
-                                </div>
+                            <div key={i} className="group relative aspect-square">
+                              <label className="cursor-pointer overflow-hidden rounded-xl border border-iqBorder bg-white transition-all hover:border-iqText h-full w-full flex">
+                                {formData.photos?.[i] ? (
+                                  <img src={formData.photos[i]} alt={`photo-${i}`} className="h-full w-full object-cover" />
+                                ) : (
+                                  <div className="flex h-full w-full items-center justify-center text-iqText/20 transition-colors group-hover:text-iqText">
+                                    <span className="text-2xl md:text-3xl">+</span>
+                                  </div>
+                                )}
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => handleFileChange(i, e)}
+                                />
+                              </label>
+                              {formData.photos?.[i] && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    handleRemovePhoto(i)
+                                  }}
+                                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-100 transition-opacity shadow-md hover:bg-red-600 z-50"
+                                >
+                                  <span className="text-xs font-bold">✕</span>
+                                </button>
                               )}
-                              <input
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={(e) => handleFileChange(i, e)}
-                              />
-                            </label>
+                            </div>
                           ))}
                         </div>
-                        <p className="text-[10px] text-iqText/40 italic">* These photos will be displayed in a cinematic grid.</p>
+                        <p className="text-[10px] text-iqText/40 italic">* These photos will be displayed in a cinematic grid. If no photos are uploaded, default images will be shown.</p>
                       </div>
                     )}
                   </div>

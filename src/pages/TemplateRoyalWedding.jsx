@@ -63,61 +63,64 @@ export default function TemplateRoyalWedding() {
   } : staticData
 
   return (
-    <div className="relative min-h-[100svh] w-full bg-background text-primary">
-      {/* Repeating Watermark Overlay */}
-      {isPreview && (
-        <div 
-          className="pointer-events-none fixed inset-0 z-[100] opacity-[0.05] select-none"
-          style={{
-            backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 100px, currentColor 100px, currentColor 101px)`,
-            maskImage: 'linear-gradient(to bottom, black, black)',
-          }}
-        >
-          <div className="flex h-full w-full flex-wrap content-start justify-center gap-20 p-10 font-bold uppercase tracking-[0.2em]">
-            {Array.from({ length: 40 }).map((_, i) => (
-              <span key={i} className="rotate-[-25deg] text-sm">Preview • Inviteque</span>
-            ))}
+    <div className="flex justify-center items-start min-h-screen bg-[#1a1a1a]">
+      {/* Mobile viewport container - max 430px like a phone */}
+      <div className="relative w-full max-w-[430px] min-h-[100svh] bg-background text-primary shadow-[0_0_80px_rgba(0,0,0,0.5)]">
+        {/* Repeating Watermark Overlay */}
+        {isPreview && (
+          <div 
+            className="pointer-events-none fixed inset-0 z-[100] opacity-[0.05] select-none"
+            style={{
+              backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 100px, currentColor 100px, currentColor 101px)`,
+              maskImage: 'linear-gradient(to bottom, black, black)',
+            }}
+          >
+            <div className="flex h-full w-full flex-wrap content-start justify-center gap-20 p-10 font-bold uppercase tracking-[0.2em]">
+              {Array.from({ length: 40 }).map((_, i) => (
+                <span key={i} className="rotate-[-25deg] text-sm">Preview • Inviteque</span>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Floating Continue Button for Preview */}
-      {isPreview && (
-        <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-md">
-          <div className="flex gap-3">
-            <button 
-              onClick={() => navigate(-1)}
-              className="flex-1 flex items-center justify-center gap-2 rounded-full border border-iqBorder bg-white py-4 text-sm font-bold text-iqText shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition hover:scale-105 active:scale-95"
-            >
-              <span>←</span>
-              Back
-            </button>
-            <button 
-              onClick={() => navigate('/payment', { state: { draftData, templateId } })}
-              className="flex-1 flex items-center justify-center gap-3 rounded-full bg-black py-4 text-sm font-bold text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
-            >
-              Confirm
-              <span className="text-xs opacity-50">→</span>
-            </button>
+        {/* Floating Continue Button for Preview */}
+        {isPreview && (
+          <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
+            <div className="flex gap-3">
+              <button 
+                onClick={() => navigate(-1)}
+                className="flex-1 flex items-center justify-center gap-2 rounded-full border border-iqBorder bg-white py-4 text-sm font-bold text-iqText shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition hover:scale-105 active:scale-95"
+              >
+                <span>←</span>
+                Back
+              </button>
+              <button 
+                onClick={() => navigate('/payment', { state: { draftData, templateId } })}
+                className="flex-1 flex items-center justify-center gap-3 rounded-full bg-black py-4 text-sm font-bold text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
+              >
+                Confirm
+                <span className="text-xs opacity-50">→</span>
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-      
-      <Hero data={data.hero} />
-      
-      {/* Photo Gallery is optional (Mapped to Story component) */}
-      {draftData.showGallery && <Story data={data.story} />}
+        )}
+        
+        <Hero data={data.hero} />
+        
+        {/* Photo Gallery is optional (Mapped to Story component) */}
+        {draftData.showGallery && <Story data={data.story} />}
 
-      <Invitation data={data.invitation} />
-      
-      <Venue data={data.venue} />
-      
-      {/* Wedding Schedule is optional */}
-      {draftData.showSchedule && <Events data={data.events} />}
-      
-      <Countdown data={data.countdown} />
-      
-      <Footer data={data.footer} />
+        <Invitation data={data.invitation} />
+        
+        <Venue data={data.venue} />
+        
+        {/* Wedding Schedule is optional */}
+        {draftData.showSchedule && <Events data={data.events} />}
+        
+        <Countdown data={data.countdown} />
+        
+        <Footer data={data.footer} />
+      </div>
     </div>
   )
 }

@@ -57,13 +57,23 @@ export default function Venue({ data }) {
   if (!data) return null
 
   const addressTextRaw = String(data.address || data.location || 'MG Road')
-  const addressTextPretty = addressTextRaw
+  // Remove venue name from address to avoid duplication with the title
   const venueCityPart = data.venueCity ? String(data.venueCity).trim() : ''
   const venueTitleBase = data.venueName ? String(data.venueName).trim() : ''
   const venueTitle = (venueTitleBase
     ? `${venueTitleBase}${venueCityPart ? `, ${venueCityPart}` : ''}`
     : 'PALACE GROUNDS'
   ).toUpperCase()
+
+  // Strip the venue name from the full address so it doesn't repeat
+  let addressTextPretty = addressTextRaw
+  if (venueTitleBase) {
+    // Remove "VenueName, " or "VenueName" from the start of the address
+    const regex = new RegExp(`^${venueTitleBase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*,?\\s*`, 'i')
+    addressTextPretty = addressTextRaw.replace(regex, '').trim()
+  }
+  // If stripping removed everything, fall back to raw
+  if (!addressTextPretty) addressTextPretty = addressTextRaw
 
   const viewport = { once: false, amount: 0.15 }
   const petals = [

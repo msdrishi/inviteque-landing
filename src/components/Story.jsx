@@ -206,6 +206,16 @@ export default function Story({ data }) {
             <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden', position: 'relative', borderRadius: 12 }}>
               <img src={items[0].image} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="Memory 1" />
               <div aria-hidden style={{ position: 'absolute', inset: 0, background: C.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
+              {/* Mat Finish Texture */}
+              <div aria-hidden style={{ 
+                position: 'absolute', 
+                inset: 0, 
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' seed='1' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08' /%3E%3C/svg%3E")`,
+                backgroundSize: '100px 100px',
+                mixBlendMode: 'overlay',
+                borderRadius: 12,
+                pointerEvents: 'none'
+              }} />
             </div>
           </motion.div>
         )}
@@ -250,6 +260,16 @@ export default function Story({ data }) {
             <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden', position: 'relative', borderRadius: 12 }}>
               <img src={items[1].image} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="Memory 2" />
               <div aria-hidden style={{ position: 'absolute', inset: 0, background: C.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
+              {/* Mat Finish Texture */}
+              <div aria-hidden style={{ 
+                position: 'absolute', 
+                inset: 0, 
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' seed='1' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08' /%3E%3C/svg%3E")`,
+                backgroundSize: '100px 100px',
+                mixBlendMode: 'overlay',
+                borderRadius: 12,
+                pointerEvents: 'none'
+              }} />
             </div>
           </motion.div>
         )}
@@ -276,6 +296,16 @@ export default function Story({ data }) {
             <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden', position: 'relative', borderRadius: 12 }}>
               <img src={items[2].image} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="Memory 3" />
               <div aria-hidden style={{ position: 'absolute', inset: 0, background: C.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
+              {/* Mat Finish Texture */}
+              <div aria-hidden style={{ 
+                position: 'absolute', 
+                inset: 0, 
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' seed='1' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08' /%3E%3C/svg%3E")`,
+                backgroundSize: '100px 100px',
+                mixBlendMode: 'overlay',
+                borderRadius: 12,
+                pointerEvents: 'none'
+              }} />
             </div>
           </motion.div>
         )}
