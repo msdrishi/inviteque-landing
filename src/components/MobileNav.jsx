@@ -209,6 +209,12 @@ export default function MobileNav() {
                     {/* Action Links */}
                     <div className="space-y-3 border-t border-iqBorder pt-6">
                       <button
+                        onClick={() => handleNavigate('/account')}
+                        className="w-full rounded-full border border-iqText bg-transparent px-4 py-3 text-center font-bold text-iqText transition hover:bg-iqText/5"
+                      >
+                        My Account
+                      </button>
+                      <button
                         onClick={() => handleNavigate('/builder/template-1')}
                         className="w-full rounded-full bg-black px-4 py-3 text-center font-bold text-white transition hover:opacity-90"
                       >

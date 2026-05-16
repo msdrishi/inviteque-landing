@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo/logo-inviteque.png'
 import { fadeUp } from '../motionVariants'
 import { templates } from '../templates/templates'
@@ -31,19 +33,70 @@ export default function Payment() {
     )
   }
 
-  const handlePaymentClick = () => {
-    // Generate dummy order for now
-    const orderId = 'ORD-' + Date.now()
-    const inviteUrl = `${window.location.origin}/invite/${orderId}`
-    navigate('/payment-confirmation', { 
-      state: { 
-        orderId, 
-        inviteUrl, 
-        draftData, 
-        template,
-        amount: TEMPLATE_PRICE
-      } 
-    })
+  const { saveInvitation } = useAuth()
+  const [isProcessing, setIsProcessing] = useState(false)
+ 
+  const isAlreadyPaid = draftData.status === 'PAID'
+
+  const handlePaymentClick = async () => {
+    setIsProcessing(true)
+    try {
+      // Prepare backend request matching our JSONB columns
+      const inviteRequest = {
+        code: draftData.code, // VERY IMPORTANT: Pass code to update instead of creating new
+        templateId,
+        coupleData: {
+          groomName: draftData.groomName,
+          brideName: draftData.brideName
+        },
+        heroData: {
+          groomName: draftData.groomName,
+          brideName: draftData.brideName,
+          weddingDate: draftData.weddingDate,
+          weddingMonth: draftData.weddingMonth,
+          weddingYear: draftData.weddingYear
+        },
+        venueData: {
+          mahalName: draftData.mahalName,
+          venueAddress: draftData.venueAddress,
+          venueCity: draftData.venueCity,
+          state: draftData.state,
+          mapLink: draftData.mapLink
+        },
+        scheduleData: {
+          showSchedule: draftData.showSchedule,
+          showGallery: draftData.showGallery,
+          items: draftData.scheduleItems
+        },
+        storyData: {
+          photos: draftData.photos
+        },
+        invitationData: {}, // Placeholder
+        rsvpData: {}, // Placeholder
+        status: 'PAID' // Ensure status is set to PAID after this step
+      }
+
+      const savedInvite = await saveInvitation(inviteRequest)
+      const inviteUrl = `${window.location.origin}/templates/${templateId}/${savedInvite.code}`
+
+      // If already paid, we don't need a new confirmation, or we can just show success
+      navigate('/payment-confirmation', { 
+        state: { 
+          orderId: savedInvite.id, 
+          inviteUrl, 
+          draftData, 
+          template,
+          amount: isAlreadyPaid ? draftData.amountPaid : TEMPLATE_PRICE,
+          code: savedInvite.code,
+          isUpdate: true
+        } 
+      })
+    } catch (error) {
+      console.error('Save error:', error)
+      alert('Error saving invitation. Please try again.')
+    } finally {
+      setIsProcessing(false)
+    }
   }
 
   return (
@@ -53,7 +106,7 @@ export default function Payment() {
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-6 w-auto" />
-            <span className="text-sm md:text-lg font-bold">Payment</span>
+            <span className="text-sm md:text-lg font-bold">{isAlreadyPaid ? 'Update' : 'Payment'}</span>
           </div>
           <button
             onClick={() => navigate(-1)}
@@ -72,123 +125,102 @@ export default function Payment() {
           transition={{ duration: 0.5 }}
           className="space-y-8"
         >
-          {/* Order Summary */}
+          {/* Summary Section */}
           <div className="space-y-6">
             <div className="text-center">
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">Order Summary</h1>
-              <p className="text-iqText/60">Review your invitation details and proceed to payment</p>
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                {isAlreadyPaid ? 'Review Your Updates' : 'Order Summary'}
+              </h1>
+              <p className="text-iqText/60">
+                {isAlreadyPaid 
+                  ? 'Confirm the changes before they go live' 
+                  : 'Review your invitation details and proceed to payment'}
+              </p>
             </div>
 
-            {/* Template Preview Card */}
+            {/* Main Info Card */}
             <motion.div
               variants={fadeUp}
-              className="rounded-2xl border border-iqBorder bg-white overflow-hidden shadow-luxury"
+              className="rounded-[2.5rem] border border-iqBorder bg-white overflow-hidden shadow-luxury"
             >
-              {/* Template Image */}
-              <div className="h-48 md:h-64 overflow-hidden bg-gradient-to-br from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]">
+              {/* Template Image / Header */}
+              <div className="h-40 md:h-52 overflow-hidden bg-gradient-to-br from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14] relative">
                 <img 
                   src={themeImg}
                   alt={template.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover opacity-50"
                 />
+                <div className="absolute inset-0 flex items-center justify-center">
+                   <div className="text-center text-white">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-60">Template</span>
+                      <h2 className="text-2xl font-serif italic mt-1">{template.name}</h2>
+                   </div>
+                </div>
               </div>
 
-              <div className="p-6 md:p-8 space-y-4">
-                {/* Template Name and Couple Details */}
-                <div className="space-y-2 pb-4 border-b border-iqBorder">
-                  <p className="text-xs font-bold uppercase tracking-wider text-iqText/60">Template</p>
-                  <h2 className="text-2xl font-bold text-iqText">{template.name}</h2>
-                  <p className="text-sm text-iqText/70">Couple: {draftData.groomName} & {draftData.brideName}</p>
-                </div>
-
-                {/* Couple Details */}
-                <div className="space-y-4 border-b border-iqBorder pb-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-iqText/60">Groom</span>
-                    <span className="font-semibold">{draftData.groomName}</span>
+              <div className="p-8 md:p-10 space-y-6">
+                {/* Couple Summary */}
+                <div className="space-y-4 pb-6 border-b border-iqBorder">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-iqText/40 font-bold uppercase tracking-widest text-[10px]">Couple</span>
+                    <span className="font-bold text-lg">{draftData.groomName} & {draftData.brideName}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-iqText/60">Bride</span>
-                    <span className="font-semibold">{draftData.brideName}</span>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-iqText/40 font-bold uppercase tracking-widest text-[10px]">Date</span>
+                    <span className="font-bold">{draftData.weddingDate} {draftData.weddingMonth} {draftData.weddingYear}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-iqText/60">Wedding Date</span>
-                    <span className="font-semibold">{draftData.weddingDate} {draftData.weddingMonth} {draftData.weddingYear}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-iqText/60">Venue</span>
-                    <span className="font-semibold text-right line-clamp-2">{draftData.venueAddress}</span>
+                  <div className="flex justify-between items-start text-sm">
+                    <span className="text-iqText/40 font-bold uppercase tracking-widest text-[10px]">Venue</span>
+                    <span className="font-bold text-right max-w-[200px]">{draftData.mahalName}</span>
                   </div>
                 </div>
 
-                {/* Optional Features */}
-                <div className="space-y-3 pb-6 border-b border-iqBorder">
-                  <p className="text-sm font-bold text-iqText/60 uppercase tracking-wider">Included Features</p>
-                  <div className="space-y-2">
-                    {draftData.showGallery && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <span className="text-green-600">✓</span>
-                        <span>Photo Gallery</span>
-                      </div>
-                    )}
-                    {draftData.showSchedule && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <span className="text-green-600">✓</span>
-                        <span>Wedding Schedule ({draftData.scheduleItems.length} events)</span>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="text-green-600">✓</span>
-                      <span>Premium Digital Invitation</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="text-green-600">✓</span>
-                      <span>Unique URL (Valid for 6 months)</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="text-green-600">✓</span>
-                      <span>Watermark-Free Preview</span>
-                    </div>
-                  </div>
+                {/* Feature Status */}
+                <div className="grid grid-cols-2 gap-4 pb-6">
+                   <div className="rounded-2xl bg-iqBg/50 p-4 border border-iqBorder">
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">Gallery</span>
+                      <span className="text-xs font-bold">{draftData.showGallery ? '✅ Enabled' : '❌ Disabled'}</span>
+                   </div>
+                   <div className="rounded-2xl bg-iqBg/50 p-4 border border-iqBorder">
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">Schedule</span>
+                      <span className="text-xs font-bold">{draftData.showSchedule ? '✅ Enabled' : '❌ Disabled'}</span>
+                   </div>
                 </div>
 
-                {/* Price */}
-                <div className="space-y-3">
-                  <div className="flex justify-between items-end border-t border-iqBorder pt-3">
-                    <span className="font-bold">Total Amount</span>
-                    <span className="text-2xl font-bold text-iqText">₹{TEMPLATE_PRICE}</span>
+                {/* Price (Only show if not paid) */}
+                {!isAlreadyPaid ? (
+                  <div className="space-y-3 pt-4">
+                    <div className="flex justify-between items-end border-t border-iqBorder pt-6">
+                      <span className="font-bold">Total Amount</span>
+                      <span className="text-3xl font-bold text-iqText">₹{TEMPLATE_PRICE}</span>
+                    </div>
+                    <p className="text-[10px] text-iqText/40 text-center uppercase tracking-widest font-bold">Inclusive of all taxes</p>
                   </div>
-                </div>
+                ) : (
+                  <div className="rounded-2xl bg-green-50 p-5 border border-green-100 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-bold text-green-700 uppercase tracking-widest block">Premium Status</span>
+                      <span className="text-sm font-bold text-green-700">All features unlocked</span>
+                    </div>
+                    <span className="bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">PAID</span>
+                  </div>
+                )}
               </div>
             </motion.div>
 
             {/* Info Box */}
             <motion.div
               variants={fadeUp}
-              className="rounded-xl border border-blue-200 bg-blue-50 p-4 md:p-6 space-y-3"
+              className={`rounded-2xl p-6 space-y-3 ${isAlreadyPaid ? 'bg-blue-50 border border-blue-100' : 'bg-iqBg/50 border border-iqBorder'}`}
             >
-              <h3 className="font-semibold text-blue-900 flex items-center gap-2">
-                <span className="text-lg">ℹ️</span>
-                What You'll Get After Payment
+              <h3 className={`font-bold text-sm ${isAlreadyPaid ? 'text-blue-900' : 'text-iqText'}`}>
+                {isAlreadyPaid ? '✨ Free Updates Enabled' : '🎁 What happens next?'}
               </h3>
-              <ul className="space-y-2 text-sm text-blue-900/80">
-                <li className="flex gap-2">
-                  <span className="text-lg leading-none">→</span>
-                  <span><strong>Unique Digital Invitation URL</strong> - Share with guests via WhatsApp, Email, or Social Media</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-lg leading-none">→</span>
-                  <span><strong>No Watermark Preview</strong> - Your complete invitation without "Preview" watermark</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-lg leading-none">→</span>
-                  <span><strong>6 Month Validity</strong> - Guests can access the invitation for 6 months from purchase</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-lg leading-none">→</span>
-                  <span><strong>Edit Anytime</strong> - Update guest details even after purchase</span>
-                </li>
-              </ul>
+              <p className={`text-xs leading-relaxed ${isAlreadyPaid ? 'text-blue-800/70' : 'text-iqText/60'}`}>
+                {isAlreadyPaid 
+                  ? 'As a premium user, you can update your wedding details as many times as you like. Your live link will be refreshed instantly once you click update.' 
+                  : 'After a successful payment, you will receive your unique digital invitation link. You can share this link with your guests instantly via WhatsApp or Email.'}
+              </p>
             </motion.div>
           </div>
 
@@ -205,10 +237,29 @@ export default function Payment() {
             </button>
             <button
               onClick={handlePaymentClick}
-              className="flex-1 rounded-full bg-black py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90 flex items-center justify-center gap-2"
+              disabled={isProcessing}
+              className={`flex-1 rounded-full bg-black py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90 flex items-center justify-center gap-2 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              <span>💳</span>
-              Pay ₹{TEMPLATE_PRICE + Math.round(TEMPLATE_PRICE * 0.18)}
+              {isProcessing ? (
+                <>
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  {isAlreadyPaid ? (
+                    <>
+                      <span>💾</span>
+                      Update Invitation
+                    </>
+                  ) : (
+                    <>
+                      <span>💳</span>
+                      Pay ₹{TEMPLATE_PRICE}
+                    </>
+                  )}
+                </>
+              )}
             </button>
           </motion.div>
         </motion.div>

@@ -19,18 +19,18 @@ const nameReveal = {
   hidden: { opacity: 0, y: 30, filter: 'blur(6px)' },
   show: {
     opacity: 1, y: 0, filter: 'blur(0px)',
-    transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 2.0, ease: [0.22, 1, 0.36, 1] },
   },
 }
 
 const nameLetters = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.08 } },
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.12 } },
 }
 
 const nameLetter = {
   hidden: { opacity: 0, x: -10 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const ampReveal = {
@@ -209,7 +209,7 @@ export default function Hero({ data, scrollContainerRef }) {
       {/* ── Parallax background — no overlay ── */}
       <motion.div
         className="absolute inset-0 z-0 will-change-transform"
-        style={{ y: bgY, scale: 1.25, transformOrigin: 'center top' }}
+        style={{ y: bgY, scale: 1.15, transformOrigin: 'center top' }}
       >
         <img
           src={heroBg}

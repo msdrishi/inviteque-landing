@@ -15,22 +15,61 @@ export function AuthProvider({ children }) {
     setLoading(false)
   }, [])
 
-  const login = (userData) => {
-    const userWithInvitations = {
-      ...userData,
-      purchasedInvitations: userData.purchasedInvitations || [],
-    }
-    setUser(userWithInvitations)
-    localStorage.setItem('inviteque_user', JSON.stringify(userWithInvitations))
-  }
-
-  const signup = (userData) => {
-    const userWithInvitations = {
+  const loginWithData = (userData) => {
+    const userWithToken = {
       ...userData,
       purchasedInvitations: [],
     }
-    setUser(userWithInvitations)
-    localStorage.setItem('inviteque_user', JSON.stringify(userWithInvitations))
+    setUser(userWithToken)
+    localStorage.setItem('inviteque_user', JSON.stringify(userWithToken))
+  }
+
+  const login = async (email, password) => {
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Login failed')
+      }
+
+      const data = await response.json()
+      const userWithToken = {
+        ...data,
+        purchasedInvitations: [], // You can fetch this later from DB
+      }
+      setUser(userWithToken)
+      localStorage.setItem('inviteque_user', JSON.stringify(userWithToken))
+      return { success: true }
+    } catch (error) {
+      return { success: false, message: error.message }
+    }
+  }
+
+  const signup = async (name, email, password, phoneNumber) => {
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, phoneNumber }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Signup failed')
+      }
+
+      const data = await response.json()
+      setUser(data)
+      localStorage.setItem('inviteque_user', JSON.stringify(data))
+      return { success: true }
+    } catch (error) {
+      return { success: false, message: error.message }
+    }
   }
 
   const addPurchasedInvitation = (invitationData) => {
@@ -67,6 +106,28 @@ export function AuthProvider({ children }) {
     localStorage.setItem('inviteque_user', JSON.stringify(updatedUser))
   }
 
+  const saveInvitation = async (invitationRequest) => {
+    try {
+      const response = await fetch('http://localhost:8080/api/invites', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
+        body: JSON.stringify(invitationRequest),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save invitation')
+      }
+
+      return await response.json()
+    } catch (error) {
+      console.error('Save error:', error)
+      throw error
+    }
+  }
+
   const logout = () => {
     setUser(null)
     localStorage.removeItem('inviteque_user')
@@ -77,10 +138,12 @@ export function AuthProvider({ children }) {
       value={{
         user,
         login,
+        loginWithData,
         signup,
         logout,
         addPurchasedInvitation,
         updatePurchasedInvitation,
+        saveInvitation,
         loading,
       }}
     >

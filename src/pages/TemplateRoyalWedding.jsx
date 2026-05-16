@@ -9,49 +9,70 @@ import Story from '../components/Story.jsx'
 import Venue from '../components/Venue.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 
-export default function TemplateRoyalWedding() {
+export default function TemplateRoyalWedding({ savedData }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData } = useDraft()
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
 
-  // Merge static data with user's draft data for preview
-  const data = isPreview ? {
+  // Determine which data to use: Saved DB data > Local Draft data > Static Fallback
+  const activeData = savedData || (isPreview ? draftData : null)
+
+  const data = activeData ? {
     ...staticData,
     hero: {
       ...staticData.hero,
-      names: `${draftData.groomName} & ${draftData.brideName}`,
-      groomName: draftData.groomName,
-      brideName: draftData.brideName,
-      dateLine: `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear}`,
-      venueName: draftData.mahalName || '',
-        fullAddress: [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
-        addressParts: [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean),
+      names: savedData 
+        ? `${savedData.coupleData.groomName} & ${savedData.coupleData.brideName}`
+        : `${draftData.groomName} & ${draftData.brideName}`,
+      groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
+      brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
+      dateLine: savedData 
+        ? `${savedData.heroData.weddingDate} ${savedData.heroData.weddingMonth} ${savedData.heroData.weddingYear}`
+        : `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear}`,
+      venueName: (savedData ? savedData.venueData.mahalName : draftData.mahalName) || '',
+      venueCity: (savedData ? savedData.venueData.venueCity : draftData.venueCity) || '',
+      addressParts: savedData 
+        ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean)
+        : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean),
+      fullAddress: savedData 
+        ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean).join(', ')
+        : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
+      mapUrl: savedData ? savedData.venueData.mapLink : draftData.mapLink,
     },
     venue: {
       ...staticData.venue,
-      venueName: draftData.mahalName || '',
-        location: [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
-      mapUrl: draftData.mapLink,
-        venueCity: draftData.venueCity || '',
+      venueName: (savedData ? savedData.venueData.mahalName : draftData.mahalName) || '',
+      location: savedData
+        ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean).join(', ')
+        : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
+      mapUrl: savedData ? savedData.venueData.mapLink : draftData.mapLink,
     },
     countdown: {
       ...staticData.countdown,
-      targetDateTimeISO: new Date(`${draftData.weddingMonth} ${draftData.weddingDate}, ${draftData.weddingYear}`).toISOString(),
+      targetDateTimeISO: savedData
+        ? new Date(`${savedData.heroData.weddingMonth} ${savedData.heroData.weddingDate}, ${savedData.heroData.weddingYear}`).toISOString()
+        : new Date(`${draftData.weddingMonth} ${draftData.weddingDate}, ${draftData.weddingYear}`).toISOString(),
     },
     story: {
       ...staticData.story,
       items: (() => {
-        const photos = (draftData.photos || []).filter(Boolean)
-        return photos.length ? photos.map(p => ({ image: p })) : staticData.story.items
+        const photos = savedData 
+          ? (savedData.storyData?.photos || []) 
+          : (draftData.photos || [])
+        const activePhotos = photos.filter(Boolean)
+        return activePhotos.length > 0 
+          ? activePhotos.map(p => ({ image: p })) 
+          : staticData.story.items
       })(),
     },
     events: {
       ...staticData.events,
-      title: staticData.events?.title || 'Wedding Schedule',
       items: (() => {
-        const scheduleItems = Array.isArray(draftData.scheduleItems) ? draftData.scheduleItems : []
+        const scheduleItems = savedData 
+          ? (savedData.scheduleData?.items || []) 
+          : (Array.isArray(draftData.scheduleItems) ? draftData.scheduleItems : [])
         const icons = ['✦', '◎', '✿', '◆', '♪']
         return scheduleItems.map((item, index) => ({
           icon: icons[index % icons.length],
@@ -59,8 +80,16 @@ export default function TemplateRoyalWedding() {
           name: item.title,
         }))
       })(),
+    },
+    invitation: {
+      ...staticData.invitation,
+      groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
+      brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
     }
   } : staticData
+
+  const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
+  const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
 
   return (
     <div className="flex justify-center items-start min-h-screen bg-[#1a1a1a]">
@@ -98,7 +127,7 @@ export default function TemplateRoyalWedding() {
                 onClick={() => navigate('/payment', { state: { draftData, templateId } })}
                 className="flex-1 flex items-center justify-center gap-3 rounded-full bg-black py-4 text-sm font-bold text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
               >
-                Confirm
+                Proceed
                 <span className="text-xs opacity-50">→</span>
               </button>
             </div>
@@ -108,14 +137,14 @@ export default function TemplateRoyalWedding() {
         <Hero data={data.hero} />
         
         {/* Photo Gallery is optional (Mapped to Story component) */}
-        {draftData.showGallery && <Story data={data.story} />}
+        {showGallery && <Story data={data.story} />}
 
         <Invitation data={data.invitation} />
         
         <Venue data={data.venue} />
         
         {/* Wedding Schedule is optional */}
-        {draftData.showSchedule && <Events data={data.events} />}
+        {showSchedule && <Events data={data.events} />}
         
         <Countdown data={data.countdown} />
         

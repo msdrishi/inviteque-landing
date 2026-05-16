@@ -9,7 +9,7 @@ export default function PaymentConfirmation() {
   const navigate = useNavigate()
   const [copied, setCopied] = useState(false)
   
-  const { orderId, inviteUrl, draftData, template, amount } = location.state || {}
+  const { orderId, inviteUrl, draftData, template, amount, templateId, isUpdate } = location.state || {}
 
   if (!orderId || !inviteUrl) {
     return (
@@ -18,7 +18,7 @@ export default function PaymentConfirmation() {
           <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
             <div className="flex items-center gap-2">
               <img src={logo} alt="Inviteque" className="h-6 w-auto" />
-              <span className="text-sm font-bold text-iqText">Payment Confirmation</span>
+              <span className="text-sm font-bold text-iqText">{isUpdate ? 'Update' : 'Payment'} Confirmation</span>
             </div>
           </div>
         </header>
@@ -55,7 +55,7 @@ export default function PaymentConfirmation() {
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-6 w-auto" />
-            <span className="text-sm font-bold text-iqText">Payment Confirmation</span>
+            <span className="text-sm font-bold text-iqText">{isUpdate ? 'Update' : 'Payment'} Confirmation</span>
           </div>
           <button
             onClick={() => navigate('/')}
@@ -109,9 +109,11 @@ export default function PaymentConfirmation() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-center space-y-2"
           >
-            <h1 className="text-3xl md:text-4xl font-bold text-iqText">Payment Successful!</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-iqText">
+              {isUpdate ? 'Invitation Updated!' : 'Payment Successful!'}
+            </h1>
             <p className="text-iqText/70">
-              Your invitation link is ready to share
+              {isUpdate ? 'Your changes have been saved' : 'Your invitation link is ready to share'}
             </p>
           </motion.div>
 

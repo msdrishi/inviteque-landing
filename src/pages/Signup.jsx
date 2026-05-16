@@ -12,14 +12,21 @@ export default function Signup() {
     phone: '',
     password: '',
   })
+  const [error, setError] = useState('')
   const { signup } = useAuth()
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Mock signup - Phone and Email will be used for notifications later
-    signup(formData)
-    navigate('/')
+    setError('')
+    
+    const result = await signup(formData.name, formData.email, formData.password, formData.phone)
+    
+    if (result.success) {
+      navigate('/')
+    } else {
+      setError(result.message)
+    }
   }
 
   const handleChange = (e) => {
@@ -54,6 +61,12 @@ export default function Signup() {
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-iqText">Create Account</h2>
           <p className="mt-2 text-sm text-iqText/50">Start crafting your cinematic invitations</p>
         </div>
+
+        {error && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-center text-sm font-medium text-red-600">
+            {error}
+          </div>
+        )}
 
         <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
           <div>

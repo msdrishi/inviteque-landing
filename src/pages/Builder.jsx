@@ -1,19 +1,45 @@
-import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import logo from '../assets/logo/logo-inviteque.png'
 import { useDraft } from '../context/DraftContext'
 import { templates } from '../templates/templates'
 
+// Function to format text to proper case (first letter capital, rest lowercase)
+function toProperCase(str) {
+  if (!str) return ''
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+}
+
+// Function to convert date input (YYYY-MM-DD) to day, month, year
+function parseDateInput(dateString) {
+  if (!dateString) return { day: '', month: '', year: '' }
+  const date = new Date(dateString)
+  if (isNaN(date)) return { day: '', month: '', year: '' }
+  
+  const day = String(date.getDate())
+  const month = date.toLocaleString('en-US', { month: 'long' })
+  const year = String(date.getFullYear())
+  return { day, month, year }
+}
+
+// Function to convert day, month, year to date input format (YYYY-MM-DD)
+function formatToDateInput(day, month, year) {
+  if (!day || !month || !year) return ''
+  const monthIndex = new Date(`${month} 1`).getMonth()
+  const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+  return dateStr
+}
+
 export default function Builder() {
   const { templateId } = useParams()
+  const [searchParams] = useSearchParams()
+  const editCode = searchParams.get('code')
   const navigate = useNavigate()
   const { draftData, updateDraft } = useDraft()
   const [step, setStep] = useState(1)
   const [showMapTooltip, setShowMapTooltip] = useState(false)
-
-  // Get template details
-  const template = templates.find(t => t.id === templateId)
+  const [loading, setLoading] = useState(!!editCode && !draftData.code)
 
   // Initialize with draft data
   const [formData, setFormData] = useState({
@@ -28,16 +54,75 @@ export default function Builder() {
     venueCity: draftData.venueCity || '',
     state: draftData.state || '',
     mapLink: draftData.mapLink || '',
-    showGallery: draftData.showGallery || false,
-    showSchedule: draftData.showSchedule || false,
+    showGallery: draftData.showGallery !== undefined ? draftData.showGallery : true,
+    showSchedule: draftData.showSchedule !== undefined ? draftData.showSchedule : true,
     photos: draftData.photos || [null, null, null],
     scheduleItems: draftData.scheduleItems || [
       { time: '11:00 AM', title: 'Haldi Ceremony' },
       { time: '04:00 PM', title: 'Wedding Vows' },
       { time: '07:00 PM', title: 'Grand Reception' }
-    ]
+    ],
+    code: draftData.code || editCode || null,
+    status: draftData.status || 'DRAFT',
+    amountPaid: draftData.amountPaid || 0
   })
+
+  useEffect(() => {
+    // If we have an editCode in the URL AND (we haven't loaded it yet OR it's different from what's in memory)
+    if (editCode && (draftData.code !== editCode)) {
+      setLoading(true)
+      // Fetch existing data for editing
+      fetch(`http://localhost:8080/api/invites/${editCode}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            const mappedData = {
+              groomName: data.coupleData?.groomName || '',
+              brideName: data.coupleData?.brideName || '',
+              weddingDate: data.heroData?.weddingDate || '',
+              weddingMonth: data.heroData?.weddingMonth || '',
+              weddingYear: data.heroData?.weddingYear || '',
+              mahalName: data.venueData?.mahalName || '',
+              venueAddress: data.venueData?.venueAddress || '',
+              venueCity: data.venueData?.venueCity || '',
+              state: data.venueData?.state || '',
+              mapLink: data.venueData?.mapLink || '',
+              showGallery: data.scheduleData?.showGallery !== undefined ? data.scheduleData?.showGallery : true,
+              showSchedule: data.scheduleData?.showSchedule !== undefined ? data.scheduleData?.showSchedule : true,
+              photos: data.storyData?.photos || [null, null, null],
+              scheduleItems: data.scheduleData?.items || [
+                { time: '11:00 AM', title: 'Haldi Ceremony' },
+                { time: '04:00 PM', title: 'Wedding Vows' },
+                { time: '07:00 PM', title: 'Grand Reception' }
+              ],
+              code: data.code,
+              status: data.status,
+              amountPaid: data.amountPaid || 0
+            }
+            setFormData(mappedData)
+            updateDraft(mappedData)
+          }
+          setLoading(false)
+        })
+        .catch(err => {
+          console.error('Error fetching invite for edit:', err)
+          setLoading(false)
+        })
+    }
+  }, [editCode, draftData.code, updateDraft])
+
   const [errors, setErrors] = useState({})
+
+  // Get template details
+  const template = templates.find(t => t.id === templateId)
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FDFCFB]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#D4AF37] border-t-transparent"></div>
+      </div>
+    )
+  }
 
   const validateStep1 = () => {
     const newErrors = {}
@@ -78,10 +163,29 @@ export default function Builder() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }))
+    let finalValue = type === 'checkbox' ? checked : value
+
+    // Apply proper case to couple names and venue names
+    if ((name === 'groomName' || name === 'brideName' || name === 'mahalName' || name === 'venueCity') && type !== 'checkbox') {
+      finalValue = toProperCase(value)
+    }
+
+    // Handle date input separately
+    if (name === 'weddingDateInput' && type !== 'checkbox') {
+      const { day, month, year } = parseDateInput(value)
+      setFormData(prev => ({
+        ...prev,
+        weddingDate: day,
+        weddingMonth: month,
+        weddingYear: year
+      }))
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: finalValue
+      }))
+    }
+
     // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors(prev => {
@@ -120,12 +224,19 @@ export default function Builder() {
     setFormData(prev => ({ ...prev, photos: newPhotos }))
   }
 
-  const nextStep = () => setStep(s => s + 1)
-  const prevStep = () => setStep(s => s - 1)
+  const nextStep = () => {
+    setStep(s => s + 1)
+    window.scrollTo(0, 0)
+  }
+  const prevStep = () => {
+    setStep(s => s - 1)
+    window.scrollTo(0, 0)
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
     updateDraft(formData)
+    window.scrollTo(0, 0)
     navigate(`/templates/${templateId}?preview=true`)
   }
 
@@ -196,49 +307,21 @@ export default function Builder() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">Day <span className="text-red-500">*</span></label>
-                    <input
-                      name="weddingDate"
-                      value={formData.weddingDate}
-                      onChange={handleChange}
-                      placeholder="18"
-                      className={`w-full rounded-xl border px-4 py-3 outline-none transition-colors ${errors.weddingDate
-                          ? 'border-red-500 bg-red-50 focus:border-red-500'
-                          : 'border-iqBorder bg-white focus:border-iqText'
-                        }`}
-                    />
-                    {errors.weddingDate && <p className="text-xs text-red-500">{errors.weddingDate}</p>}
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">Month <span className="text-red-500">*</span></label>
-                    <input
-                      name="weddingMonth"
-                      value={formData.weddingMonth}
-                      onChange={handleChange}
-                      placeholder="August"
-                      className={`w-full rounded-xl border px-4 py-3 outline-none transition-colors ${errors.weddingMonth
-                          ? 'border-red-500 bg-red-50 focus:border-red-500'
-                          : 'border-iqBorder bg-white focus:border-iqText'
-                        }`}
-                    />
-                    {errors.weddingMonth && <p className="text-xs text-red-500">{errors.weddingMonth}</p>}
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">Year <span className="text-red-500">*</span></label>
-                    <input
-                      name="weddingYear"
-                      value={formData.weddingYear}
-                      onChange={handleChange}
-                      placeholder="2026"
-                      className={`w-full rounded-xl border px-4 py-3 outline-none transition-colors ${errors.weddingYear
-                          ? 'border-red-500 bg-red-50 focus:border-red-500'
-                          : 'border-iqBorder bg-white focus:border-iqText'
-                        }`}
-                    />
-                    {errors.weddingYear && <p className="text-xs text-red-500">{errors.weddingYear}</p>}
-                  </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-wider opacity-50">Wedding Date <span className="text-red-500">*</span></label>
+                  <input
+                    type="date"
+                    name="weddingDateInput"
+                    value={formatToDateInput(formData.weddingDate, formData.weddingMonth, formData.weddingYear)}
+                    onChange={handleChange}
+                    className={`w-full rounded-xl border px-4 py-3 outline-none transition-colors text-sm ${errors.weddingDate || errors.weddingMonth || errors.weddingYear
+                        ? 'border-red-500 bg-red-50 focus:border-red-500'
+                        : 'border-iqBorder bg-white focus:border-iqText'
+                      }`}
+                  />
+                  {(errors.weddingDate || errors.weddingMonth || errors.weddingYear) && (
+                    <p className="text-xs text-red-500">Please select a valid wedding date</p>
+                  )}
                 </div>
 
                 <div className="space-y-4">

@@ -147,7 +147,7 @@ export default function Footer({ data }) {
         }}
       >
 
-        {/* "Crafted with love by" */}
+        {/* Crafted by */}
         <motion.p
           variants={fadeUp}
           style={{
@@ -160,13 +160,13 @@ export default function Footer({ data }) {
             marginBottom: 6,
           }}
         >
-          Crafted with love by
+          Crafted by
         </motion.p>
 
         {/* Brand name — Parisienne script + heart swash */}
         <motion.div
           variants={fadeUp}
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginBottom: 12 }}
+          style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 }}
         >
           <img
             src={logo}
@@ -179,7 +179,7 @@ export default function Footer({ data }) {
           <span
             style={{
               fontFamily: "'Parisienne', cursive",
-              fontSize: 'clamp(34px, 9vw, 50px)',
+              fontSize: 'clamp(35px, 10vw, 40px)',
               fontWeight: 400,
               color: '#7B1E2B',
               lineHeight: 1,
@@ -199,7 +199,7 @@ export default function Footer({ data }) {
             fontSize: 'clamp(9.5px, 2.8vw, 12px)',
             color: 'rgba(123, 30, 43, 0.7)',
             lineHeight: 1.6,
-            marginBottom: 18,
+            marginBottom: 14,
             maxWidth: 260,
           }}
         >
@@ -213,14 +213,8 @@ export default function Footer({ data }) {
           variants={fadeUp}
           style={{ display: 'flex', gap: 14, justifyContent: 'center', marginBottom: 16 }}
         >
-          <SocialIcon href="https://inviteque.com" label="Website">
-            <GlobeIcon />
-          </SocialIcon>
           <SocialIcon href="https://instagram.com/inviteque" label="Instagram">
             <InstagramIcon />
-          </SocialIcon>
-          <SocialIcon href="https://facebook.com/inviteque" label="Facebook">
-            <FacebookIcon />
           </SocialIcon>
           <SocialIcon href="https://wa.me/inviteque" label="WhatsApp">
             <WhatsAppIcon />
@@ -240,7 +234,7 @@ export default function Footer({ data }) {
             letterSpacing: '0.06em',
             color: 'rgba(123, 30, 43, 0.7)',
             textDecoration: 'none',
-            marginBottom: 20,
+            marginBottom: 0,
           }}
         >
           www.inviteque.com

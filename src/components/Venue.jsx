@@ -62,8 +62,8 @@ export default function Venue({ data }) {
   const venueTitleBase = data.venueName ? String(data.venueName).trim() : ''
   const venueTitle = (venueTitleBase
     ? `${venueTitleBase}${venueCityPart ? `, ${venueCityPart}` : ''}`
-    : 'PALACE GROUNDS'
-  ).toUpperCase()
+    : 'Palace Ground'
+  )
 
   // Strip the venue name from the full address so it doesn't repeat
   let addressTextPretty = addressTextRaw
@@ -155,7 +155,7 @@ export default function Venue({ data }) {
         whileInView="show"
         viewport={viewport}
         variants={fadeUp}
-        transition={{ duration: 0.65, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.8, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
         className="flex items-center justify-center gap-3 relative z-10"
         style={{ marginBottom: '16px' }}
       >
@@ -169,7 +169,7 @@ export default function Venue({ data }) {
         whileInView="show"
         viewport={viewport}
         variants={fadeUp}
-        transition={{ duration: 0.7, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.85, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         className="font-semibold relative z-10"
         style={{
           fontFamily: "'Cinzel', serif",
@@ -189,7 +189,7 @@ export default function Venue({ data }) {
         whileInView="show"
         viewport={viewport}
         variants={fadeUp}
-        transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.85, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
         className="flex flex-col items-center text-center relative z-10"
         style={{
           width: '100%',
@@ -246,7 +246,7 @@ export default function Venue({ data }) {
           whileInView="show"
           viewport={viewport}
           variants={fadeUp}
-          transition={{ duration: 0.75, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.9, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
           style={{
             position: 'relative',
             marginTop: '26px',
@@ -256,6 +256,10 @@ export default function Venue({ data }) {
             boxShadow: '0 22px 46px rgba(109,18,32,0.12), 0 8px 16px rgba(216,178,110,0.22), inset 0 1px 0 rgba(255,255,255,0.85)',
             padding: '16px',
             zIndex: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '14px',
           }}
         >
           <svg
@@ -285,11 +289,47 @@ export default function Venue({ data }) {
               backgroundColor: '#FFF7F2',
               padding: '10px',
               boxShadow: '0 10px 24px rgba(109,18,32,0.1)',
+              position: 'relative',
+              zIndex: 2,
             }}
             loading="lazy"
             decoding="async"
             referrerPolicy="no-referrer"
           />
+          <a
+            href={String(data.mapUrl)}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              padding: '8px 16px',
+              borderRadius: '20px',
+              background: 'rgba(123, 30, 43, 0.1)',
+              border: '1px solid rgba(123, 30, 43, 0.25)',
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: '12px',
+              fontWeight: 600,
+              color: '#7B1E2B',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              position: 'relative',
+              zIndex: 2,
+              cursor: 'pointer',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'rgba(123, 30, 43, 0.15)'
+              e.currentTarget.style.borderColor = 'rgba(123, 30, 43, 0.4)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'rgba(123, 30, 43, 0.1)'
+              e.currentTarget.style.borderColor = 'rgba(123, 30, 43, 0.25)'
+            }}
+          >
+            📍 Open in Maps
+          </a>
         </motion.div>
       )}
 

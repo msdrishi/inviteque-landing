@@ -8,17 +8,18 @@ import { useAuth } from '../context/AuthContext'
 import MobileNav from '../components/MobileNav'
 
 const templateCardPop = {
-  hidden: { opacity: 0, y: 16, scale: 0.98 },
-  show: {
+  hidden: { opacity: 0, y: 18, scale: 0.96 },
+  show: (index = 0) => ({
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
       type: 'tween',
-      duration: 0.75,
+      duration: 0.7,
       ease: [0.22, 1, 0.36, 1],
+      delay: index * 0.09,
     },
-  },
+  }),
 }
 
 function InfiniteCarouselCard({ t, i, total }) {
@@ -82,15 +83,13 @@ function InfiniteCarouselCard({ t, i, total }) {
       className="absolute left-1/2 top-[40%] -ml-[100px] -mt-[120px] w-[200px] md:-ml-[140px] md:-mt-[210px] md:w-[280px]"
       style={{ x, z, rotateY, scale, opacity, zIndex, transformStyle: 'preserve-3d', willChange: 'transform' }}
     >
-      <article className="group relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] border border-iqBorder/30 bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3),0_30px_60px_-30px_rgba(0,0,0,0.3)] transition-all duration-500 hover:-translate-y-6 hover:shadow-[0_70px_120px_-20px_rgba(0,0,0,0.4)]">
+      <article className="relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] border border-iqBorder/30 bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3),0_30px_60px_-30px_rgba(0,0,0,0.3)]">
         <img
           src={t.thumbnail}
           alt={t.name}
           className="aspect-[3/4.5] w-full object-cover"
           loading="lazy"
         />
-        {/* Clean, subtle glossy reflection */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-white/30 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
       </article>
     </motion.div>
   )
@@ -208,19 +207,35 @@ export default function Landing() {
 
           <div className="hidden md:flex items-center gap-4">
             {user ? (
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-bold text-iqText">Hi, {user.name}</span>
+              <div className="flex items-center gap-3 rounded-full border border-iqBorder bg-iqBg/50 px-4 py-1.5 shadow-sm">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-iqText text-[10px] font-bold text-white">
+                  {user.name.split(' ').map(n => n[0]).join('')}
+                </div>
+                <span className="text-sm font-bold text-iqText">{user.name}</span>
+                <div className="h-4 w-[1px] bg-iqBorder mx-1" />
+                <Link 
+                  to="/account"
+                  className="text-xs font-bold text-iqText hover:text-iqAccent transition-colors"
+                >
+                  Account
+                </Link>
+                <div className="h-4 w-[1px] bg-iqBorder mx-1" />
                 <button 
                   onClick={logout}
-                  className="text-sm font-semibold text-iqText/50 hover:text-iqText transition-colors"
+                  className="text-xs font-bold text-red-500 hover:text-red-600 transition-colors"
                 >
-                  Log Out
+                  Logout
                 </button>
               </div>
             ) : (
-              <Link to="/login" className="text-sm font-semibold text-iqText/70 hover:text-iqText">
-                Log In
-              </Link>
+              <div className="flex items-center gap-4">
+                <Link to="/login" className="text-sm font-semibold text-iqText/70 hover:text-iqText">
+                  Log In
+                </Link>
+                <Link to="/signup" className="rounded-full bg-black px-5 py-2 text-sm font-bold text-white transition hover:bg-black/90 shadow-lg">
+                  Sign Up
+                </Link>
+              </div>
             )}
           </div>
 
@@ -296,14 +311,15 @@ export default function Landing() {
           </motion.div>
 
           <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
-            {visibleTemplates.map((t) => (
+            {visibleTemplates.map((t, index) => (
               <motion.article
                 key={t.id}
                 variants={templateCardPop}
+                custom={index}
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.3 }}
-                className="overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury transition hover:scale-[1.01]"
+                className="overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury"
               >
                 <div className="relative">
                   <Link to={t.available ? t.href : '#templates'} className="block">
@@ -496,6 +512,53 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* 4b) Why Digital Invites */}
+      <section className="border-t border-iqBorder">
+        <div className="mx-auto w-full max-w-6xl px-5 py-14 md:py-16">
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            className="mx-auto max-w-3xl text-center"
+          >
+            <motion.div variants={fadeUp}>
+              <SectionLabel>Why Choose Digital</SectionLabel>
+            </motion.div>
+            <motion.h2 variants={fadeUp} className="mt-6 text-3xl font-bold md:text-4xl">
+              Modern Invitations for Modern Couples
+            </motion.h2>
+            <motion.p variants={fadeUp} className="mt-4 text-sm text-iqText/70 md:text-base">
+              No printing delays, no reprint costs, no updates hassle. Share a beautiful link instantly.
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
+          >
+            {[
+              { icon: '⚡', title: 'Instant Publishing', desc: 'Go live in minutes. Share your link immediately.' },
+              { icon: '💰', title: 'Affordable', desc: 'Premium templates at a fraction of traditional printing costs.' },
+              { icon: '🔄', title: 'Easy Updates', desc: 'Change dates, venue, or schedule anytime—instantly visible to guests.' },
+            ].map((item) => (
+              <motion.article
+                key={item.title}
+                variants={fadeUp}
+                className="rounded-card border border-iqBorder bg-white p-8 shadow-luxury text-center"
+              >
+                <p className="text-5xl mb-4">{item.icon}</p>
+                <h3 className="text-lg font-bold text-iqText mb-3">{item.title}</h3>
+                <p className="text-sm text-iqText/70">{item.desc}</p>
+              </motion.article>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
       {/* 5) Pricing */}
       <section id="pricing" className="border-t border-iqBorder bg-white">
         <div className="mx-auto w-full max-w-6xl px-5 py-20 md:py-24">
@@ -525,24 +588,24 @@ export default function Landing() {
               viewport={viewportOnce}
               className="w-full max-w-md rounded-[2.5rem] border border-iqBorder bg-white p-8 md:p-12 shadow-luxury text-center"
             >
-              <h3 className="text-lg font-bold uppercase tracking-widest text-iqText/50">Premium Plan</h3>
+              <h3 className="text-lg font-bold uppercase tracking-widest text-iqText/50">Template Pricing</h3>
               <div className="mt-6 flex items-baseline justify-center gap-1">
                 <span className="text-6xl font-extrabold text-iqText">₹999</span>
-                <span className="text-lg font-medium text-iqText/40">/event</span>
+                <span className="text-lg font-medium text-iqText/40">per template</span>
               </div>
               <p className="mt-6 text-sm font-medium text-iqText/60">
-                Everything you need to invite your guests in style.
+                Everything you need to create a stunning wedding invite website.
               </p>
               
               <div className="mt-10 space-y-4 border-y border-iqBorder py-8 text-left">
                 {[
                   'Premium Wedding Template',
                   'Custom URL / Name Link',
-                  'Unlimited RSVP Management',
                   'Interactive Google Maps Venue',
                   'Cinematic Love Story Timeline',
                   'High-Res Photo Gallery',
-                  '1 Year Hosting Included',
+                  'RSVP Management',
+                  '6 Months Validity & Hosting',
                 ].map((feature) => (
                   <div key={feature} className="flex items-center gap-3 text-sm font-semibold text-iqText/80">
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] text-white">✓</span>
@@ -713,25 +776,17 @@ export default function Landing() {
                 variants={fadeUp}
                 className="text-[10px] font-medium uppercase tracking-[0.22em] text-[#FFF6F0]/60"
               >
-                Crafted with love by
+                Crafted by
               </motion.p>
               <motion.div
                 variants={fadeUp}
-                className="mt-2 flex items-center gap-3"
+                className="mt-3"
               >
-                <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                  <img src={logo} alt="Inviteque" className="h-9 w-auto" loading="lazy" />
+                <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity md:items-start">
+                  <img src={logo} alt="Inviteque" className="h-14 w-auto" loading="lazy" />
                   <span className="font-pinyon text-5xl font-normal text-[#FFF6F0] md:text-6xl">
                     Inviteque
                   </span>
-                  <svg viewBox="0 0 28 26" className="h-6 w-auto flex-shrink-0 fill-none" aria-hidden="true">
-                    <path
-                      d="M14 23S3 15.5 3 8.5A5.5 5.5 0 0114 5.8 5.5 5.5 0 0125 8.5C25 15.5 14 23 14 23z"
-                      stroke="#C4974A"
-                      strokeWidth="1.4"
-                      fill="rgba(196,151,74,0.18)"
-                    />
-                  </svg>
                 </Link>
               </motion.div>
               <motion.p
@@ -744,6 +799,20 @@ export default function Landing() {
 
             {/* Nav & Socials */}
             <div className="flex flex-col items-center md:items-end">
+              <motion.p
+                variants={fadeUp}
+                className="mb-4 text-center text-sm text-[#FFF6F0]/70 md:text-right"
+              >
+                <span className="block text-[12px] font-semibold tracking-normal text-[#FFF6F0]/65">
+                  Support
+                </span>
+                <a
+                  href="mailto:inviteque.support@gmail.com"
+                  className="mt-1 inline-block font-semibold text-[#FFF6F0]/90 hover:text-white transition-colors"
+                >
+                  inviteque.support@gmail.com
+                </a>
+              </motion.p>
               <motion.div
                 variants={fadeUp}
                 className="flex items-center gap-4"

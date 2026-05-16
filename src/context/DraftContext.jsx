@@ -4,19 +4,27 @@ const DraftContext = createContext()
 
 export function DraftProvider({ children }) {
   const [draftData, setDraftData] = useState({
-    groomName: 'Groom',
-    brideName: 'Bride',
-    weddingDate: '18',
-    weddingMonth: 'August',
-    weddingYear: '2026',
-    venueAddress: 'Palace Grounds',
-    venueCity: 'Bangalore',
+    groomName: '',
+    brideName: '',
+    weddingDate: '',
+    weddingMonth: '',
+    weddingYear: '',
+    mahalName: '',
+    venueAddress: '',
+    venueCity: '',
+    state: '',
     mapLink: '',
     showGallery: true,
     showSchedule: true,
-    showStory: true,
-    photos: [],
-    theme: 'auraofelegance'
+    photos: [null, null, null],
+    scheduleItems: [
+      { time: '11:00 AM', title: 'Haldi Ceremony' },
+      { time: '04:00 PM', title: 'Wedding Vows' },
+      { time: '07:00 PM', title: 'Grand Reception' }
+    ],
+    code: null,
+    status: 'DRAFT',
+    amountPaid: 0
   })
 
   const updateDraft = (newData) => {

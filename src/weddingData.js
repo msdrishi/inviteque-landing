@@ -149,7 +149,7 @@ export const weddingData = {
   },
   countdown: {
     id: 'countdown',
-    title: 'Countdown',
+    headerTop: 'COUNTING DOWN TO',
     // Example format: 2026-08-18T00:00:00.000Z
     // We can parse it from inviteData.couple.weddingDate
     targetDateTimeISO: new Date(getWeddingDateLine(inviteData) || '2026-08-18').toISOString(),

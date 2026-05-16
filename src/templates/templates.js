@@ -13,12 +13,12 @@ import t12 from '../assets/themes/template-12.png'
 
 export const templates = [
   {
-    id: 'template-1',
+    id: 'aura-of-elegance',
     name: 'Aura of Elegance',
     description: 'A timeless masterpiece designed for those who appreciate the finer details of a grand celebration.',
     priceLabel: '₹999',
     thumbnail: t1,
-    href: '/templates/template-1',
+    href: '/templates/aura-of-elegance',
     available: true,
     popular: true,
   },
