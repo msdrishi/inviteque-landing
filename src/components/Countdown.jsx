@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import countdownBg from '../assets/backgrounds/countdown_bg.png'
+const countdownBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029546/jm1zlmjcwdjwvxkbjts7.png"
 
 function clampToZero(value) {
   return value < 0 ? 0 : value

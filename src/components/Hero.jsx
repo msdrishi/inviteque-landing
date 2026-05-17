@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import heroBg from '../assets/hero_bg.png'
-import petalImg from '../assets/texture/rose-petal.png'
+const heroBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029561/q3tbvdnxgw47uylaqzau.png"
+const petalImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029563/kozuh0rafoxa9zwysfjq.png"
 
 /* ─────────────────────────────────────────
    Animation variants

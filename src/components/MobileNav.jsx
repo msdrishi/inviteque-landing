@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
-import logo from '../assets/logo/logo-inviteque.png'
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)

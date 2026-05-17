@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import logo from '../assets/logo/logo-inviteque.png'
+const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
 
 /* ── Animation helpers ── */
 const stagger = {

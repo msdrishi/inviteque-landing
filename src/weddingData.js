@@ -1,11 +1,11 @@
 import inviteData from './inviteData.json'
-import envelope from './assets/illustrations/envelope.svg'
-import heroArch from './assets/illustrations/hero-arch.svg'
-import heroBg from './assets/hero_bg.png'
-import photo1 from './assets/story/story-1.png'
-import photo2 from './assets/story/story-2.png'
-import photo3 from './assets/story/story-3.png'
-import locationImg from './assets/place/location.png'
+const envelope = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029552/u90wg04k2iayizmwvtte.svg"
+const heroArch = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029553/gq0yqjoacg5kck3peetf.svg"
+const heroBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029561/q3tbvdnxgw47uylaqzau.png"
+const photo1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029555/yrekh9qkgebpcds6dplq.png"
+const photo2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029557/lly3pbmivrtjn203eclo.png"
+const photo3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029558/enoivgqhs1oi2bxery8n.png"
+const locationImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png"
 
 function parseWeddingDate(dateString) {
   const tokens = String(dateString || '').trim().split(/\s+/)

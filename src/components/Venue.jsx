@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { fadeUp } from '../motionVariants.js'
-import locationImg from '../assets/place/location.png'
+const locationImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png"
 
 const letterContainer = {
   hidden: { opacity: 0 },

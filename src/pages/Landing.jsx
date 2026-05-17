@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, useTime, useTransform } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
-import logo from '../assets/logo/logo-inviteque.png'
+const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
 import { templates } from '../templates/templates.js'
 import { fadeUp, staggerChildren, viewportOnce } from '../motionVariants.js'
 import { useAuth } from '../context/AuthContext'

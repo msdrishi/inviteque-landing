@@ -1,15 +1,16 @@
-import t1 from '../assets/themes/template-1.png'
-import t2 from '../assets/themes/template-2.png'
-import t3 from '../assets/themes/template-3.png'
-import t4 from '../assets/themes/template-4.png'
-import t5 from '../assets/themes/template-5.png'
-import t6 from '../assets/themes/template-6.png'
-import t7 from '../assets/themes/template-7.png'
-import t8 from '../assets/themes/template-8.png'
-import t9 from '../assets/themes/template-9.png'
-import t10 from '../assets/themes/template-10.png'
-import t11 from '../assets/themes/template-11.png'
-import t12 from '../assets/themes/template-12.png'
+const t1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029514/enlgamenyitexgthsrho.png"
+const t2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029517/oyvug1zdtfqcowqhg1lc.png"
+const t3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029520/hu6rkuupsgksd1hpoxh5.png"
+const t4 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029524/irbjnckwzonwup31ghgk.png"
+const t5 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029527/qohln0n2037rsomimses.png"
+const t6 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029529/vojyj7iyb499khyzyifk.png"
+const t7 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029532/luoqpfjvezbocqwaujsg.png"
+const t8 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029535/uqbhl1ku84qaqmxyghcx.png"
+const t9 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029538/hgxhgqli7nqazgx80owh.png"
+const t10 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029539/dgzy5xlayb0xiuqkkzcl.png"
+const t11 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029541/qrumeo4ulyyxazwsuwps.png"
+const t12 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029543/bhz6qhbot6cq3eaiqjc5.png"
+
 
 export const templates = [
   {

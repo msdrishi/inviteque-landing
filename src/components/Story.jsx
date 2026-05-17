@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import texturePink from '../assets/backgrounds/texture_pink.png'
+const texturePink = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png"
 
 const letterContainer = {
   hidden: { opacity: 0 },
