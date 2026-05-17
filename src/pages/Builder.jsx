@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import logo from '../assets/logo/logo-inviteque.png'
 import { useDraft } from '../context/DraftContext'
 import { templates } from '../templates/templates'
+import { uploadToCloudinary } from '../utils/cloudinary'
+
 
 // Function to format text to proper case (first letter capital, rest lowercase)
 function toProperCase(str) {
@@ -112,6 +114,7 @@ export default function Builder() {
   }, [editCode, draftData.code, updateDraft])
 
   const [errors, setErrors] = useState({})
+  const [uploadingPhotos, setUploadingPhotos] = useState({ 0: false, 1: false, 2: false })
 
   // Get template details
   const template = templates.find(t => t.id === templateId)
@@ -132,7 +135,7 @@ export default function Builder() {
     if (!formData.weddingDate?.trim()) newErrors.weddingDate = 'Day is required'
     if (!formData.weddingMonth?.trim()) newErrors.weddingMonth = 'Month is required'
     if (!formData.weddingYear?.trim()) newErrors.weddingYear = 'Year is required'
-    if (!formData.mahalName?.trim()) newErrors.mahalName = 'Mahal name is required'
+    if (!formData.mahalName?.trim()) newErrors.mahalName = 'Place of wedding is required'
     if (!formData.venueAddress?.trim()) newErrors.venueAddress = 'Venue address is required'
     if (!formData.state?.trim()) newErrors.state = 'State is required'
     if (!formData.mapLink?.trim()) newErrors.mapLink = 'Google Maps link is required'
@@ -148,16 +151,29 @@ export default function Builder() {
     nextStep()
   }
 
-  const handleFileChange = (index, e) => {
+  const handleFileChange = async (index, e) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
+    if (!file) return
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File size must be less than 10MB')
+      return
+    }
+
+    setUploadingPhotos(prev => ({ ...prev, [index]: true }))
+
+    try {
+      const result = await uploadToCloudinary(file)
+      if (result && result.url) {
         const newPhotos = [...(formData.photos || [null, null, null])]
-        newPhotos[index] = event.target?.result
+        newPhotos[index] = result.url
         setFormData(prev => ({ ...prev, photos: newPhotos }))
       }
-      reader.readAsDataURL(file)
+    } catch (err) {
+      console.error('Error uploading photo:', err)
+      alert('Failed to upload image. Please try again.')
+    } finally {
+      setUploadingPhotos(prev => ({ ...prev, [index]: false }))
     }
   }
 
@@ -165,8 +181,8 @@ export default function Builder() {
     const { name, value, type, checked } = e.target
     let finalValue = type === 'checkbox' ? checked : value
 
-    // Apply proper case to couple names and venue names
-    if ((name === 'groomName' || name === 'brideName' || name === 'mahalName' || name === 'venueCity') && type !== 'checkbox') {
+    // Apply proper case to couple names
+    if ((name === 'groomName' || name === 'brideName') && type !== 'checkbox') {
       finalValue = toProperCase(value)
     }
 
@@ -326,12 +342,12 @@ export default function Builder() {
 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">Name of Mahal <span className="text-red-500">*</span></label>
+                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">Place of Wedding <span className="text-red-500">*</span></label>
                     <input
                       name="mahalName"
                       value={formData.mahalName}
                       onChange={handleChange}
-                      placeholder="Enter the Mahal name"
+                      placeholder="Enter place of wedding"
                       className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.mahalName
                           ? 'border-red-500 bg-red-50 focus:border-red-500'
                           : 'border-iqBorder bg-white focus:border-iqText'
@@ -484,7 +500,12 @@ export default function Builder() {
                           {[0, 1, 2].map(i => (
                             <div key={i} className="group relative aspect-square">
                               <label className="cursor-pointer overflow-hidden rounded-xl border border-iqBorder bg-white transition-all hover:border-iqText h-full w-full flex">
-                                {formData.photos?.[i] ? (
+                                {uploadingPhotos[i] ? (
+                                  <div className="flex h-full w-full flex-col items-center justify-center bg-iqBg text-iqText/40">
+                                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-iqText/25 border-t-iqText"></div>
+                                    <span className="text-[10px] mt-2 font-bold tracking-tight">Uploading...</span>
+                                  </div>
+                                ) : formData.photos?.[i] ? (
                                   <img src={formData.photos[i]} alt={`photo-${i}`} className="h-full w-full object-cover" />
                                 ) : (
                                   <div className="flex h-full w-full items-center justify-center text-iqText/20 transition-colors group-hover:text-iqText">

@@ -6,6 +6,7 @@ import { templates } from '../templates/templates.js'
 import { fadeUp, staggerChildren, viewportOnce } from '../motionVariants.js'
 import { useAuth } from '../context/AuthContext'
 import MobileNav from '../components/MobileNav'
+import { LazyImage } from '../components/LazyImage'
 
 const templateCardPop = {
   hidden: { opacity: 0, y: 18, scale: 0.96 },
@@ -84,11 +85,10 @@ function InfiniteCarouselCard({ t, i, total }) {
       style={{ x, z, rotateY, scale, opacity, zIndex, transformStyle: 'preserve-3d', willChange: 'transform' }}
     >
       <article className="relative overflow-hidden rounded-[1.5rem] md:rounded-[2rem] border border-iqBorder/30 bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3),0_30px_60px_-30px_rgba(0,0,0,0.3)]">
-        <img
+        <LazyImage
           src={t.thumbnail}
           alt={t.name}
           className="aspect-[3/4.5] w-full object-cover"
-          loading="lazy"
         />
       </article>
     </motion.div>
@@ -323,11 +323,10 @@ export default function Landing() {
               >
                 <div className="relative">
                   <Link to={t.available ? t.href : '#templates'} className="block">
-                    <img
+                    <LazyImage
                       src={t.thumbnail}
                       alt={t.name}
                       className="aspect-[3/4] w-full object-cover"
-                      loading="lazy"
                     />
                   </Link>
                   <div className="absolute left-4 top-4 flex items-center gap-2">
@@ -682,7 +681,7 @@ export default function Landing() {
                   key={t.name}
                   className="relative w-[280px] flex-none snap-start overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury"
                 >
-                  <img src={t.img} alt={t.name} className="h-[210px] w-full object-cover" loading="lazy" />
+                  <LazyImage src={t.img} alt={t.name} className="h-[210px] w-full object-cover" />
                   <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-iqText/30 to-transparent" />
                   <div className="px-5 py-5">
                     <p className="text-sm text-iqText/80">{t.text}</p>
