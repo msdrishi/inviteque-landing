@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext'
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
 import { fadeUp } from '../motionVariants'
 const themeImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029551/j3pvwk2eiuvbrxt0m39d.png"
+import { API_URL } from '../config'
 
 export default function InviteDetails() {
   const { code } = useParams()
@@ -22,7 +23,7 @@ export default function InviteDetails() {
 
     const fetchInvite = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/invites/${code}`, {
+        const response = await fetch(`${API_URL}/api/invites/${code}`, {
           headers: {
             'Authorization': `Bearer ${user.token}`
           }

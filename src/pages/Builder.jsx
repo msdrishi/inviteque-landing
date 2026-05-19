@@ -5,6 +5,7 @@ import logo from '../assets/logo/logo-inviteque.png'
 import { useDraft } from '../context/DraftContext'
 import { templates } from '../templates/templates'
 import { uploadToCloudinary } from '../utils/cloudinary'
+import { API_URL } from '../config'
 
 
 // Function to format text to proper case (first letter capital, rest lowercase)
@@ -74,7 +75,7 @@ export default function Builder() {
     if (editCode && (draftData.code !== editCode)) {
       setLoading(true)
       // Fetch existing data for editing
-      fetch(`http://localhost:8080/api/invites/${editCode}`)
+      fetch(`${API_URL}/api/invites/${editCode}`)
         .then(res => res.json())
         .then(data => {
           if (data) {

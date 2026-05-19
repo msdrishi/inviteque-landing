@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Navigate, useParams, useNavigate } from 'react-router-dom'
 import TemplateRoyalWedding from './TemplateRoyalWedding.jsx'
 import logo from '../assets/logo/logo-inviteque.png'
+import { API_URL } from '../config'
 
 const TEMPLATE_MAP = {
   'royal-wedding': TemplateRoyalWedding,
@@ -17,7 +18,7 @@ export default function TemplateRoute() {
 
   useEffect(() => {
     if (code) {
-      fetch(`http://localhost:8080/api/invites/${code}`)
+      fetch(`${API_URL}/api/invites/${code}`)
         .then(res => {
           if (!res.ok) {
             navigate('/', { replace: true })

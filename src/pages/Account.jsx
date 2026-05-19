@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/logo/logo-inviteque.png'
 import { fadeUp, staggerChildren } from '../motionVariants'
+import { API_URL } from '../config'
 
 export default function Account() {
   const { user, logout } = useAuth()
@@ -19,7 +20,7 @@ export default function Account() {
 
     const fetchInvites = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/invites/my', {
+        const response = await fetch(`${API_URL}/api/invites/my`, {
           headers: {
             'Authorization': `Bearer ${user.token}`
           }
