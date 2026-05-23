@@ -24,7 +24,8 @@ export default function LoginSuccess() {
     } else {
       window.location.href = '/login'
     }
-  }, [searchParams, loginWithData])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return null // No UI needed as the redirect is instant
 }
