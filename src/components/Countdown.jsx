@@ -72,7 +72,7 @@ export default function Countdown({ data }) {
       <div className="absolute inset-0 z-10">
         <div className="relative h-full w-full">
           {/* 'COUNTING DOWN TO' (top area) */}
-          <div className="absolute inset-x-0 top-[10%] flex justify-center px-14">
+          <div className="absolute inset-x-0 top-[10%] flex justify-center px-4 md:px-14">
             <motion.div className="w-full max-w-[420px] text-center">
               {/* COUNTING DOWN */}
               <div className="flex justify-center h-8">
@@ -88,7 +88,7 @@ export default function Countdown({ data }) {
                         ease: [0.22, 1, 0.36, 1],
                         delay: idx * 0.08,
                       }}
-                      className="inline-block text-[16px] font-bold uppercase tracking-[0.34em] text-primary/80"
+                      className="inline-block text-[12px] md:text-[16px] font-bold uppercase tracking-[0.26em] md:tracking-[0.34em] text-primary/80"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       {letter === ' ' ? '\u00A0' : letter}
@@ -110,7 +110,7 @@ export default function Countdown({ data }) {
                         ease: [0.22, 1, 0.36, 1],
                         delay: 'COUNTING DOWN'.length * 0.08 + idx * 0.08,
                       }}
-                      className="inline-block text-[16px] font-bold uppercase tracking-[0.34em] text-primary/80"
+                      className="inline-block text-[12px] md:text-[16px] font-bold uppercase tracking-[0.26em] md:tracking-[0.34em] text-primary/80"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
                       {letter}
@@ -123,7 +123,7 @@ export default function Countdown({ data }) {
 
           {/* Counter numbers (centered) */}
           <div
-            className="absolute inset-x-0 top-[52%] flex justify-center px-10"
+            className="absolute inset-x-0 top-[52%] flex justify-center px-4 md:px-10"
             style={{ transform: 'translateY(-65%)' }}
           >
             <motion.div
@@ -137,10 +137,10 @@ export default function Countdown({ data }) {
                 {boxes.map((box, idx) => (
                   <div
                     key={box.key}
-                    className={`px-3 py-6 text-center ${idx === 0 ? '' : 'border-l border-primary/25'}`}
+                    className={`px-1 sm:px-3 py-6 text-center ${idx === 0 ? '' : 'border-l border-primary/25'}`}
                   >
                     <div
-                      className="text-[32px] font-semibold leading-none text-primary/80"
+                      className="text-[24px] md:text-[30px] font-semibold leading-none text-primary/80"
                       style={{ fontFamily: "'Cinzel', serif", fontWeight: 650 }}
                     >
                       {box.key === 'days' ? String(box.value) : String(box.value).padStart(2, '0')}

@@ -783,7 +783,7 @@ export default function Landing() {
               >
                 <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity md:items-start">
                   <img src={logo} alt="Inviteque" className="h-14 w-auto" loading="lazy" />
-                  <span className="font-pinyon text-5xl font-normal text-[#FFF6F0] md:text-6xl">
+                  <span className="font-parisienne text-5xl font-normal text-[#FFF6F0] md:text-6xl">
                     Inviteque
                   </span>
                 </Link>

@@ -28,6 +28,7 @@ export default {
         cormorant: ['"Cormorant Garamond"', 'serif'],
         dancing: ['"Dancing Script"', 'cursive'],
         pinyon: ['"Pinyon Script"', 'cursive'],
+        parisienne: ['"Parisienne"', 'cursive'],
         montserrat: ['"Montserrat"', 'sans-serif'],
         'alex-brush': ['"Alex Brush"', 'cursive'],
       },
