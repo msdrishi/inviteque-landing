@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDraft } from '../context/DraftContext.jsx'
 import Countdown from '../components/Countdown.jsx'
@@ -27,20 +28,20 @@ export default function TemplateRoyalWedding({ savedData }) {
     ...staticData,
     hero: {
       ...staticData.hero,
-      names: savedData 
+      names: savedData
         ? `${savedData.coupleData.groomName} & ${savedData.coupleData.brideName}`
         : `${draftData.groomName} & ${draftData.brideName}`,
       groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
       brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
-      dateLine: savedData 
+      dateLine: savedData
         ? `${savedData.heroData.weddingDate} ${savedData.heroData.weddingMonth} ${savedData.heroData.weddingYear}`
         : `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear}`,
       venueName: (savedData ? savedData.venueData.mahalName : draftData.mahalName) || '',
       venueCity: (savedData ? savedData.venueData.venueCity : draftData.venueCity) || '',
-      addressParts: savedData 
+      addressParts: savedData
         ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean)
         : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean),
-      fullAddress: savedData 
+      fullAddress: savedData
         ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean).join(', ')
         : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
       mapUrl: savedData ? savedData.venueData.mapLink : draftData.mapLink,
@@ -76,20 +77,20 @@ export default function TemplateRoyalWedding({ savedData }) {
     story: {
       ...staticData.story,
       items: (() => {
-        const photos = savedData 
-          ? (savedData.storyData?.photos || []) 
+        const photos = savedData
+          ? (savedData.storyData?.photos || [])
           : (draftData.photos || [])
         const activePhotos = photos.filter(Boolean)
-        return activePhotos.length > 0 
-          ? activePhotos.map(p => ({ image: p })) 
+        return activePhotos.length > 0
+          ? activePhotos.map(p => ({ image: p }))
           : staticData.story.items
       })(),
     },
     events: {
       ...staticData.events,
       items: (() => {
-        const scheduleItems = savedData 
-          ? (savedData.scheduleData?.items || []) 
+        const scheduleItems = savedData
+          ? (savedData.scheduleData?.items || [])
           : (Array.isArray(draftData.scheduleItems) ? draftData.scheduleItems : [])
         const icons = ['✦', '◎', '✿', '◆', '♪']
         return scheduleItems.map((item, index) => ({
@@ -113,20 +114,30 @@ export default function TemplateRoyalWedding({ savedData }) {
     <div className="flex justify-center items-start min-h-screen bg-[#1a1a1a]">
       {/* Mobile viewport container - max 430px like a phone */}
       <div className="relative w-full max-w-[430px] min-h-[100svh] bg-background text-primary shadow-[0_0_80px_rgba(0,0,0,0.5)]">
-        {/* Repeating Watermark Overlay */}
+        {/* Fixed Watermark Overlay */}
         {showWatermark && (
-          <div 
-            className="pointer-events-none fixed inset-0 z-[100] opacity-[0.16] select-none"
-            style={{
-              backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 100px, currentColor 100px, currentColor 101px)`,
-              maskImage: 'linear-gradient(to bottom, black, black)',
-            }}
-          >
-            <div className="flex h-full w-full flex-wrap content-start justify-center gap-20 p-10 font-bold uppercase tracking-[0.2em]">
-              {Array.from({ length: 40 }).map((_, i) => (
-                <span key={i} className="rotate-[-25deg] text-sm">Preview • Inviteque</span>
-              ))}
-            </div>
+          <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.22] select-none">
+            {/* Top */}
+            <span 
+              className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em] text-primary"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              preview-inviteque
+            </span>
+            {/* Middle */}
+            <span 
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18px] font-medium tracking-[0.2em] text-primary"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              preview-inviteque
+            </span>
+            {/* Bottom */}
+            <span 
+              className="absolute bottom-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em] text-primary"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              preview-inviteque
+            </span>
           </div>
         )}
 
@@ -134,14 +145,14 @@ export default function TemplateRoyalWedding({ savedData }) {
         {isPreview && (
           <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
             <div className="flex gap-3">
-              <button 
+              <button
                 onClick={() => navigate(-1)}
                 className="flex-1 flex items-center justify-center gap-2 rounded-full border border-iqBorder bg-white py-4 text-sm font-bold text-iqText shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition hover:scale-105 active:scale-95"
               >
                 <span>←</span>
                 Back
               </button>
-              <button 
+              <button
                 onClick={() => navigate('/payment', { state: { draftData, templateId } })}
                 className="flex-1 flex items-center justify-center gap-3 rounded-full bg-black py-4 text-sm font-bold text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
               >
@@ -151,21 +162,21 @@ export default function TemplateRoyalWedding({ savedData }) {
             </div>
           </div>
         )}
-        
+
         <Hero data={data.hero} />
-        
+
         {/* Photo Gallery is optional (Mapped to Story component) */}
         {showGallery && <Story data={data.story} />}
 
         <Invitation data={data.invitation} />
-        
+
         <Venue data={data.venue} />
-        
+
         {/* Wedding Schedule is optional */}
         {showSchedule && <Events data={data.events} />}
-        
+
         <Countdown data={data.countdown} />
-        
+
         <Footer data={data.footer} />
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, useTime, useTransform } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
@@ -92,6 +92,223 @@ function InfiniteCarouselCard({ t, i, total }) {
         />
       </article>
     </motion.div>
+  )
+}
+
+
+/* ─────────────────────────────────────────
+   Steps visual components
+   ───────────────────────────────────────── */
+function ChooseTemplateVisual() {
+  return (
+    <div className="relative h-64 w-full flex items-center justify-center overflow-hidden mb-8">
+      {/* Center Phone */}
+      <motion.div 
+        animate={{ y: [0, -8, 0] }}
+        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+        className="relative w-36 h-60 rounded-[1.8rem] border-[4px] border-black bg-white shadow-luxury overflow-hidden z-10"
+      >
+        <img 
+          src={templates[0]?.thumbnail} 
+          alt="Template choice" 
+          className="w-full h-full object-cover" 
+        />
+        {/* Notch */}
+        <div className="absolute top-1 left-1/2 -translate-x-1/2 w-10 h-3.5 bg-black rounded-full" />
+      </motion.div>
+      {/* Left side peeking template */}
+      <div className="absolute left-[8%] w-24 h-48 rounded-[1.2rem] border border-black/10 bg-white opacity-40 overflow-hidden transform -rotate-12 scale-90 translate-y-4">
+        <img src={templates[1]?.thumbnail} alt="Template left" className="w-full h-full object-cover" />
+      </div>
+      {/* Right side peeking template */}
+      <div className="absolute right-[8%] w-24 h-48 rounded-[1.2rem] border border-black/10 bg-white opacity-40 overflow-hidden transform rotate-12 scale-90 translate-y-4">
+        <img src={templates[2]?.thumbnail} alt="Template right" className="w-full h-full object-cover" />
+      </div>
+    </div>
+  )
+}
+
+function CustomisePublishVisual() {
+  const [name1, setName1] = useState("Rohan")
+  const [name2, setName2] = useState("Anaya")
+  
+  useEffect(() => {
+    let index = 0
+    const names = [
+      { n1: "Rohan", n2: "Anaya" },
+      { n1: "Aaditya", n2: "Veera" },
+      { n1: "Abhishek", n2: "Kanika" }
+    ]
+    
+    const interval = setInterval(() => {
+      index = (index + 1) % names.length
+      setName1(names[index].n1)
+      setName2(names[index].n2)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="relative h-64 w-full flex items-center justify-center overflow-hidden mb-8">
+      {/* Background Invite Preview Card */}
+      <div className="absolute w-44 h-56 rounded-2xl border border-iqBorder bg-[#FFF6F2] shadow-luxury overflow-hidden transform -rotate-6 -translate-x-6 scale-95 opacity-80 flex flex-col items-center p-4">
+        <div className="w-full h-24 rounded-lg bg-red-100 overflow-hidden mb-2">
+          <img src={templates[2]?.thumbnail} alt="background preview" className="w-full h-full object-cover opacity-60" />
+        </div>
+        <span className="text-[6px] font-bold uppercase tracking-[0.2em] text-[#7B0F1A] mb-1">Save the Date</span>
+        <h4 className="text-[12px] font-serif text-[#7B0F1A] text-center font-bold">
+          {name1} <span className="text-[8px] block">&amp;</span> {name2}
+        </h4>
+      </div>
+      
+      {/* Floating Customize Panel Mockup */}
+      <div className="absolute w-48 rounded-xl border border-iqBorder bg-white/95 backdrop-blur-md p-3.5 shadow-xl transform translate-x-10 translate-y-6 scale-95 z-10 flex flex-col space-y-2.5 font-saas text-left">
+        <div className="flex justify-between items-center pb-1.5 border-b border-iqBorder/60">
+          <span className="text-[10px] font-bold text-iqText">Details</span>
+          <span className="text-[8px] bg-iqBg text-iqText/60 px-1.5 py-0.5 rounded font-mono">Editor</span>
+        </div>
+        
+        <div className="space-y-1">
+          <label className="text-[8px] font-bold text-iqText/40 uppercase tracking-wider block">Groom Name</label>
+          <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1.5 text-[9px] font-bold text-iqText/80">
+            {name1}
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-[8px] font-bold text-iqText/40 uppercase tracking-wider block">Bride Name</label>
+          <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1.5 text-[9px] font-bold text-iqText/80">
+            {name2}
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-[8px] font-bold text-iqText/40 uppercase tracking-wider block">Wedding Date</label>
+          <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1.5 text-[9px] font-bold text-iqText/80">
+            18 August 2026
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ShareAnywhereVisual() {
+  const [msgCount, setMsgCount] = useState(0)
+  const chatRef = useRef(null)
+  
+  useEffect(() => {
+    let active = true
+    const runSequence = () => {
+      if (!active) return
+      setMsgCount(0)
+      
+      const timers = [
+        setTimeout(() => active && setMsgCount(1), 1000),  // Msg 1
+        setTimeout(() => active && setMsgCount(2), 2500),  // Msg 2
+        setTimeout(() => active && setMsgCount(3), 4000),  // Msg 3 (Card)
+        setTimeout(() => active && setMsgCount(4), 6000),  // Msg 4
+        setTimeout(() => active && setMsgCount(5), 8000),  // Msg 5
+      ]
+      
+      const restartTimer = setTimeout(() => {
+        if (active) runSequence()
+      }, 13000)
+      
+      return () => {
+        timers.forEach(clearTimeout)
+        clearTimeout(restartTimer)
+      }
+    }
+    
+    runSequence()
+    return () => {
+      active = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTo({
+        top: chatRef.current.scrollHeight,
+        behavior: 'smooth'
+      })
+    }
+  }, [msgCount])
+
+  return (
+    <div 
+      ref={chatRef}
+      className="relative h-64 w-full rounded-2xl bg-[#EFEAE2] border border-iqBorder overflow-y-auto p-4 flex flex-col space-y-2.5 text-left mb-8 shadow-inner select-none no-scrollbar"
+    >
+      {/* 1. Shared Invite Link Card (Starts the conversation!) */}
+      {msgCount >= 1 && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="max-w-[78%] self-end rounded-2xl bg-[#DCF8C6] p-1.5 shadow-md overflow-hidden flex flex-col font-saas border border-[#c5e1b2] flex-shrink-0"
+        >
+          {/* Card Preview */}
+          <div className="w-full h-16 rounded-lg overflow-hidden bg-white relative flex-shrink-0">
+            <img src={templates[2]?.thumbnail} alt="Chat invite preview" className="w-full h-full object-cover object-center" />
+            <div className="absolute inset-0 bg-black/10" />
+            <div className="absolute inset-0 flex items-center justify-center p-2">
+              <span className="text-[10px] font-serif text-white font-extrabold tracking-wide text-center drop-shadow-md">
+                Rohan &amp; Anaya
+              </span>
+            </div>
+          </div>
+          <div className="p-1.5 bg-white mt-1 rounded-lg border border-iqBorder/40 flex-shrink-0">
+            <h5 className="text-[9px] font-bold text-iqText leading-tight">Rohan Weds Anaya</h5>
+            <span className="text-[7.5px] text-iqText/50 tracking-wide font-mono block">inviteque.com/templates/royal-wedding</span>
+          </div>
+        </motion.div>
+      )}
+
+      {/* 2. Friend reacts in amazement */}
+      {msgCount >= 2 && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="max-w-[78%] rounded-2xl rounded-tl-none bg-white p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
+        >
+          Oh wow, this looks incredibly premium! 😍 I love the animation!
+        </motion.div>
+      )}
+      
+      {/* 3. Friend asks who designed it */}
+      {msgCount >= 3 && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="max-w-[78%] rounded-2xl rounded-tl-none bg-white p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
+        >
+          Who designed this for you guys?
+        </motion.div>
+      )}
+      
+      {/* 4. Couple replies explaining it is Inviteque */}
+      {msgCount >= 4 && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="max-w-[78%] self-end rounded-2xl rounded-tr-none bg-[#DCF8C6] p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
+        >
+          We designed it in minutes on Inviteque!
+        </motion.div>
+      )}
+      
+      {/* 5. Friend responds in excitement */}
+      {msgCount >= 5 && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          className="max-w-[78%] rounded-2xl rounded-tl-none bg-white p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
+        >
+          That is amazing! I am going to try it too.
+        </motion.div>
+      )}
+    </div>
   )
 }
 
@@ -400,46 +617,75 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 3) Value proposition */}
-      <section id="about" className="border-t border-iqBorder">
-        <div className="mx-auto w-full max-w-6xl px-5 py-14 md:py-16">
+      {/* 3) How It Works Section */}
+      <section id="about" className="border-t border-iqBorder bg-white">
+        <div className="mx-auto w-full max-w-6xl px-6 py-16 md:py-24">
           <motion.div
             variants={staggerChildren}
             initial="hidden"
             whileInView="show"
             viewport={viewportOnce}
-            className="grid grid-cols-1 gap-8 md:grid-cols-2 md:items-center"
+            className="text-center max-w-3xl mx-auto mb-16"
           >
             <motion.div variants={fadeUp}>
-              <SectionLabel>About</SectionLabel>
-              <h2 className="mt-6 text-3xl font-bold md:text-4xl">
-                Create a Stunning Wedding Invite Website in Minutes
-              </h2>
-              <p className="mt-4 text-sm text-iqText/70 md:text-base">
-                Start from a premium template, personalize everything, and share a single link with
-                guests—RSVP, map, schedule, and more.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <OutlineButton href="#templates">Browse templates</OutlineButton>
-                <PrimaryButton to="/templates/template-1">Preview now</PrimaryButton>
-              </div>
+              <SectionLabel>How it works</SectionLabel>
             </motion.div>
+            <motion.h2 
+              variants={fadeUp} 
+              className="mt-6 text-3xl md:text-5xl font-bold tracking-tight text-iqText"
+            >
+              Three Simple Steps to Invite
+            </motion.h2>
+            <motion.p 
+              variants={fadeUp} 
+              className="mt-4 text-sm text-iqText/60 md:text-base text-balance"
+            >
+              Create and share your professional wedding invitation website in minutes.
+            </motion.p>
+          </motion.div>
 
-            <motion.div variants={fadeUp} className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {[
-                { title: '🎨 Easy Customization', desc: 'Edit names, date, venue, schedule, RSVP.' },
-                { title: '⚡ Instant Sharing', desc: 'Send your link on WhatsApp & socials.' },
-                { title: '📱 Mobile Optimized', desc: 'Looks perfect across devices.' },
-              ].map((card) => (
-                <article
-                  key={card.title}
-                  className="rounded-card border border-iqBorder bg-iqCard p-5 shadow-luxury"
-                >
-                  <p className="text-sm font-bold">{card.title}</p>
-                  <p className="mt-2 text-xs text-iqText/70">{card.desc}</p>
-                </article>
-              ))}
-            </motion.div>
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {/* Card 1 - Choose a template */}
+            <motion.article 
+              variants={fadeUp}
+              className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
+            >
+              <ChooseTemplateVisual />
+              <h3 className="text-xl font-extrabold text-iqText mb-2">1 - Choose a template</h3>
+              <p className="text-sm text-iqText/60 max-w-[280px]">
+                Choose a design that fits your wedding aesthetics
+              </p>
+            </motion.article>
+
+            {/* Card 2 - Customise & Publish */}
+            <motion.article 
+              variants={fadeUp}
+              className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
+            >
+              <CustomisePublishVisual />
+              <h3 className="text-xl font-extrabold text-iqText mb-2">2 - Customise & Publish</h3>
+              <p className="text-sm text-iqText/60 max-w-[280px]">
+                Add your story, event details, hit publish.
+              </p>
+            </motion.article>
+
+            {/* Card 3 - Share anywhere */}
+            <motion.article 
+              variants={fadeUp}
+              className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
+            >
+              <ShareAnywhereVisual />
+              <h3 className="text-xl font-extrabold text-iqText mb-2">3 - Share anywhere</h3>
+              <p className="text-sm text-iqText/60 max-w-[280px]">
+                Share your invite with friends and family
+              </p>
+            </motion.article>
           </motion.div>
         </div>
       </section>

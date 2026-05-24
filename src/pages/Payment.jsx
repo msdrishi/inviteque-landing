@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { API_URL } from '../config'
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
 import { fadeUp } from '../motionVariants'
 import { templates } from '../templates/templates'
@@ -33,10 +34,72 @@ export default function Payment() {
     )
   }
 
-  const { saveInvitation } = useAuth()
+  const { saveInvitation, user } = useAuth()
   const [isProcessing, setIsProcessing] = useState(false)
- 
+  const [couponCode, setCouponCode] = useState('')
+  const [appliedCoupon, setAppliedCoupon] = useState(null)
+  const [couponError, setCouponError] = useState('')
+  const [couponSuccess, setCouponSuccess] = useState('')
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false)
+
   const isAlreadyPaid = draftData.status === 'PAID'
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError('Please enter a coupon code')
+      setCouponSuccess('')
+      return
+    }
+
+    setIsValidatingCoupon(true)
+    setCouponError('')
+    setCouponSuccess('')
+
+    try {
+      const response = await fetch(`${API_URL}/api/coupons/validate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user?.token}`
+        },
+        body: JSON.stringify({ code: couponCode.trim() })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to validate coupon')
+      }
+
+      const data = await response.json()
+      if (data.isValid) {
+        setAppliedCoupon({
+          code: data.code,
+          discountPercentage: data.discountPercentage
+        })
+        setCouponSuccess(data.message || 'Coupon applied successfully!')
+        setCouponError('')
+      } else {
+        setAppliedCoupon(null)
+        setCouponError(data.message || 'Invalid coupon code.')
+        setCouponSuccess('')
+      }
+    } catch (error) {
+      console.error('Coupon validation error:', error)
+      setCouponError('Error validating coupon. Please try again.')
+      setCouponSuccess('')
+    } finally {
+      setIsValidatingCoupon(false)
+    }
+  }
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null)
+    setCouponCode('')
+    setCouponSuccess('')
+    setCouponError('')
+  }
+
+  const discount = appliedCoupon ? (TEMPLATE_PRICE * appliedCoupon.discountPercentage) / 100 : 0
+  const finalPrice = TEMPLATE_PRICE - discount
 
   const handlePaymentClick = async () => {
     setIsProcessing(true)
@@ -86,7 +149,7 @@ export default function Payment() {
           inviteUrl, 
           draftData, 
           template,
-          amount: isAlreadyPaid ? draftData.amountPaid : TEMPLATE_PRICE,
+          amount: isAlreadyPaid ? draftData.amountPaid : finalPrice,
           code: savedInvite.code,
           isUpdate: true
         } 
@@ -187,13 +250,75 @@ export default function Payment() {
                    </div>
                 </div>
 
+                {/* Coupon Code Input */}
+                {!isAlreadyPaid && (
+                  <div className="space-y-3 pt-4 border-t border-iqBorder">
+                    <span className="text-iqText/40 font-bold uppercase tracking-widest text-[10px]">Have a Coupon?</span>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Enter coupon code"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                        disabled={appliedCoupon !== null || isValidatingCoupon}
+                        className="flex-1 px-4 py-2.5 text-sm font-semibold border border-iqBorder rounded-xl focus:outline-none focus:ring-2 focus:ring-black disabled:bg-iqBg/50 uppercase"
+                      />
+                      {appliedCoupon ? (
+                        <button
+                          type="button"
+                          onClick={handleRemoveCoupon}
+                          className="px-4 py-2.5 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors duration-200"
+                        >
+                          Remove
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={handleApplyCoupon}
+                          disabled={isValidatingCoupon || !couponCode.trim()}
+                          className="px-6 py-2.5 text-sm font-bold text-white bg-black hover:opacity-90 rounded-xl transition duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center min-w-[80px]"
+                        >
+                          {isValidatingCoupon ? (
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                          ) : (
+                            'Apply'
+                          )}
+                        </button>
+                      )}
+                    </div>
+                    {couponError && (
+                      <p className="text-xs text-red-600 font-semibold animate-pulse">❌ {couponError}</p>
+                    )}
+                    {couponSuccess && (
+                      <p className="text-xs text-green-600 font-semibold">🎉 {couponSuccess}</p>
+                    )}
+                  </div>
+                )}
+
                 {/* Price (Only show if not paid) */}
                 {!isAlreadyPaid ? (
                   <div className="space-y-3 pt-4">
-                    <div className="flex justify-between items-end border-t border-iqBorder pt-6">
-                      <span className="font-bold">Total Amount</span>
-                      <span className="text-3xl font-bold text-iqText">₹{TEMPLATE_PRICE}</span>
-                    </div>
+                    {appliedCoupon ? (
+                      <div className="space-y-2 w-full pt-4 border-t border-iqBorder">
+                        <div className="flex justify-between items-center text-sm text-iqText/60">
+                          <span>Original Amount</span>
+                          <span>₹{TEMPLATE_PRICE}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm text-green-600 font-medium">
+                          <span>Discount ({appliedCoupon.discountPercentage}%)</span>
+                          <span>-₹{discount}</span>
+                        </div>
+                        <div className="flex justify-between items-end pt-2 border-t border-dashed border-iqBorder">
+                          <span className="font-bold">Total Amount</span>
+                          <span className="text-3xl font-bold text-iqText">₹{finalPrice}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex justify-between items-end border-t border-iqBorder pt-6">
+                        <span className="font-bold">Total Amount</span>
+                        <span className="text-3xl font-bold text-iqText">₹{TEMPLATE_PRICE}</span>
+                      </div>
+                    )}
                     <p className="text-[10px] text-iqText/40 text-center uppercase tracking-widest font-bold">Inclusive of all taxes</p>
                   </div>
                 ) : (
@@ -255,7 +380,7 @@ export default function Payment() {
                   ) : (
                     <>
                       <span>💳</span>
-                      Pay ₹{TEMPLATE_PRICE}
+                      Pay ₹{finalPrice}
                     </>
                   )}
                 </>
