@@ -36,8 +36,8 @@ function InfiniteCarouselCard({ t, i, total }) {
   const duration = 70000;
   // Reduce orbit spacing on mobile to compress carousel
   const orbitX = isMobile ? 820 : 1100;
-  const orbitZ = isMobile ? 100 : 1000;
-  
+  const orbitZ = isMobile ? 3300 : 1000;
+
   const pos = useTransform(time, tValue => {
     const rawPos = (tValue / duration) + (i / total);
     return rawPos % 1; // Loops infinitely from 0 to 1
@@ -103,15 +103,15 @@ function ChooseTemplateVisual() {
   return (
     <div className="relative h-64 w-full flex items-center justify-center overflow-hidden mb-8">
       {/* Center Phone */}
-      <motion.div 
+      <motion.div
         animate={{ y: [0, -8, 0] }}
         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
         className="relative w-36 h-60 rounded-[1.8rem] border-[4px] border-black bg-white shadow-luxury overflow-hidden z-10"
       >
-        <img 
-          src={templates[0]?.thumbnail} 
-          alt="Template choice" 
-          className="w-full h-full object-cover" 
+        <img
+          src={templates[0]?.thumbnail}
+          alt="Template choice"
+          className="w-full h-full object-cover"
         />
         {/* Notch */}
         <div className="absolute top-1 left-1/2 -translate-x-1/2 w-10 h-3.5 bg-black rounded-full" />
@@ -131,7 +131,7 @@ function ChooseTemplateVisual() {
 function CustomisePublishVisual() {
   const [name1, setName1] = useState("Rohan")
   const [name2, setName2] = useState("Anaya")
-  
+
   useEffect(() => {
     let index = 0
     const names = [
@@ -139,7 +139,7 @@ function CustomisePublishVisual() {
       { n1: "Aaditya", n2: "Veera" },
       { n1: "Abhishek", n2: "Kanika" }
     ]
-    
+
     const interval = setInterval(() => {
       index = (index + 1) % names.length
       setName1(names[index].n1)
@@ -151,7 +151,7 @@ function CustomisePublishVisual() {
   return (
     <div className="relative h-64 w-full flex items-center justify-center overflow-hidden mb-8">
       {/* Background Invite Preview Card */}
-      <div className="absolute w-44 h-56 rounded-2xl border border-iqBorder bg-[#FFF6F2] shadow-luxury overflow-hidden transform -rotate-6 -translate-x-6 scale-95 opacity-80 flex flex-col items-center p-4">
+      <div className="absolute w-44 h-56 rounded-2xl border border-iqBorder bg-[#FFF6F2] shadow-luxury overflow-hidden transform -rotate-6 -translate-x-10 scale-95 opacity-80 flex flex-col items-center p-4">
         <div className="w-full h-24 rounded-lg bg-red-100 overflow-hidden mb-2">
           <img src={templates[2]?.thumbnail} alt="background preview" className="w-full h-full object-cover opacity-60" />
         </div>
@@ -160,14 +160,14 @@ function CustomisePublishVisual() {
           {name1} <span className="text-[8px] block">&amp;</span> {name2}
         </h4>
       </div>
-      
+
       {/* Floating Customize Panel Mockup */}
-      <div className="absolute w-48 rounded-xl border border-iqBorder bg-white/95 backdrop-blur-md p-3.5 shadow-xl transform translate-x-10 translate-y-6 scale-95 z-10 flex flex-col space-y-2.5 font-saas text-left">
+      <div className="absolute w-48 rounded-xl border border-iqBorder bg-white/95 backdrop-blur-md p-3.5 shadow-xl transform translate-x-10 translate-y-4 scale-95 z-10 flex flex-col space-y-2.5 font-saas text-left">
         <div className="flex justify-between items-center pb-1.5 border-b border-iqBorder/60">
           <span className="text-[10px] font-bold text-iqText">Details</span>
           <span className="text-[8px] bg-iqBg text-iqText/60 px-1.5 py-0.5 rounded font-mono">Editor</span>
         </div>
-        
+
         <div className="space-y-1">
           <label className="text-[8px] font-bold text-iqText/40 uppercase tracking-wider block">Groom Name</label>
           <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1.5 text-[9px] font-bold text-iqText/80">
@@ -196,13 +196,13 @@ function CustomisePublishVisual() {
 function ShareAnywhereVisual() {
   const [msgCount, setMsgCount] = useState(0)
   const chatRef = useRef(null)
-  
+
   useEffect(() => {
     let active = true
     const runSequence = () => {
       if (!active) return
       setMsgCount(0)
-      
+
       const timers = [
         setTimeout(() => active && setMsgCount(1), 1000),  // Msg 1
         setTimeout(() => active && setMsgCount(2), 2500),  // Msg 2
@@ -210,17 +210,17 @@ function ShareAnywhereVisual() {
         setTimeout(() => active && setMsgCount(4), 6000),  // Msg 4
         setTimeout(() => active && setMsgCount(5), 8000),  // Msg 5
       ]
-      
+
       const restartTimer = setTimeout(() => {
         if (active) runSequence()
       }, 13000)
-      
+
       return () => {
         timers.forEach(clearTimeout)
         clearTimeout(restartTimer)
       }
     }
-    
+
     runSequence()
     return () => {
       active = false
@@ -237,13 +237,13 @@ function ShareAnywhereVisual() {
   }, [msgCount])
 
   return (
-    <div 
+    <div
       ref={chatRef}
       className="relative h-64 w-full rounded-2xl bg-[#EFEAE2] border border-iqBorder overflow-y-auto p-4 flex flex-col space-y-2.5 text-left mb-8 shadow-inner select-none no-scrollbar"
     >
       {/* 1. Shared Invite Link Card (Starts the conversation!) */}
       {msgCount >= 1 && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="max-w-[78%] self-end rounded-2xl bg-[#DCF8C6] p-1.5 shadow-md overflow-hidden flex flex-col font-saas border border-[#c5e1b2] flex-shrink-0"
@@ -267,29 +267,29 @@ function ShareAnywhereVisual() {
 
       {/* 2. Friend reacts in amazement */}
       {msgCount >= 2 && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="max-w-[78%] rounded-2xl rounded-tl-none bg-white p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
         >
-          Oh wow, this looks incredibly premium! 😍 I love the animation!
+          Congrats! 🎉
         </motion.div>
       )}
-      
+
       {/* 3. Friend asks who designed it */}
       {msgCount >= 3 && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="max-w-[78%] rounded-2xl rounded-tl-none bg-white p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
         >
-          Who designed this for you guys?
+          It is really good, where did you get this? 😍
         </motion.div>
       )}
-      
+
       {/* 4. Couple replies explaining it is Inviteque */}
       {msgCount >= 4 && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="max-w-[78%] self-end rounded-2xl rounded-tr-none bg-[#DCF8C6] p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
@@ -297,10 +297,10 @@ function ShareAnywhereVisual() {
           We designed it in minutes on Inviteque!
         </motion.div>
       )}
-      
+
       {/* 5. Friend responds in excitement */}
       {msgCount >= 5 && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="max-w-[78%] rounded-2xl rounded-tl-none bg-white p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
@@ -408,11 +408,11 @@ export default function Landing() {
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">
-            <a href="#templates" className="text-sm font-semibold text-iqText/70 hover:text-iqText transition-colors">
-              Templates
-            </a>
             <a href="#about" className="text-sm font-semibold text-iqText/70 hover:text-iqText transition-colors">
               How it Works
+            </a>
+            <a href="#templates" className="text-sm font-semibold text-iqText/70 hover:text-iqText transition-colors">
+              Templates
             </a>
             <a href="#pricing" className="text-sm font-semibold text-iqText/70 hover:text-iqText transition-colors">
               Pricing
@@ -430,14 +430,14 @@ export default function Landing() {
                 </div>
                 <span className="text-sm font-bold text-iqText">{user.name}</span>
                 <div className="h-4 w-[1px] bg-iqBorder mx-1" />
-                <Link 
+                <Link
                   to="/account"
                   className="text-xs font-bold text-iqText hover:text-iqAccent transition-colors"
                 >
                   Account
                 </Link>
                 <div className="h-4 w-[1px] bg-iqBorder mx-1" />
-                <button 
+                <button
                   onClick={logout}
                   className="text-xs font-bold text-red-500 hover:text-red-600 transition-colors"
                 >
@@ -467,7 +467,7 @@ export default function Landing() {
       <section className="relative overflow-hidden bg-gradient-to-b from-white via-[#FFF9F9] to-iqBg pt-12 pb-16 md:pt-16 md:pb-24">
         {/* Decorative subtle glow background */}
         <div className="absolute top-0 left-1/2 -z-10 h-[500px] w-[800px] -translate-x-1/2 bg-iqAccent/5 blur-[120px]" />
-        
+
         <motion.div
           variants={staggerChildren}
           initial="hidden"
@@ -498,7 +498,7 @@ export default function Landing() {
         </motion.div>
 
         {/* Infinite Curved Full-Screen Carousel Layout */}
-        <div className="mt-8 md:mt-10 relative h-[450px] md:h-[600px] w-full overflow-hidden [perspective:2000px] [transform-style:preserve-3d]">
+        <div className="mt-8 md:mt-10 relative h-[450px] md:h-[600px] w-full overflow-hidden [perspective:1000px] md:[perspective:2000px] [transform-style:preserve-3d]">
           {/* Duplicate only when template count is low (prevents crowding with 12 cards) */}
           {carouselTemplates.map((t, i, arr) => (
             <InfiniteCarouselCard key={`${t.id}-${i}`} t={t} i={i} total={arr.length} />
@@ -506,7 +506,80 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 2) Template grid */}
+      {/* 2) How It Works Section */}
+      <section id="about" className="border-t border-iqBorder bg-white">
+        <div className="mx-auto w-full max-w-6xl px-6 py-16 md:py-24">
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            className="text-center max-w-3xl mx-auto mb-16"
+          >
+            <motion.div variants={fadeUp}>
+              <SectionLabel>How it works</SectionLabel>
+            </motion.div>
+            <motion.h2
+              variants={fadeUp}
+              className="mt-6 text-3xl md:text-5xl font-bold tracking-tight text-iqText"
+            >
+              Three Simple Steps to Invite
+            </motion.h2>
+            <motion.p
+              variants={fadeUp}
+              className="mt-4 text-sm text-iqText/60 md:text-base text-balance"
+            >
+              Create and share your professional wedding invitation website in minutes.
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {/* Card 1 - Choose a template */}
+            <motion.article
+              variants={fadeUp}
+              className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
+            >
+              <ChooseTemplateVisual />
+              <h3 className="text-xl font-extrabold text-iqText mb-2">1 - Choose a template</h3>
+              <p className="text-sm text-iqText/60 max-w-[280px]">
+                Choose a design that fits your wedding aesthetics
+              </p>
+            </motion.article>
+
+            {/* Card 2 - Customise & Publish */}
+            <motion.article
+              variants={fadeUp}
+              className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
+            >
+              <CustomisePublishVisual />
+              <h3 className="text-xl font-extrabold text-iqText mb-2">2 - Customise & Publish</h3>
+              <p className="text-sm text-iqText/60 max-w-[280px]">
+                Add your story, event details, hit publish.
+              </p>
+            </motion.article>
+
+            {/* Card 3 - Share anywhere */}
+            <motion.article
+              variants={fadeUp}
+              className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
+            >
+              <ShareAnywhereVisual />
+              <h3 className="text-xl font-extrabold text-iqText mb-2">3 - Share anywhere</h3>
+              <p className="text-sm text-iqText/60 max-w-[280px]">
+                Share your invite with friends and family
+              </p>
+            </motion.article>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 3) Template grid */}
       <section id="templates" className="border-t border-iqBorder">
         <div className="mx-auto w-full max-w-7xl px-5 py-14 md:py-16">
           <motion.div
@@ -565,37 +638,37 @@ export default function Landing() {
                   </div>
 
                   <div className="mt-5 flex flex-wrap gap-2">
-                      <a 
-                        href={t.available ? t.href : '#templates'}
-                        target={t.available ? '_blank' : undefined}
-                        rel={t.available ? 'noopener noreferrer' : undefined}
-                        className={[
-                          'inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition',
-                          t.available
-                            ? 'bg-black text-white hover:scale-105 hover:bg-black/90 active:scale-95 shadow-xl'
-                            : 'cursor-not-allowed bg-black/50 text-white/50'
-                        ].join(' ')}
-                      >
-                        Preview
-                      </a>
-                      <button
-                        onClick={() => {
-                          if (!t.available) return
-                          if (user) navigate(`/builder/${t.id}`)
-                          else navigate('/login')
-                        }}
-                        disabled={!t.available}
-                        className={[
-                          'inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition',
-                          t.available
-                            ? 'border-iqBorder bg-iqCard text-iqText hover:bg-iqText/5'
-                            : 'cursor-not-allowed border-iqBorder bg-iqCard text-iqText/40',
-                        ].join(' ')}
-                        aria-disabled={!t.available}
-                      >
-                        Use Template
-                      </button>
-                    </div>
+                    <a
+                      href={t.available ? t.href : '#templates'}
+                      target={t.available ? '_blank' : undefined}
+                      rel={t.available ? 'noopener noreferrer' : undefined}
+                      className={[
+                        'inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition',
+                        t.available
+                          ? 'bg-black text-white hover:scale-105 hover:bg-black/90 active:scale-95 shadow-xl'
+                          : 'cursor-not-allowed bg-black/50 text-white/50'
+                      ].join(' ')}
+                    >
+                      Preview
+                    </a>
+                    <button
+                      onClick={() => {
+                        if (!t.available) return
+                        if (user) navigate(`/builder/${t.id}`)
+                        else navigate('/login')
+                      }}
+                      disabled={!t.available}
+                      className={[
+                        'inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition',
+                        t.available
+                          ? 'border-iqBorder bg-iqCard text-iqText hover:bg-iqText/5'
+                          : 'cursor-not-allowed border-iqBorder bg-iqCard text-iqText/40',
+                      ].join(' ')}
+                      aria-disabled={!t.available}
+                    >
+                      Use Template
+                    </button>
+                  </div>
                 </div>
               </motion.article>
             ))}
@@ -617,79 +690,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 3) How It Works Section */}
-      <section id="about" className="border-t border-iqBorder bg-white">
-        <div className="mx-auto w-full max-w-6xl px-6 py-16 md:py-24">
-          <motion.div
-            variants={staggerChildren}
-            initial="hidden"
-            whileInView="show"
-            viewport={viewportOnce}
-            className="text-center max-w-3xl mx-auto mb-16"
-          >
-            <motion.div variants={fadeUp}>
-              <SectionLabel>How it works</SectionLabel>
-            </motion.div>
-            <motion.h2 
-              variants={fadeUp} 
-              className="mt-6 text-3xl md:text-5xl font-bold tracking-tight text-iqText"
-            >
-              Three Simple Steps to Invite
-            </motion.h2>
-            <motion.p 
-              variants={fadeUp} 
-              className="mt-4 text-sm text-iqText/60 md:text-base text-balance"
-            >
-              Create and share your professional wedding invitation website in minutes.
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            variants={staggerChildren}
-            initial="hidden"
-            whileInView="show"
-            viewport={viewportOnce}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            {/* Card 1 - Choose a template */}
-            <motion.article 
-              variants={fadeUp}
-              className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
-            >
-              <ChooseTemplateVisual />
-              <h3 className="text-xl font-extrabold text-iqText mb-2">1 - Choose a template</h3>
-              <p className="text-sm text-iqText/60 max-w-[280px]">
-                Choose a design that fits your wedding aesthetics
-              </p>
-            </motion.article>
-
-            {/* Card 2 - Customise & Publish */}
-            <motion.article 
-              variants={fadeUp}
-              className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
-            >
-              <CustomisePublishVisual />
-              <h3 className="text-xl font-extrabold text-iqText mb-2">2 - Customise & Publish</h3>
-              <p className="text-sm text-iqText/60 max-w-[280px]">
-                Add your story, event details, hit publish.
-              </p>
-            </motion.article>
-
-            {/* Card 3 - Share anywhere */}
-            <motion.article 
-              variants={fadeUp}
-              className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
-            >
-              <ShareAnywhereVisual />
-              <h3 className="text-xl font-extrabold text-iqText mb-2">3 - Share anywhere</h3>
-              <p className="text-sm text-iqText/60 max-w-[280px]">
-                Share your invite with friends and family
-              </p>
-            </motion.article>
-          </motion.div>
-        </div>
-      </section>
-
       {/* 4) Comparison */}
       <section className="border-t border-iqBorder">
         <div className="mx-auto w-full max-w-6xl px-5 py-14 md:py-16">
@@ -707,7 +707,7 @@ export default function Landing() {
               Everything in One Link
             </motion.h2>
             <motion.p variants={fadeUp} className="mt-4 text-sm text-iqText/70 md:text-base">
-              Keep everything in one place—updates, RSVP, map, and animations.
+              Keep everything in one place—updates, map, and animations.
             </motion.p>
           </motion.div>
 
@@ -724,8 +724,7 @@ export default function Landing() {
               <div className="px-4 py-3 text-center">Traditional</div>
             </div>
             {[
-              { label: 'RSVP', a: '✔', b: '✖' },
-              { label: 'Map', a: '✔', b: '✖' },
+              { label: 'Interactive Map', a: '✔', b: '✖' },
               { label: 'Animations', a: '✔', b: '✖' },
               { label: 'Instant updates', a: '✔', b: '✖' },
             ].map((row) => (
@@ -841,7 +840,7 @@ export default function Landing() {
               <p className="mt-6 text-sm font-medium text-iqText/60">
                 Everything you need to create a stunning wedding invite website.
               </p>
-              
+
               <div className="mt-10 space-y-4 border-y border-iqBorder py-8 text-left">
                 {[
                   'Premium Wedding Template',
@@ -849,7 +848,6 @@ export default function Landing() {
                   'Interactive Google Maps Venue',
                   'Cinematic Love Story Timeline',
                   'High-Res Photo Gallery',
-                  'RSVP Management',
                   '6 Months Validity & Hosting',
                 ].map((feature) => (
                   <div key={feature} className="flex items-center gap-3 text-sm font-semibold text-iqText/80">
@@ -872,75 +870,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 6) Testimonials */}
-      <section id="testimonials" className="border-t border-iqBorder">
-        <div className="mx-auto w-full max-w-6xl px-5 py-14 md:py-16">
-          <motion.div
-            variants={staggerChildren}
-            initial="hidden"
-            whileInView="show"
-            viewport={viewportOnce}
-            className="mx-auto max-w-3xl text-center"
-          >
-            <motion.div variants={fadeUp}>
-              <SectionLabel>Testimonials</SectionLabel>
-            </motion.div>
-            <motion.h2 variants={fadeUp} className="mt-6 text-3xl font-bold md:text-4xl">
-              Don’t Take Our Word for It
-            </motion.h2>
-            <motion.p variants={fadeUp} className="mt-4 text-sm text-iqText/70 md:text-base">
-              Real couples. Real reactions. Premium templates.
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={viewportOnce}
-            className="mt-10"
-          >
-            <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-3">
-              {[
-                {
-                  img: templates[0]?.thumbnail,
-                  text: '“We set it up in minutes. Guests loved the RSVP + map.”',
-                  name: 'Aarav & Kiara',
-                },
-                {
-                  img: templates[1]?.thumbnail,
-                  text: '“The templates feel premium and the link sharing was perfect.”',
-                  name: 'Rohan & Anaya',
-                },
-                {
-                  img: templates[2]?.thumbnail,
-                  text: '“Clean design, super easy to customize. Looked great on mobile.”',
-                  name: 'Vihaan & Saanvi',
-                },
-                {
-                  img: templates[3]?.thumbnail,
-                  text: '“Our schedule updates were instant—no reprinting stress.”',
-                  name: 'Arjun & Isha',
-                },
-              ].map((t) => (
-                <article
-                  key={t.name}
-                  className="relative w-[280px] flex-none snap-start overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury"
-                >
-                  <LazyImage src={t.img} alt={t.name} className="h-[210px] w-full object-cover" />
-                  <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-iqText/30 to-transparent" />
-                  <div className="px-5 py-5">
-                    <p className="text-sm text-iqText/80">{t.text}</p>
-                    <p className="mt-4 text-xs font-bold text-iqText/70">{t.name}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 7) FAQ */}
+      {/* 6) FAQ */}
       <section id="faq" className="border-t border-iqBorder">
         <div className="mx-auto w-full max-w-6xl px-5 py-14 md:py-16">
           <motion.div
@@ -970,20 +900,44 @@ export default function Landing() {
           >
             {[
               {
-                q: 'How does this work?',
-                a: 'Pick a template, customize your details, and share your link with guests.',
+                q: 'How do I create and customize my wedding website on Inviteque?',
+                a: 'It is incredibly simple! Just choose a premium template you love, log in, and enter your details (couple names, wedding date, story milestones, event schedule, and venue details). Our intuitive real-time builder shows you all changes instantly as you type. Once you are satisfied, pay the one-time activation fee to make it go live.',
               },
               {
-                q: 'Can I customize everything?',
-                a: 'Yes—names, date, venue, schedule, RSVP, and more (depending on template).',
+                q: 'Can I make changes to my website after it is published and shared?',
+                a: 'Absolutely! We know that wedding plans can shift. You can log into your Inviteque account at any point, modify any details (such as venue location, timing, schedule, or text), and hit save. The updates will instantly reflect live for all your guests, with no reprint costs or extra fees.',
               },
               {
-                q: 'Is it mobile friendly?',
-                a: 'Yes—templates are designed mobile-first and scale beautifully on desktop.',
+                q: 'How long will my wedding invitation link remain active and hosted?',
+                a: 'Your unique wedding website remains completely hosted and active for a full 6 months from your date of publishing. This gives you and your guests plenty of time to access event details, view photos, and read your story before, during, and after your big day.',
               },
               {
-                q: 'Can I include RSVP and map?',
-                a: 'Yes—website invites can include RSVP, map, countdown, schedule, and updates.',
+                q: 'Is my wedding website optimized for mobile phones?',
+                a: 'Yes, 100%! All our premium templates are designed mobile-first. Since over 90% of guests open invitations on their smartphones, we ensure your wedding invite website is incredibly fast, fully responsive, and looks spectacular on all devices including iOS, Android, tablets, and desktops.',
+              },
+              {
+                q: 'How do guests find the venue location map?',
+                a: 'We integrate interactive Google Maps directly into your invite. When you paste your venue map link in our editor, a clickable location pin is embedded on your page. Guests can tap it to open the location directly in their navigation app for effortless directions.',
+              },
+              {
+                q: 'Can I share my invitation link directly on WhatsApp?',
+                a: 'Yes! Once published, you will get a unique, clean link (like inviteque.com/rohan-anaya). You can copy and paste this link to share it instantly on WhatsApp, Instagram, email, SMS, or any other messaging platform.',
+              },
+              {
+                q: 'Are there any recurring monthly subscription fees?',
+                a: 'No. We believe in complete transparency. There are absolutely no subscriptions, hidden fees, or monthly hosting costs. You pay a simple, one-time flat fee of ₹999 per template, which includes 6 months of premium hosting and unlimited updates.',
+              },
+              {
+                q: 'Can I upload our personal photos to the website?',
+                a: 'Yes! Our premium templates include gorgeous cinematic story timelines and high-resolution photo galleries. You can upload your beautiful pre-wedding photoshoot or personal couple images directly from your phone or computer to showcase them to your guests.',
+              },
+              {
+                q: 'What happens to the watermark on my website?',
+                a: 'A clean, minimal preview watermark is displayed on all drafts and unpaid templates. As soon as you complete the secure payment, the watermark is instantly and automatically removed, leaving you with a polished, premium wedding website.',
+              },
+              {
+                q: 'How secure is the checkout process?',
+                a: 'Extremely secure. We partner with industry-leading payment gateways to process transactions. All checkout actions are fully encrypted, and your credit/debit card, UPI, or net banking information is never stored on our servers.',
               },
             ].map((item) => (
               <motion.div key={item.q} variants={fadeUp}>
@@ -1063,12 +1017,16 @@ export default function Landing() {
                 className="flex items-center gap-4"
               >
                 {[
-                  { id: 'ig', label: 'Instagram', icon: (
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-                  )},
-                  { id: 'wa', label: 'WhatsApp', icon: (
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.22-1.632A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 01-5.042-1.378l-.361-.214-3.742.981.999-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.53 6.53 2.106 12 2.106c5.471 0 9.894 4.424 9.894 9.894 0 5.471-4.423 9.894-9.894 9.894z"/></svg>
-                  )},
+                  {
+                    id: 'ig', label: 'Instagram', icon: (
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4.5" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg>
+                    )
+                  },
+                  {
+                    id: 'wa', label: 'WhatsApp', icon: (
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.22-1.632A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 01-5.042-1.378l-.361-.214-3.742.981.999-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.53 6.53 2.106 12 2.106c5.471 0 9.894 4.424 9.894 9.894 0 5.471-4.423 9.894-9.894 9.894z" /></svg>
+                    )
+                  },
                 ].map((social) => (
                   <a
                     key={social.id}
@@ -1084,8 +1042,8 @@ export default function Landing() {
                 variants={fadeUp}
                 className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs font-semibold tracking-wide text-[#FFF6F0]/40 md:justify-end"
               >
-                <a href="#templates" className="hover:text-white transition-colors">Templates</a>
                 <a href="#about" className="hover:text-white transition-colors">How it Works</a>
+                <a href="#templates" className="hover:text-white transition-colors">Templates</a>
                 <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
                 <a href="#faq" className="hover:text-white transition-colors">FAQs</a>
               </motion.div>
