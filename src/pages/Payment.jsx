@@ -70,7 +70,7 @@ export default function Payment() {
       }
 
       const data = await response.json()
-      if (data.isValid) {
+      if (data.isValid || data.valid) {
         setAppliedCoupon({
           code: data.code,
           discountPercentage: data.discountPercentage
