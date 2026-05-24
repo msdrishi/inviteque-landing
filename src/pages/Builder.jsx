@@ -53,17 +53,9 @@ function parseTimeParts(timeString) {
   
   const groups = trimmed.match(/\d+/g)
   if (groups && groups.length >= 1) {
-    let hours = groups[0]
-    let minutes = '00'
-    if (groups.length >= 2) {
-      minutes = groups[1]
-    }
-    
-    // Normalize values
-    const padHours = hours ? String(parseInt(hours, 10)).padStart(2, '0') : ''
-    const padMinutes = minutes ? String(parseInt(minutes, 10)).padStart(2, '0') : ''
-    
-    return { hours: padHours, minutes: padMinutes, ampm }
+    const hours = groups[0] || ''
+    const minutes = groups[1] || ''
+    return { hours, minutes, ampm }
   }
   
   return defaultParts
