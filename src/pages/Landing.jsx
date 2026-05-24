@@ -95,34 +95,31 @@ function InfiniteCarouselCard({ t, i, total }) {
   )
 }
 
-
-/* ─────────────────────────────────────────
-   Steps visual components
-   ───────────────────────────────────────── */
+/* ─────────────────────────────────────── */
 function ChooseTemplateVisual() {
   return (
     <div className="relative h-64 w-full flex items-center justify-center overflow-hidden mb-8">
       {/* Center Phone */}
-      <motion.div
+      <motion.div 
         animate={{ y: [0, -8, 0] }}
         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
         className="relative w-36 h-60 rounded-[1.8rem] border-[4px] border-black bg-white shadow-luxury overflow-hidden z-10"
       >
-        <img
-          src={templates[0]?.thumbnail}
-          alt="Template choice"
-          className="w-full h-full object-cover"
+        <img 
+          src={templates[3]?.thumbnail} 
+          alt="Template choice" 
+          className="w-full h-full object-cover" 
         />
         {/* Notch */}
         <div className="absolute top-1 left-1/2 -translate-x-1/2 w-10 h-3.5 bg-black rounded-full" />
       </motion.div>
       {/* Left side peeking template */}
       <div className="absolute left-[8%] w-24 h-48 rounded-[1.2rem] border border-black/10 bg-white opacity-40 overflow-hidden transform -rotate-12 scale-90 translate-y-4">
-        <img src={templates[1]?.thumbnail} alt="Template left" className="w-full h-full object-cover" />
+        <img src={templates[4]?.thumbnail} alt="Template left" className="w-full h-full object-cover" />
       </div>
       {/* Right side peeking template */}
       <div className="absolute right-[8%] w-24 h-48 rounded-[1.2rem] border border-black/10 bg-white opacity-40 overflow-hidden transform rotate-12 scale-90 translate-y-4">
-        <img src={templates[2]?.thumbnail} alt="Template right" className="w-full h-full object-cover" />
+        <img src={templates[5]?.thumbnail} alt="Template right" className="w-full h-full object-cover" />
       </div>
     </div>
   )
@@ -131,7 +128,7 @@ function ChooseTemplateVisual() {
 function CustomisePublishVisual() {
   const [name1, setName1] = useState("Rohan")
   const [name2, setName2] = useState("Anaya")
-
+  
   useEffect(() => {
     let index = 0
     const names = [
@@ -139,7 +136,7 @@ function CustomisePublishVisual() {
       { n1: "Aaditya", n2: "Veera" },
       { n1: "Abhishek", n2: "Kanika" }
     ]
-
+    
     const interval = setInterval(() => {
       index = (index + 1) % names.length
       setName1(names[index].n1)
@@ -160,32 +157,39 @@ function CustomisePublishVisual() {
           {name1} <span className="text-[8px] block">&amp;</span> {name2}
         </h4>
       </div>
-
-      {/* Floating Customize Panel Mockup */}
-      <div className="absolute w-48 rounded-xl border border-iqBorder bg-white/95 backdrop-blur-md p-3.5 shadow-xl transform translate-x-10 translate-y-4 scale-95 z-10 flex flex-col space-y-2.5 font-saas text-left">
-        <div className="flex justify-between items-center pb-1.5 border-b border-iqBorder/60">
-          <span className="text-[10px] font-bold text-iqText">Details</span>
-          <span className="text-[8px] bg-iqBg text-iqText/60 px-1.5 py-0.5 rounded font-mono">Editor</span>
+      
+      {/* Floating Customize Panel Mockup (Matching our exact Builder UI!) */}
+      <div className="absolute w-48 rounded-xl border border-iqBorder bg-white/95 backdrop-blur-md p-3.5 shadow-xl transform translate-x-10 translate-y-4 scale-95 z-10 flex flex-col space-y-2 font-saas text-left">
+        <div className="flex justify-between items-center pb-1 border-b border-iqBorder/60">
+          <span className="text-[9px] font-bold text-iqText uppercase tracking-wider">Step 01 — Details</span>
+          <span className="text-[7.5px] bg-[#D4AF37]/10 text-[#D4AF37] px-1.5 py-0.5 rounded font-bold font-mono">Live</span>
         </div>
-
-        <div className="space-y-1">
-          <label className="text-[8px] font-bold text-iqText/40 uppercase tracking-wider block">Groom Name</label>
-          <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1.5 text-[9px] font-bold text-iqText/80">
+        
+        <div className="space-y-0.5">
+          <label className="text-[7px] font-bold text-iqText/40 uppercase tracking-wider block">Groom's Name <span className="text-red-500">*</span></label>
+          <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1 text-[8.5px] font-bold text-iqText/80">
             {name1}
           </div>
         </div>
 
-        <div className="space-y-1">
-          <label className="text-[8px] font-bold text-iqText/40 uppercase tracking-wider block">Bride Name</label>
-          <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1.5 text-[9px] font-bold text-iqText/80">
+        <div className="space-y-0.5">
+          <label className="text-[7px] font-bold text-iqText/40 uppercase tracking-wider block">Bride's Name <span className="text-red-500">*</span></label>
+          <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1 text-[8.5px] font-bold text-iqText/80">
             {name2}
           </div>
         </div>
 
-        <div className="space-y-1">
-          <label className="text-[8px] font-bold text-iqText/40 uppercase tracking-wider block">Wedding Date</label>
-          <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1.5 text-[9px] font-bold text-iqText/80">
-            18 August 2026
+        <div className="space-y-0.5">
+          <label className="text-[7px] font-bold text-iqText/40 uppercase tracking-wider block">Wedding Date <span className="text-red-500">*</span></label>
+          <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1 text-[8.5px] font-bold text-iqText/80 font-mono">
+            2026-08-18
+          </div>
+        </div>
+
+        <div className="space-y-0.5">
+          <label className="text-[7px] font-bold text-iqText/40 uppercase tracking-wider block">Place of Wedding <span className="text-red-500">*</span></label>
+          <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1 text-[8.5px] font-bold text-iqText/80 truncate">
+            The Grand Palace
           </div>
         </div>
       </div>
@@ -196,13 +200,13 @@ function CustomisePublishVisual() {
 function ShareAnywhereVisual() {
   const [msgCount, setMsgCount] = useState(0)
   const chatRef = useRef(null)
-
+  
   useEffect(() => {
     let active = true
     const runSequence = () => {
       if (!active) return
       setMsgCount(0)
-
+      
       const timers = [
         setTimeout(() => active && setMsgCount(1), 1000),  // Msg 1
         setTimeout(() => active && setMsgCount(2), 2500),  // Msg 2
@@ -210,17 +214,17 @@ function ShareAnywhereVisual() {
         setTimeout(() => active && setMsgCount(4), 6000),  // Msg 4
         setTimeout(() => active && setMsgCount(5), 8000),  // Msg 5
       ]
-
+      
       const restartTimer = setTimeout(() => {
         if (active) runSequence()
       }, 13000)
-
+      
       return () => {
         timers.forEach(clearTimeout)
         clearTimeout(restartTimer)
       }
     }
-
+    
     runSequence()
     return () => {
       active = false
@@ -237,37 +241,36 @@ function ShareAnywhereVisual() {
   }, [msgCount])
 
   return (
-    <div
+    <div 
       ref={chatRef}
       className="relative h-64 w-full rounded-2xl bg-[#EFEAE2] border border-iqBorder overflow-y-auto p-4 flex flex-col space-y-2.5 text-left mb-8 shadow-inner select-none no-scrollbar"
     >
       {/* 1. Shared Invite Link Card (Starts the conversation!) */}
       {msgCount >= 1 && (
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="max-w-[78%] self-end rounded-2xl bg-[#DCF8C6] p-1.5 shadow-md overflow-hidden flex flex-col font-saas border border-[#c5e1b2] flex-shrink-0"
+          className="max-w-[85%] self-end rounded-2xl bg-[#DCF8C6] p-1.5 shadow-md overflow-hidden flex flex-col font-saas border border-[#c5e1b2] flex-shrink-0"
         >
-          {/* Card Preview */}
-          <div className="w-full h-16 rounded-lg overflow-hidden bg-white relative flex-shrink-0">
-            <img src={templates[2]?.thumbnail} alt="Chat invite preview" className="w-full h-full object-cover object-center" />
-            <div className="absolute inset-0 bg-black/10" />
-            <div className="absolute inset-0 flex items-center justify-center p-2">
-              <span className="text-[10px] font-serif text-white font-extrabold tracking-wide text-center drop-shadow-md">
-                Rohan &amp; Anaya
-              </span>
+          {/* Authentic WhatsApp Rich Link Preview Card */}
+          <div className="w-full rounded-xl bg-black/[0.04] overflow-hidden flex flex-row items-stretch border border-black/05 flex-shrink-0">
+            {/* Text details on the left */}
+            <div className="flex-1 p-2 flex flex-col justify-center text-left min-w-0">
+              <h5 className="text-[9px] font-bold text-iqText leading-tight truncate">Rohan &amp; Anaya's Wedding 💍</h5>
+              <p className="text-[7.5px] text-iqText/60 mt-0.5 line-clamp-2 leading-snug">You are cordially invited! Click to view our details, venue map, and photos.</p>
+              <span className="text-[7px] text-[#0066cc] font-medium tracking-wide mt-1 block font-mono truncate">inviteque.com/rohan-anaya</span>
             </div>
-          </div>
-          <div className="p-1.5 bg-white mt-1 rounded-lg border border-iqBorder/40 flex-shrink-0">
-            <h5 className="text-[9px] font-bold text-iqText leading-tight">Rohan Weds Anaya</h5>
-            <span className="text-[7.5px] text-iqText/50 tracking-wide font-mono block">inviteque.com/templates/royal-wedding</span>
+            {/* Image thumbnail on the right */}
+            <div className="w-16 bg-white relative flex-shrink-0 border-l border-black/05">
+              <img src={templates[0]?.thumbnail} alt="Chat invite preview" className="w-full h-full object-cover" />
+            </div>
           </div>
         </motion.div>
       )}
 
       {/* 2. Friend reacts in amazement */}
       {msgCount >= 2 && (
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="max-w-[78%] rounded-2xl rounded-tl-none bg-white p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
@@ -275,10 +278,10 @@ function ShareAnywhereVisual() {
           Congrats! 🎉
         </motion.div>
       )}
-
+      
       {/* 3. Friend asks who designed it */}
       {msgCount >= 3 && (
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="max-w-[78%] rounded-2xl rounded-tl-none bg-white p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
@@ -286,10 +289,10 @@ function ShareAnywhereVisual() {
           It is really good, where did you get this? 😍
         </motion.div>
       )}
-
+      
       {/* 4. Couple replies explaining it is Inviteque */}
       {msgCount >= 4 && (
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="max-w-[78%] self-end rounded-2xl rounded-tr-none bg-[#DCF8C6] p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
@@ -297,10 +300,10 @@ function ShareAnywhereVisual() {
           We designed it in minutes on Inviteque!
         </motion.div>
       )}
-
+      
       {/* 5. Friend responds in excitement */}
       {msgCount >= 5 && (
-        <motion.div
+        <motion.div 
           initial={{ opacity: 0, scale: 0.9, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           className="max-w-[78%] rounded-2xl rounded-tl-none bg-white p-2.5 shadow-sm text-[11px] text-iqText font-saas flex-shrink-0"
@@ -312,6 +315,85 @@ function ShareAnywhereVisual() {
   )
 }
 
+/* ─────────────────────────────────────────
+   Why Digital micro-animated components
+   ───────────────────────────────────────── */
+function InstantPublishingIcon() {
+  return (
+    <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+      {/* Outer pulsing rings */}
+      <motion.div 
+        animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0, 0.3] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+        className="absolute inset-0 rounded-full bg-iqAccent/10"
+      />
+      <motion.div 
+        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.1, 0.5] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
+        className="absolute w-14 h-14 rounded-full bg-iqAccent/20"
+      />
+      {/* Central active bolt */}
+      <motion.div
+        animate={{ y: [-3, 3, -3], scale: [0.95, 1.05, 0.95] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        className="relative z-10 text-4xl"
+      >
+        ⚡
+      </motion.div>
+    </div>
+  )
+}
+
+function AffordableIcon() {
+  return (
+    <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+      {/* Sparkling stars */}
+      <motion.div
+        animate={{ scale: [0.5, 1.2, 0.5], opacity: [0.2, 1, 0.2] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1 right-2 text-sm"
+      >
+        ✨
+      </motion.div>
+      <motion.div
+        animate={{ scale: [1.2, 0.5, 1.2], opacity: [1, 0.2, 1] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute bottom-1 left-2 text-xs"
+      >
+        ✨
+      </motion.div>
+      {/* Floating Price Tag/Coin */}
+      <motion.div
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        className="relative z-10 text-4xl drop-shadow-lg"
+      >
+        💎
+      </motion.div>
+    </div>
+  )
+}
+
+function EasyUpdatesIcon() {
+  return (
+    <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+      {/* Synchronizing spinning loop */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        className="absolute w-16 h-16 rounded-full border border-dashed border-iqAccent/40 flex items-center justify-center"
+      />
+      {/* Pulsing Sync arrows */}
+      <motion.div
+        animate={{ scale: [0.9, 1.1, 0.9] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="relative z-10 text-4xl"
+      >
+        🔄
+      </motion.div>
+    </div>
+  )
+}
 
 function SectionLabel({ children }) {
   return (
@@ -343,7 +425,6 @@ function PrimaryButton({ to, children, disabled = false }) {
     </Link>
   )
 }
-
 
 function OutlineButton({ href, children }) {
   return (
@@ -519,14 +600,14 @@ export default function Landing() {
             <motion.div variants={fadeUp}>
               <SectionLabel>How it works</SectionLabel>
             </motion.div>
-            <motion.h2
-              variants={fadeUp}
+            <motion.h2 
+              variants={fadeUp} 
               className="mt-6 text-3xl md:text-5xl font-bold tracking-tight text-iqText"
             >
               Three Simple Steps to Invite
             </motion.h2>
-            <motion.p
-              variants={fadeUp}
+            <motion.p 
+              variants={fadeUp} 
               className="mt-4 text-sm text-iqText/60 md:text-base text-balance"
             >
               Create and share your professional wedding invitation website in minutes.
@@ -541,38 +622,38 @@ export default function Landing() {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
             {/* Card 1 - Choose a template */}
-            <motion.article
+            <motion.article 
               variants={fadeUp}
               className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
             >
               <ChooseTemplateVisual />
-              <h3 className="text-xl font-extrabold text-iqText mb-2">1 - Choose a template</h3>
+              <h3 className="text-xl font-extrabold text-iqText mb-2">01 — Curate Your Style</h3>
               <p className="text-sm text-iqText/60 max-w-[280px]">
-                Choose a design that fits your wedding aesthetics
+                Select from our exclusive collection of luxury digital invitation templates crafted to look breathtaking on all modern viewports.
               </p>
             </motion.article>
 
             {/* Card 2 - Customise & Publish */}
-            <motion.article
+            <motion.article 
               variants={fadeUp}
               className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
             >
               <CustomisePublishVisual />
-              <h3 className="text-xl font-extrabold text-iqText mb-2">2 - Customise & Publish</h3>
+              <h3 className="text-xl font-extrabold text-iqText mb-2">02 — Tailor the Romance</h3>
               <p className="text-sm text-iqText/60 max-w-[280px]">
-                Add your story, event details, hit publish.
+                Bring your invite to life by adding your love story timeline, high-res photos, venue details, and schedule using our elegant builder.
               </p>
             </motion.article>
 
             {/* Card 3 - Share anywhere */}
-            <motion.article
+            <motion.article 
               variants={fadeUp}
               className="flex flex-col items-center text-center p-8 rounded-[2rem] border border-iqBorder bg-iqBg/20 shadow-luxury h-full hover:shadow-2xl transition duration-300"
             >
               <ShareAnywhereVisual />
-              <h3 className="text-xl font-extrabold text-iqText mb-2">3 - Share anywhere</h3>
+              <h3 className="text-xl font-extrabold text-iqText mb-2">03 — Broadcast the Magic</h3>
               <p className="text-sm text-iqText/60 max-w-[280px]">
-                Share your invite with friends and family
+                Broadcast your gorgeous wedding website link instantly with friends and family across WhatsApp, Instagram, or email.
               </p>
             </motion.article>
           </motion.div>
@@ -691,8 +772,8 @@ export default function Landing() {
       </section>
 
       {/* 4) Comparison */}
-      <section className="border-t border-iqBorder">
-        <div className="mx-auto w-full max-w-6xl px-5 py-14 md:py-16">
+      <section className="border-t border-iqBorder bg-gradient-to-b from-[#FFFDFB] to-[#FFF9F5]">
+        <div className="mx-auto w-full max-w-6xl px-5 py-16 md:py-24">
           <motion.div
             variants={staggerChildren}
             initial="hidden"
@@ -703,40 +784,97 @@ export default function Landing() {
             <motion.div variants={fadeUp}>
               <SectionLabel>Better than Paper</SectionLabel>
             </motion.div>
-            <motion.h2 variants={fadeUp} className="mt-6 text-3xl font-bold md:text-4xl">
-              Everything in One Link
+            <motion.h2 variants={fadeUp} className="mt-6 text-3xl font-bold md:text-5xl tracking-tight">
+              An Elevated Guest Experience
             </motion.h2>
-            <motion.p variants={fadeUp} className="mt-4 text-sm text-iqText/70 md:text-base">
-              Keep everything in one place—updates, map, and animations.
+            <motion.p variants={fadeUp} className="mt-4 text-sm text-iqText/60 md:text-base text-pretty">
+              Ditch the rigid limitations of traditional printed invitations and normal picture uploads. Compare and see why Inviteque stands out.
             </motion.p>
           </motion.div>
 
+          {/* Unified Comparison Table (100% responsive in table format on all screens) */}
           <motion.div
             variants={fadeUp}
             initial="hidden"
             whileInView="show"
             viewport={viewportOnce}
-            className="mt-10 overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury"
+            className="mt-12 overflow-x-auto w-full rounded-[1.8rem] border border-iqBorder bg-white shadow-luxury no-scrollbar"
           >
-            <div className="grid grid-cols-3 gap-0 border-b border-iqBorder text-xs font-semibold">
-              <div className="px-4 py-3">Feature</div>
-              <div className="px-4 py-3 text-center">Templates</div>
-              <div className="px-4 py-3 text-center">Traditional</div>
-            </div>
-            {[
-              { label: 'Interactive Map', a: '✔', b: '✖' },
-              { label: 'Animations', a: '✔', b: '✖' },
-              { label: 'Instant updates', a: '✔', b: '✖' },
-            ].map((row) => (
-              <div
-                key={row.label}
-                className="grid grid-cols-3 border-b border-iqBorder text-sm last:border-b-0"
-              >
-                <div className="px-4 py-3 text-iqText/80">{row.label}</div>
-                <div className="px-4 py-3 text-center font-semibold">{row.a}</div>
-                <div className="px-4 py-3 text-center text-iqText/60">{row.b}</div>
-              </div>
-            ))}
+            <table className="w-full border-collapse text-left text-[10px] xs:text-xs md:text-sm table-fixed min-w-[300px]">
+              <colgroup>
+                <col className="w-[37%] md:w-[35%]" />
+                <col className="w-[21%] md:w-[21%]" />
+                <col className="w-[21%] md:w-[22%]" />
+                <col className="w-[21%] md:w-[22%]" />
+              </colgroup>
+              <thead>
+                <tr className="border-b border-iqBorder bg-iqBg/50 text-iqText uppercase tracking-wider text-[9px] xs:text-[10px] md:text-xs font-extrabold">
+                  <th className="px-2.5 md:px-6 py-3.5 md:py-4 font-black">Feature</th>
+                  <th className="px-1 md:px-6 py-3.5 md:py-4 text-center text-iqText/55">
+                    <span className="hidden md:inline">Traditional Paper</span>
+                    <span className="inline md:hidden">Paper</span>
+                  </th>
+                  <th className="px-1 md:px-6 py-3.5 md:py-4 text-center text-iqText/55">
+                    <span className="hidden md:inline">WhatsApp Image / PDF</span>
+                    <span className="inline md:hidden">Image/PDF</span>
+                  </th>
+                  <th className="px-1 md:px-6 py-3.5 md:py-4 text-center text-[#1a5f20] bg-[#f4faf4]/20">
+                    <span className="hidden md:inline">Inviteque Digital Website</span>
+                    <span className="inline md:hidden">Inviteque</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-iqBorder">
+                {[
+                  {
+                    feature: 'Google Map Navigation',
+                    paper: '✕',
+                    image: '✕',
+                    inviteque: '✓',
+                    iqClass: 'text-emerald-600 font-extrabold bg-[#f4faf4]/40 text-center'
+                  },
+                  {
+                    feature: 'Live Countdown Timer',
+                    paper: '✕',
+                    image: '✕',
+                    inviteque: '✓',
+                    iqClass: 'text-emerald-600 font-extrabold bg-[#f4faf4]/40 text-center'
+                  },
+                  {
+                    feature: 'Cinematic Animations',
+                    paper: '✕',
+                    image: '✕',
+                    inviteque: '✓',
+                    iqClass: 'text-emerald-600 font-extrabold bg-[#f4faf4]/40 text-center'
+                  },
+                  {
+                    feature: 'Instant Live Updates',
+                    paper: '✕',
+                    image: '✕',
+                    inviteque: '✓',
+                    iqClass: 'text-emerald-600 font-extrabold bg-[#f4faf4]/40 text-center'
+                  },
+                  {
+                    feature: 'Environmental Impact',
+                    paper: '✕',
+                    image: '✓',
+                    inviteque: '✓',
+                    iqClass: 'text-emerald-600 font-extrabold bg-[#f4faf4]/40 text-center'
+                  }
+                ].map((row) => (
+                  <tr key={row.feature} className="hover:bg-iqBg/5 transition-colors">
+                    <td className="px-2.5 md:px-6 py-3.5 md:py-5 font-bold text-iqText bg-[#FFFDFB]/40 break-words leading-tight">{row.feature}</td>
+                    <td className="px-1 md:px-6 py-3.5 md:py-5 text-center text-xs xs:text-sm md:text-base font-bold">
+                      {row.paper === '✕' ? <span className="text-red-500">✕</span> : row.paper}
+                    </td>
+                    <td className="px-1 md:px-6 py-3.5 md:py-5 text-center text-xs xs:text-sm md:text-base font-bold">
+                      {row.image === '✓' ? <span className="text-emerald-600">✓</span> : <span className="text-red-500">✕</span>}
+                    </td>
+                    <td className={`px-1 md:px-6 py-3.5 md:py-5 ${row.iqClass} text-xs xs:text-sm md:text-base`}>{row.inviteque}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </motion.div>
 
           <motion.div
@@ -744,13 +882,13 @@ export default function Landing() {
             initial="hidden"
             whileInView="show"
             viewport={viewportOnce}
-            className="mx-auto mt-10 flex max-w-3xl items-center justify-center"
+            className="mx-auto mt-12 flex max-w-3xl items-center justify-center"
           >
             <a
               href="#templates"
-              className="inline-flex items-center justify-center rounded-full bg-iqText px-7 py-3 text-sm font-semibold text-iqCard shadow-luxury transition hover:opacity-95"
+              className="inline-flex h-14 items-center justify-center rounded-full bg-black px-10 text-base font-semibold text-white shadow-xl transition-all hover:scale-105 hover:bg-black/90 active:scale-95"
             >
-              Get Started
+              Curate Your Invite
             </a>
           </motion.div>
         </div>
@@ -784,21 +922,35 @@ export default function Landing() {
             viewport={viewportOnce}
             className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
           >
-            {[
-              { icon: '⚡', title: 'Instant Publishing', desc: 'Go live in minutes. Share your link immediately.' },
-              { icon: '💰', title: 'Affordable', desc: 'Premium templates at a fraction of traditional printing costs.' },
-              { icon: '🔄', title: 'Easy Updates', desc: 'Change dates, venue, or schedule anytime—instantly visible to guests.' },
-            ].map((item) => (
-              <motion.article
-                key={item.title}
-                variants={fadeUp}
-                className="rounded-card border border-iqBorder bg-white p-8 shadow-luxury text-center"
-              >
-                <p className="text-5xl mb-4">{item.icon}</p>
-                <h3 className="text-lg font-bold text-iqText mb-3">{item.title}</h3>
-                <p className="text-sm text-iqText/70">{item.desc}</p>
-              </motion.article>
-            ))}
+            {/* Card 1 - Instant Publishing */}
+            <motion.article
+              variants={fadeUp}
+              className="rounded-card border border-iqBorder bg-white p-8 shadow-luxury text-center hover:shadow-2xl transition duration-300"
+            >
+              <InstantPublishingIcon />
+              <h3 className="text-lg font-bold text-iqText mb-3">Instant Publishing</h3>
+              <p className="text-sm text-iqText/70">Go live in minutes. Share your gorgeous luxury wedding link immediately with zero delays.</p>
+            </motion.article>
+
+            {/* Card 2 - Affordable Premium */}
+            <motion.article
+              variants={fadeUp}
+              className="rounded-card border border-iqBorder bg-white p-8 shadow-luxury text-center hover:shadow-2xl transition duration-300"
+            >
+              <AffordableIcon />
+              <h3 className="text-lg font-bold text-iqText mb-3">Affordable Luxury</h3>
+              <p className="text-sm text-iqText/70">Unlock spectacular, fully responsive designs at a fraction of the cost of traditional printing.</p>
+            </motion.article>
+
+            {/* Card 3 - Easy Live Updates */}
+            <motion.article
+              variants={fadeUp}
+              className="rounded-card border border-iqBorder bg-white p-8 shadow-luxury text-center hover:shadow-2xl transition duration-300"
+            >
+              <EasyUpdatesIcon />
+              <h3 className="text-lg font-bold text-iqText mb-3">Easy Live Updates</h3>
+              <p className="text-sm text-iqText/70">Adjust timing, venue map, or details anytime—changes are synced live for your guests in real-time.</p>
+            </motion.article>
           </motion.div>
         </div>
       </section>

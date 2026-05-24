@@ -144,16 +144,16 @@ export default function Payment() {
       const inviteUrl = `${window.location.origin}/templates/${templateId}/${savedInvite.code}`
 
       // If already paid, we don't need a new confirmation, or we can just show success
-      navigate('/payment-confirmation', { 
-        state: { 
-          orderId: savedInvite.id, 
-          inviteUrl, 
-          draftData, 
+      navigate('/payment-confirmation', {
+        state: {
+          orderId: savedInvite.id,
+          inviteUrl,
+          draftData,
           template,
           amount: isAlreadyPaid ? draftData.amountPaid : finalPrice,
           code: savedInvite.code,
           isUpdate: true
-        } 
+        }
       })
     } catch (error) {
       console.error('Save error:', error)
@@ -196,8 +196,8 @@ export default function Payment() {
                 {isAlreadyPaid ? 'Review Your Updates' : 'Order Summary'}
               </h1>
               <p className="text-iqText/60">
-                {isAlreadyPaid 
-                  ? 'Confirm the changes before they go live' 
+                {isAlreadyPaid
+                  ? 'Confirm the changes before they go live'
                   : 'Review your invitation details and proceed to payment'}
               </p>
             </div>
@@ -209,16 +209,16 @@ export default function Payment() {
             >
               {/* Template Image / Header */}
               <div className="h-40 md:h-52 overflow-hidden bg-gradient-to-br from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14] relative">
-                <img 
+                <img
                   src={themeImg}
                   alt={template.name}
                   className="w-full h-full object-cover opacity-50"
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                   <div className="text-center text-white">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-60">Template</span>
-                      <h2 className="text-2xl font-serif italic mt-1">{template.name}</h2>
-                   </div>
+                  <div className="text-center text-white">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-60">Template</span>
+                    <h2 className="text-2xl font-serif italic mt-1">{template.name}</h2>
+                  </div>
                 </div>
               </div>
 
@@ -241,14 +241,14 @@ export default function Payment() {
 
                 {/* Feature Status */}
                 <div className="grid grid-cols-2 gap-4 pb-6">
-                   <div className="rounded-2xl bg-iqBg/50 p-4 border border-iqBorder">
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">Gallery</span>
-                      <span className="text-xs font-bold">{draftData.showGallery ? '✅ Enabled' : '❌ Disabled'}</span>
-                   </div>
-                   <div className="rounded-2xl bg-iqBg/50 p-4 border border-iqBorder">
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">Schedule</span>
-                      <span className="text-xs font-bold">{draftData.showSchedule ? '✅ Enabled' : '❌ Disabled'}</span>
-                   </div>
+                  <div className="rounded-2xl bg-iqBg/50 p-4 border border-iqBorder">
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">Gallery</span>
+                    <span className="text-xs font-bold">{draftData.showGallery ? '✅ Enabled' : '❌ Disabled'}</span>
+                  </div>
+                  <div className="rounded-2xl bg-iqBg/50 p-4 border border-iqBorder">
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">Schedule</span>
+                    <span className="text-xs font-bold">{draftData.showSchedule ? '✅ Enabled' : '❌ Disabled'}</span>
+                  </div>
                 </div>
 
                 {/* Coupon Code Input */}
@@ -343,8 +343,8 @@ export default function Payment() {
                 {isAlreadyPaid ? '✨ Free Updates Enabled' : '🎁 What happens next?'}
               </h3>
               <p className={`text-xs leading-relaxed ${isAlreadyPaid ? 'text-blue-800/70' : 'text-iqText/60'}`}>
-                {isAlreadyPaid 
-                  ? 'As a premium user, you can update your wedding details as many times as you like. Your live link will be refreshed instantly once you click update.' 
+                {isAlreadyPaid
+                  ? 'As a premium user, you can update your wedding details as many times as you like. Your live link will be refreshed instantly once you click update.'
                   : 'After a successful payment, you will receive your unique digital invitation link. You can share this link with your guests instantly via WhatsApp or Email.'}
               </p>
             </motion.div>

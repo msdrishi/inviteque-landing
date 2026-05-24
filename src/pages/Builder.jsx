@@ -19,7 +19,7 @@ function parseDateInput(dateString) {
   if (!dateString) return { day: '', month: '', year: '' }
   const date = new Date(dateString)
   if (isNaN(date)) return { day: '', month: '', year: '' }
-  
+
   const day = String(date.getDate())
   const month = date.toLocaleString('en-US', { month: 'long' })
   const year = String(date.getFullYear())
@@ -32,6 +32,15 @@ function formatToDateInput(day, month, year) {
   const monthIndex = new Date(`${month} 1`).getMonth()
   const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
   return dateStr
+}
+
+// Function to get today's date in YYYY-MM-DD format (local time)
+function getTodayDateString() {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
+  const day = String(today.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
 }
 
 export default function Builder() {
@@ -140,6 +149,15 @@ export default function Builder() {
     if (!formData.venueAddress?.trim()) newErrors.venueAddress = 'Venue address is required'
     if (!formData.state?.trim()) newErrors.state = 'State is required'
     if (!formData.mapLink?.trim()) newErrors.mapLink = 'Google Maps link is required'
+
+    // Verify selected date is not in the past
+    if (formData.weddingDate && formData.weddingMonth && formData.weddingYear) {
+      const selectedDateStr = formatToDateInput(formData.weddingDate, formData.weddingMonth, formData.weddingYear)
+      const todayStr = getTodayDateString()
+      if (selectedDateStr < todayStr) {
+        newErrors.weddingDate = 'Wedding date cannot be in the past'
+      }
+    }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -302,8 +320,8 @@ export default function Builder() {
                       onChange={handleChange}
                       placeholder="Enter groom's name"
                       className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.groomName
-                          ? 'border-red-500 bg-red-50 focus:border-red-500'
-                          : 'border-iqBorder bg-white focus:border-iqText'
+                        ? 'border-red-500 bg-red-50 focus:border-red-500'
+                        : 'border-iqBorder bg-white focus:border-iqText'
                         }`}
                     />
                     {errors.groomName && <p className="text-xs text-red-500">{errors.groomName}</p>}
@@ -316,8 +334,8 @@ export default function Builder() {
                       onChange={handleChange}
                       placeholder="Enter bride's name"
                       className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.brideName
-                          ? 'border-red-500 bg-red-50 focus:border-red-500'
-                          : 'border-iqBorder bg-white focus:border-iqText'
+                        ? 'border-red-500 bg-red-50 focus:border-red-500'
+                        : 'border-iqBorder bg-white focus:border-iqText'
                         }`}
                     />
                     {errors.brideName && <p className="text-xs text-red-500">{errors.brideName}</p>}
@@ -329,15 +347,20 @@ export default function Builder() {
                   <input
                     type="date"
                     name="weddingDateInput"
+                    min={getTodayDateString()}
                     value={formatToDateInput(formData.weddingDate, formData.weddingMonth, formData.weddingYear)}
                     onChange={handleChange}
-                    className={`w-full rounded-xl border px-4 py-3 outline-none transition-colors text-sm ${errors.weddingDate || errors.weddingMonth || errors.weddingYear
-                        ? 'border-red-500 bg-red-50 focus:border-red-500'
-                        : 'border-iqBorder bg-white focus:border-iqText'
+                    className={`w-full rounded-xl border px-4 py-3 outline-none transition-colors text-sm uppercase ${errors.weddingDate || errors.weddingMonth || errors.weddingYear
+                      ? 'border-red-500 bg-red-50 focus:border-red-500'
+                      : 'border-iqBorder bg-white focus:border-iqText'
                       }`}
                   />
                   {(errors.weddingDate || errors.weddingMonth || errors.weddingYear) && (
-                    <p className="text-xs text-red-500">Please select a valid wedding date</p>
+                    <p className="text-xs text-red-500">
+                      {errors.weddingDate && errors.weddingDate !== 'Day is required'
+                        ? errors.weddingDate
+                        : 'Please select a valid wedding date'}
+                    </p>
                   )}
                 </div>
 
@@ -350,8 +373,8 @@ export default function Builder() {
                       onChange={handleChange}
                       placeholder="Enter place of wedding"
                       className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.mahalName
-                          ? 'border-red-500 bg-red-50 focus:border-red-500'
-                          : 'border-iqBorder bg-white focus:border-iqText'
+                        ? 'border-red-500 bg-red-50 focus:border-red-500'
+                        : 'border-iqBorder bg-white focus:border-iqText'
                         }`}
                     />
                     {errors.mahalName && <p className="text-xs text-red-500">{errors.mahalName}</p>}
@@ -365,8 +388,8 @@ export default function Builder() {
                       onChange={handleChange}
                       placeholder="Enter street or area..."
                       className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.venueAddress
-                          ? 'border-red-500 bg-red-50 focus:border-red-500'
-                          : 'border-iqBorder bg-white focus:border-iqText'
+                        ? 'border-red-500 bg-red-50 focus:border-red-500'
+                        : 'border-iqBorder bg-white focus:border-iqText'
                         }`}
                     />
                     {errors.venueAddress && <p className="text-xs text-red-500">{errors.venueAddress}</p>}
@@ -380,8 +403,8 @@ export default function Builder() {
                       onChange={handleChange}
                       placeholder="Enter city (e.g. Bangalore)"
                       className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.venueCity
-                          ? 'border-red-500 bg-red-50 focus:border-red-500'
-                          : 'border-iqBorder bg-white focus:border-iqText'
+                        ? 'border-red-500 bg-red-50 focus:border-red-500'
+                        : 'border-iqBorder bg-white focus:border-iqText'
                         }`}
                     />
                   </div>
@@ -394,8 +417,8 @@ export default function Builder() {
                       onChange={handleChange}
                       placeholder="Enter the State"
                       className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.state
-                          ? 'border-red-500 bg-red-50 focus:border-red-500'
-                          : 'border-iqBorder bg-white focus:border-iqText'
+                        ? 'border-red-500 bg-red-50 focus:border-red-500'
+                        : 'border-iqBorder bg-white focus:border-iqText'
                         }`}
                     />
                     {errors.state && <p className="text-xs text-red-500">{errors.state}</p>}
@@ -411,8 +434,8 @@ export default function Builder() {
                       onChange={handleChange}
                       placeholder="https://goo.gl/maps/..."
                       className={`flex-1 rounded-xl border px-4 py-3 outline-none transition-colors text-sm ${errors.mapLink
-                          ? 'border-red-500 bg-red-50 focus:border-red-500'
-                          : 'border-iqBorder bg-white focus:border-iqText'
+                        ? 'border-red-500 bg-red-50 focus:border-red-500'
+                        : 'border-iqBorder bg-white focus:border-iqText'
                         }`}
                     />
                     <div className="relative">

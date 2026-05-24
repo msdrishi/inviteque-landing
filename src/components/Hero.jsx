@@ -292,7 +292,7 @@ export default function Hero({ data, scrollContainerRef }) {
                 </motion.span>
               ))}
           </motion.span>
-          
+
           {/* Glassy reflection overlay */}
           <motion.div
             animate={{ backgroundPosition: ['200% center', '-200% center'] }}
@@ -541,35 +541,35 @@ export default function Hero({ data, scrollContainerRef }) {
           }
         }}
         aria-label="Scroll down"
-          className="absolute z-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-          style={{ bottom: 'clamp(20px, 4vh, 40px)' }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 3.0 }}
+        className="absolute z-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        style={{ bottom: 'clamp(20px, 4vh, 40px)' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3.0 }}
+      >
+        <motion.div
+          animate={{ y: [0, 5, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+          style={{
+            width: 38,
+            height: 38,
+            borderRadius: '50%',
+            border: '1.5px solid rgba(123,15,26,0.3)',
+            background: 'rgba(255,255,255,0.58)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: '50%',
-              border: '1.5px solid rgba(123,15,26,0.3)',
-              background: 'rgba(255,255,255,0.58)',
-              backdropFilter: 'blur(6px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <svg viewBox="0 0 18 11" width="13" height="8" fill="none" aria-hidden="true">
-              <path d="M1 1.5 L9 9.5 L17 1.5"
-                stroke="#7B0F1A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
-                opacity="0.55"
-              />
-            </svg>
-          </motion.div>
-        </motion.button>
+          <svg viewBox="0 0 18 11" width="13" height="8" fill="none" aria-hidden="true">
+            <path d="M1 1.5 L9 9.5 L17 1.5"
+              stroke="#7B0F1A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+              opacity="0.55"
+            />
+          </svg>
+        </motion.div>
+      </motion.button>
     </section>
   )
 }
