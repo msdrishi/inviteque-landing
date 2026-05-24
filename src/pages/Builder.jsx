@@ -43,6 +43,55 @@ function getTodayDateString() {
   return `${year}-${month}-${day}`
 }
 
+// Function to format time flexibly (e.g. 9 -> 09:00 AM, 9:30 pm -> 09:30 PM, 18:00 -> 06:00 PM)
+function formatTimeFlexible(inputStr) {
+  if (!inputStr) return ''
+  const trimmed = inputStr.trim().toUpperCase()
+  
+  // Check if AM or PM is specified
+  let isPM = false
+  if (trimmed.includes('PM') || trimmed.includes('P.M.')) {
+    isPM = true
+  }
+  
+  // Extract groups of digits
+  const groups = trimmed.match(/\d+/g)
+  if (groups && groups.length >= 1) {
+    let hours = parseInt(groups[0], 10)
+    let minutes = 0
+    if (groups.length >= 2) {
+      minutes = parseInt(groups[1], 10)
+    }
+    
+    // Handle 24-hour formatting (e.g. 18:00 -> 06:00 PM)
+    if (hours >= 24) {
+      hours = hours % 24
+    }
+    
+    if (hours >= 12) {
+      if (hours > 12) {
+        hours = hours - 12
+      }
+      isPM = true
+    } else if (hours === 0) {
+      hours = 12
+      isPM = false
+    }
+    
+    // Clamp hours and minutes
+    hours = Math.min(Math.max(hours, 1), 12)
+    minutes = Math.min(Math.max(minutes, 0), 59)
+    
+    const paddedHours = String(hours).padStart(2, '0')
+    const paddedMinutes = String(minutes).padStart(2, '0')
+    const ampm = isPM ? 'PM' : 'AM'
+    
+    return `${paddedHours}:${paddedMinutes} ${ampm}`
+  }
+  
+  return inputStr
+}
+
 export default function Builder() {
   const { templateId } = useParams()
   const [searchParams] = useSearchParams()
@@ -591,6 +640,10 @@ export default function Builder() {
                               placeholder="Time (e.g. 11:00 AM)"
                               value={item.time}
                               onChange={(e) => handleScheduleChange(idx, 'time', e.target.value)}
+                              onBlur={(e) => {
+                                const formatted = formatTimeFlexible(e.target.value)
+                                handleScheduleChange(idx, 'time', formatted)
+                              }}
                               className="w-full sm:w-32 rounded-lg border border-iqBorder bg-transparent px-2 py-2 text-sm font-semibold outline-none focus:ring-0 focus:border-iqText transition-colors"
                             />
                             <div className="hidden sm:block h-4 w-px bg-iqBorder" />
