@@ -136,7 +136,8 @@ export default function Payment() {
         },
         invitationData: {}, // Placeholder
         rsvpData: {}, // Placeholder
-        status: 'PAID' // Ensure status is set to PAID after this step
+        status: 'PAID', // Ensure status is set to PAID after this step
+        couponCode: appliedCoupon ? appliedCoupon.code : null
       }
 
       const savedInvite = await saveInvitation(inviteRequest)
