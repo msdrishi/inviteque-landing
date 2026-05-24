@@ -16,6 +16,10 @@ export default function TemplateRoyalWedding({ savedData }) {
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
 
+  // Watermark is shown unless the invitation has been paid
+  const isPaid = savedData?.status === 'PAID' || savedData?.isPaid === true || savedData?.coupleData?.isPaid === true
+  const showWatermark = !isPaid
+
   // Determine which data to use: Saved DB data > Local Draft data > Static Fallback
   const activeData = savedData || (isPreview ? draftData : null)
 
@@ -110,9 +114,9 @@ export default function TemplateRoyalWedding({ savedData }) {
       {/* Mobile viewport container - max 430px like a phone */}
       <div className="relative w-full max-w-[430px] min-h-[100svh] bg-background text-primary shadow-[0_0_80px_rgba(0,0,0,0.5)]">
         {/* Repeating Watermark Overlay */}
-        {isPreview && (
+        {showWatermark && (
           <div 
-            className="pointer-events-none fixed inset-0 z-[100] opacity-[0.05] select-none"
+            className="pointer-events-none fixed inset-0 z-[100] opacity-[0.16] select-none"
             style={{
               backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 100px, currentColor 100px, currentColor 101px)`,
               maskImage: 'linear-gradient(to bottom, black, black)',
