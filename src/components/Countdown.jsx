@@ -71,60 +71,10 @@ export default function Countdown({ data }) {
       {/* Overlayed content */}
       <div className="absolute inset-0 z-10">
         <div className="relative h-full w-full">
-          {/* 'COUNTING DOWN TO' (top area) */}
-          <div className="absolute inset-x-0 top-[10%] flex justify-center px-4 md:px-14">
-            <motion.div className="w-full max-w-[420px] text-center">
-              {/* COUNTING DOWN */}
-              <div className="flex justify-center h-8">
-                <div className="flex gap-0">
-                  {'COUNTING DOWN'.split('').map((letter, idx) => (
-                    <motion.span
-                      key={`letter-${idx}`}
-                      initial={{ opacity: 0, y: 12 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false, amount: 0.25 }}
-                      transition={{
-                        duration: 0.75,
-                        ease: [0.22, 1, 0.36, 1],
-                        delay: idx * 0.08,
-                      }}
-                      className="inline-block text-[12px] md:text-[16px] font-bold uppercase tracking-[0.26em] md:tracking-[0.34em] text-primary/80"
-                      style={{ fontFamily: "'Cinzel', serif" }}
-                    >
-                      {letter === ' ' ? '\u00A0' : letter}
-                    </motion.span>
-                  ))}
-                </div>
-              </div>
-              {/* TO */}
-              <div className="flex justify-center h-8">
-                <div className="flex gap-0">
-                  {'TO'.split('').map((letter, idx) => (
-                    <motion.span
-                      key={`to-letter-${idx}`}
-                      initial={{ opacity: 0, y: 12 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false, amount: 0.25 }}
-                      transition={{
-                        duration: 0.75,
-                        ease: [0.22, 1, 0.36, 1],
-                        delay: 'COUNTING DOWN'.length * 0.08 + idx * 0.08,
-                      }}
-                      className="inline-block text-[12px] md:text-[16px] font-bold uppercase tracking-[0.26em] md:tracking-[0.34em] text-primary/80"
-                      style={{ fontFamily: "'Cinzel', serif" }}
-                    >
-                      {letter}
-                    </motion.span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
           {/* Counter numbers (centered) */}
           <div
-            className="absolute inset-x-0 top-[52%] flex justify-center px-4 md:px-10"
-            style={{ transform: 'translateY(-65%)' }}
+            className="absolute inset-x-0 top-1/2 flex justify-center px-4 md:px-10"
+            style={{ transform: 'translateY(-50%)' }}
           >
             <motion.div
               initial={{ opacity: 0, y: 14, scale: 0.99 }}
@@ -133,24 +83,49 @@ export default function Countdown({ data }) {
               transition={{ duration: 0.85, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
               className="w-full max-w-[420px]"
             >
-              <div className="grid grid-cols-4">
-                {boxes.map((box, idx) => (
-                  <div
-                    key={box.key}
-                    className={`px-1 sm:px-3 py-6 text-center ${idx === 0 ? '' : 'border-l border-primary/25'}`}
-                  >
-                    <div
-                      className="text-[24px] md:text-[30px] font-semibold leading-none text-primary/80"
-                      style={{ fontFamily: "'Cinzel', serif", fontWeight: 650 }}
-                    >
-                      {box.key === 'days' ? String(box.value) : String(box.value).padStart(2, '0')}
-                    </div>
-                    <div
-                      className="mt-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary/65"
+              {/* COUNT DOWN Title */}
+              <div className="flex justify-center h-6 mb-2">
+                <div className="flex gap-0">
+                  {'COUNT DOWN'.split('').map((letter, idx) => (
+                    <motion.span
+                      key={`countdown-letter-${idx}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, amount: 0.25 }}
+                      transition={{
+                        duration: 0.75,
+                        ease: [0.22, 1, 0.36, 1],
+                        delay: idx * 0.08,
+                      }}
+                      className="inline-block text-[14px] md:text-[18px] font-bold uppercase tracking-[0.26em] md:tracking-[0.34em] text-primary/80"
                       style={{ fontFamily: "'Cinzel', serif" }}
                     >
-                      {String(box.label || '').toUpperCase()}
+                      {letter === ' ' ? '\u00A0' : letter}
+                    </motion.span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex justify-center items-center gap-3 sm:gap-6">
+                {boxes.map((box, idx) => (
+                  <div key={box.key} className="flex items-center">
+                    <div className="text-center px-3 sm:px-5 py-3">
+                      <div
+                        className="text-[24px] md:text-[30px] font-semibold leading-none text-primary/80"
+                        style={{ fontFamily: "'Cinzel', serif", fontWeight: 650 }}
+                      >
+                        {box.key === 'days' ? String(box.value) : String(box.value).padStart(2, '0')}
+                      </div>
+                      <div
+                        className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-primary/65"
+                        style={{ fontFamily: "'Cinzel', serif" }}
+                      >
+                        {String(box.label || '').toUpperCase()}
+                      </div>
                     </div>
+                    {idx < boxes.length - 1 && (
+                      <div className="w-[1px] h-8 bg-primary/25 self-center" />
+                    )}
                   </div>
                 ))}
               </div>

@@ -40,6 +40,20 @@ export default function TemplateRoyalWedding({ savedData }) {
         ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean).join(', ')
         : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
       mapUrl: savedData ? savedData.venueData.mapLink : draftData.mapLink,
+      hashtag: (() => {
+        const groom = savedData ? savedData.coupleData.groomName : draftData.groomName
+        const bride = savedData ? savedData.coupleData.brideName : draftData.brideName
+        const gName = (groom || '').trim().replace(/\s+/g, '')
+        const bName = (bride || '').trim().replace(/\s+/g, '')
+        return `#${gName}${bName}Forever`
+      })(),
+      dayOfWeek: (() => {
+        const month = savedData ? savedData.heroData.weddingMonth : draftData.weddingMonth
+        const date = savedData ? savedData.heroData.weddingDate : draftData.weddingDate
+        const year = savedData ? savedData.heroData.weddingYear : draftData.weddingYear
+        const d = new Date(`${month} ${date}, ${year}`)
+        return isNaN(d.getTime()) ? 'Wednesday' : d.toLocaleDateString('en-US', { weekday: 'long' })
+      })(),
     },
     venue: {
       ...staticData.venue,
