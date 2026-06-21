@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
@@ -12,11 +12,28 @@ export default function Payment() {
   const location = useLocation()
   const navigate = useNavigate()
   const { draftData, templateId } = location.state || {}
+  const { saveInvitation, user, loading: authLoading } = useAuth()
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/login')
+    }
+  }, [user, authLoading, navigate])
 
   // Get template details
   const template = templates.find(t => t.id === templateId)
 
   const TEMPLATE_PRICE = 999 // Price in INR
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-iqBg">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+      </div>
+    )
+  }
+
+  if (!user) return null
 
   if (!draftData || !template) {
     return (
@@ -34,7 +51,6 @@ export default function Payment() {
     )
   }
 
-  const { saveInvitation, user } = useAuth()
   const [isProcessing, setIsProcessing] = useState(false)
   const [couponCode, setCouponCode] = useState('')
   const [appliedCoupon, setAppliedCoupon] = useState(null)
@@ -169,7 +185,7 @@ export default function Payment() {
       <header className="border-b border-iqBorder bg-white/80 backdrop-blur-md sticky top-0 z-30">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="Inviteque" className="h-6 w-auto" />
+            <img src={logo} alt="Inviteque" className="h-8 w-auto" />
             <span className="text-sm md:text-lg font-bold">{isAlreadyPaid ? 'Update' : 'Payment'}</span>
           </div>
           <button
@@ -396,7 +412,7 @@ export default function Payment() {
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-6 w-auto" loading="lazy" />
-            <span className="text-sm font-bold text-iqText">Inviteque</span>
+            <span className="font-parisienne text-xl font-normal text-iqText leading-none">Inviteque</span>
           </div>
           <span className="text-xs font-medium text-iqText/40">© {new Date().getFullYear()} Inviteque</span>
         </div>

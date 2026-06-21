@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { useDraft } from '../context/DraftContext'
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)
   const { user, logout } = useAuth()
+  const { resetDraft } = useDraft()
   const navigate = useNavigate()
 
   const handleLogout = () => {
@@ -214,7 +216,10 @@ export default function MobileNav() {
                         My Account
                       </button>
                       <button
-                        onClick={() => handleNavigate('/builder/template-1')}
+                        onClick={() => {
+                          resetDraft()
+                          handleNavigate('/builder/template-1')
+                        }}
                         className="w-full rounded-full bg-black px-4 py-3 text-center font-bold text-white transition hover:opacity-90"
                       >
                         Create New Invitation

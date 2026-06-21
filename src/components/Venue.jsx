@@ -53,7 +53,7 @@ const CornerFloral = ({ top, left, right, bottom, rotate = 0 }) => (
   </svg>
 )
 
-export default function Venue({ data }) {
+export default function Venue({ data, isDesktop }) {
   if (!data) return null
 
   const addressTextRaw = String(data.address || data.location || 'MG Road')
@@ -88,7 +88,18 @@ export default function Venue({ data }) {
     <section 
       id={data.id} 
       className="relative w-full overflow-hidden px-4 py-6 flex flex-col items-center text-center"
-      style={{
+      style={isDesktop ? {
+        aspectRatio: '3 / 2',
+        minHeight: 'auto',
+        backgroundColor: '#FFF7F2',
+        backgroundImage: `url("https://res.cloudinary.com/djbxuk2xr/image/upload/v1782033908/io3izfnqso0mtsob8zlk.png")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'scroll',
+        paddingTop: 'clamp(80px, 12svh, 120px)',
+        paddingBottom: 'clamp(52px, 10svh, 96px)',
+        clipPath: 'url(#venueTopCurveClip)',
+      } : {
         minHeight: '100svh',
         backgroundColor: '#FFF7F2',
         backgroundImage: `url(${locationImg})`,
@@ -136,201 +147,347 @@ export default function Venue({ data }) {
         </defs>
       </svg>
 
-      <AnimatedTitle 
-        text="OUR VENUE"
-        className="font-semibold relative z-10"
-        style={{
-          fontFamily: "'Cinzel', serif",
-          fontSize: 'clamp(24px, 5.2vw, 34px)',
-          letterSpacing: '0.14em',
-          fontWeight: 600,
-          color: '#7B1E2B',
-          marginBottom: '12px',
-          textShadow: '0 14px 28px rgba(123, 30, 43, 0.16)',
-        }}
-      />
-
-      <motion.p
-        initial="hidden"
-        whileInView="show"
-        viewport={viewport}
-        variants={fadeUp}
-        transition={{ duration: 0.8, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
-        className="flex items-center justify-center gap-3 relative z-10"
-        style={{ marginBottom: '16px' }}
-      >
-        <span style={{ width: '56px', height: '1px', backgroundColor: 'rgba(216,178,110,0.7)' }} />
-        <PinIconSolid size={16} color="#D8B26E" />
-        <span style={{ width: '56px', height: '1px', backgroundColor: 'rgba(216,178,110,0.7)' }} />
-      </motion.p>
-
-      <motion.h3 
-        initial="hidden"
-        whileInView="show"
-        viewport={viewport}
-        variants={fadeUp}
-        transition={{ duration: 0.85, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        className="font-semibold relative z-10"
-        style={{
-          fontFamily: "'Cinzel', serif",
-          fontSize: 'clamp(18px, 4.2vw, 28px)',
-          fontWeight: 600,
-          color: '#8A2D3B',
-          margin: '10px 0 6px 0',
-          letterSpacing: '0.16em',
-          textShadow: '0 14px 28px rgba(122, 30, 43, 0.16)',
-        }}
-      >
-        {venueTitle}
-      </motion.h3>
-
-      <motion.address
-        initial="hidden"
-        whileInView="show"
-        viewport={viewport}
-        variants={fadeUp}
-        transition={{ duration: 0.85, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
-        className="flex flex-col items-center text-center relative z-10"
-        style={{
-          width: '100%',
-          maxWidth: '520px',
-          padding: 0,
-          marginTop: '14px',
-          color: '#9C5E67',
-          fontStyle: 'normal',
-          textAlign: 'center',
-        }}
-      >
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ width: 54, height: 1, background: 'rgba(216,178,110,0.66)' }} />
-          <PinIconSolid size={16} color="#D8B26E" />
-          <span style={{ width: 54, height: 1, background: 'rgba(216,178,110,0.66)' }} />
-        </span>
-
-        <AnimatedTitle 
-          text="ADDRESS"
+      {isDesktop ? (
+        <div 
+          className="absolute inset-0 z-10 flex flex-col items-center justify-between text-center"
           style={{
-            marginTop: 8,
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: 300,
-            fontSize: '11px',
-            letterSpacing: '0.34em',
-            color: '#9C5E67',
-            textTransform: 'uppercase',
-            textShadow: '0 8px 18px rgba(255, 247, 242, 0.64)',
-          }}
-        />
-
-        <span
-          style={{
-            marginTop: 6,
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: 500,
-            fontSize: 'clamp(13px, 2.8vw, 15px)',
-            lineHeight: 1.68,
-            color: '#9C5E67',
-            whiteSpace: 'normal',
-            overflowWrap: 'anywhere',
-            textShadow: '0 12px 24px rgba(255, 247, 242, 0.64)',
+            paddingTop: 'clamp(70px, 9.5%, 120px)',
+            paddingBottom: '8%',
+            paddingLeft: '5%',
+            paddingRight: '5%',
           }}
         >
-          {addressTextPretty}
-        </span>
-      </motion.address>
+          {/* Top: Header & Venue Details */}
+          <div className="flex flex-col items-center">
+            <AnimatedTitle 
+              text="OUR VENUE"
+              className="font-semibold relative z-10"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontSize: 'clamp(24px, 2.5vw, 36px)',
+                letterSpacing: '0.14em',
+                fontWeight: 600,
+                color: '#7B1E2B',
+                marginBottom: '8px',
+                textShadow: '0 14px 28px rgba(123, 30, 43, 0.16)',
+              }}
+            />
+            <motion.p
+              initial="hidden"
+              whileInView="show"
+              viewport={viewport}
+              variants={fadeUp}
+              transition={{ duration: 0.8, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+              className="flex items-center justify-center gap-3 relative z-10"
+              style={{ marginBottom: '14px' }}
+            >
+              <span style={{ width: '56px', height: '1px', backgroundColor: 'rgba(216,178,110,0.7)' }} />
+              <PinIconSolid size={16} color="#D8B26E" />
+              <span style={{ width: '56px', height: '1px', backgroundColor: 'rgba(216,178,110,0.7)' }} />
+            </motion.p>
 
-      <span aria-hidden="true" style={{ flex: 1 }} />
+            <motion.h3 
+              initial="hidden"
+              whileInView="show"
+              viewport={viewport}
+              variants={fadeUp}
+              transition={{ duration: 0.85, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="font-semibold relative z-10"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontSize: 'clamp(18px, 2.2vw, 30px)',
+                fontWeight: 600,
+                color: '#8A2D3B',
+                margin: '6px 0 8px 0',
+                letterSpacing: '0.16em',
+                textShadow: '0 14px 28px rgba(122, 30, 43, 0.16)',
+              }}
+            >
+              {venueTitle}
+            </motion.h3>
 
-      {data.mapUrl && (
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={viewport}
-          variants={fadeUp}
-          transition={{ duration: 0.9, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            position: 'relative',
-            marginTop: '26px',
-            background: '#FFF7F2',
-            borderRadius: '22px',
-            border: '1px solid rgba(216,178,110,0.6)',
-            boxShadow: '0 22px 46px rgba(109,18,32,0.12), 0 8px 16px rgba(216,178,110,0.22), inset 0 1px 0 rgba(255,255,255,0.85)',
-            padding: '16px',
-            zIndex: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '14px',
-          }}
-        >
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 120 120"
-            width="120"
-            height="120"
-            style={{
-              position: 'absolute',
-              inset: '8px',
-              opacity: 0.18,
-              pointerEvents: 'none',
-            }}
-          >
-            <path d="M8 60 C24 40, 42 40, 60 60 C78 80, 96 80, 112 60" stroke="#D8B26E" strokeWidth="1" fill="none" />
-            <path d="M8 68 C24 48, 42 48, 60 68 C78 88, 96 88, 112 68" stroke="#D8B26E" strokeWidth="1" fill="none" />
-          </svg>
-          <motion.img
-            src={`https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(String(data.mapUrl))}&color=6D1220&bgcolor=FFF7F2`}
-            alt="QR Code for Location"
-            width={132}
-            height={132}
-            style={{
-              display: 'block',
-              borderRadius: '14px',
-              border: '1px solid rgba(216,178,110,0.44)',
-              backgroundColor: '#FFF7F2',
-              padding: '10px',
-              boxShadow: '0 10px 24px rgba(109,18,32,0.1)',
-              position: 'relative',
-              zIndex: 2,
-            }}
-            loading="lazy"
-            decoding="async"
-            referrerPolicy="no-referrer"
-          />
-          <a
-            href={String(data.mapUrl)}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              padding: '8px 16px',
-              borderRadius: '20px',
-              background: 'rgba(123, 30, 43, 0.1)',
-              border: '1px solid rgba(123, 30, 43, 0.25)',
-              fontFamily: "'Montserrat', sans-serif",
-              fontSize: '12px',
-              fontWeight: 600,
-              color: '#7B1E2B',
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              position: 'relative',
-              zIndex: 2,
-              cursor: 'pointer',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'rgba(123, 30, 43, 0.15)'
-              e.currentTarget.style.borderColor = 'rgba(123, 30, 43, 0.4)'
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = 'rgba(123, 30, 43, 0.1)'
-              e.currentTarget.style.borderColor = 'rgba(123, 30, 43, 0.25)'
-            }}
-          >
-            📍 Open in Maps
-          </a>
-        </motion.div>
+            <motion.address
+              initial="hidden"
+              whileInView="show"
+              viewport={viewport}
+              variants={fadeUp}
+              transition={{ duration: 0.85, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col items-center text-center relative z-10"
+              style={{
+                width: '100%',
+                maxWidth: '620px',
+                marginTop: '4px',
+                color: '#9C5E67',
+                fontStyle: 'normal',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 500,
+                  fontSize: 'clamp(13px, 1.2vw, 16px)',
+                  lineHeight: 1.6,
+                  color: '#9C5E67',
+                  whiteSpace: 'normal',
+                  overflowWrap: 'anywhere',
+                  textShadow: '0 12px 24px rgba(255, 247, 242, 0.64)',
+                }}
+              >
+                {addressTextPretty}
+              </span>
+            </motion.address>
+          </div>
+
+          {/* Bottom: QR Code card */}
+          {data.mapUrl && (
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={viewport}
+              variants={fadeUp}
+              transition={{ duration: 0.9, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                position: 'relative',
+                background: '#FFF7F2',
+                borderRadius: '16px',
+                border: '1px solid rgba(216,178,110,0.6)',
+                boxShadow: '0 15px 35px rgba(109,18,32,0.1), 0 5px 12px rgba(216,178,110,0.15)',
+                padding: '14px 24px',
+                zIndex: 3,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '20px',
+              }}
+            >
+              <motion.img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(String(data.mapUrl))}&color=6D1220&bgcolor=FFF7F2`}
+                alt="QR Code for Location"
+                width={80}
+                height={80}
+                style={{
+                  display: 'block',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(216,178,110,0.44)',
+                  backgroundColor: '#FFF7F2',
+                  padding: '4px',
+                }}
+                loading="lazy"
+              />
+              <div className="flex flex-col items-start gap-2">
+                <span style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  color: '#9C5E67',
+                  letterSpacing: '0.1em'
+                }}>Scan to locate or</span>
+                <a
+                  href={String(data.mapUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 6,
+                    padding: '8px 16px',
+                    borderRadius: '20px',
+                    background: 'rgba(123, 30, 43, 0.08)',
+                    border: '1px solid rgba(123, 30, 43, 0.2)',
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: '#7B1E2B',
+                    textDecoration: 'none',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(123, 30, 43, 0.12)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'rgba(123, 30, 43, 0.08)'
+                  }}
+                >
+                  📍 Open in Maps
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      ) : (
+        <div className="relative z-10 w-full flex-1 flex flex-col items-center justify-between mt-6">
+          {/* Top: Details */}
+          <div className="flex flex-col items-center justify-center w-full">
+            <AnimatedTitle 
+              text="OUR VENUE"
+              className="font-semibold relative z-10"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontSize: 'clamp(24px, 5.2vw, 34px)',
+                letterSpacing: '0.14em',
+                fontWeight: 600,
+                color: '#7B1E2B',
+                marginBottom: '12px',
+                textShadow: '0 14px 28px rgba(123, 30, 43, 0.16)',
+              }}
+            />
+
+            <motion.p
+              initial="hidden"
+              whileInView="show"
+              viewport={viewport}
+              variants={fadeUp}
+              transition={{ duration: 0.8, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+              className="flex items-center justify-center gap-3 relative z-10"
+              style={{ marginBottom: '16px' }}
+            >
+              <span style={{ width: '56px', height: '1px', backgroundColor: 'rgba(216,178,110,0.7)' }} />
+              <PinIconSolid size={16} color="#D8B26E" />
+              <span style={{ width: '56px', height: '1px', backgroundColor: 'rgba(216,178,110,0.7)' }} />
+            </motion.p>
+
+            <motion.h3 
+              initial="hidden"
+              whileInView="show"
+              viewport={viewport}
+              variants={fadeUp}
+              transition={{ duration: 0.85, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="font-semibold relative z-10"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontSize: 'clamp(18px, 4.2vw, 28px)',
+                fontWeight: 600,
+                color: '#8A2D3B',
+                margin: '10px 0 6px 0',
+                letterSpacing: '0.16em',
+                textShadow: '0 14px 28px rgba(122, 30, 43, 0.16)',
+              }}
+            >
+              {venueTitle}
+            </motion.h3>
+
+            <motion.address
+              initial="hidden"
+              whileInView="show"
+              viewport={viewport}
+              variants={fadeUp}
+              transition={{ duration: 0.85, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col items-center text-center relative z-10"
+              style={{
+                width: '100%',
+                maxWidth: '520px',
+                padding: 0,
+                marginTop: '14px',
+                color: '#9C5E67',
+                fontStyle: 'normal',
+                textAlign: 'center',
+              }}
+            >
+              <span style={{ display: 'inline-flex', items: 'center', gap: 8 }}>
+                <span style={{ width: 54, height: 1, background: 'rgba(216,178,110,0.66)' }} />
+                <PinIconSolid size={16} color="#D8B26E" />
+                <span style={{ width: 54, height: 1, background: 'rgba(216,178,110,0.66)' }} />
+              </span>
+
+              <AnimatedTitle 
+                text="ADDRESS"
+                style={{
+                  marginTop: 8,
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 300,
+                  fontSize: '11px',
+                  letterSpacing: '0.34em',
+                  color: '#9C5E67',
+                  textTransform: 'uppercase',
+                  textShadow: '0 8px 18px rgba(255, 247, 242, 0.64)',
+                }}
+              />
+
+              <span
+                style={{
+                  marginTop: 6,
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 500,
+                  fontSize: 'clamp(13px, 2.8vw, 15px)',
+                  lineHeight: 1.68,
+                  color: '#9C5E67',
+                  whiteSpace: 'normal',
+                  overflowWrap: 'anywhere',
+                  textShadow: '0 12px 24px rgba(255, 247, 242, 0.64)',
+                }}
+              >
+                {addressTextPretty}
+              </span>
+            </motion.address>
+          </div>
+
+          {/* Bottom: Smaller QR Map Card (Vertical Stack) */}
+          {data.mapUrl && (
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={viewport}
+              variants={fadeUp}
+              transition={{ duration: 0.9, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                position: 'relative',
+                background: '#FFF7F2',
+                borderRadius: '16px',
+                border: '1px solid rgba(216,178,110,0.5)',
+                boxShadow: '0 10px 24px rgba(109,18,32,0.06)',
+                padding: '12px 14px',
+                zIndex: 3,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                alignSelf: 'center',
+                marginTop: '16px',
+              }}
+            >
+              <motion.img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(String(data.mapUrl))}&color=6D1220&bgcolor=FFF7F2`}
+                alt="QR Code for Location"
+                width={86}
+                height={86}
+                style={{
+                  display: 'block',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(216,178,110,0.44)',
+                  backgroundColor: '#FFF7F2',
+                  padding: '4px',
+                }}
+                loading="lazy"
+              />
+              <a
+                href={String(data.mapUrl)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 5,
+                  padding: '6px 14px',
+                  borderRadius: '16px',
+                  background: 'rgba(123, 30, 43, 0.08)',
+                  border: '1px solid rgba(123, 30, 43, 0.2)',
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: '10px',
+                  fontWeight: 600,
+                  color: '#7B1E2B',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                }}
+              >
+                📍 Open in Maps
+              </a>
+            </motion.div>
+          )}
+        </div>
       )}
 
     </section>

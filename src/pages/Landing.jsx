@@ -5,9 +5,10 @@ const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1
 import { templates } from '../templates/templates.js'
 import { fadeUp, staggerChildren, viewportOnce } from '../motionVariants.js'
 import { useAuth } from '../context/AuthContext'
+import { useDraft } from '../context/DraftContext'
 import MobileNav from '../components/MobileNav'
 import { LazyImage } from '../components/LazyImage'
-import tailorRomanceBg from '../assets/illustrations/tailor_romance_bg.png'
+const tailorRomanceBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036339/m2xlgvmlglao8ulz60dd.jpg"
 
 const templateCardPop = {
   hidden: { opacity: 0, y: 18, scale: 0.96 },
@@ -534,6 +535,7 @@ export default function Landing() {
   const [displayCount, setDisplayCount] = useState(null)
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   const { user, logout } = useAuth()
+  const { resetDraft } = useDraft()
   const navigate = useNavigate()
   const time = useTime()
 
@@ -554,8 +556,8 @@ export default function Landing() {
       <header className="sticky top-0 z-50 border-b border-iqBorder bg-white/70 backdrop-blur-md">
         <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Inviteque" className="h-6 w-auto" />
-            <span className="text-xl font-extrabold tracking-tight text-iqText hidden sm:inline">Inviteque</span>
+            <img src={logo} alt="Inviteque" className="h-8 w-auto" />
+            <span className="font-parisienne text-3xl font-normal text-iqText hidden sm:inline leading-none">Inviteque</span>
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">
@@ -805,6 +807,7 @@ export default function Landing() {
                     <button
                       onClick={() => {
                         if (!t.available) return
+                        resetDraft()
                         if (user) navigate(`/builder/${t.id}`)
                         else navigate('/login')
                       }}
@@ -1214,7 +1217,9 @@ export default function Landing() {
                 variants={fadeUp}
                 className="mt-4 max-w-xs text-sm leading-relaxed text-[#FFF6F0]/60"
               >
-                Create Beautiful Digital Invitations. Share Love.
+                Create Beautiful Digital Invitations.
+                <br />
+                Share Love. Share Moments.
               </motion.p>
             </div>
 

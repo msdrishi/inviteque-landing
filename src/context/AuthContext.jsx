@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { API_URL } from '../config'
 
 const AuthContext = createContext()
@@ -6,6 +7,14 @@ const AuthContext = createContext()
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [toast, setToast] = useState(null)
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type })
+    setTimeout(() => {
+      setToast(null)
+    }, 2000)
+  }
 
   useEffect(() => {
     // Check for saved session
@@ -13,6 +22,19 @@ export function AuthProvider({ children }) {
     if (savedUser) {
       setUser(JSON.parse(savedUser))
     }
+
+    // Check if we need to show flags
+    if (localStorage.getItem('show_login_toast') === 'true') {
+      showToast('Successfully logged in!')
+      localStorage.removeItem('show_login_toast')
+    } else if (localStorage.getItem('show_signup_toast') === 'true') {
+      showToast('Account created successfully!')
+      localStorage.removeItem('show_signup_toast')
+    } else if (localStorage.getItem('show_logout_toast') === 'true') {
+      showToast('Logged out successfully!')
+      localStorage.removeItem('show_logout_toast')
+    }
+
     setLoading(false)
   }, [])
 
@@ -23,6 +45,7 @@ export function AuthProvider({ children }) {
     }
     setUser(userWithToken)
     localStorage.setItem('inviteque_user', JSON.stringify(userWithToken))
+    localStorage.setItem('show_login_toast', 'true')
   }
 
   const login = async (email, password) => {
@@ -45,6 +68,7 @@ export function AuthProvider({ children }) {
       }
       setUser(userWithToken)
       localStorage.setItem('inviteque_user', JSON.stringify(userWithToken))
+      localStorage.setItem('show_login_toast', 'true')
       return { success: true }
     } catch (error) {
       return { success: false, message: error.message }
@@ -67,6 +91,7 @@ export function AuthProvider({ children }) {
       const data = await response.json()
       setUser(data)
       localStorage.setItem('inviteque_user', JSON.stringify(data))
+      localStorage.setItem('show_signup_toast', 'true')
       return { success: true }
     } catch (error) {
       return { success: false, message: error.message }
@@ -118,6 +143,11 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(invitationRequest),
       })
 
+      if (response.status === 401) {
+        logout()
+        throw new Error('Your session has expired. Please login again.')
+      }
+
       if (!response.ok) {
         throw new Error('Failed to save invitation')
       }
@@ -132,6 +162,8 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setUser(null)
     localStorage.removeItem('inviteque_user')
+    localStorage.setItem('show_logout_toast', 'true')
+    window.location.href = '/'
   }
 
   return (
@@ -149,6 +181,22 @@ export function AuthProvider({ children }) {
       }}
     >
       {!loading && children}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, scale: 1, x: '-50%' }}
+            exit={{ opacity: 0, y: -15, scale: 0.95, x: '-50%' }}
+            transition={{ duration: 0.25, ease: [0.21, 1.02, 0.43, 1.01] }}
+            className="fixed top-6 left-1/2 z-[9999] pointer-events-none"
+          >
+            <div className="px-6 py-3.5 rounded-full bg-emerald-950/90 text-emerald-100 shadow-[0_20px_50px_rgba(16,185,129,0.15)] text-xs md:text-sm font-semibold flex items-center gap-3 border border-emerald-500/30 tracking-wide backdrop-blur-md">
+              <span className="text-emerald-400 animate-pulse">✓</span>
+              <span className="font-saas tracking-tight">{toast.message}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </AuthContext.Provider>
   )
 }

@@ -44,7 +44,7 @@ function Tape({ top, bottom, left, right, rotate, width = 70, height = 26 }) {
 }
 
 /* ─── Main Gallery Section ──────────────── */
-export default function Story({ data }) {
+export default function Story({ data, isDesktop }) {
   const containerRef = useRef(null)
   
   const { scrollYProgress } = useScroll({
@@ -175,13 +175,16 @@ export default function Story({ data }) {
       <div style={{
         position: 'relative',
         width: '100%',
-        maxWidth: '460px',
+        maxWidth: isDesktop ? '1000px' : '460px',
         padding: '0 20px',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: isDesktop ? 'row' : 'column',
+        justifyContent: isDesktop ? 'space-around' : 'center',
         alignItems: 'center',
+        gap: isDesktop ? '30px' : '0px',
         zIndex: 2,
         marginBottom: '20px',
+        margin: '0 auto',
       }}>
         
         {/* Photo 1 (Top Left) */}
@@ -195,9 +198,10 @@ export default function Story({ data }) {
               background: 'rgba(255,255,255,0.9)',
               padding: '8px',
               boxShadow: '0 24px 60px rgba(0,0,0,0.18), 0 12px 24px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6)',
-              width: '75%',
+              width: isDesktop ? '28%' : '75%',
               borderRadius: 16,
-              marginRight: '18%',
+              marginRight: isDesktop ? '0px' : '18%',
+              marginTop: isDesktop ? '0px' : undefined,
               zIndex: 1,
             }}
           >
@@ -231,10 +235,10 @@ export default function Story({ data }) {
               background: 'rgba(255,255,255,0.9)',
               padding: '8px',
               boxShadow: '0 32px 80px rgba(0,0,0,0.22), 0 16px 32px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.6)',
-              width: '80%',
+              width: isDesktop ? '30%' : '80%',
               borderRadius: 16,
-              marginLeft: '18%',
-              marginTop: '-22%', // Overlap over Photo 1
+              marginLeft: isDesktop ? '0px' : '18%',
+              marginTop: isDesktop ? '0px' : '-22%', // Overlap over Photo 1
               zIndex: 2,
             }}
           >
@@ -285,10 +289,10 @@ export default function Story({ data }) {
               background: 'rgba(255,255,255,0.9)',
               padding: '8px',
               boxShadow: '0 24px 55px rgba(0,0,0,0.18), 0 12px 22px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6)',
-              width: '78%',
+              width: isDesktop ? '29%' : '78%',
               borderRadius: 16,
-              marginRight: '20%',
-              marginTop: '-22%', // Overlap over Photo 2
+              marginRight: isDesktop ? '0px' : '20%',
+              marginTop: isDesktop ? '0px' : '-22%', // Overlap over Photo 2
               zIndex: 3,
             }}
           >
@@ -312,8 +316,6 @@ export default function Story({ data }) {
 
       </div>
       </div>
-
-
 
     </section>
   )

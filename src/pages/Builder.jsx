@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import logo from '../assets/logo/logo-inviteque.png'
+const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
 import { useDraft } from '../context/DraftContext'
 import { templates } from '../templates/templates'
 import { uploadToCloudinary } from '../utils/cloudinary'
 import { API_URL } from '../config'
+import { useAuth } from '../context/AuthContext'
 
 
 // Function to format text to proper case (first letter capital, rest lowercase)
@@ -66,36 +67,81 @@ export default function Builder() {
   const [searchParams] = useSearchParams()
   const editCode = searchParams.get('code')
   const navigate = useNavigate()
-  const { draftData, updateDraft } = useDraft()
+  const { draftData, updateDraft, resetDraft } = useDraft()
   const [step, setStep] = useState(1)
   const [showMapTooltip, setShowMapTooltip] = useState(false)
+  const { user, loading: authLoading } = useAuth()
   const [loading, setLoading] = useState(!!editCode && !draftData.code)
 
-  // Initialize with draft data
-  const [formData, setFormData] = useState({
-    ...draftData,
-    groomName: draftData.groomName || '',
-    brideName: draftData.brideName || '',
-    weddingDate: draftData.weddingDate || '',
-    weddingMonth: draftData.weddingMonth || '',
-    weddingYear: draftData.weddingYear || '',
-    mahalName: draftData.mahalName || '',
-    venueAddress: draftData.venueAddress || '',
-    venueCity: draftData.venueCity || '',
-    state: draftData.state || '',
-    mapLink: draftData.mapLink || '',
-    showGallery: draftData.showGallery !== undefined ? draftData.showGallery : true,
-    showSchedule: draftData.showSchedule !== undefined ? draftData.showSchedule : true,
-    photos: draftData.photos || [null, null, null],
-    scheduleItems: draftData.scheduleItems || [
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/login')
+    }
+  }, [user, authLoading, navigate])
+
+  const defaultFormData = {
+    groomName: '',
+    brideName: '',
+    weddingDate: '',
+    weddingMonth: '',
+    weddingYear: '',
+    mahalName: '',
+    venueAddress: '',
+    venueCity: '',
+    state: '',
+    mapLink: '',
+    showGallery: true,
+    showSchedule: true,
+    photos: [null, null, null],
+    scheduleItems: [
       { time: '11:00 AM', title: 'Haldi Ceremony' },
       { time: '04:00 PM', title: 'Wedding Vows' },
       { time: '07:00 PM', title: 'Grand Reception' }
     ],
-    code: draftData.code || editCode || null,
-    status: draftData.status || 'DRAFT',
-    amountPaid: draftData.amountPaid || 0
+    code: null,
+    status: 'DRAFT',
+    amountPaid: 0
+  }
+
+  // If entering a creation flow (no editCode) but context has a PAID invitation, we must reset
+  const shouldStartFresh = !editCode && draftData.status === 'PAID'
+
+  // Initialize with draft data
+  const [formData, setFormData] = useState(() => {
+    if (shouldStartFresh) {
+      return defaultFormData
+    }
+    return {
+      ...draftData,
+      groomName: draftData.groomName || '',
+      brideName: draftData.brideName || '',
+      weddingDate: draftData.weddingDate || '',
+      weddingMonth: draftData.weddingMonth || '',
+      weddingYear: draftData.weddingYear || '',
+      mahalName: draftData.mahalName || '',
+      venueAddress: draftData.venueAddress || '',
+      venueCity: draftData.venueCity || '',
+      state: draftData.state || '',
+      mapLink: draftData.mapLink || '',
+      showGallery: draftData.showGallery !== undefined ? draftData.showGallery : true,
+      showSchedule: draftData.showSchedule !== undefined ? draftData.showSchedule : true,
+      photos: draftData.photos || [null, null, null],
+      scheduleItems: draftData.scheduleItems || [
+        { time: '11:00 AM', title: 'Haldi Ceremony' },
+        { time: '04:00 PM', title: 'Wedding Vows' },
+        { time: '07:00 PM', title: 'Grand Reception' }
+      ],
+      code: editCode || draftData.code || null,
+      status: draftData.status || 'DRAFT',
+      amountPaid: draftData.amountPaid || 0
+    }
   })
+
+  useEffect(() => {
+    if (shouldStartFresh) {
+      resetDraft()
+    }
+  }, [shouldStartFresh, resetDraft])
 
   useEffect(() => {
     // If we have an editCode in the URL AND (we haven't loaded it yet OR it's different from what's in memory)
@@ -147,13 +193,15 @@ export default function Builder() {
   // Get template details
   const template = templates.find(t => t.id === templateId)
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FDFCFB]">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#D4AF37] border-t-transparent"></div>
       </div>
     )
   }
+
+  if (!user) return null
 
   const validateStep1 = () => {
     const newErrors = {}
@@ -299,7 +347,7 @@ export default function Builder() {
       <header className="border-b border-iqBorder bg-white/80 backdrop-blur-md sticky top-0 z-30">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2 min-w-0">
-            <img src={logo} alt="Inviteque" className="h-6 w-auto flex-shrink-0" />
+            <img src={logo} alt="Inviteque" className="h-8 w-auto flex-shrink-0" />
             <span className="text-sm md:text-lg font-bold hidden sm:inline">Builder</span>
           </div>
           <div className="flex items-center gap-2 md:gap-4 text-xs md:text-sm font-medium overflow-x-auto">
@@ -775,7 +823,7 @@ export default function Builder() {
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-6 w-auto" loading="lazy" />
-            <span className="text-sm font-bold text-iqText">Inviteque</span>
+            <span className="font-parisienne text-xl font-normal text-iqText leading-none">Inviteque</span>
           </div>
           <span className="text-xs font-medium text-iqText/40">© {new Date().getFullYear()} Inviteque</span>
         </div>

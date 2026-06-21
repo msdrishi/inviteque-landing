@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-const heroBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029561/q3tbvdnxgw47uylaqzau.png"
+const heroBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1780830584/bevo6p9kp87xs9glyczu.png"
 const petalImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029563/kozuh0rafoxa9zwysfjq.png"
 
 /* ─────────────────────────────────────────
@@ -125,7 +125,7 @@ function HeartRule({ maxW = 160 }) {
 /* ─────────────────────────────────────────
    Date row — AUGUST | 18 | 2026
 ───────────────────────────────────────── */
-function DateRow({ dateLine }) {
+function DateRow({ dateLine, isDesktop }) {
   const parts = String(dateLine || '').trim().split(/\s+/)
   let day = '', month = '', year = ''
   if (parts.length >= 3) {
@@ -141,7 +141,7 @@ function DateRow({ dateLine }) {
       <div style={{ paddingRight: 14 }}>
         <span style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: 'clamp(8px, 2.4vw, 11px)',
+          fontSize: isDesktop ? '14px' : 'clamp(8px, 2.4vw, 11px)',
           letterSpacing: '0.2em',
           color: '#7B0F1A',
           opacity: 0.75,
@@ -153,7 +153,7 @@ function DateRow({ dateLine }) {
       <div style={{ paddingLeft: 14, paddingRight: 14 }}>
         <span style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: 'clamp(26px, 8.5vw, 42px)',
+          fontSize: isDesktop ? '48px' : 'clamp(26px, 8.5vw, 42px)',
           fontWeight: 700,
           lineHeight: 1,
           color: '#7B0F1A',
@@ -165,7 +165,7 @@ function DateRow({ dateLine }) {
       <div style={{ paddingLeft: 14 }}>
         <span style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: 'clamp(8px, 2.4vw, 11px)',
+          fontSize: isDesktop ? '14px' : 'clamp(8px, 2.4vw, 11px)',
           letterSpacing: '0.2em',
           color: '#7B0F1A',
           opacity: 0.75,
@@ -191,32 +191,36 @@ function PinIcon() {
 /* ─────────────────────────────────────────
    Main Hero
 ───────────────────────────────────────── */
-export default function Hero({ data, scrollContainerRef }) {
+export default function Hero({ data, scrollContainerRef, isDesktop }) {
   const { scrollY } = useScroll(
     scrollContainerRef ? { container: scrollContainerRef } : undefined,
   )
-  const rawY = useTransform(scrollY, [0, 800], ['0%', '-14%'])
+  const rawY = useTransform(scrollY, [0, 800], ['0%', '-10%'])
   const bgY = useSpring(rawY, { stiffness: 55, damping: 18 })
 
   if (!data) return null
+
+  const currentHeroBg = isDesktop
+    ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782033902/nelfh17u4fep6v8ksoei.webp"
+    : heroBg
 
   return (
     <section
       id={data.id}
       className="relative w-full overflow-hidden"
-      style={{ minHeight: 'calc(100svh + 20px)', background: '#FFF0EC' }}
+      style={isDesktop ? { aspectRatio: '1448 / 1086', minHeight: 'auto', background: '#FFF0EC' } : { minHeight: 'calc(100svh + 20px)', background: '#FFF0EC' }}
     >
       {/* ── Parallax background — no overlay ── */}
       <motion.div
         className="absolute inset-0 z-0 will-change-transform"
-        style={{ y: bgY, scale: 1.15, transformOrigin: 'center top' }}
+        style={{ y: bgY, scale: 1.3, transformOrigin: 'center' }}
       >
         <img
-          src={heroBg}
+          src={currentHeroBg}
           alt=""
           aria-hidden="true"
           className="h-full w-full object-cover"
-          style={{ objectPosition: 'center top' }}
+          style={{ objectPosition: 'center' }}
           loading="eager"
         />
       </motion.div>
@@ -250,7 +254,7 @@ export default function Hero({ data, scrollContainerRef }) {
             marginTop: 4,
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: 700,
-            fontSize: 'clamp(8.5px, 1.4svh, 13px)',
+            fontSize: isDesktop ? '14px' : 'clamp(8.5px, 1.4svh, 13px)',
             letterSpacing: '0.35em',
             textTransform: 'uppercase',
             color: '#7B0F1A',
@@ -266,12 +270,12 @@ export default function Hero({ data, scrollContainerRef }) {
         </div>
 
         {/* ── Groom name ── */}
-        <motion.div variants={nameReveal} style={{ marginTop: 10, position: 'relative' }}>
+        <motion.div variants={nameReveal} style={{ marginTop: isDesktop ? 26 : 10, position: 'relative' }}>
           <motion.span
             variants={nameLetters}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(30px, 4.2vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               color: '#7B0F1A',
@@ -294,37 +298,48 @@ export default function Hero({ data, scrollContainerRef }) {
           </motion.span>
 
           {/* Glassy reflection overlay */}
-          <motion.div
-            animate={{ backgroundPosition: ['200% center', '-200% center'] }}
+          <motion.span
+            animate={{ backgroundPosition: ['100% center', '-200% center'] }}
             transition={{ repeat: Infinity, duration: 7, ease: 'linear' }}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(30px, 4.2vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               whiteSpace: 'nowrap',
               position: 'absolute',
-              inset: 0,
+              inset: '-35px -20px',
+              padding: '35px 20px',
               pointerEvents: 'none',
-              background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.4) 50%, transparent 60%)',
-              backgroundSize: '200% auto',
+              background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.48) 50%, transparent 60%)',
+              backgroundSize: '200% 250%',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               color: 'transparent',
               zIndex: 2,
+              display: 'block',
             }}
             aria-hidden="true"
           >
-            {data.groomName}
-          </motion.div>
+            {String(data.groomName || '')
+              .split('')
+              .map((ch, idx) => (
+                <span
+                  key={`${ch}-${idx}`}
+                  style={{ display: 'inline-block' }}
+                >
+                  {ch === ' ' ? '\u00A0' : ch}
+                </span>
+              ))}
+          </motion.span>
         </motion.div>
 
         {/* & */}
-        <motion.div variants={ampReveal} style={{ marginTop: -2 }}>
+        <motion.div variants={ampReveal} style={{ marginTop: isDesktop ? 10 : -2 }}>
           <span style={{
             fontFamily: "'Parisienne', 'Spectral', cursive",
-            fontSize: 'clamp(20px, 10svh, 60px)',
+            fontSize: isDesktop ? 'clamp(30px, 4.2vw, 90px)' : 'clamp(20px, 10svh, 60px)',
             fontWeight: 100,
             lineHeight: 1,
             color: '#7B0F1A',
@@ -336,12 +351,12 @@ export default function Hero({ data, scrollContainerRef }) {
         </motion.div>
 
         {/* ── Bride name ── */}
-        <motion.div variants={nameReveal} style={{ marginTop: -4, position: 'relative' }}>
+        <motion.div variants={nameReveal} style={{ marginTop: isDesktop ? 10 : -4, position: 'relative' }}>
           <motion.span
             variants={nameLetters}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(30px, 4.2vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               color: '#7B0F1A',
@@ -364,37 +379,48 @@ export default function Hero({ data, scrollContainerRef }) {
           </motion.span>
 
           {/* Glassy reflection overlay */}
-          <motion.div
+          <motion.span
             animate={{ backgroundPosition: ['200% center', '-200% center'] }}
             transition={{ repeat: Infinity, duration: 7, ease: 'linear', delay: 1 }}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(30px, 4.2vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               whiteSpace: 'nowrap',
               position: 'absolute',
-              inset: 0,
+              inset: '-35px -20px',
+              padding: '35px 20px',
               pointerEvents: 'none',
-              background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.4) 50%, transparent 60%)',
-              backgroundSize: '200% auto',
+              background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.48) 50%, transparent 60%)',
+              backgroundSize: '200% 250%',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               color: 'transparent',
               zIndex: 2,
+              display: 'block',
             }}
             aria-hidden="true"
           >
-            {data.brideName}
-          </motion.div>
+            {String(data.brideName || '')
+              .split('')
+              .map((ch, idx) => (
+                <span
+                  key={`${ch}-${idx}`}
+                  style={{ display: 'inline-block' }}
+                >
+                  {ch === ' ' ? '\u00A0' : ch}
+                </span>
+              ))}
+          </motion.span>
         </motion.div>
 
         {/* ARE GETTING MARRIED */}
         <motion.div
           variants={fadeUp}
           style={{
-            marginTop: 4, display: 'flex', flexDirection: 'column',
+            marginTop: isDesktop ? 24 : 4, display: 'flex', flexDirection: 'column',
             alignItems: 'center', gap: 20, width: '100%'
           }}
         >
@@ -404,7 +430,7 @@ export default function Hero({ data, scrollContainerRef }) {
           <p style={{
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: 700,
-            fontSize: 'clamp(7px, 1.2svh, 10.5px)',
+            fontSize: isDesktop ? '14px' : 'clamp(7px, 1.2svh, 10.5px)',
             letterSpacing: '0.28em',
             textTransform: 'uppercase',
             color: '#7B0F1A',
@@ -415,15 +441,15 @@ export default function Hero({ data, scrollContainerRef }) {
         </motion.div>
 
         {/* ── Date row ── */}
-        <div style={{ marginTop: 3 }}>
-          <DateRow dateLine={data.dateLine} />
+        <div style={{ marginTop: isDesktop ? 12 : 3 }}>
+          <DateRow dateLine={data.dateLine} isDesktop={isDesktop} />
         </div>
 
         {/* Day of week */}
-        <motion.div variants={fadeUp} style={{ marginTop: 0 }}>
+        <motion.div variants={fadeUp} style={{ marginTop: isDesktop ? 8 : 0 }}>
           <span style={{
             fontFamily: "'Parisienne', cursive",
-            fontSize: 'clamp(18px, 4.5svh, 30px)',
+            fontSize: isDesktop ? '34px' : 'clamp(18px, 4.5svh, 30px)',
             fontWeight: 400,
             lineHeight: 1.1,
             color: '#7B0F1A',
@@ -455,7 +481,7 @@ export default function Hero({ data, scrollContainerRef }) {
               <p style={{
                 fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 800,
-                fontSize: 'clamp(9px, 1.5svh, 13px)',
+                fontSize: isDesktop ? '16px' : 'clamp(9px, 1.5svh, 13px)',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 color: '#7B0F1A',
@@ -470,7 +496,7 @@ export default function Hero({ data, scrollContainerRef }) {
                 <p style={{
                   fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 600,
-                  fontSize: 'clamp(7px, 1.1svh, 9.5px)',
+                  fontSize: isDesktop ? '12px' : 'clamp(7px, 1.1svh, 9.5px)',
                   letterSpacing: '0.22em',
                   textTransform: 'uppercase',
                   color: '#7B0F1A',
@@ -488,7 +514,7 @@ export default function Hero({ data, scrollContainerRef }) {
               <p style={{
                 fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 800,
-                fontSize: 'clamp(9px, 1.5svh, 13px)',
+                fontSize: isDesktop ? '16px' : 'clamp(9px, 1.5svh, 13px)',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 color: '#7B0F1A',
@@ -500,7 +526,7 @@ export default function Hero({ data, scrollContainerRef }) {
               <p style={{
                 fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 600,
-                fontSize: 'clamp(7px, 1.1svh, 9.5px)',
+                fontSize: isDesktop ? '12px' : 'clamp(7px, 1.1svh, 9.5px)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
                 color: '#7B0F1A',
@@ -514,7 +540,7 @@ export default function Hero({ data, scrollContainerRef }) {
           {data.hashtag && (
             <p style={{
               fontFamily: "'Parisienne', cursive",
-              fontSize: 'clamp(12px, 2.8svh, 18px)',
+              fontSize: isDesktop ? '22px' : 'clamp(12px, 2.8svh, 18px)',
               fontWeight: 400,
               color: '#7B0F1A',
               opacity: 0.7,

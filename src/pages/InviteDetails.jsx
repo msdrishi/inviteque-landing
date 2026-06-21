@@ -9,7 +9,7 @@ import { API_URL } from '../config'
 
 export default function InviteDetails() {
   const { code } = useParams()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [invite, setInvite] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -28,6 +28,11 @@ export default function InviteDetails() {
             'Authorization': `Bearer ${user.token}`
           }
         })
+        if (response.status === 401) {
+          logout()
+          navigate('/login')
+          return
+        }
         if (response.ok) {
           const data = await response.json()
           setInvite(data)
@@ -76,7 +81,7 @@ export default function InviteDetails() {
       <header className="border-b border-iqBorder bg-white/70 backdrop-blur-md sticky top-0 z-50">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="Inviteque" className="h-6 w-auto" />
+            <img src={logo} alt="Inviteque" className="h-8 w-auto" />
             <span className="text-sm font-bold text-iqText">Invitation Details</span>
           </div>
           <button

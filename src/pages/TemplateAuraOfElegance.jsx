@@ -10,7 +10,7 @@ import Story from '../components/Story.jsx'
 import Venue from '../components/Venue.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 
-export default function TemplateRoyalWedding({ savedData }) {
+export default function TemplateAuraOfElegance({ savedData }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData } = useDraft()
@@ -119,73 +119,127 @@ export default function TemplateRoyalWedding({ savedData }) {
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-[#1a1a1a]">
-      {/* Mobile viewport container - max 430px like a phone */}
-      <div className="relative w-full max-w-[430px] min-h-[100svh] bg-background text-primary shadow-[0_0_80px_rgba(0,0,0,0.5)]">
-        {/* Fixed Watermark Overlay */}
-        {showWatermark && (
-          <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.22] select-none">
-            {/* Top */}
-            <span 
-              className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em] text-primary"
-              style={{ fontFamily: "'Montserrat', sans-serif" }}
-            >
-              preview-inviteque
-            </span>
-            {/* Middle */}
-            <span 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18px] font-medium tracking-[0.2em] text-primary"
-              style={{ fontFamily: "'Montserrat', sans-serif" }}
-            >
-              preview-inviteque
-            </span>
-            {/* Bottom */}
-            <span 
-              className="absolute bottom-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em] text-primary"
-              style={{ fontFamily: "'Montserrat', sans-serif" }}
-            >
-              preview-inviteque
-            </span>
-          </div>
-        )}
-
-        {/* Floating Continue Button for Preview */}
-        {isPreview && (
-          <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
-            <div className="flex gap-3">
-              <button
-                onClick={() => navigate(-1)}
-                className="flex-1 flex items-center justify-center gap-2 rounded-full border border-iqBorder bg-white py-4 text-sm font-bold text-iqText shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition hover:scale-105 active:scale-95"
-              >
-                <span>←</span>
-                Back
-              </button>
-              <button
-                onClick={() => navigate('/payment', { state: { draftData, templateId } })}
-                className="flex-1 flex items-center justify-center gap-3 rounded-full bg-black py-4 text-sm font-bold text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
-              >
-                Proceed
-                <span className="text-xs opacity-50">→</span>
-              </button>
+    <div className="relative min-h-screen bg-[#FFF0EC] text-primary">
+      {/* MOBILE VIEW (Existing max-w-[430px] layout) */}
+      <div className="md:hidden flex justify-center items-start min-h-screen bg-[#1a1a1a]">
+        <div className="relative w-full max-w-[430px] min-h-[100svh] bg-background text-primary shadow-[0_0_80px_rgba(0,0,0,0.5)]">
+          {/* Fixed Watermark Overlay */}
+          {showWatermark && (
+            <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.22] select-none">
+              <span className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em] text-primary" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                preview-inviteque
+              </span>
+              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18px] font-medium tracking-[0.2em] text-primary" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                preview-inviteque
+              </span>
+              <span className="absolute bottom-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em] text-primary" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                preview-inviteque
+              </span>
             </div>
+          )}
+
+          {/* Floating Continue Button for Preview */}
+          {isPreview && (
+            <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
+              <div className="flex gap-3">
+                <button
+                  onClick={() => navigate(-1)}
+                  className="flex-1 flex items-center justify-center gap-2 rounded-full border border-iqBorder bg-white py-4 text-sm font-bold text-iqText shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition hover:scale-105 active:scale-95"
+                >
+                  <span>←</span>
+                  Back
+                </button>
+                <button
+                  onClick={() => navigate('/payment', { state: { draftData, templateId } })}
+                  className="flex-1 flex items-center justify-center gap-3 rounded-full bg-black py-4 text-sm font-bold text-white shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
+                >
+                  Proceed
+                  <span className="text-xs opacity-50">→</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          <Hero data={data.hero} />
+          {showGallery && <Story data={data.story} />}
+          <Invitation data={data.invitation} />
+          <Venue data={data.venue} />
+          {showSchedule && <Events data={data.events} />}
+          <Countdown data={data.countdown} />
+          <Footer data={data.footer} />
+        </div>
+      </div>
+
+      {/* DESKTOP VIEW (New Full-Width Sequential Layout) */}
+      <div className="hidden md:block w-full min-h-screen bg-[#FFF6F2] relative">
+        {/* Fixed Watermark Overlay for Desktop */}
+        {showWatermark && (
+          <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.12] select-none flex flex-col justify-around items-center">
+            <span className="text-[32px] font-medium tracking-[0.3em] text-primary" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              PREVIEW — INVITEQUE
+            </span>
+            <span className="text-[32px] font-medium tracking-[0.3em] text-primary" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              PREVIEW — INVITEQUE
+            </span>
           </div>
         )}
 
-        <Hero data={data.hero} />
+        {/* Floating Continue Button for Preview on Desktop */}
+        {isPreview && (
+          <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="px-8 py-4 rounded-full border border-iqBorder bg-white text-sm font-bold text-iqText shadow-[0_10px_30px_rgba(0,0,0,0.15)] transition hover:scale-105 active:scale-95"
+            >
+              ← Back to Edit
+            </button>
+            <button
+              onClick={() => navigate('/payment', { state: { draftData, templateId } })}
+              className="px-10 py-4 rounded-full bg-black text-sm font-bold text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition hover:scale-105 active:scale-95"
+            >
+              Proceed to Payment →
+            </button>
+          </div>
+        )}
 
-        {/* Photo Gallery is optional (Mapped to Story component) */}
-        {showGallery && <Story data={data.story} />}
+        {/* 1) Hero Section - Full width Palace / Cherry Blossom BG */}
+        <div className="w-full">
+          <Hero data={data.hero} isDesktop={true} />
+        </div>
 
-        <Invitation data={data.invitation} />
+        {/* 2) Our Moments Section (Photo 1, Photo 2, Photo 3 side-by-side) */}
+        {showGallery && (
+          <div className="w-full">
+            <Story data={data.story} isDesktop={true} />
+          </div>
+        )}
 
-        <Venue data={data.venue} />
+        {/* 3) Our Story, Our Journey Section (Envelope Card centered) */}
+        <div className="w-full py-16 bg-[#fff6f2]">
+          <Invitation data={data.invitation} isDesktop={true} />
+        </div>
 
-        {/* Wedding Schedule is optional */}
-        {showSchedule && <Events data={data.events} />}
+        {/* 4) Venue Section (Details + QR Code map card side-by-side) */}
+        <div className="w-full">
+          <Venue data={data.venue} isDesktop={true} />
+        </div>
 
-        <Countdown data={data.countdown} />
+        {/* 5) Wedding Schedule Section (Reception, Haldi, Wedding Vows side-by-side) */}
+        {showSchedule && (
+          <div className="w-full">
+            <Events data={data.events} isDesktop={true} />
+          </div>
+        )}
 
-        <Footer data={data.footer} />
+        {/* 6) Forever / Countdown Section */}
+        <div className="w-full">
+          <Countdown data={data.countdown} isDesktop={true} />
+        </div>
+
+        {/* Footer Section */}
+        <div className="w-full">
+          <Footer data={data.footer} isDesktop={true} />
+        </div>
       </div>
     </div>
   )

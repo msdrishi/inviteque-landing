@@ -22,32 +22,35 @@ function AnimatedTitle({ text, className, style }) {
   )
 }
 
-function EventItem({ item, index, scrollY }) {
+function EventItem({ item, index, scrollY, isDesktop }) {
   const itemY = index * PITCH;
   
-  // screenY is the physical position of this item inside the 340px frame
+  // screenY is the physical position of this item inside the frame
   const screenY = useTransform(scrollY, y => y + itemY);
   
-  // Center of the 340px frame is roughly 120.
-  const containerOpacity = useTransform(screenY, [-30, 120, 270], [0, 1, 0]);
+  // Center of the frame: center values scale for desktop frame height
+  const fadeStart = isDesktop ? -40 : -30;
+  const fadePeak = isDesktop ? 130 : 120;
+  const fadeEnd = isDesktop ? 290 : 270;
+  const containerOpacity = useTransform(screenY, [fadeStart, fadePeak, fadeEnd], [0, 1, 0]);
 
   return (
     <motion.div 
-      className="absolute left-0 right-0 mx-auto w-[85%] max-w-[340px] flex justify-center"
+      className={`absolute left-0 right-0 mx-auto w-[85%] ${isDesktop ? 'max-w-[360px]' : 'max-w-[340px]'} flex justify-center`}
       style={{ y: screenY, opacity: containerOpacity }}
     >
       {/* Event Card */}
       <div 
-        className="relative w-full p-[12px] rounded-[20px] flex items-center gap-3 bg-[#ffffff]/80 border border-[#d5b28c]/40 shadow-[0_5px_15px_rgba(0,0,0,0.04)]"
+        className={`relative w-full ${isDesktop ? 'p-[14px] rounded-[22px] gap-4' : 'p-[12px] rounded-[20px] gap-3'} flex items-center bg-[#ffffff]/80 border border-[#d5b28c]/40 shadow-[0_5px_15px_rgba(0,0,0,0.04)]`}
       >
-         <div className="w-[44px] h-[44px] rounded-full flex items-center justify-center shrink-0 shadow-inner bg-[#fff0ec] text-[#8B1E2D]">
+         <div className={`rounded-full flex items-center justify-center shrink-0 shadow-inner bg-[#fff0ec] text-[#8B1E2D] ${isDesktop ? 'w-[48px] h-[48px]' : 'w-[44px] h-[44px]'}`}>
            {item.icon}
          </div>
          <div>
-           <div className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#8B1E2D] mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+           <div className={`${isDesktop ? 'text-[11px]' : 'text-[10px]'} font-bold tracking-[0.15em] uppercase text-[#8B1E2D] mb-1`} style={{ fontFamily: "'Montserrat', sans-serif" }}>
              {item.time}
            </div>
-           <h3 className="text-[18px] font-bold text-[#5C0A14]" style={{ fontFamily: "'Playfair Display', serif" }}>
+           <h3 className={`${isDesktop ? 'text-[20px]' : 'text-[18px]'} font-bold text-[#5C0A14]`} style={{ fontFamily: "'Playfair Display', serif" }}>
              {item.name}
            </h3>
          </div>
@@ -56,7 +59,7 @@ function EventItem({ item, index, scrollY }) {
   )
 }
 
-export default function Events({ data }) {
+export default function Events({ data, isDesktop }) {
   if (!data) return null
 
   const defaultEvents = [
@@ -158,13 +161,13 @@ export default function Events({ data }) {
         </div>
       </motion.div>
 
-      {/* ── Luxury Roller Frame ── */}
+      {/* ── Roller Layout (Same auto moving animation for both Mobile & Desktop) ── */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: false, amount: 0.2 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
-        className="relative w-full max-w-[300px] h-[340px] flex justify-center items-center mt-6"
+        className={`relative w-full ${isDesktop ? 'max-w-[420px] h-[360px]' : 'max-w-[300px] h-[340px]'} flex justify-center items-center mt-6 z-10`}
       >
         {/* Inner Glass Frame */}
         <div 
@@ -173,7 +176,7 @@ export default function Events({ data }) {
           {/* The Roller Items Track */}
           <div className="absolute inset-0">
              {displayItems.map((item, index) => (
-               <EventItem key={index} item={item} index={index} scrollY={scrollY} />
+               <EventItem key={index} item={item} index={index} scrollY={scrollY} isDesktop={isDesktop} />
              ))}
           </div>
           

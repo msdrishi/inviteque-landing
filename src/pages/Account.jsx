@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
-import logo from '../assets/logo/logo-inviteque.png'
+const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
 import { fadeUp, staggerChildren } from '../motionVariants'
 import { API_URL } from '../config'
 
@@ -25,6 +25,11 @@ export default function Account() {
             'Authorization': `Bearer ${user.token}`
           }
         })
+        if (response.status === 401) {
+          logout()
+          navigate('/login')
+          return
+        }
         if (response.ok) {
           const data = await response.json()
           setInvites(data)
@@ -47,8 +52,8 @@ export default function Account() {
       <header className="sticky top-0 z-50 border-b border-iqBorder bg-white/70 backdrop-blur-md">
         <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Inviteque" className="h-6 w-auto" />
-            <span className="text-xl font-extrabold tracking-tight text-iqText">Inviteque</span>
+            <img src={logo} alt="Inviteque" className="h-8 w-auto" />
+            <span className="font-parisienne text-3xl font-normal text-iqText leading-none">Inviteque</span>
           </Link>
           <div className="flex items-center gap-6">
             <button

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import logo from '../assets/logo/logo-inviteque.png'
+const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
 import { fadeUp } from '../motionVariants'
 
 export default function PaymentConfirmation() {
@@ -17,7 +17,7 @@ export default function PaymentConfirmation() {
         <header className="border-b border-iqBorder bg-white/70 backdrop-blur-md">
           <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
             <div className="flex items-center gap-2">
-              <img src={logo} alt="Inviteque" className="h-6 w-auto" />
+              <img src={logo} alt="Inviteque" className="h-8 w-auto" />
               <span className="text-sm font-bold text-iqText">{isUpdate ? 'Update' : 'Payment'} Confirmation</span>
             </div>
           </div>
@@ -54,7 +54,7 @@ export default function PaymentConfirmation() {
       <header className="border-b border-iqBorder bg-white/70 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="Inviteque" className="h-6 w-auto" />
+            <img src={logo} alt="Inviteque" className="h-8 w-auto" />
             <span className="text-sm font-bold text-iqText">{isUpdate ? 'Update' : 'Payment'} Confirmation</span>
           </div>
           <button
@@ -269,7 +269,7 @@ export default function PaymentConfirmation() {
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-6 w-auto" loading="lazy" />
-            <span className="text-sm font-bold text-iqText">Inviteque</span>
+            <span className="font-parisienne text-xl font-normal text-iqText leading-none">Inviteque</span>
           </div>
           <span className="text-xs font-medium text-iqText/40">© {new Date().getFullYear()} Inviteque</span>
         </div>
