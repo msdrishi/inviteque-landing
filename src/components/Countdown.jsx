@@ -82,7 +82,8 @@ export default function Countdown({ data, isDesktop }) {
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: false, amount: 0.25 }}
               transition={{ duration: 0.85, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className={`w-full ${isDesktop ? 'max-w-[700px]' : 'max-w-[420px]'}`}
+              className="w-full"
+              style={isDesktop ? { maxWidth: '58vw' } : { maxWidth: '420px' }}
             >
               {/* COUNT DOWN Title (hidden on desktop) */}
               {!isDesktop && (
@@ -109,25 +110,46 @@ export default function Countdown({ data, isDesktop }) {
                 </div>
               )}
 
-              <div className={`flex justify-center items-center ${isDesktop ? 'gap-8 md:gap-14' : 'gap-3 sm:gap-6'}`}>
+              <div 
+                className={`flex justify-center items-center ${isDesktop ? '' : 'gap-3 sm:gap-6'}`}
+                style={isDesktop ? { gap: 'clamp(12px, 3.2vw, 56px)' } : undefined}
+              >
                 {boxes.map((box, idx) => (
                   <div key={box.key} className="flex items-center">
-                    <div className="text-center px-3 sm:px-5 py-3">
+                    <div 
+                      className={`text-center ${isDesktop ? '' : 'px-3 sm:px-5'} py-3`}
+                      style={isDesktop ? { paddingLeft: 'clamp(6px, 1.2vw, 20px)', paddingRight: 'clamp(6px, 1.2vw, 20px)' } : undefined}
+                    >
                       <div
-                        className={`font-semibold leading-none text-primary/80 ${isDesktop ? 'text-[48px] md:text-[56px]' : 'text-[24px] md:text-[30px]'}`}
-                        style={{ fontFamily: "'Cinzel', serif", fontWeight: 650 }}
+                        className={`font-semibold leading-none text-primary/80 ${isDesktop ? '' : 'text-[24px] md:text-[30px]'}`}
+                        style={isDesktop ? { 
+                          fontFamily: "'Cinzel', serif", 
+                          fontWeight: 650,
+                          fontSize: 'clamp(24px, 3.6vw, 56px)'
+                        } : { fontFamily: "'Cinzel', serif", fontWeight: 650 }}
                       >
                         {box.key === 'days' ? String(box.value) : String(box.value).padStart(2, '0')}
                       </div>
                       <div
-                        className={`mt-2 font-semibold uppercase tracking-[0.2em] text-primary/65 ${isDesktop ? 'text-[12px] md:text-[13px]' : 'text-[10px]'}`}
-                        style={{ fontFamily: "'Cinzel', serif" }}
+                        className={`mt-2 font-semibold uppercase tracking-[0.2em] text-primary/65 ${isDesktop ? '' : 'text-[10px]'}`}
+                        style={isDesktop ? { 
+                          fontFamily: "'Cinzel', serif",
+                          fontSize: 'clamp(7.5px, 0.85vw, 13px)'
+                        } : { fontFamily: "'Cinzel', serif" }}
                       >
                         {String(box.label || '').toUpperCase()}
                       </div>
                     </div>
                     {idx < boxes.length - 1 && (
-                      <div className={`bg-primary/25 self-center ${isDesktop ? 'w-[1.5px] h-12 mx-4' : 'w-[1px] h-8'}`} />
+                      <div 
+                        className={`bg-primary/25 self-center ${isDesktop ? '' : 'w-[1px] h-8'}`} 
+                        style={isDesktop ? {
+                          width: '1.5px',
+                          height: 'clamp(20px, 3vw, 48px)',
+                          marginLeft: 'clamp(6px, 1vw, 16px)',
+                          marginRight: 'clamp(6px, 1vw, 16px)',
+                        } : undefined}
+                      />
                     )}
                   </div>
                 ))}

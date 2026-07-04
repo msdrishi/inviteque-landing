@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
@@ -13,8 +13,14 @@ export default function Signup() {
     password: '',
   })
   const [error, setError] = useState('')
-  const { signup } = useAuth()
+  const { user, signup } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true })
+    }
+  }, [user, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -23,7 +29,7 @@ export default function Signup() {
     const result = await signup(formData.name, formData.email, formData.password, formData.phone)
     
     if (result.success) {
-      window.location.href = '/'
+      window.location.replace('/')
     } else {
       setError(result.message)
     }

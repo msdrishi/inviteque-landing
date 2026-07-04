@@ -12,6 +12,9 @@ import Signup from './pages/Signup.jsx'
 import LoginSuccess from './pages/LoginSuccess.jsx'
 import Account from './pages/Account.jsx'
 import InviteDetails from './pages/InviteDetails.jsx'
+import AdminLogin from './pages/AdminLogin.jsx'
+import AdminDashboard from './pages/AdminDashboard.jsx'
+import { API_URL } from './config'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -25,11 +28,51 @@ function ScrollToTop() {
   return null
 }
 
+function AnalyticsTracker() {
+  const location = useLocation()
+  useEffect(() => {
+    const trackVisit = async () => {
+      try {
+        let templateId = null
+        let inviteCode = null
+        
+        // Parse /templates/:templateId or /templates/:templateId/:code
+        const pathParts = location.pathname.split('/')
+        if (pathParts[1] === 'templates' && pathParts[2]) {
+          templateId = pathParts[2]
+          if (pathParts[3]) {
+            inviteCode = pathParts[3]
+          }
+        }
+        // Parse /builder/:templateId
+        if (pathParts[1] === 'builder' && pathParts[2]) {
+          templateId = pathParts[2]
+        }
+        
+        await fetch(`${API_URL}/api/public/analytics/visit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            path: location.pathname,
+            templateId,
+            inviteCode
+          })
+        })
+      } catch (err) {
+        console.error('Analytics tracking failed:', err)
+      }
+    }
+    trackVisit()
+  }, [location])
+  return null
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <DraftProvider>
         <ScrollToTop />
+        <AnalyticsTracker />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
@@ -42,9 +85,15 @@ export default function App() {
           <Route path="/templates/:templateId/:code" element={<TemplateRoute />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
+          
+          {/* Admin console routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </DraftProvider>
     </AuthProvider>
   )
 }
+

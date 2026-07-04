@@ -36,6 +36,9 @@ export default function TemplateAuraOfElegance({ savedData }) {
       dateLine: savedData
         ? `${savedData.heroData.weddingDate} ${savedData.heroData.weddingMonth} ${savedData.heroData.weddingYear}`
         : `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear}`,
+      weddingTime: savedData
+        ? (savedData.heroData?.weddingTime || '09:00 AM - 10:30 AM')
+        : (draftData.weddingTime || '09:00 AM - 10:30 AM'),
       venueName: (savedData ? savedData.venueData.mahalName : draftData.mahalName) || '',
       venueCity: (savedData ? savedData.venueData.venueCity : draftData.venueCity) || '',
       addressParts: savedData
@@ -66,7 +69,7 @@ export default function TemplateAuraOfElegance({ savedData }) {
       location: savedData
         ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean).join(', ')
         : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
-      mapUrl: savedData ? savedData.venueData.mapLink : draftData.mapLink,
+      mapUrl: (savedData ? savedData.venueData.mapLink : draftData.mapLink) || staticData.venue.mapUrl,
     },
     countdown: {
       ...staticData.countdown,
@@ -197,7 +200,7 @@ export default function TemplateAuraOfElegance({ savedData }) {
               onClick={() => navigate('/payment', { state: { draftData, templateId } })}
               className="px-10 py-4 rounded-full bg-black text-sm font-bold text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition hover:scale-105 active:scale-95"
             >
-              Proceed to Payment →
+              Proceed →
             </button>
           </div>
         )}

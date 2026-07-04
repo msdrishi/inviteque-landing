@@ -19,10 +19,10 @@ export default function LoginSuccess() {
       
       // Short delay to ensure storage is committed
       setTimeout(() => {
-        window.location.href = '/'
+        window.location.replace('/')
       }, 100)
     } else {
-      window.location.href = '/login'
+      window.location.replace('/login')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

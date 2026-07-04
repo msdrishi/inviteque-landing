@@ -133,7 +133,8 @@ export default function Payment() {
           brideName: draftData.brideName,
           weddingDate: draftData.weddingDate,
           weddingMonth: draftData.weddingMonth,
-          weddingYear: draftData.weddingYear
+          weddingYear: draftData.weddingYear,
+          weddingTime: draftData.weddingTime
         },
         venueData: {
           mahalName: draftData.mahalName,
@@ -142,6 +143,22 @@ export default function Payment() {
           state: draftData.state,
           mapLink: draftData.mapLink
         },
+        // Flat fields
+        groomName: draftData.groomName,
+        brideName: draftData.brideName,
+        weddingDate: {
+          day: draftData.weddingDate,
+          month: draftData.weddingMonth,
+          year: draftData.weddingYear
+        },
+        weddingTime: draftData.weddingTime,
+        mahalName: draftData.mahalName,
+        venueCity: draftData.venueCity,
+        venueName: draftData.venueAddress,
+        state: draftData.state,
+        mapLink: draftData.mapLink,
+        photos: draftData.photos,
+        eventSchedule: draftData.scheduleItems,
         scheduleData: {
           showSchedule: draftData.showSchedule,
           showGallery: draftData.showGallery,
@@ -238,17 +255,23 @@ export default function Payment() {
                 </div>
               </div>
 
-              <div className="p-8 md:p-10 space-y-6">
+              <div className="p-6 sm:p-8 md:p-10 space-y-6">
                 {/* Couple Summary */}
                 <div className="space-y-4 pb-6 border-b border-iqBorder">
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-iqText/40 font-bold uppercase tracking-widest text-[10px]">Couple</span>
                     <span className="font-bold text-lg">{draftData.groomName} & {draftData.brideName}</span>
                   </div>
-                  <div className="flex justify-between items-center text-sm">
+                   <div className="flex justify-between items-center text-sm">
                     <span className="text-iqText/40 font-bold uppercase tracking-widest text-[10px]">Date</span>
                     <span className="font-bold">{draftData.weddingDate} {draftData.weddingMonth} {draftData.weddingYear}</span>
                   </div>
+                  {draftData.weddingTime && (
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-iqText/40 font-bold uppercase tracking-widest text-[10px]">Time</span>
+                      <span className="font-bold">{draftData.weddingTime}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between items-start text-sm">
                     <span className="text-iqText/40 font-bold uppercase tracking-widest text-[10px]">Venue</span>
                     <span className="font-bold text-right max-w-[200px]">{draftData.mahalName}</span>
@@ -271,20 +294,20 @@ export default function Payment() {
                 {!isAlreadyPaid && (
                   <div className="space-y-3 pt-4 border-t border-iqBorder">
                     <span className="text-iqText/40 font-bold uppercase tracking-widest text-[10px]">Have a Coupon?</span>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <input
                         type="text"
                         placeholder="Enter coupon code"
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                         disabled={appliedCoupon !== null || isValidatingCoupon}
-                        className="flex-1 px-4 py-2.5 text-sm font-semibold border border-iqBorder rounded-xl focus:outline-none focus:ring-2 focus:ring-black disabled:bg-iqBg/50 uppercase"
+                        className="flex-1 px-4 py-2.5 text-sm font-semibold border border-iqBorder rounded-xl focus:outline-none focus:ring-2 focus:ring-black disabled:bg-iqBg/50 uppercase w-full"
                       />
                       {appliedCoupon ? (
                         <button
                           type="button"
                           onClick={handleRemoveCoupon}
-                          className="px-4 py-2.5 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors duration-200"
+                          className="w-full sm:w-auto px-4 py-2.5 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors duration-200 text-center"
                         >
                           Remove
                         </button>
@@ -293,7 +316,7 @@ export default function Payment() {
                           type="button"
                           onClick={handleApplyCoupon}
                           disabled={isValidatingCoupon || !couponCode.trim()}
-                          className="px-6 py-2.5 text-sm font-bold text-white bg-black hover:opacity-90 rounded-xl transition duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center min-w-[80px]"
+                          className="w-full sm:w-auto px-6 py-2.5 text-sm font-bold text-white bg-black hover:opacity-90 rounded-xl transition duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center min-w-[80px]"
                         >
                           {isValidatingCoupon ? (
                             <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />

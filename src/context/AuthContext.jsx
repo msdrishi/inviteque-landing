@@ -163,7 +163,7 @@ export function AuthProvider({ children }) {
     setUser(null)
     localStorage.removeItem('inviteque_user')
     localStorage.setItem('show_logout_toast', 'true')
-    window.location.href = '/'
+    window.location.replace('/')
   }
 
   return (

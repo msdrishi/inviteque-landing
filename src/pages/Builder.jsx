@@ -85,6 +85,7 @@ export default function Builder() {
     weddingDate: '',
     weddingMonth: '',
     weddingYear: '',
+    weddingTime: '09:00 AM - 10:30 AM',
     mahalName: '',
     venueAddress: '',
     venueCity: '',
@@ -118,6 +119,7 @@ export default function Builder() {
       weddingDate: draftData.weddingDate || '',
       weddingMonth: draftData.weddingMonth || '',
       weddingYear: draftData.weddingYear || '',
+      weddingTime: draftData.weddingTime || '09:00 AM - 10:30 AM',
       mahalName: draftData.mahalName || '',
       venueAddress: draftData.venueAddress || '',
       venueCity: draftData.venueCity || '',
@@ -158,6 +160,7 @@ export default function Builder() {
               weddingDate: data.heroData?.weddingDate || '',
               weddingMonth: data.heroData?.weddingMonth || '',
               weddingYear: data.heroData?.weddingYear || '',
+              weddingTime: data.heroData?.weddingTime || '',
               mahalName: data.venueData?.mahalName || '',
               venueAddress: data.venueData?.venueAddress || '',
               venueCity: data.venueData?.venueCity || '',
@@ -211,8 +214,10 @@ export default function Builder() {
     if (!formData.weddingDate?.trim()) newErrors.weddingDate = 'Day is required'
     if (!formData.weddingMonth?.trim()) newErrors.weddingMonth = 'Month is required'
     if (!formData.weddingYear?.trim()) newErrors.weddingYear = 'Year is required'
+    if (!formData.weddingTime?.trim()) newErrors.weddingTime = 'Time of marriage is required'
     if (!formData.mahalName?.trim()) newErrors.mahalName = 'Place of wedding is required'
     if (!formData.venueAddress?.trim()) newErrors.venueAddress = 'Venue address is required'
+    if (!formData.venueCity?.trim()) newErrors.venueCity = 'City is required'
     if (!formData.state?.trim()) newErrors.state = 'State is required'
     if (!formData.mapLink?.trim()) newErrors.mapLink = 'Google Maps link is required'
 
@@ -430,6 +435,22 @@ export default function Builder() {
                   )}
                 </div>
 
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-wider opacity-50">Time of Marriage <span className="text-red-500">*</span></label>
+                  <input
+                    type="text"
+                    name="weddingTime"
+                    value={formData.weddingTime || ''}
+                    onChange={handleChange}
+                    placeholder="e.g. 9:00 AM - 10:30 AM"
+                    className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.weddingTime
+                      ? 'border-red-500 bg-red-50 focus:border-red-500'
+                      : 'border-iqBorder bg-white focus:border-iqText'
+                      }`}
+                  />
+                  {errors.weddingTime && <p className="text-xs text-red-500">{errors.weddingTime}</p>}
+                </div>
+
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-wider opacity-50">Place of Wedding <span className="text-red-500">*</span></label>
@@ -462,7 +483,7 @@ export default function Builder() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">City</label>
+                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">City <span className="text-red-500">*</span></label>
                     <input
                       name="venueCity"
                       value={formData.venueCity}
@@ -473,6 +494,7 @@ export default function Builder() {
                         : 'border-iqBorder bg-white focus:border-iqText'
                         }`}
                     />
+                    {errors.venueCity && <p className="text-xs text-red-500">{errors.venueCity}</p>}
                   </div>
 
                   <div className="space-y-2">

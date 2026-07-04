@@ -36,6 +36,9 @@ export default function TemplateRoyalWedding({ savedData }) {
       dateLine: savedData
         ? `${savedData.heroData.weddingDate} ${savedData.heroData.weddingMonth} ${savedData.heroData.weddingYear}`
         : `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear}`,
+      weddingTime: savedData
+        ? (savedData.heroData?.weddingTime || '09:00 AM - 10:30 AM')
+        : (draftData.weddingTime || '09:00 AM - 10:30 AM'),
       venueName: (savedData ? savedData.venueData.mahalName : draftData.mahalName) || '',
       venueCity: (savedData ? savedData.venueData.venueCity : draftData.venueCity) || '',
       addressParts: savedData
@@ -66,7 +69,7 @@ export default function TemplateRoyalWedding({ savedData }) {
       location: savedData
         ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean).join(', ')
         : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
-      mapUrl: savedData ? savedData.venueData.mapLink : draftData.mapLink,
+      mapUrl: (savedData ? savedData.venueData.mapLink : draftData.mapLink) || staticData.venue.mapUrl,
     },
     countdown: {
       ...staticData.countdown,

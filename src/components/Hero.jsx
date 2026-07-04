@@ -141,7 +141,7 @@ function DateRow({ dateLine, isDesktop }) {
       <div style={{ paddingRight: 14 }}>
         <span style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: isDesktop ? '14px' : 'clamp(8px, 2.4vw, 11px)',
+          fontSize: isDesktop ? 'clamp(11px, 1vw, 14px)' : 'clamp(8px, 2.4vw, 11px)',
           letterSpacing: '0.2em',
           color: '#7B0F1A',
           opacity: 0.75,
@@ -153,7 +153,7 @@ function DateRow({ dateLine, isDesktop }) {
       <div style={{ paddingLeft: 14, paddingRight: 14 }}>
         <span style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: isDesktop ? '48px' : 'clamp(26px, 8.5vw, 42px)',
+          fontSize: isDesktop ? 'clamp(32px, 3.2vw, 48px)' : 'clamp(26px, 8.5vw, 42px)',
           fontWeight: 700,
           lineHeight: 1,
           color: '#7B0F1A',
@@ -165,7 +165,7 @@ function DateRow({ dateLine, isDesktop }) {
       <div style={{ paddingLeft: 14 }}>
         <span style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: isDesktop ? '14px' : 'clamp(8px, 2.4vw, 11px)',
+          fontSize: isDesktop ? 'clamp(11px, 1vw, 14px)' : 'clamp(8px, 2.4vw, 11px)',
           letterSpacing: '0.2em',
           color: '#7B0F1A',
           opacity: 0.75,
@@ -254,7 +254,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             marginTop: 4,
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: 700,
-            fontSize: isDesktop ? '14px' : 'clamp(8.5px, 1.4svh, 13px)',
+            fontSize: isDesktop ? 'clamp(11px, 1vw, 14px)' : 'clamp(8.5px, 1.4svh, 13px)',
             letterSpacing: '0.35em',
             textTransform: 'uppercase',
             color: '#7B0F1A',
@@ -275,7 +275,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             variants={nameLetters}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(30px, 4.2vw, 90px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(44px, 5.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               color: '#7B0F1A',
@@ -303,7 +303,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             transition={{ repeat: Infinity, duration: 7, ease: 'linear' }}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(30px, 4.2vw, 90px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(44px, 5.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               whiteSpace: 'nowrap',
@@ -339,7 +339,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         <motion.div variants={ampReveal} style={{ marginTop: isDesktop ? 10 : -2 }}>
           <span style={{
             fontFamily: "'Parisienne', 'Spectral', cursive",
-            fontSize: isDesktop ? 'clamp(30px, 4.2vw, 90px)' : 'clamp(20px, 10svh, 60px)',
+            fontSize: isDesktop ? 'clamp(44px, 5.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
             fontWeight: 100,
             lineHeight: 1,
             color: '#7B0F1A',
@@ -356,7 +356,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             variants={nameLetters}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(30px, 4.2vw, 90px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(44px, 5.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               color: '#7B0F1A',
@@ -384,7 +384,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             transition={{ repeat: Infinity, duration: 7, ease: 'linear', delay: 1 }}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(30px, 4.2vw, 90px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(44px, 5.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               whiteSpace: 'nowrap',
@@ -420,7 +420,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         <motion.div
           variants={fadeUp}
           style={{
-            marginTop: isDesktop ? 24 : 4, display: 'flex', flexDirection: 'column',
+            marginTop: isDesktop ? 'clamp(12px, 2vw, 24px)' : 4, display: 'flex', flexDirection: 'column',
             alignItems: 'center', gap: 20, width: '100%'
           }}
         >
@@ -430,7 +430,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
           <p style={{
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: 700,
-            fontSize: isDesktop ? '14px' : 'clamp(7px, 1.2svh, 10.5px)',
+            fontSize: isDesktop ? 'clamp(11px, 1vw, 14px)' : 'clamp(7px, 1.2svh, 10.5px)',
             letterSpacing: '0.28em',
             textTransform: 'uppercase',
             color: '#7B0F1A',
@@ -439,6 +439,33 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             {data.subtitle || 'Are Getting Married'}
           </p>
         </motion.div>
+
+        {/* Time of Marriage */}
+        {data.weddingTime && (
+          <motion.div
+            variants={fadeUp}
+            style={{
+              marginTop: isDesktop ? 12 : 6,
+              marginBottom: isDesktop ? -4 : -2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'
+            }}
+          >
+            <span style={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 700,
+              fontSize: isDesktop ? 'clamp(11px, 1vw, 14px)' : 'clamp(8px, 1.4svh, 11px)',
+              letterSpacing: '0.15em',
+              color: '#7B0F1A',
+              opacity: 0.9,
+              textAlign: 'center',
+              textTransform: 'uppercase'
+            }}>
+              {data.weddingTime}
+            </span>
+          </motion.div>
+        )}
 
         {/* ── Date row ── */}
         <div style={{ marginTop: isDesktop ? 12 : 3 }}>
@@ -449,7 +476,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         <motion.div variants={fadeUp} style={{ marginTop: isDesktop ? 8 : 0 }}>
           <span style={{
             fontFamily: "'Parisienne', cursive",
-            fontSize: isDesktop ? '34px' : 'clamp(18px, 4.5svh, 30px)',
+            fontSize: isDesktop ? 'clamp(24px, 2.4vw, 34px)' : 'clamp(18px, 4.5svh, 30px)',
             fontWeight: 400,
             lineHeight: 1.1,
             color: '#7B0F1A',
@@ -481,7 +508,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
               <p style={{
                 fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 800,
-                fontSize: isDesktop ? '16px' : 'clamp(9px, 1.5svh, 13px)',
+                fontSize: isDesktop ? 'clamp(12px, 1.2vw, 16px)' : 'clamp(9px, 1.5svh, 13px)',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 color: '#7B0F1A',
@@ -496,7 +523,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
                 <p style={{
                   fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 600,
-                  fontSize: isDesktop ? '12px' : 'clamp(7px, 1.1svh, 9.5px)',
+                  fontSize: isDesktop ? 'clamp(9.5px, 0.9vw, 12px)' : 'clamp(7px, 1.1svh, 9.5px)',
                   letterSpacing: '0.22em',
                   textTransform: 'uppercase',
                   color: '#7B0F1A',
@@ -514,7 +541,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
               <p style={{
                 fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 800,
-                fontSize: isDesktop ? '16px' : 'clamp(9px, 1.5svh, 13px)',
+                fontSize: isDesktop ? 'clamp(12px, 1.2vw, 16px)' : 'clamp(9px, 1.5svh, 13px)',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 color: '#7B0F1A',
@@ -526,7 +553,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
               <p style={{
                 fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 600,
-                fontSize: isDesktop ? '12px' : 'clamp(7px, 1.1svh, 9.5px)',
+                fontSize: isDesktop ? 'clamp(9.5px, 0.9vw, 12px)' : 'clamp(7px, 1.1svh, 9.5px)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
                 color: '#7B0F1A',
@@ -540,7 +567,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
           {data.hashtag && (
             <p style={{
               fontFamily: "'Parisienne', cursive",
-              fontSize: isDesktop ? '22px' : 'clamp(12px, 2.8svh, 18px)',
+              fontSize: isDesktop ? 'clamp(16px, 1.6vw, 22px)' : 'clamp(12px, 2.8svh, 18px)',
               fontWeight: 400,
               color: '#7B0F1A',
               opacity: 0.7,

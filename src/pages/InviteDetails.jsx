@@ -164,6 +164,10 @@ export default function InviteDetails() {
                   <p className="font-bold">{invite.heroData?.weddingDate} {invite.heroData?.weddingMonth} {invite.heroData?.weddingYear}</p>
                 </div>
                 <div className="space-y-1">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-iqText/40">Time</span>
+                  <p className="font-bold">{invite.heroData?.weddingTime || '09:00 AM - 10:30 AM'}</p>
+                </div>
+                <div className="space-y-1">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-iqText/40">Venue</span>
                   <p className="font-bold truncate">{invite.venueData?.mahalName || invite.venueData?.venueCity}</p>
                 </div>

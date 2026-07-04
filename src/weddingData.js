@@ -80,6 +80,7 @@ export const weddingData = {
     title: inviteData.hero?.title,
     subtitle: 'Are Getting Married',
     dateLine: getWeddingDateLine(inviteData),
+    weddingTime: '09:00 AM - 10:30 AM',
     names: coupleNames(getCouple(inviteData)),
     groomName: getCouple(inviteData)?.groomName || '',
     brideName: getCouple(inviteData)?.brideName || '',

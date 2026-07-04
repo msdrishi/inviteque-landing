@@ -100,7 +100,7 @@ function ChooseTemplateVisual() {
       >
         {/* Dynamic Island */}
         <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-6 h-2 bg-black rounded-full z-30 shadow-[0_0.5px_1px_rgba(0,0,0,0.8)]" />
-        
+
         {/* Premium screen glossy reflection overlay */}
         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-white/[0.12] pointer-events-none z-20" />
 
@@ -113,7 +113,7 @@ function ChooseTemplateVisual() {
           />
         </div>
       </motion.div>
-      
+
       {/* Left side peeking template */}
       <div className="absolute left-[8%] w-24 h-48 rounded-[1.2rem] border border-black/10 bg-white opacity-40 overflow-hidden transform -rotate-12 scale-90 translate-y-4">
         <img src={templates[4]?.thumbnail} alt="Template left" className="w-full h-full object-cover" />
@@ -555,9 +555,9 @@ export default function Landing() {
     <main className="min-h-[100svh] w-full bg-iqBg font-saas text-iqText">
       <header className="sticky top-0 z-50 border-b border-iqBorder bg-white/70 backdrop-blur-md">
         <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Inviteque" className="h-8 w-auto" />
-            <span className="font-parisienne text-3xl font-normal text-iqText hidden sm:inline leading-none">Inviteque</span>
+          <Link to="/" className="flex items-baseline gap-2 whitespace-nowrap">
+            <img src={logo} alt="Inviteque" className="h-8 w-auto align-baseline" />
+            <span className="font-parisienne text-3xl font-normal text-iqText hidden sm:inline leading-none select-none">Inviteque</span>
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">

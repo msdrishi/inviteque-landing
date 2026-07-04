@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
@@ -10,8 +10,14 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const { login } = useAuth()
+  const { user, login } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true })
+    }
+  }, [user, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -20,7 +26,7 @@ export default function Login() {
     const result = await login(email, password)
     
     if (result.success) {
-      window.location.href = '/'
+      window.location.replace('/')
     } else {
       setError(result.message)
     }
@@ -30,9 +36,9 @@ export default function Login() {
     <div className="flex min-h-screen flex-col bg-iqBg font-saas">
       <header className="border-b border-iqBorder bg-white/70 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Inviteque" className="h-8 w-auto" loading="lazy" />
-            <span className="font-parisienne text-2xl font-normal text-iqText leading-none">Inviteque</span>
+          <Link to="/" className="flex items-baseline gap-2 whitespace-nowrap">
+            <img src={logo} alt="Inviteque" className="h-8 w-auto align-baseline" loading="lazy" />
+            <span className="font-parisienne text-2xl font-normal text-iqText leading-none select-none">Inviteque</span>
           </Link>
           <Link to="/signup" className="text-sm font-semibold text-iqText/60 hover:text-iqText">
             Create account
@@ -119,9 +125,9 @@ export default function Login() {
 
       <footer className="border-t border-iqBorder bg-white/70 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <img src={logo} alt="Inviteque" className="h-6 w-auto" loading="lazy" />
-            <span className="font-parisienne text-xl font-normal text-iqText leading-none">Inviteque</span>
+          <div className="flex items-baseline gap-2 whitespace-nowrap">
+            <img src={logo} alt="Inviteque" className="h-6 w-auto align-baseline" loading="lazy" />
+            <span className="font-parisienne text-xl font-normal text-iqText leading-none select-none">Inviteque</span>
           </div>
           <span className="text-xs font-medium text-iqText/40">© {new Date().getFullYear()} Inviteque</span>
         </div>

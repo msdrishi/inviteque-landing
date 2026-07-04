@@ -176,6 +176,12 @@ export default function PaymentConfirmation() {
                 <span className="text-iqText/60">Wedding Date</span>
                 <span className="font-semibold text-iqText">{draftData?.weddingDate} {draftData?.weddingMonth} {draftData?.weddingYear}</span>
               </div>
+              {draftData?.weddingTime && (
+                <div className="flex justify-between">
+                  <span className="text-iqText/60">Time of Marriage</span>
+                  <span className="font-semibold text-iqText">{draftData.weddingTime}</span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-iqText/60">Venue</span>
                 <span className="font-semibold text-iqText text-right">{draftData?.mahalName || draftData?.venueAddress}</span>
