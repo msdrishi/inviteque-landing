@@ -534,10 +534,24 @@ function ComingSoonPill() {
 export default function Landing() {
   const [displayCount, setDisplayCount] = useState(null)
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+  const [activeCoupon, setActiveCoupon] = useState(null)
   const { user, logout } = useAuth()
   const { resetDraft } = useDraft()
   const navigate = useNavigate()
   const time = useTime()
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/public/coupons`)
+      .then(res => res.ok ? res.json() : [])
+      .then(data => {
+        if (data && data.length > 0) {
+          setActiveCoupon(data[0])
+        } else {
+          setActiveCoupon(null)
+        }
+      })
+      .catch(err => console.error('Error fetching active coupons:', err))
+  }, [])
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768)
@@ -553,6 +567,11 @@ export default function Landing() {
 
   return (
     <main className="min-h-[100svh] w-full bg-iqBg font-saas text-iqText">
+      {activeCoupon && (
+        <div className="bg-black py-2.5 text-center text-xs font-bold tracking-wide text-white select-none relative z-[51]">
+          ✨ Limited Time Offer: Use code <span className="font-mono rounded bg-white/10 px-1.5 py-0.5 text-amber-300 uppercase">{activeCoupon.code}</span> to get <span className="text-amber-300 font-extrabold">{activeCoupon.discountPercentage}% Off</span> on your premium wedding invitation! ✨
+        </div>
+      )}
       <header className="sticky top-0 z-50 border-b border-iqBorder bg-white/70 backdrop-blur-md">
         <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-baseline gap-2 whitespace-nowrap">
