@@ -68,9 +68,9 @@ export default function AdminDashboard() {
   }, [activeTab])
 
   // Fetch dashboard data
-  const fetchData = async () => {
+  const fetchData = async (isSilent = false) => {
     if (!user || !user.token) return
-    setLoading(true)
+    if (!isSilent) setLoading(true)
     setError('')
     try {
       const headers = {
@@ -113,6 +113,13 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchData()
+
+    // Poll the backend every 10 seconds for real-time traffic/order updates
+    const interval = setInterval(() => {
+      fetchData(true)
+    }, 10000)
+
+    return () => clearInterval(interval)
   }, [user])
 
   // Generate dynamic chart data based on timeframe filter
