@@ -371,6 +371,23 @@ export default function AdminDashboard() {
     document.body.removeChild(link)
   }
 
+  const exportCouponsCsv = () => {
+    if (coupons.length === 0) return
+    let csv = 'Coupon ID,Code,Discount Percentage,Status\n'
+    coupons.forEach(c => {
+      csv += `"${c.id}","${c.code}",${c.discountPercentage},"Available"\n`
+    })
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement("a")
+    const url = URL.createObjectURL(blob)
+    link.setAttribute("href", url)
+    link.setAttribute("download", "active_coupons.csv")
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   const exportTransactionsCsv = () => {
     if (purchases.length === 0) return
     let csv = 'Order ID,Customer Name,Email,Template ID,Amount Paid,Coupon,Status,Date\n'
@@ -986,7 +1003,17 @@ export default function AdminDashboard() {
 
               {/* Right Column: Coupon list */}
               <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
-                <h3 className="text-sm font-bold text-slate-800">Active Coupon Codes</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-slate-800">Active Coupon Codes</h3>
+                  {coupons.length > 0 && (
+                    <button
+                      onClick={exportCouponsCsv}
+                      className="rounded-xl border border-slate-200 bg-white px-3 py-1 text-[11px] font-bold text-slate-800 shadow-sm hover:bg-slate-50 transition"
+                    >
+                      📥 Export CSV
+                    </button>
+                  )}
+                </div>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse text-left text-xs text-slate-500">
                     <thead className="border-b border-slate-100 bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-400">
