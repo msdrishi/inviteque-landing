@@ -45,7 +45,7 @@ export default function Signup() {
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-8 w-auto" loading="lazy" />
-            <span className="font-parisienne text-2xl font-normal text-iqText leading-none">Inviteque</span>
+            <span className="font-parisienne text-2xl font-normal text-iqText leading-none relative -top-[2px]">Inviteque</span>
           </Link>
           <Link to="/login" className="text-sm font-semibold text-iqText/60 hover:text-iqText">
             Sign in
@@ -147,7 +147,7 @@ export default function Signup() {
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-6 w-auto" loading="lazy" />
-            <span className="font-parisienne text-xl font-normal text-iqText leading-none">Inviteque</span>
+            <span className="font-parisienne text-xl font-normal text-iqText leading-none select-none relative -top-[1.5px]">Inviteque</span>
           </div>
           <span className="text-xs font-medium text-iqText/40">© {new Date().getFullYear()} Inviteque</span>
         </div>
