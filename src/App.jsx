@@ -76,7 +76,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/signup" element={<Navigate to="/login" replace />} />
           <Route path="/login-success" element={<LoginSuccess />} />
           <Route path="/account" element={<Account />} />
           <Route path="/account/:code" element={<InviteDetails />} />

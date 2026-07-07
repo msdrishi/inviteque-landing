@@ -75,23 +75,46 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const signup = async (name, email, password, phoneNumber) => {
+  const sendOtp = async (phoneNumber) => {
     try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
+      const response = await fetch(`${API_URL}/api/auth/otp/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, phoneNumber }),
+        body: JSON.stringify({ phoneNumber }),
       })
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Signup failed')
+        throw new Error(errorData.error || 'Failed to send OTP')
+      }
+
+      return { success: true }
+    } catch (error) {
+      return { success: false, message: error.message }
+    }
+  }
+
+  const verifyOtp = async (phoneNumber, code) => {
+    try {
+      const response = await fetch(`${API_URL}/api/auth/otp/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber, code }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Invalid OTP code')
       }
 
       const data = await response.json()
-      setUser(data)
-      localStorage.setItem('inviteque_user', JSON.stringify(data))
-      localStorage.setItem('show_signup_toast', 'true')
+      const userWithToken = {
+        ...data,
+        purchasedInvitations: [],
+      }
+      setUser(userWithToken)
+      localStorage.setItem('inviteque_user', JSON.stringify(userWithToken))
+      localStorage.setItem('show_login_toast', 'true')
       return { success: true }
     } catch (error) {
       return { success: false, message: error.message }
@@ -172,7 +195,8 @@ export function AuthProvider({ children }) {
         user,
         login,
         loginWithData,
-        signup,
+        sendOtp,
+        verifyOtp,
         logout,
         addPurchasedInvitation,
         updatePurchasedInvitation,

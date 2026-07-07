@@ -147,7 +147,9 @@ export default function MobileNav() {
                           Account
                         </h3>
                         <p className="mt-2 text-lg font-bold text-iqText">{user.name}</p>
-                        <p className="mt-1 text-sm text-iqText/60">{user.email}</p>
+                        {user.email && user.email !== user.name && (
+                          <p className="mt-1 text-sm text-iqText/60">{user.email}</p>
+                        )}
                       </div>
                     </div>
 

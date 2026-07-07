@@ -86,12 +86,14 @@ export default function Account() {
               <p className="mt-2 text-iqText/60 font-medium">Manage your invitations and purchase history</p>
             </div>
             <div className="flex items-center gap-4 rounded-2xl border border-iqBorder bg-white p-4 shadow-sm">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-iqText text-lg font-bold text-white uppercase">
-                {user.name.split(' ').map(n => n[0]).join('')}
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-iqText text-lg font-bold text-white">
+                {/^[0-9+]+$/.test(user.name) ? '👤' : user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
               </div>
               <div>
                 <p className="text-sm font-bold">{user.name}</p>
-                <p className="text-xs text-iqText/50">{user.email}</p>
+                {user.email && user.email !== user.name && (
+                  <p className="text-xs text-iqText/50">{user.email}</p>
+                )}
               </div>
             </div>
           </motion.div>

@@ -579,7 +579,7 @@ export default function Landing() {
             {user ? (
               <div className="flex items-center gap-3 rounded-full border border-iqBorder bg-iqBg/50 px-4 py-1.5 shadow-sm">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-iqText text-[10px] font-bold text-white">
-                  {user.name.split(' ').map(n => n[0]).join('')}
+                  {/^[0-9+]+$/.test(user.name) ? '👤' : user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                 </div>
                 <span className="text-sm font-bold text-iqText">{user.name}</span>
                 <div className="h-4 w-[1px] bg-iqBorder mx-1" />
