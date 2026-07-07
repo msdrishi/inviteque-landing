@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext'
 import { useDraft } from '../context/DraftContext'
 import MobileNav from '../components/MobileNav'
 import { LazyImage } from '../components/LazyImage'
+import { API_URL } from '../config'
 const tailorRomanceBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036339/m2xlgvmlglao8ulz60dd.jpg"
 
 const templateCardPop = {

@@ -120,7 +120,7 @@ export default function Payment() {
   const handlePaymentClick = async () => {
     setIsProcessing(true)
     try {
-      // Prepare backend request matching our JSONB columns
+      // 1. Prepare backend request matching our JSONB columns
       const inviteRequest = {
         code: draftData.code, // VERY IMPORTANT: Pass code to update instead of creating new
         templateId,
@@ -169,28 +169,168 @@ export default function Payment() {
         },
         invitationData: {}, // Placeholder
         rsvpData: {}, // Placeholder
-        status: 'PAID', // Ensure status is set to PAID after this step
+        status: isAlreadyPaid ? 'PAID' : 'DRAFT', // Leave as draft until payment succeeds
         couponCode: appliedCoupon ? appliedCoupon.code : null
       }
 
+      // Save invitation as draft first so backend has the row ready
       const savedInvite = await saveInvitation(inviteRequest)
       const inviteUrl = `${window.location.origin}/templates/${templateId}/${savedInvite.code}`
 
-      // If already paid, we don't need a new confirmation, or we can just show success
-      navigate('/payment-confirmation', {
-        state: {
-          orderId: savedInvite.id,
-          inviteUrl,
-          draftData,
-          template,
-          amount: isAlreadyPaid ? draftData.amountPaid : finalPrice,
+      // If already paid, bypass payment entirely
+      if (isAlreadyPaid) {
+        navigate('/payment-confirmation', {
+          state: {
+            orderId: savedInvite.id,
+            inviteUrl,
+            draftData,
+            template,
+            amount: draftData.amountPaid || finalPrice,
+            code: savedInvite.code,
+            isUpdate: true
+          }
+        })
+        return
+      }
+
+      // 2. Call backend to create Razorpay Order
+      const orderRes = await fetch(`${API_URL}/api/payments/order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user?.token}`
+        },
+        body: JSON.stringify({
           code: savedInvite.code,
-          isUpdate: true
-        }
+          discountPercentage: appliedCoupon ? appliedCoupon.discountPercentage : null
+        })
       })
+
+      if (!orderRes.ok) {
+        throw new Error('Failed to create payment order.')
+      }
+
+      const orderData = await orderRes.json()
+
+      // 3. Check if payments are enabled or bypassed
+      if (!orderData.enabled) {
+        // Payment is disabled/turned off -> Mark purchase as successful immediately
+        const verifyRes = await fetch(`${API_URL}/api/payments/verify`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user?.token}`
+          },
+          body: JSON.stringify({
+            inviteCode: savedInvite.code,
+            amountPaid: finalPrice,
+            inviteRequest: { ...inviteRequest, status: 'PAID' }
+          })
+        })
+
+        if (!verifyRes.ok) {
+          throw new Error('Failed to mark purchase as successful.')
+        }
+
+        navigate('/payment-confirmation', {
+          state: {
+            orderId: savedInvite.id,
+            inviteUrl,
+            draftData,
+            template,
+            amount: finalPrice,
+            code: savedInvite.code,
+            isUpdate: true
+          }
+        })
+        return
+      }
+
+      // 4. Payments are enabled -> Load Razorpay SDK and open modal
+      const loadRazorpay = () => {
+        return new Promise((resolve) => {
+          if (window.Razorpay) {
+            resolve(true)
+            return
+          }
+          const script = document.createElement('script')
+          script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+          script.onload = () => resolve(true)
+          script.onerror = () => resolve(false)
+          document.body.appendChild(script)
+        })
+      }
+
+      const isLoaded = await loadRazorpay()
+      if (!isLoaded) {
+        alert('Failed to load payment gateway SDK. Please try again.')
+        return
+      }
+
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'InviteQue',
+        description: 'Wedding Invitation Purchase',
+        image: logo,
+        order_id: orderData.orderId,
+        handler: async function (response) {
+          try {
+            setIsProcessing(true)
+            const verifyRes = await fetch(`${API_URL}/api/payments/verify`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user?.token}`
+              },
+              body: JSON.stringify({
+                inviteCode: savedInvite.code,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+                amountPaid: finalPrice,
+                inviteRequest: { ...inviteRequest, status: 'PAID' }
+              })
+            })
+
+            if (!verifyRes.ok) {
+              throw new Error('Payment verification failed.')
+            }
+
+            navigate('/payment-confirmation', {
+              state: {
+                orderId: savedInvite.id,
+                inviteUrl,
+                draftData,
+                template,
+                amount: finalPrice,
+                code: savedInvite.code,
+                isUpdate: true
+              }
+            })
+          } catch (err) {
+            console.error('Verification error:', err)
+            alert('Payment verification failed. Please try again or contact support.')
+          } finally {
+            setIsProcessing(false)
+          }
+        },
+        prefill: {
+          contact: user?.phoneNumber || '',
+          email: user?.email || ''
+        },
+        theme: {
+          color: '#0f172a'
+        }
+      }
+
+      const rzp = new window.Razorpay(options)
+      rzp.open()
+
     } catch (error) {
       console.error('Save error:', error)
-      alert('Error saving invitation. Please try again.')
+      alert(error.message || 'Error saving invitation. Please try again.')
     } finally {
       setIsProcessing(false)
     }
