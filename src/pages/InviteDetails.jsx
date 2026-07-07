@@ -59,8 +59,39 @@ export default function InviteDetails() {
 
   const handleShareWhatsApp = () => {
     const url = `${window.location.origin}/templates/${invite.templateId}/${invite.code}`
-    const text = `Dear guests, we're thrilled to invite you to our wedding!\n\nView our digital invitation: ${url}`
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+    
+    const groom = invite.groomName || invite.coupleData?.groomName || 'Groom'
+    const bride = invite.brideName || invite.coupleData?.brideName || 'Bride'
+    
+    let date = 'our wedding day'
+    if (invite.weddingDate) {
+      const d = invite.weddingDate.day || ''
+      const m = invite.weddingDate.month || ''
+      const y = invite.weddingDate.year || ''
+      if (d && m) date = `${d} ${m} ${y}`.trim()
+    } else if (invite.heroData?.weddingDate && invite.heroData?.weddingMonth) {
+      date = `${invite.heroData.weddingDate} ${invite.heroData.weddingMonth} ${invite.heroData.weddingYear || ''}`.trim()
+    }
+    
+    const time = invite.weddingTime || invite.heroData?.weddingTime || ''
+    const timeStr = time ? ` at ${time}` : ''
+    
+    const venue = invite.mahalName || invite.venueName || invite.venueData?.mahalName || invite.venueData?.venueAddress || 'our venue'
+    const city = invite.venueCity || invite.venueData?.venueCity || ''
+    const cityStr = city ? `, ${city}` : ''
+
+    const text = `✨ *𝒲𝑒𝒹𝒹𝒾𝓃𝑔 𝐼𝓃𝓋𝒾𝓉𝒶𝓉𝒾𝑜𝓃* ✨\n\n` +
+                 `Dear Loved Ones,\n\n` +
+                 `We are joyful to invite you to celebrate the wedding ceremony of\n` +
+                 `💍 *${groom} & ${bride}* 💍\n\n` +
+                 `📅 Date: *${date}*\n` +
+                 `⏰ Time: *${timeStr}*\n` +
+                 `📍 Venue: *${venue}${cityStr}*\n\n` +
+                 `We look forward to your presence and blessings on our special day! ❤️\n\n` +
+                 `Please find the wedding details and RSVP via our digital invitation link here:\n` +
+                 `👉 ${url}`
+
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
   }
 
   if (loading) {

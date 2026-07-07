@@ -65,9 +65,9 @@ export default function Login() {
   return (
     <div className="flex min-h-screen flex-col bg-iqBg font-saas">
       <header className="border-b border-iqBorder bg-white/70 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-baseline gap-2 whitespace-nowrap">
-            <img src={logo} alt="Inviteque" className="h-8 w-auto align-baseline" loading="lazy" />
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-center px-6 py-4">
+          <Link to="/" className="flex items-center gap-2 whitespace-nowrap">
+            <img src={logo} alt="Inviteque" className="h-8 w-auto align-middle" loading="lazy" />
             <span className="font-parisienne text-2xl font-normal text-iqText leading-none select-none">Inviteque</span>
           </Link>
         </div>

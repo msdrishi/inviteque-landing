@@ -44,8 +44,27 @@ export default function PaymentConfirmation() {
   }
 
   const handleShareWhatsApp = () => {
-    const text = `Dear guests, we're thrilled to invite you to our wedding!\n\nView our digital invitation: ${inviteUrl}`
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+    const groom = draftData?.groomName || 'Groom'
+    const bride = draftData?.brideName || 'Bride'
+    const date = draftData?.weddingDate && draftData?.weddingMonth
+      ? `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear || ''}`.trim()
+      : 'our wedding day'
+    const time = draftData?.weddingTime ? ` at ${draftData.weddingTime}` : ''
+    const venue = draftData?.mahalName || draftData?.venueAddress || 'our venue'
+    const city = draftData?.venueCity ? `, ${draftData.venueCity}` : ''
+
+    const text = `✨ *𝒲𝑒𝒹𝒹𝒾𝓃𝑔 𝐼𝓃𝓋𝒾𝓉𝒶𝓉𝒾𝑜𝓃* ✨\n\n` +
+                 `Dear Loved Ones,\n\n` +
+                 `We are joyful to invite you to celebrate the wedding ceremony of\n` +
+                 `💍 *${groom} & ${bride}* 💍\n\n` +
+                 `📅 Date: *${date}*\n` +
+                 `⏰ Time: *${time}*\n` +
+                 `📍 Venue: *${venue}${city}*\n\n` +
+                 `We look forward to your presence and blessings on our special day! ❤️\n\n` +
+                 `Please find the wedding details and RSVP via our digital invitation link here:\n` +
+                 `👉 ${inviteUrl}`
+
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
   }
 
   return (

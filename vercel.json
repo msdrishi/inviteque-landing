@@ -1,6 +1,21 @@
 {
   "rewrites": [
     {
+      "source": "/templates/:templateId/:code",
+      "has": [
+        {
+          "type": "query",
+          "key": "redirected",
+          "value": "true"
+        }
+      ],
+      "destination": "/index.html"
+    },
+    {
+      "source": "/templates/:templateId/:code",
+      "destination": "https://inviteque-spring.onrender.com/api/public/meta/:templateId/:code"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

@@ -18,7 +18,11 @@ export default function TemplateRoyalWedding({ savedData }) {
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
 
   // Watermark is shown unless the invitation has been paid
-  const isPaid = savedData?.status === 'PAID' || savedData?.isPaid === true || savedData?.coupleData?.isPaid === true
+  const isPaid = savedData && (
+    String(savedData.status).toUpperCase() === 'PAID' ||
+    savedData.isPaid === true ||
+    (savedData.coupleData && savedData.coupleData.isPaid === true)
+  )
   const showWatermark = !isPaid
 
   // Determine which data to use: Saved DB data > Local Draft data > Static Fallback
