@@ -177,6 +177,10 @@ export default function Payment() {
       const savedInvite = await saveInvitation(inviteRequest)
       const inviteUrl = `${window.location.origin}/templates/${templateId}/${savedInvite.code}`
 
+      // Update the inviteRequest with the newly saved ID and code to prevent duplicate creation on verification
+      inviteRequest.id = savedInvite.id
+      inviteRequest.code = savedInvite.code
+
       // If already paid, bypass payment entirely
       if (isAlreadyPaid) {
         navigate('/payment-confirmation', {
@@ -240,7 +244,7 @@ export default function Payment() {
             template,
             amount: finalPrice,
             code: savedInvite.code,
-            isUpdate: true
+            isUpdate: isAlreadyPaid
           }
         })
         return
@@ -306,7 +310,7 @@ export default function Payment() {
                 template,
                 amount: finalPrice,
                 code: savedInvite.code,
-                isUpdate: true
+                isUpdate: isAlreadyPaid
               }
             })
           } catch (err) {
