@@ -570,9 +570,9 @@ export default function Landing() {
     <main className="min-h-[100svh] w-full bg-iqBg font-saas text-iqText">
       <header className="sticky top-0 z-50 border-b border-iqBorder bg-white/70 backdrop-blur-md">
         <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-baseline gap-2 whitespace-nowrap">
-            <img src={logo} alt="Inviteque" className="h-8 w-auto align-baseline" />
-            <span className="font-parisienne text-3xl font-normal text-iqText hidden sm:inline leading-none select-none">Inviteque</span>
+          <Link to="/" className="flex items-center gap-2 whitespace-nowrap">
+            <img src={logo} alt="Inviteque" className="h-8 w-auto" />
+            <span className="font-parisienne text-3xl font-normal text-iqText hidden sm:inline leading-none select-none relative -top-[2px]">Inviteque</span>
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">

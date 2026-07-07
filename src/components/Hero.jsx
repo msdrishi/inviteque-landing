@@ -178,15 +178,12 @@ function DateRow({ dateLine, isDesktop }) {
 /* ─────────────────────────────────────────
    Pin icon
 ───────────────────────────────────────── */
-/* ─────────────────────────────────────────
-   Pin icon
-───────────────────────────────────────── */
 function PinIcon() {
   return (
     <svg viewBox="0 0 20 26" width="12" height="16" fill="none" aria-hidden="true">
       <path d="M10 1C6.13 1 3 4.13 3 8c0 5.25 7 16 7 16s7-10.75 7-16c0-3.87-3.13-7-7-7z"
-        stroke="rgba(255,255,255,0.95)" strokeWidth="1.4" fill="rgba(255,255,255,0.2)" />
-      <circle cx="10" cy="8" r="2.5" fill="rgba(255,255,255,0.95)" />
+        stroke="#7B0F1A" strokeWidth="1.4" fill="#7B0F1A" fillOpacity="0.12" />
+      <circle cx="10" cy="8" r="2.5" fill="#7B0F1A" opacity="0.7" />
     </svg>
   )
 }
@@ -424,7 +421,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
           variants={fadeUp}
           style={{
             marginTop: isDesktop ? 'clamp(12px, 2vw, 24px)' : 4, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', gap: 2, width: '100%'
+            alignItems: 'center', gap: 20, width: '100%'
           }}
         >
           <div style={{ width: '100%', maxWidth: 170 }}>
@@ -514,12 +511,11 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
                 fontSize: isDesktop ? 'clamp(12px, 1.2vw, 16px)' : 'clamp(9px, 1.5svh, 13px)',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                color: '#FFF',
+                color: '#7B0F1A',
                 marginTop: 2,
                 lineHeight: 1.2,
                 textAlign: 'center',
-                padding: '0 10px',
-                textShadow: '0 2px 8px rgba(0,0,0,0.5)'
+                padding: '0 10px'
               }}>
                 {data.addressParts[0]}
               </p>
@@ -530,11 +526,11 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
                   fontSize: isDesktop ? 'clamp(9.5px, 0.9vw, 12px)' : 'clamp(7px, 1.1svh, 9.5px)',
                   letterSpacing: '0.22em',
                   textTransform: 'uppercase',
-                  color: 'rgba(255,255,255,0.85)',
+                  color: '#7B0F1A',
+                  opacity: 0.8,
                   textAlign: 'center',
                   padding: '0 20px',
-                  marginTop: '4px',
-                  textShadow: '0 1px 4px rgba(0,0,0,0.4)'
+                  marginTop: '4px'
                 }}>
                   {data.addressParts.slice(1).join(', ')}
                 </p>
@@ -548,10 +544,9 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
                 fontSize: isDesktop ? 'clamp(12px, 1.2vw, 16px)' : 'clamp(9px, 1.5svh, 13px)',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                color: '#FFF',
+                color: '#7B0F1A',
                 marginTop: 2,
                 lineHeight: 1.2,
-                textShadow: '0 2px 8px rgba(0,0,0,0.5)'
               }}>
                 {data.venueName}
               </p>
@@ -561,8 +556,8 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
                 fontSize: isDesktop ? 'clamp(9.5px, 0.9vw, 12px)' : 'clamp(7px, 1.1svh, 9.5px)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.85)',
-                textShadow: '0 1px 4px rgba(0,0,0,0.4)'
+                color: '#7B0F1A',
+                opacity: 0.8,
               }}>
                 {data.venueCity}
               </p>
@@ -574,10 +569,9 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
               fontFamily: "'Parisienne', cursive",
               fontSize: isDesktop ? 'clamp(16px, 1.6vw, 22px)' : 'clamp(12px, 2.8svh, 18px)',
               fontWeight: 400,
-              color: '#FFF',
-              opacity: 0.9,
+              color: '#7B0F1A',
+              opacity: 0.7,
               marginTop: 1,
-              textShadow: '0 2px 8px rgba(0,0,0,0.4)'
             }}>
               {data.hashtag}
             </p>

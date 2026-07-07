@@ -53,7 +53,7 @@ export default function Account() {
         <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-8 w-auto" />
-            <span className="font-parisienne text-3xl font-normal text-iqText leading-none hidden sm:inline">Inviteque</span>
+            <span className="font-parisienne text-3xl font-normal text-iqText leading-none hidden sm:inline relative -top-[2px]">Inviteque</span>
           </Link>
           <div className="flex items-center gap-6">
             <button
