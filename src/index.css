@@ -90,3 +90,22 @@ body::before {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Tablet / Desktop responsive styles for Aura of Elegance Hero */
+.aura-hero-section {
+  background: #FFF0EC;
+}
+
+@media (min-width: 768px) {
+  .aura-hero-section {
+    min-height: 100vh !important;
+    aspect-ratio: auto !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .aura-hero-section {
+    min-height: auto !important;
+    aspect-ratio: 1448 / 1086 !important;
+  }
+}

@@ -207,8 +207,8 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
   return (
     <section
       id={data.id}
-      className="relative w-full overflow-hidden"
-      style={isDesktop ? { aspectRatio: '1448 / 1086', minHeight: 'auto', background: '#FFF0EC' } : { minHeight: 'calc(100svh + 20px)', background: '#FFF0EC' }}
+      className={isDesktop ? "relative w-full overflow-hidden aura-hero-section" : "relative w-full overflow-hidden"}
+      style={isDesktop ? { background: '#FFF0EC' } : { minHeight: 'calc(100svh + 20px)', background: '#FFF0EC' }}
     >
       {/* ── Parallax background — no overlay ── */}
       <motion.div
