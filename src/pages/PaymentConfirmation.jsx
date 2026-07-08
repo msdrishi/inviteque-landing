@@ -44,22 +44,24 @@ export default function PaymentConfirmation() {
   }
 
   const handleShareWhatsApp = () => {
-    const groom = draftData?.groomName || 'Groom'
-    const bride = draftData?.brideName || 'Bride'
+    const groom = (draftData?.groomName || 'Groom').trim()
+    const bride = (draftData?.brideName || 'Bride').trim()
     const date = draftData?.weddingDate && draftData?.weddingMonth
       ? `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear || ''}`.trim()
       : 'our wedding day'
-    const time = draftData?.weddingTime ? ` at ${draftData.weddingTime}` : ''
-    const venue = draftData?.mahalName || draftData?.venueAddress || 'our venue'
-    const city = draftData?.venueCity ? `, ${draftData.venueCity}` : ''
+    const time = (draftData?.weddingTime || '').trim()
+    const timeStr = time ? `at ${time}` : ''
+    const venue = (draftData?.mahalName || draftData?.venueAddress || 'our venue').trim()
+    const city = (draftData?.venueCity || '').trim()
+    const cityStr = city ? `, ${city}` : ''
 
     const text = `✨ *𝒲𝑒𝒹𝒹𝒾𝓃𝑔 𝐼𝓃𝓋𝒾𝓉𝒶𝓉𝒾𝑜𝓃* ✨\n\n` +
                  `Dear Loved Ones,\n\n` +
                  `We are joyful to invite you to celebrate the wedding ceremony of\n` +
                  `💍 *${groom} & ${bride}* 💍\n\n` +
-                 `📅 Date: *${date}*\n` +
-                 `⏰ Time: *${time}*\n` +
-                 `📍 Venue: *${venue}${city}*\n\n` +
+                 (date ? `📅 Date: *${date}*\n` : '') +
+                 (timeStr ? `⏰ Time: *${timeStr}*\n` : '') +
+                 `📍 Venue: *${(venue + cityStr).trim()}*\n\n` +
                  `We look forward to your presence and blessings on our special day! ❤️\n\n` +
                  `Please find the wedding details and RSVP via our digital invitation link here:\n` +
                  `👉 ${inviteUrl}`

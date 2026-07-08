@@ -73,20 +73,20 @@ export default function InviteDetails() {
       date = `${invite.heroData.weddingDate} ${invite.heroData.weddingMonth} ${invite.heroData.weddingYear || ''}`.trim()
     }
     
-    const time = invite.weddingTime || invite.heroData?.weddingTime || ''
-    const timeStr = time ? ` at ${time}` : ''
+    const time = (invite.weddingTime || invite.heroData?.weddingTime || '').trim()
+    const timeStr = time ? `at ${time}` : ''
     
-    const venue = invite.mahalName || invite.venueName || invite.venueData?.mahalName || invite.venueData?.venueAddress || 'our venue'
-    const city = invite.venueCity || invite.venueData?.venueCity || ''
+    const venue = (invite.mahalName || invite.venueName || invite.venueData?.mahalName || invite.venueData?.venueAddress || 'our venue').trim()
+    const city = (invite.venueCity || invite.venueData?.venueCity || '').trim()
     const cityStr = city ? `, ${city}` : ''
 
     const text = `✨ *𝒲𝑒𝒹𝒹𝒾𝓃𝑔 𝐼𝓃𝓋𝒾𝓉𝒶𝓉𝒾𝑜𝓃* ✨\n\n` +
                  `Dear Loved Ones,\n\n` +
                  `We are joyful to invite you to celebrate the wedding ceremony of\n` +
                  `💍 *${groom} & ${bride}* 💍\n\n` +
-                 `📅 Date: *${date}*\n` +
-                 `⏰ Time: *${timeStr}*\n` +
-                 `📍 Venue: *${venue}${cityStr}*\n\n` +
+                 (date ? `📅 Date: *${date.trim()}*\n` : '') +
+                 (timeStr ? `⏰ Time: *${timeStr}*\n` : '') +
+                 `📍 Venue: *${(venue + cityStr).trim()}*\n\n` +
                  `We look forward to your presence and blessings on our special day! ❤️\n\n` +
                  `Please find the wedding details and RSVP via our digital invitation link here:\n` +
                  `👉 ${url}`
