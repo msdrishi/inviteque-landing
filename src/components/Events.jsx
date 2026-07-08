@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
 
-const PITCH = 96;
+const PITCH = 112;
 
 const letterContainer = {
   hidden: { opacity: 0 },
@@ -29,9 +29,9 @@ function EventItem({ item, index, scrollY, isDesktop }) {
   const screenY = useTransform(scrollY, y => y + itemY);
   
   // Center of the frame: center values scale for desktop frame height
-  const fadeStart = isDesktop ? -40 : -30;
-  const fadePeak = isDesktop ? 130 : 120;
-  const fadeEnd = isDesktop ? 290 : 270;
+  const fadeStart = isDesktop ? -50 : -45;
+  const fadePeak = isDesktop ? 120 : 110;
+  const fadeEnd = isDesktop ? 300 : 280;
   const containerOpacity = useTransform(screenY, [fadeStart, fadePeak, fadeEnd], [0, 1, 0]);
 
   return (
