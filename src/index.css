@@ -149,7 +149,7 @@ body::before {
 
   /* Countdown */
   .countdown-section {
-    min-height: 100vh !important;
+    min-height: auto !important;
     aspect-ratio: auto !important;
   }
 }

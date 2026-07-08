@@ -164,7 +164,7 @@ export default function Venue({ data, isDesktop }) {
               className="font-semibold relative z-10"
               style={{
                 fontFamily: "'Cinzel', serif",
-                fontSize: 'clamp(24px, 2.5vw, 36px)',
+                fontSize: 'clamp(28px, 3.2vw, 36px)',
                 letterSpacing: '0.14em',
                 fontWeight: 600,
                 color: '#7B1E2B',
@@ -195,7 +195,7 @@ export default function Venue({ data, isDesktop }) {
               className="font-semibold relative z-10"
               style={{
                 fontFamily: "'Cinzel', serif",
-                fontSize: 'clamp(18px, 2.2vw, 30px)',
+                fontSize: 'clamp(22px, 2.8vw, 30px)',
                 fontWeight: 600,
                 color: '#8A2D3B',
                 margin: '6px 0 8px 0',
@@ -225,7 +225,7 @@ export default function Venue({ data, isDesktop }) {
                 style={{
                   fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 500,
-                  fontSize: 'clamp(13px, 1.2vw, 16px)',
+                  fontSize: 'clamp(16px, 1.8vw, 20px)',
                   lineHeight: 1.6,
                   color: '#9C5E67',
                   whiteSpace: 'normal',
@@ -260,10 +260,10 @@ export default function Venue({ data, isDesktop }) {
               }}
             >
               <motion.img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(String(data.mapUrl))}&color=6D1220&bgcolor=FFF7F2`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(String(data.mapUrl))}&color=6D1220&bgcolor=FFF7F2`}
                 alt="QR Code for Location"
-                width={80}
-                height={80}
+                width={130}
+                height={130}
                 style={{
                   display: 'block',
                   borderRadius: '10px',
@@ -273,10 +273,10 @@ export default function Venue({ data, isDesktop }) {
                 }}
                 loading="lazy"
               />
-              <div className="flex flex-col items-start gap-2">
+              <div className="flex flex-col items-start gap-3">
                 <span style={{
                   fontFamily: "'Montserrat', sans-serif",
-                  fontSize: '11px',
+                  fontSize: '14px',
                   fontWeight: 600,
                   color: '#9C5E67',
                   letterSpacing: '0.1em'
@@ -290,12 +290,12 @@ export default function Venue({ data, isDesktop }) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 6,
-                    padding: '8px 16px',
+                    padding: '10px 20px',
                     borderRadius: '20px',
                     background: 'rgba(123, 30, 43, 0.08)',
                     border: '1px solid rgba(123, 30, 43, 0.2)',
                     fontFamily: "'Montserrat', sans-serif",
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 600,
                     color: '#7B1E2B',
                     textDecoration: 'none',

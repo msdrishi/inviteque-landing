@@ -92,16 +92,16 @@ export default function Story({ data, isDesktop }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        backgroundImage: `url(${texturePink})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'repeat',
+        backgroundAttachment: 'scroll',
       }}
     >
       {/* Moments Section with Texture Background */}
       <div style={{
         position: 'relative',
         width: '100%',
-        backgroundImage: `url(${texturePink})`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'repeat',
-        backgroundAttachment: 'scroll',
         paddingTop: '60px',
         paddingBottom: '80px',
       }}>
