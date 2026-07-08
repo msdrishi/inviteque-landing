@@ -147,10 +147,14 @@ export default function Builder() {
 
   useEffect(() => {
     // If we have an editCode in the URL AND (we haven't loaded it yet OR it's different from what's in memory)
-    if (editCode && (draftData.code !== editCode)) {
+    if (editCode && (draftData.code !== editCode) && user?.token) {
       setLoading(true)
       // Fetch existing data for editing
-      fetch(`${API_URL}/api/invites/${editCode}`)
+      fetch(`${API_URL}/api/invites/${editCode}`, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      })
         .then(res => res.json())
         .then(data => {
           if (data) {
@@ -188,7 +192,7 @@ export default function Builder() {
           setLoading(false)
         })
     }
-  }, [editCode, draftData.code, updateDraft])
+  }, [editCode, draftData.code, updateDraft, user])
 
   const [errors, setErrors] = useState({})
   const [uploadingPhotos, setUploadingPhotos] = useState({ 0: false, 1: false, 2: false })
