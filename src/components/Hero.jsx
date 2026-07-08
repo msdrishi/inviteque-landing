@@ -80,14 +80,9 @@ function FallingPetals() {
 /* ─────────────────────────────────────────
    Monogram Badge — diamond frame
 ───────────────────────────────────────── */
-function MonogramBadge({ groomInitial = 'G', brideInitial = 'B', delay = 0.1 }) {
+function MonogramBadge({ groomInitial = 'G', brideInitial = 'B' }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
-      className="flex flex-col items-center"
-    >
+    <motion.div variants={fadeUp} className="flex flex-col items-center">
       <svg viewBox="0 0 80 80" width="54" height="54" fill="none" aria-hidden="true">
         <polygon points="40,4 76,40 40,76 4,40"
           stroke="#7B0F1A" strokeWidth="1.3" fill="none" opacity="0.55" />
@@ -111,12 +106,10 @@ function MonogramBadge({ groomInitial = 'G', brideInitial = 'B', delay = 0.1 }) 
 /* ─────────────────────────────────────────
    Decorative heart divider
 ───────────────────────────────────────── */
-function HeartRule({ maxW = 160, delay = 0.4 }) {
+function HeartRule({ maxW = 160 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      variants={fadeUp}
       style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         gap: 8, width: '100%', maxWidth: maxW
@@ -132,7 +125,7 @@ function HeartRule({ maxW = 160, delay = 0.4 }) {
 /* ─────────────────────────────────────────
    Date row — AUGUST | 18 | 2026
 ───────────────────────────────────────── */
-function DateRow({ dateLine, isDesktop, delay = 0.5 }) {
+function DateRow({ dateLine, isDesktop }) {
   const parts = String(dateLine || '').trim().split(/\s+/)
   let day = '', month = '', year = ''
   if (parts.length >= 3) {
@@ -141,10 +134,7 @@ function DateRow({ dateLine, isDesktop, delay = 0.5 }) {
     year = parts[parts.length - 1]
   }
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+    <motion.div variants={fadeUp}
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
     >
       {/* MONTH */}
@@ -255,14 +245,11 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         <MonogramBadge
           groomInitial={(data.groomName?.[0] ?? 'G').toUpperCase()}
           brideInitial={(data.brideName?.[0] ?? 'B').toUpperCase()}
-          delay={0.1}
         />
 
         {/* SAVE THE DATE */}
         <motion.p
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 0.95, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          variants={fadeUp}
           style={{
             marginTop: 4,
             fontFamily: "'Montserrat', sans-serif",
@@ -271,6 +258,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             letterSpacing: '0.35em',
             textTransform: 'uppercase',
             color: '#7B0F1A',
+            opacity: 0.95,
           }}
         >
           {data.title || 'Save the Date'}
@@ -278,21 +266,16 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
 
         {/* Divider below SAVE THE DATE */}
         <div style={{ marginTop: 10, width: '100%', maxWidth: 130 }}>
-          <HeartRule maxW={130} delay={0.3} />
+          <HeartRule maxW={130} />
         </div>
 
         {/* ── Groom name ── */}
-        {/* ── Groom name ── */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 1.6, delay: 1.4, ease: [0.22, 1, 0.36, 1] }}
-          style={{ marginTop: isDesktop ? 26 : 10, position: 'relative' }}
-        >
-          <span
+        <motion.div variants={nameReveal} style={{ marginTop: isDesktop ? 26 : 10, position: 'relative' }}>
+          <motion.span
+            variants={nameLetters}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(62px, 7.5vw, 105px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               color: '#7B0F1A',
@@ -306,24 +289,21 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
               .map((ch, idx) => (
                 <motion.span
                   key={`${ch}-${idx}`}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.9, delay: 1.4 + idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  variants={nameLetter}
                   style={{ display: 'inline-block' }}
                 >
                   {ch === ' ' ? '\u00A0' : ch}
                 </motion.span>
               ))}
-          </span>
+          </motion.span>
 
           {/* Glassy reflection overlay */}
           <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 2.3 }}
+            animate={{ backgroundPosition: ['100% center', '-200% center'] }}
+            transition={{ repeat: Infinity, duration: 7, ease: 'linear' }}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(62px, 7.5vw, 105px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               whiteSpace: 'nowrap',
@@ -340,8 +320,6 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
               zIndex: 2,
               display: 'block',
             }}
-            animate={{ backgroundPosition: ['100% center', '-200% center'] }}
-            transition={{ repeat: Infinity, duration: 7, ease: 'linear' }}
             aria-hidden="true"
           >
             {String(data.groomName || '')
@@ -358,15 +336,10 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         </motion.div>
 
         {/* & */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.7 }}
-          animate={{ opacity: 0.88, scale: 1 }}
-          transition={{ duration: 0.8, delay: 2.7, ease: 'backOut' }}
-          style={{ marginTop: isDesktop ? 10 : -2 }}
-        >
+        <motion.div variants={ampReveal} style={{ marginTop: isDesktop ? 10 : -2 }}>
           <span style={{
             fontFamily: "'Parisienne', 'Spectral', cursive",
-            fontSize: isDesktop ? 'clamp(62px, 7.5vw, 105px)' : 'clamp(20px, 10svh, 60px)',
+            fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
             fontWeight: 100,
             lineHeight: 1,
             color: '#7B0F1A',
@@ -378,16 +351,12 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         </motion.div>
 
         {/* ── Bride name ── */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30, filter: 'blur(6px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 1.6, delay: 3.2, ease: [0.22, 1, 0.36, 1] }}
-          style={{ marginTop: isDesktop ? 10 : -4, position: 'relative' }}
-        >
-          <span
+        <motion.div variants={nameReveal} style={{ marginTop: isDesktop ? 10 : -4, position: 'relative' }}>
+          <motion.span
+            variants={nameLetters}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(62px, 7.5vw, 105px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               color: '#7B0F1A',
@@ -401,24 +370,21 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
               .map((ch, idx) => (
                 <motion.span
                   key={`${ch}-${idx}`}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.9, delay: 3.2 + idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  variants={nameLetter}
                   style={{ display: 'inline-block' }}
                 >
                   {ch === ' ' ? '\u00A0' : ch}
                 </motion.span>
               ))}
-          </span>
+          </motion.span>
 
           {/* Glassy reflection overlay */}
           <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 4.1 }}
+            animate={{ backgroundPosition: ['200% center', '-200% center'] }}
+            transition={{ repeat: Infinity, duration: 7, ease: 'linear', delay: 1 }}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(62px, 7.5vw, 105px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
               fontWeight: 100,
               lineHeight: 0.92,
               whiteSpace: 'nowrap',
@@ -435,8 +401,6 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
               zIndex: 2,
               display: 'block',
             }}
-            animate={{ backgroundPosition: ['200% center', '-200% center'] }}
-            transition={{ repeat: Infinity, duration: 7, ease: 'linear', delay: 1 }}
             aria-hidden="true"
           >
             {String(data.brideName || '')
@@ -454,16 +418,14 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
 
         {/* ARE GETTING MARRIED */}
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          variants={fadeUp}
           style={{
             marginTop: isDesktop ? 'clamp(12px, 2vw, 24px)' : 4, display: 'flex', flexDirection: 'column',
             alignItems: 'center', gap: 20, width: '100%'
           }}
         >
           <div style={{ width: '100%', maxWidth: 170 }}>
-            <HeartRule maxW={170} delay={0.7} />
+            <HeartRule maxW={170} />
           </div>
           <p style={{
             fontFamily: "'Montserrat', sans-serif",
@@ -481,9 +443,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         {/* Time of Marriage */}
         {data.weddingTime && (
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 0.9, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            variants={fadeUp}
             style={{
               marginTop: isDesktop ? 12 : 6,
               marginBottom: isDesktop ? -4 : -2,
@@ -509,16 +469,11 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
 
         {/* ── Date row ── */}
         <div style={{ marginTop: isDesktop ? 12 : 3 }}>
-          <DateRow dateLine={data.dateLine} isDesktop={isDesktop} delay={0.5} />
+          <DateRow dateLine={data.dateLine} isDesktop={isDesktop} />
         </div>
 
         {/* Day of week */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 0.95, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          style={{ marginTop: isDesktop ? 8 : 0 }}
-        >
+        <motion.div variants={fadeUp} style={{ marginTop: isDesktop ? 8 : 0 }}>
           <span style={{
             fontFamily: "'Parisienne', cursive",
             fontSize: isDesktop ? 'clamp(24px, 2.4vw, 34px)' : 'clamp(18px, 4.5svh, 30px)',
@@ -539,9 +494,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
 
         {/* ── Venue ── */}
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          variants={fadeUp}
           style={{
             marginTop: 4, display: 'flex', flexDirection: 'column',
             alignItems: 'center', gap: 2
