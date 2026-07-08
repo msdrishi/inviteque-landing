@@ -132,7 +132,7 @@ export default function TemplateAuraOfElegance({ savedData }) {
         <div className="relative w-full max-w-[430px] min-h-[100svh] bg-background text-primary shadow-[0_0_80px_rgba(0,0,0,0.5)]">
           {/* Fixed Watermark Overlay */}
           {showWatermark && (
-            <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.22] select-none">
+            <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.45] select-none">
               <span className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em] text-primary" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 preview-inviteque
               </span>
@@ -181,7 +181,7 @@ export default function TemplateAuraOfElegance({ savedData }) {
       <div className="hidden md:block w-full min-h-screen bg-[#FFF6F2] relative">
         {/* Fixed Watermark Overlay for Desktop */}
         {showWatermark && (
-          <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.12] select-none flex flex-col justify-around items-center">
+          <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.28] select-none flex flex-col justify-around items-center">
             <span className="text-[32px] font-medium tracking-[0.3em] text-primary" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               PREVIEW — INVITEQUE
             </span>

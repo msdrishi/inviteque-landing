@@ -145,6 +145,7 @@ export const weddingData = {
         icon: ['✦', '◎', '✿', '◆', '♪'][index % 5],
         time: s.time,
         name: s.title,
+        date: s.date,
       }))
     })(),
   },

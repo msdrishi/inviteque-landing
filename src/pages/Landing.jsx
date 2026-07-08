@@ -245,7 +245,7 @@ function CustomisePublishVisual() {
         </div>
 
         <div className="space-y-0.5">
-          <label className="text-[7px] font-bold text-iqText/40 uppercase tracking-wider block">Place of Wedding <span className="text-red-500">*</span></label>
+          <label className="text-[7px] font-bold text-iqText/40 uppercase tracking-wider block">Location of Wedding <span className="text-red-500">*</span></label>
           <div className="w-full rounded-md border border-iqBorder bg-white px-2 py-1 text-[8.5px] font-bold text-iqText/80 truncate">
             The Grand Palace
           </div>

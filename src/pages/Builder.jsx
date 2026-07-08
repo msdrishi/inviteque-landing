@@ -55,11 +55,61 @@ function parseTimeParts(timeString) {
   const groups = trimmed.match(/\d+/g)
   if (groups && groups.length >= 1) {
     const hours = groups[0] || ''
-    const minutes = groups[1] || ''
-    return { hours, minutes, ampm }
+    const paddedHours = hours ? (hours.length === 1 ? '0' + hours : hours) : ''
+    const minutes = groups[1] || '00'
+    const paddedMinutes = minutes ? (minutes.length === 1 ? '0' + minutes : minutes) : '00'
+    return { hours: paddedHours, minutes: paddedMinutes, ampm }
   }
   
   return defaultParts
+}
+
+// Function to parse a time range (e.g. "09:00 AM - 10:30 AM") into start and end parts
+function parseTimeRange(timeRangeString) {
+  const parts = (timeRangeString || '').split('-')
+  const startPart = parts[0] || ''
+  const endPart = parts[1] || ''
+  
+  const start = parseTimeParts(startPart)
+  const end = endPart.trim() ? parseTimeParts(endPart) : { hours: '', minutes: '', ampm: 'AM' }
+  
+  const hasEnd = endPart.trim() !== '' && endPart.match(/\d+/) !== null
+  
+  return {
+    startHours: start.hours,
+    startMinutes: start.minutes,
+    startAmpm: start.ampm,
+    endHours: hasEnd ? end.hours : '',
+    endMinutes: hasEnd ? end.minutes : '',
+    endAmpm: hasEnd ? end.ampm : 'AM',
+    hasEnd
+  }
+}
+
+// Function to format start and end parts into a time range string
+function formatTimeRange(sh, sm, sa, eh, em, ea) {
+  let start = ''
+  if (sh && sm) {
+    start = `${sh}:${sm} ${sa}`
+  } else if (sh) {
+    start = `${sh}:00 ${sa}`
+  } else if (sm) {
+    start = `12:${sm} ${sa}`
+  }
+  
+  let end = ''
+  if (eh && em) {
+    end = `${eh}:${em} ${ea}`
+  } else if (eh) {
+    end = `${eh}:00 ${ea}`
+  } else if (em) {
+    end = `12:${em} ${ea}`
+  }
+  
+  if (start && end) {
+    return `${start} - ${end}`
+  }
+  return start || end
 }
 
 export default function Builder() {
@@ -200,6 +250,8 @@ export default function Builder() {
   // Get template details
   const template = templates.find(t => t.id === templateId)
 
+  const { startHours, startMinutes, startAmpm, endHours, endMinutes, endAmpm } = parseTimeRange(formData.weddingTime)
+
   if (loading || authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FDFCFB]">
@@ -219,7 +271,7 @@ export default function Builder() {
     if (!formData.weddingMonth?.trim()) newErrors.weddingMonth = 'Month is required'
     if (!formData.weddingYear?.trim()) newErrors.weddingYear = 'Year is required'
     if (!formData.weddingTime?.trim()) newErrors.weddingTime = 'Time of marriage is required'
-    if (!formData.mahalName?.trim()) newErrors.mahalName = 'Place of wedding is required'
+    if (!formData.mahalName?.trim()) newErrors.mahalName = 'Location of wedding is required'
     if (!formData.venueAddress?.trim()) newErrors.venueAddress = 'Venue address is required'
     if (!formData.venueCity?.trim()) newErrors.venueCity = 'City is required'
     if (!formData.state?.trim()) newErrors.state = 'State is required'
@@ -320,8 +372,6 @@ export default function Builder() {
   }
 
   const handleDeleteScheduleItem = (index) => {
-    // Prevent deleting mandatory first three events
-    if (index < 3) return
     setFormData(prev => ({
       ...prev,
       scheduleItems: prev.scheduleItems.filter((_, i) => i !== index)
@@ -441,28 +491,152 @@ export default function Builder() {
 
                 <div className="space-y-2">
                   <label className="text-xs font-bold uppercase tracking-wider opacity-50">Time of Marriage <span className="text-red-500">*</span></label>
-                  <input
-                    type="text"
-                    name="weddingTime"
-                    value={formData.weddingTime || ''}
-                    onChange={handleChange}
-                    placeholder="e.g. 9:00 AM - 10:30 AM"
-                    className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.weddingTime
-                      ? 'border-red-500 bg-red-50 focus:border-red-500'
-                      : 'border-iqBorder bg-white focus:border-iqText'
-                      }`}
-                  />
+                  <div className="flex items-center gap-4 flex-wrap">
+                    {/* Start Time */}
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs text-iqText/50 font-medium mr-1">Start:</span>
+                      <input
+                        type="text"
+                        placeholder="HH"
+                        maxLength={2}
+                        value={startHours}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '')
+                          const newTime = formatTimeRange(val, startMinutes, startAmpm, endHours, endMinutes, endAmpm)
+                          setFormData(prev => ({ ...prev, weddingTime: newTime }))
+                        }}
+                        onBlur={(e) => {
+                          let val = e.target.value.trim()
+                          if (val) {
+                            let num = parseInt(val, 10)
+                            if (isNaN(num)) num = 12
+                            num = Math.min(Math.max(num, 1), 12)
+                            val = String(num).padStart(2, '0')
+                          } else {
+                            val = '12'
+                          }
+                          const newTime = formatTimeRange(val, startMinutes, startAmpm, endHours, endMinutes, endAmpm)
+                          setFormData(prev => ({ ...prev, weddingTime: newTime }))
+                        }}
+                        className="w-12 text-center rounded-lg border border-iqBorder bg-white py-2 text-sm font-semibold outline-none focus:border-iqText transition-colors"
+                      />
+                      <span className="text-iqText/40 font-bold">:</span>
+                      <input
+                        type="text"
+                        placeholder="MM"
+                        maxLength={2}
+                        value={startMinutes}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '')
+                          const newTime = formatTimeRange(startHours, val, startAmpm, endHours, endMinutes, endAmpm)
+                          setFormData(prev => ({ ...prev, weddingTime: newTime }))
+                        }}
+                        onBlur={(e) => {
+                          let val = e.target.value.trim()
+                          if (val) {
+                            let num = parseInt(val, 10)
+                            if (isNaN(num)) num = 0
+                            num = Math.min(Math.max(num, 0), 59)
+                            val = String(num).padStart(2, '0')
+                          } else {
+                            val = '00'
+                          }
+                          const newTime = formatTimeRange(startHours, val, startAmpm, endHours, endMinutes, endAmpm)
+                          setFormData(prev => ({ ...prev, weddingTime: newTime }))
+                        }}
+                        className="w-12 text-center rounded-lg border border-iqBorder bg-white py-2 text-sm font-semibold outline-none focus:border-iqText transition-colors"
+                      />
+                      <select
+                        value={startAmpm}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          const newTime = formatTimeRange(startHours, startMinutes, val, endHours, endMinutes, endAmpm)
+                          setFormData(prev => ({ ...prev, weddingTime: newTime }))
+                        }}
+                        className="rounded-lg border border-iqBorder bg-white py-2 px-1 text-sm font-semibold outline-none focus:border-iqText transition-colors cursor-pointer"
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </select>
+                    </div>
+
+                    <div className="h-4 w-px bg-iqBorder hidden sm:block" />
+
+                    {/* End Time */}
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs text-iqText/50 font-medium mr-1">End (Optional):</span>
+                      <input
+                        type="text"
+                        placeholder="HH"
+                        maxLength={2}
+                        value={endHours}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '')
+                          const newTime = formatTimeRange(startHours, startMinutes, startAmpm, val, endMinutes, endAmpm)
+                          setFormData(prev => ({ ...prev, weddingTime: newTime }))
+                        }}
+                        onBlur={(e) => {
+                          let val = e.target.value.trim()
+                          if (val) {
+                            let num = parseInt(val, 10)
+                            if (isNaN(num)) num = 12
+                            num = Math.min(Math.max(num, 1), 12)
+                            val = String(num).padStart(2, '0')
+                          }
+                          const newTime = formatTimeRange(startHours, startMinutes, startAmpm, val, endMinutes, endAmpm)
+                          setFormData(prev => ({ ...prev, weddingTime: newTime }))
+                        }}
+                        className="w-12 text-center rounded-lg border border-iqBorder bg-white py-2 text-sm font-semibold outline-none focus:border-iqText transition-colors"
+                      />
+                      <span className="text-iqText/40 font-bold">:</span>
+                      <input
+                        type="text"
+                        placeholder="MM"
+                        maxLength={2}
+                        value={endMinutes}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '')
+                          const newTime = formatTimeRange(startHours, startMinutes, startAmpm, endHours, val, endAmpm)
+                          setFormData(prev => ({ ...prev, weddingTime: newTime }))
+                        }}
+                        onBlur={(e) => {
+                          let val = e.target.value.trim()
+                          if (val) {
+                            let num = parseInt(val, 10)
+                            if (isNaN(num)) num = 0
+                            num = Math.min(Math.max(num, 0), 59)
+                            val = String(num).padStart(2, '0')
+                          }
+                          const newTime = formatTimeRange(startHours, startMinutes, startAmpm, endHours, val, endAmpm)
+                          setFormData(prev => ({ ...prev, weddingTime: newTime }))
+                        }}
+                        className="w-12 text-center rounded-lg border border-iqBorder bg-white py-2 text-sm font-semibold outline-none focus:border-iqText transition-colors"
+                      />
+                      <select
+                        value={endAmpm}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          const newTime = formatTimeRange(startHours, startMinutes, startAmpm, endHours, endMinutes, val)
+                          setFormData(prev => ({ ...prev, weddingTime: newTime }))
+                        }}
+                        className="rounded-lg border border-iqBorder bg-white py-2 px-1 text-sm font-semibold outline-none focus:border-iqText transition-colors cursor-pointer"
+                      >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </select>
+                    </div>
+                  </div>
                   {errors.weddingTime && <p className="text-xs text-red-500">{errors.weddingTime}</p>}
                 </div>
 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">Place of Wedding <span className="text-red-500">*</span></label>
+                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">Location of Wedding <span className="text-red-500">*</span></label>
                     <input
                       name="mahalName"
                       value={formData.mahalName}
                       onChange={handleChange}
-                      placeholder="Enter place of wedding"
+                      placeholder="Enter location of wedding"
                       className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.mahalName
                         ? 'border-red-500 bg-red-50 focus:border-red-500'
                         : 'border-iqBorder bg-white focus:border-iqText'
@@ -671,91 +845,102 @@ export default function Builder() {
                         <p className="text-xs text-iqText/50">List your ceremony timelines.</p>
                       </div>
                     </label>
-
                     {formData.showSchedule && (
                       <div className="ml-0 md:ml-9 space-y-3 md:space-y-4">
-                        {formData.scheduleItems.map((item, idx) => {
-                          const { hours, minutes, ampm } = parseTimeParts(item.time)
-                          return (
-                            <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center gap-3 rounded-xl border border-iqBorder bg-white p-3 md:p-4 shadow-sm transition-shadow hover:shadow-md">
-                              <div className="flex-shrink-0 rounded-lg bg-iqBg p-2 text-[10px] font-bold uppercase tracking-tighter text-iqText/40 whitespace-nowrap">
-                                Event {idx + 1}
-                              </div>
-                              
-                              <div className="flex items-center gap-1.5 flex-wrap">
+                        {formData.scheduleItems.length === 0 ? (
+                          <div className="text-center py-6 border border-dashed border-iqBorder rounded-xl bg-white text-sm text-iqText/40 font-medium">
+                            No events added yet. Add events to display them in the schedule.
+                          </div>
+                        ) : (
+                          formData.scheduleItems.map((item, idx) => {
+                            const { hours, minutes, ampm } = parseTimeParts(item.time)
+                            return (
+                              <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center gap-3 rounded-xl border border-iqBorder bg-white p-3 md:p-4 shadow-sm transition-shadow hover:shadow-md">
+                                <div className="flex-shrink-0 rounded-lg bg-iqBg p-2 text-[10px] font-bold uppercase tracking-tighter text-iqText/40 whitespace-nowrap">
+                                  Event {idx + 1}
+                                </div>
+                                
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <input
+                                    type="text"
+                                    placeholder="HH"
+                                    maxLength={2}
+                                    value={hours}
+                                    onChange={(e) => {
+                                      const val = e.target.value.replace(/\D/g, '')
+                                      const newTime = `${val}:${minutes} ${ampm}`
+                                      handleScheduleChange(idx, 'time', newTime)
+                                    }}
+                                    onBlur={(e) => {
+                                      let val = e.target.value.trim()
+                                      if (val) {
+                                        let num = parseInt(val, 10)
+                                        if (isNaN(num)) num = 12
+                                        num = Math.min(Math.max(num, 1), 12)
+                                        val = String(num).padStart(2, '0')
+                                      } else {
+                                        val = '12'
+                                      }
+                                      const newTime = `${val}:${minutes} ${ampm}`
+                                      handleScheduleChange(idx, 'time', newTime)
+                                    }}
+                                    className="w-12 text-center rounded-lg border border-iqBorder bg-transparent py-2 text-sm font-semibold outline-none focus:border-iqText transition-colors"
+                                  />
+                                  <span className="text-iqText/40 font-bold">:</span>
+                                  <input
+                                    type="text"
+                                    placeholder="MM"
+                                    maxLength={2}
+                                    value={minutes}
+                                    onChange={(e) => {
+                                      const val = e.target.value.replace(/\D/g, '')
+                                      const newTime = `${hours}:${val} ${ampm}`
+                                      handleScheduleChange(idx, 'time', newTime)
+                                    }}
+                                    onBlur={(e) => {
+                                      let val = e.target.value.trim()
+                                      if (val) {
+                                        let num = parseInt(val, 10)
+                                        if (isNaN(num)) num = 0
+                                        num = Math.min(Math.max(num, 0), 59)
+                                        val = String(num).padStart(2, '0')
+                                      } else {
+                                        val = '00'
+                                      }
+                                      const newTime = `${hours}:${val} ${ampm}`
+                                      handleScheduleChange(idx, 'time', newTime)
+                                    }}
+                                    className="w-12 text-center rounded-lg border border-iqBorder bg-transparent py-2 text-sm font-semibold outline-none focus:border-iqText transition-colors"
+                                  />
+                                  <select
+                                    value={ampm}
+                                    onChange={(e) => {
+                                      const val = e.target.value
+                                      const newTime = `${hours}:${minutes} ${val}`
+                                      handleScheduleChange(idx, 'time', newTime)
+                                    }}
+                                    className="rounded-lg border border-iqBorder bg-white py-2 px-1 text-sm font-semibold outline-none focus:border-iqText transition-colors cursor-pointer"
+                                  >
+                                    <option value="AM">AM</option>
+                                    <option value="PM">PM</option>
+                                  </select>
+                                </div>
+                                
+                                <div className="hidden sm:block h-4 w-px bg-iqBorder" />
                                 <input
-                                  type="text"
-                                  placeholder="HH"
-                                  maxLength={2}
-                                  value={hours}
-                                  onChange={(e) => {
-                                    const val = e.target.value.replace(/\D/g, '')
-                                    const newTime = `${val}:${minutes} ${ampm}`
-                                    handleScheduleChange(idx, 'time', newTime)
-                                  }}
-                                  onBlur={(e) => {
-                                    let val = e.target.value.trim()
-                                    if (val) {
-                                      let num = parseInt(val, 10)
-                                      if (isNaN(num)) num = 12
-                                      num = Math.min(Math.max(num, 1), 12)
-                                      val = String(num).padStart(2, '0')
-                                    } else {
-                                      val = '12'
-                                    }
-                                    const newTime = `${val}:${minutes} ${ampm}`
-                                    handleScheduleChange(idx, 'time', newTime)
-                                  }}
-                                  className="w-12 text-center rounded-lg border border-iqBorder bg-transparent py-2 text-sm font-semibold outline-none focus:border-iqText transition-colors"
+                                  placeholder="Date/Day (e.g. Day 1)"
+                                  value={item.date || ''}
+                                  onChange={(e) => handleScheduleChange(idx, 'date', e.target.value)}
+                                  className="w-full sm:w-36 rounded-lg border border-iqBorder bg-transparent px-2 py-2 text-sm outline-none focus:ring-0 focus:border-iqText transition-colors"
                                 />
-                                <span className="text-iqText/40 font-bold">:</span>
+  
+                                <div className="hidden sm:block h-4 w-px bg-iqBorder" />
                                 <input
-                                  type="text"
-                                  placeholder="MM"
-                                  maxLength={2}
-                                  value={minutes}
-                                  onChange={(e) => {
-                                    const val = e.target.value.replace(/\D/g, '')
-                                    const newTime = `${hours}:${val} ${ampm}`
-                                    handleScheduleChange(idx, 'time', newTime)
-                                  }}
-                                  onBlur={(e) => {
-                                    let val = e.target.value.trim()
-                                    if (val) {
-                                      let num = parseInt(val, 10)
-                                      if (isNaN(num)) num = 0
-                                      num = Math.min(Math.max(num, 0), 59)
-                                      val = String(num).padStart(2, '0')
-                                    } else {
-                                      val = '00'
-                                    }
-                                    const newTime = `${hours}:${val} ${ampm}`
-                                    handleScheduleChange(idx, 'time', newTime)
-                                  }}
-                                  className="w-12 text-center rounded-lg border border-iqBorder bg-transparent py-2 text-sm font-semibold outline-none focus:border-iqText transition-colors"
+                                  placeholder="Event Name"
+                                  value={item.title}
+                                  onChange={(e) => handleScheduleChange(idx, 'title', e.target.value)}
+                                  className="flex-1 rounded-lg border border-iqBorder bg-transparent px-2 py-2 text-sm outline-none focus:ring-0 focus:border-iqText transition-colors"
                                 />
-                                <select
-                                  value={ampm}
-                                  onChange={(e) => {
-                                    const val = e.target.value
-                                    const newTime = `${hours}:${minutes} ${val}`
-                                    handleScheduleChange(idx, 'time', newTime)
-                                  }}
-                                  className="rounded-lg border border-iqBorder bg-white py-2 px-1 text-sm font-semibold outline-none focus:border-iqText transition-colors cursor-pointer"
-                                >
-                                  <option value="AM">AM</option>
-                                  <option value="PM">PM</option>
-                                </select>
-                              </div>
-
-                              <div className="hidden sm:block h-4 w-px bg-iqBorder" />
-                              <input
-                                placeholder="Event Name"
-                                value={item.title}
-                                onChange={(e) => handleScheduleChange(idx, 'title', e.target.value)}
-                                className="flex-1 rounded-lg border border-iqBorder bg-transparent px-2 py-2 text-sm outline-none focus:ring-0 focus:border-iqText transition-colors"
-                              />
-                              {idx > 2 && (
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteScheduleItem(idx)}
@@ -763,10 +948,10 @@ export default function Builder() {
                                 >
                                   Remove
                                 </button>
-                              )}
-                            </div>
-                          )
-                        })}
+                              </div>
+                            )
+                          })
+                        )}
                         <button
                           type="button"
                           onClick={handleAddScheduleItem}

@@ -48,7 +48,7 @@ function EventItem({ item, index, scrollY, isDesktop }) {
          </div>
          <div>
            <div className={`${isDesktop ? 'text-[11px]' : 'text-[10px]'} font-bold tracking-[0.15em] uppercase text-[#8B1E2D] mb-1`} style={{ fontFamily: "'Montserrat', sans-serif" }}>
-             {item.time}
+             {item.date ? `${item.date}  •  ${item.time}` : item.time}
            </div>
            <h3 className={`${isDesktop ? 'text-[20px]' : 'text-[18px]'} font-bold text-[#5C0A14]`} style={{ fontFamily: "'Playfair Display', serif" }}>
              {item.name}
@@ -101,11 +101,21 @@ export default function Events({ data, isDesktop }) {
     }
   ]
 
-  const items = (data.items && data.items.length >= 3) ? data.items.map((item, i) => ({
-    ...defaultEvents[i % defaultEvents.length], 
-    time: item.time || defaultEvents[i % defaultEvents.length].time,
-    name: item.name || defaultEvents[i % defaultEvents.length].name,
-  })) : defaultEvents
+  const items = (data.items !== undefined)
+    ? (data.items || []).map((item, i) => ({
+        icon: item.icon || defaultEvents[i % defaultEvents.length]?.icon,
+        time: item.time || '',
+        name: item.name || item.title || '',
+        date: item.date || ''
+      }))
+    : defaultEvents.map((item, i) => ({
+        ...item,
+        date: ''
+      }));
+
+  if (items.length === 0) {
+    return null;
+  }
 
   const displayItems = [...items, ...items, ...items, ...items, ...items, ...items]
   
