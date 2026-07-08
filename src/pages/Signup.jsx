@@ -9,7 +9,6 @@ export default function Signup() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
     password: '',
   })
   const [error, setError] = useState('')
@@ -26,7 +25,7 @@ export default function Signup() {
     e.preventDefault()
     setError('')
     
-    const result = await signup(formData.name, formData.email, formData.password, formData.phone)
+    const result = await signup(formData.name, formData.email, formData.password, '')
     
     if (result.success) {
       window.location.replace('/')
@@ -87,31 +86,17 @@ export default function Signup() {
               placeholder="Rohan Sharma"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs font-bold uppercase tracking-widest text-iqText/40">Email</label>
-              <input
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-xl border border-iqBorder bg-iqBg/50 px-4 py-3 text-sm outline-none focus:border-iqText transition-colors"
-                placeholder="rohan@example.com"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-bold uppercase tracking-widest text-iqText/40">Phone</label>
-              <input
-                name="phone"
-                type="tel"
-                required
-                value={formData.phone}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-xl border border-iqBorder bg-iqBg/50 px-4 py-3 text-sm outline-none focus:border-iqText transition-colors"
-                placeholder="+91 98765 43210"
-              />
-            </div>
+          <div>
+            <label className="text-xs font-bold uppercase tracking-widest text-iqText/40">Email address</label>
+            <input
+              name="email"
+              type="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-xl border border-iqBorder bg-iqBg/50 px-4 py-3 text-sm outline-none focus:border-iqText transition-colors"
+              placeholder="rohan@example.com"
+            />
           </div>
           <div>
             <label className="text-xs font-bold uppercase tracking-widest text-iqText/40">Password</label>

@@ -121,6 +121,29 @@ export function AuthProvider({ children }) {
     }
   }
 
+  const signup = async (name, email, password, phoneNumber) => {
+    try {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, phoneNumber }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Signup failed')
+      }
+
+      const data = await response.json()
+      setUser(data)
+      localStorage.setItem('inviteque_user', JSON.stringify(data))
+      localStorage.setItem('show_signup_toast', 'true')
+      return { success: true }
+    } catch (error) {
+      return { success: false, message: error.message }
+    }
+  }
+
   const addPurchasedInvitation = (invitationData) => {
     if (!user) return
 
@@ -195,6 +218,7 @@ export function AuthProvider({ children }) {
         user,
         login,
         loginWithData,
+        signup,
         sendOtp,
         verifyOtp,
         logout,
