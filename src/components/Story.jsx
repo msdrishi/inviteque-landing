@@ -82,6 +82,7 @@ export default function Story({ data, isDesktop }) {
     <section
       id={data.id}
       ref={containerRef}
+      className="moments-section"
       style={{
         position: 'relative',
         width: '100%',
@@ -172,7 +173,7 @@ export default function Story({ data, isDesktop }) {
       </div>
 
       {/* Cascading Photos */}
-      <div style={{
+      <div className="moments-photos-container" style={{
         position: 'relative',
         width: '100%',
         maxWidth: isDesktop ? '1000px' : '460px',
@@ -190,6 +191,7 @@ export default function Story({ data, isDesktop }) {
         {/* Photo 1 (Top Left) */}
         {items[0] && (
           <motion.div
+            className="moments-photo-1"
             style={{
               opacity: p1Op,
               x: p1X,
@@ -227,6 +229,7 @@ export default function Story({ data, isDesktop }) {
         {/* Photo 2 (Middle Right) */}
         {items[1] && (
           <motion.div
+            className="moments-photo-2"
             style={{
               opacity: p2Op,
               x: p2X,
@@ -281,6 +284,7 @@ export default function Story({ data, isDesktop }) {
         {/* Photo 3 (Bottom Left) */}
         {items[2] && (
           <motion.div
+            className="moments-photo-3"
             style={{
               opacity: p3Op,
               x: p3X,

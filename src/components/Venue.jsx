@@ -87,7 +87,7 @@ export default function Venue({ data, isDesktop }) {
   return (
     <section 
       id={data.id} 
-      className="relative w-full overflow-hidden px-4 py-6 flex flex-col items-center text-center"
+      className={isDesktop ? "relative w-full overflow-hidden px-4 py-6 flex flex-col items-center text-center venue-section" : "relative w-full overflow-hidden px-4 py-6 flex flex-col items-center text-center"}
       style={isDesktop ? {
         aspectRatio: '3 / 2',
         minHeight: 'auto',

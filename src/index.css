@@ -91,21 +91,113 @@ body::before {
   scrollbar-width: none;  /* Firefox */
 }
 
-/* Tablet / Desktop responsive styles for Aura of Elegance Hero */
+/* Tablet / Desktop responsive styles for Aura of Elegance sections */
 .aura-hero-section {
   background: #FFF0EC;
 }
 
 @media (min-width: 768px) {
+  /* Hero */
   .aura-hero-section {
+    min-height: 100vh !important;
+    aspect-ratio: auto !important;
+  }
+
+  /* Moments/Story (Cascading Photos stacked vertically on tablet) */
+  .moments-section {
+    min-height: 100vh !important;
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+  }
+  .moments-photos-container {
+    flex-direction: column !important;
+    max-width: 520px !important;
+    gap: 0px !important;
+  }
+  .moments-photo-1, .moments-photo-2, .moments-photo-3 {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+  }
+  .moments-photo-1 {
+    width: 65% !important;
+  }
+  .moments-photo-2 {
+    width: 65% !important;
+    margin-top: -16% !important;
+    align-self: flex-end !important;
+  }
+  .moments-photo-3 {
+    width: 68% !important;
+    margin-top: -16% !important;
+    align-self: flex-start !important;
+  }
+
+  /* Invitation */
+  .invitation-section {
+    min-height: 100vh !important;
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+  }
+
+  /* Venue */
+  .venue-section {
+    min-height: 100vh !important;
+    aspect-ratio: auto !important;
+    padding-top: 100px !important;
+    padding-bottom: 100px !important;
+  }
+
+  /* Countdown */
+  .countdown-section {
     min-height: 100vh !important;
     aspect-ratio: auto !important;
   }
 }
 
 @media (min-width: 1024px) and (orientation: landscape) {
+  /* Hero */
   .aura-hero-section {
     min-height: auto !important;
     aspect-ratio: 1448 / 1086 !important;
+  }
+
+  /* Moments/Story (Restore side-by-side row on desktop) */
+  .moments-section {
+    min-height: auto !important;
+  }
+  .moments-photos-container {
+    flex-direction: row !important;
+    max-width: 1000px !important;
+    gap: 30px !important;
+  }
+  .moments-photo-1 {
+    width: 28% !important;
+  }
+  .moments-photo-2 {
+    width: 30% !important;
+    margin-top: 0px !important;
+    align-self: auto !important;
+  }
+  .moments-photo-3 {
+    width: 29% !important;
+    margin-top: 0px !important;
+    align-self: auto !important;
+  }
+
+  /* Invitation */
+  .invitation-section {
+    min-height: auto !important;
+  }
+
+  /* Venue */
+  .venue-section {
+    min-height: auto !important;
+    aspect-ratio: 3 / 2 !important;
+  }
+
+  /* Countdown */
+  .countdown-section {
+    min-height: auto !important;
+    aspect-ratio: 3 / 2 !important;
   }
 }
