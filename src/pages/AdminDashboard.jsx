@@ -694,7 +694,7 @@ export default function AdminDashboard() {
                     <div className="flex justify-between text-xs font-bold text-slate-500">
                       <span>Average Conversion Rate</span>
                       <span className="text-emerald-500">
-                        {summary ? ((summary.totalTransactions / Math.max(summary.totalVisits, 1)) * 100).toFixed(2) : '3.24'}%
+                        {summary ? ((summary.totalTransactions / Math.max(summary.uniqueVisitors || 1, 1)) * 100).toFixed(2) : '3.24'}%
                       </span>
                     </div>
                   </div>
@@ -1030,7 +1030,11 @@ export default function AdminDashboard() {
                           <td className="px-6 py-4 font-mono font-bold text-slate-900 uppercase">{c.code}</td>
                           <td className="px-6 py-4 font-semibold text-slate-800">{c.discountPercentage}% Off</td>
                           <td className="px-6 py-4">
-                            <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600">Available</span>
+                            {c.available ? (
+                              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600">Available</span>
+                            ) : (
+                              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-500">Used</span>
+                            )}
                           </td>
                           <td className="px-6 py-4 text-right">
                             <button

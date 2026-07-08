@@ -114,8 +114,8 @@ export default function Payment() {
     setCouponError('')
   }
 
-  const discount = appliedCoupon ? (TEMPLATE_PRICE * appliedCoupon.discountPercentage) / 100 : 0
-  const finalPrice = TEMPLATE_PRICE - discount
+  const discount = appliedCoupon ? Number(((TEMPLATE_PRICE * appliedCoupon.discountPercentage) / 100).toFixed(2)) : 0
+  const finalPrice = Number((TEMPLATE_PRICE - discount).toFixed(2))
 
   const handlePaymentClick = async () => {
     setIsProcessing(true)
@@ -490,11 +490,11 @@ export default function Payment() {
                         </div>
                         <div className="flex justify-between items-center text-sm text-green-600 font-medium">
                           <span>Discount ({appliedCoupon.discountPercentage}%)</span>
-                          <span>-₹{discount}</span>
+                          <span>-₹{discount.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between items-end pt-2 border-t border-dashed border-iqBorder">
                           <span className="font-bold">Total Amount</span>
-                          <span className="text-3xl font-bold text-iqText">₹{finalPrice}</span>
+                          <span className="text-3xl font-bold text-iqText">₹{finalPrice.toFixed(2)}</span>
                         </div>
                       </div>
                     ) : (
@@ -564,7 +564,7 @@ export default function Payment() {
                   ) : (
                     <>
                       <span>💳</span>
-                      Pay ₹{finalPrice}
+                      Pay ₹{finalPrice.toFixed(2)}
                     </>
                   )}
                 </>
