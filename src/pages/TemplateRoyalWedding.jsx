@@ -112,6 +112,7 @@ export default function TemplateRoyalWedding({ savedData }) {
           icon: icons[index % icons.length],
           time: item.time,
           name: item.title,
+          date: item.date,
         }))
       })(),
     },

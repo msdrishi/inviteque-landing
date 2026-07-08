@@ -48,7 +48,7 @@ function EventItem({ item, index, scrollY, isDesktop }) {
          </div>
          <div>
            <div className={`${isDesktop ? 'text-[11px]' : 'text-[10px]'} font-bold tracking-[0.15em] uppercase text-[#8B1E2D] mb-1`} style={{ fontFamily: "'Montserrat', sans-serif" }}>
-             {item.date ? `${item.date}  •  ${item.time}` : item.time}
+             {item.date ? `${item.time}  |  ${item.date}` : item.time}
            </div>
            <h3 className={`${isDesktop ? 'text-[20px]' : 'text-[18px]'} font-bold text-[#5C0A14]`} style={{ fontFamily: "'Playfair Display', serif" }}>
              {item.name}
