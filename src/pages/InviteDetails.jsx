@@ -88,7 +88,7 @@ export default function InviteDetails() {
                  (timeStr ? `⏰ Time: *${timeStr}*\n` : '') +
                  `📍 Venue: *${(venue + cityStr).trim()}*\n\n` +
                  `We look forward to your presence and blessings on our special day! ❤️\n\n` +
-                 `Please find the wedding details and RSVP via our digital invitation link here:\n` +
+                 `Please find the wedding details via our digital invitation link here:\n` +
                  `👉 ${url}`
 
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
