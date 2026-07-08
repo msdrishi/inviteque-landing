@@ -103,7 +103,7 @@ body::before {
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px) and (orientation: landscape) {
   .aura-hero-section {
     min-height: auto !important;
     aspect-ratio: 1448 / 1086 !important;
