@@ -58,8 +58,8 @@ export default function Countdown({ data, isDesktop }) {
   return (
     <section
       id={data.id || 'countdown'}
-      className={isDesktop ? "relative w-full overflow-hidden countdown-section" : "relative w-full overflow-hidden"}
-      style={isDesktop ? {} : { minHeight: '92svh' }}
+      className="relative w-full overflow-hidden"
+      style={isDesktop ? { aspectRatio: '3 / 2', minHeight: 'auto' } : { minHeight: '92svh' }}
     >
       {/* Background image (no overlay/filter) */}
       <img
