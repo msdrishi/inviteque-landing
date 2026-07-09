@@ -213,7 +213,7 @@ export default function Footer({ data }) {
           variants={fadeUp}
           style={{ display: 'flex', gap: 14, justifyContent: 'center', marginBottom: 16 }}
         >
-          <SocialIcon href="https://instagram.com/inviteque" label="Instagram">
+          <SocialIcon href="https://www.instagram.com/invitequeofficial" label="Instagram">
             <InstagramIcon />
           </SocialIcon>
           <SocialIcon href="https://wa.me/inviteque" label="WhatsApp">

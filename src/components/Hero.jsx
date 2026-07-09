@@ -12,30 +12,30 @@ const container = {
 
 const fadeUp = {
   hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const nameReveal = {
   hidden: { opacity: 0, y: 30, filter: 'blur(6px)' },
   show: {
     opacity: 1, y: 0, filter: 'blur(0px)',
-    transition: { duration: 2.0, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 3.2, ease: [0.22, 1, 0.36, 1] },
   },
 }
 
 const nameLetters = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.12 } },
+  show: { transition: { staggerChildren: 0.2, delayChildren: 0.2 } },
 }
 
 const nameLetter = {
   hidden: { opacity: 0, x: -10 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, x: 0, transition: { duration: 2.4, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const ampReveal = {
   hidden: { opacity: 0, scale: 0.7 },
-  show: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: 'backOut' } },
+  show: { opacity: 1, scale: 1, transition: { duration: 1.8, ease: [0.22, 1, 0.36, 1] } },
 }
 
 /* ─────────────────────────────────────────
@@ -141,34 +141,36 @@ function DateRow({ dateLine, isDesktop }) {
       <div style={{ paddingRight: 14 }}>
         <span style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: isDesktop ? 'clamp(11px, 1vw, 14px)' : 'clamp(8px, 2.4vw, 11px)',
+          fontSize: isDesktop ? 'clamp(14px, 1.3vw, 18px)' : 'clamp(11px, 3vw, 14px)',
+          fontWeight: 700,
           letterSpacing: '0.2em',
           color: '#7B0F1A',
-          opacity: 0.75,
+          opacity: 0.95,
         }}>{month}</span>
       </div>
       {/* Vertical divider */}
-      <div style={{ width: 1, height: 32, background: '#7B0F1A', opacity: 0.28 }} />
+      <div style={{ width: 1.5, height: 38, background: '#7B0F1A', opacity: 0.35 }} />
       {/* DAY */}
       <div style={{ paddingLeft: 14, paddingRight: 14 }}>
         <span style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: isDesktop ? 'clamp(32px, 3.2vw, 48px)' : 'clamp(26px, 8.5vw, 42px)',
-          fontWeight: 700,
+          fontSize: isDesktop ? 'clamp(38px, 3.8vw, 56px)' : 'clamp(32px, 10vw, 48px)',
+          fontWeight: 800,
           lineHeight: 1,
           color: '#7B0F1A',
         }}>{day}</span>
       </div>
       {/* Vertical divider */}
-      <div style={{ width: 1, height: 32, background: '#7B0F1A', opacity: 0.28 }} />
+      <div style={{ width: 1.5, height: 38, background: '#7B0F1A', opacity: 0.35 }} />
       {/* YEAR */}
       <div style={{ paddingLeft: 14 }}>
         <span style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: isDesktop ? 'clamp(11px, 1vw, 14px)' : 'clamp(8px, 2.4vw, 11px)',
+          fontSize: isDesktop ? 'clamp(14px, 1.3vw, 18px)' : 'clamp(11px, 3vw, 14px)',
+          fontWeight: 700,
           letterSpacing: '0.2em',
           color: '#7B0F1A',
-          opacity: 0.75,
+          opacity: 0.95,
         }}>{year}</span>
       </div>
     </motion.div>

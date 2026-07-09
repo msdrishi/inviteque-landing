@@ -8,7 +8,7 @@ const letterContainer = {
 }
 const letterAnim = {
   hidden: { opacity: 0, y: 15 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+  show: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } }
 }
 
 function AnimatedTitle({ text, className, style }) {
@@ -177,7 +177,7 @@ export default function Venue({ data, isDesktop }) {
               whileInView="show"
               viewport={viewport}
               variants={fadeUp}
-              transition={{ duration: 0.8, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.6, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center justify-center gap-3 relative z-10"
               style={{ marginBottom: '14px' }}
             >
@@ -191,7 +191,7 @@ export default function Venue({ data, isDesktop }) {
               whileInView="show"
               viewport={viewport}
               variants={fadeUp}
-              transition={{ duration: 0.85, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="font-semibold relative z-10"
               style={{
                 fontFamily: "'Cinzel', serif",
@@ -211,7 +211,7 @@ export default function Venue({ data, isDesktop }) {
               whileInView="show"
               viewport={viewport}
               variants={fadeUp}
-              transition={{ duration: 0.85, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.7, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-col items-center text-center relative z-10"
               style={{
                 width: '100%',
@@ -245,7 +245,7 @@ export default function Venue({ data, isDesktop }) {
               whileInView="show"
               viewport={viewport}
               variants={fadeUp}
-              transition={{ duration: 0.9, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.8, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 position: 'relative',
                 background: '#FFF7F2',
@@ -338,7 +338,7 @@ export default function Venue({ data, isDesktop }) {
               whileInView="show"
               viewport={viewport}
               variants={fadeUp}
-              transition={{ duration: 0.8, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.6, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center justify-center gap-3 relative z-10"
               style={{ marginBottom: '16px' }}
             >
@@ -352,7 +352,7 @@ export default function Venue({ data, isDesktop }) {
               whileInView="show"
               viewport={viewport}
               variants={fadeUp}
-              transition={{ duration: 0.85, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="font-semibold relative z-10"
               style={{
                 fontFamily: "'Cinzel', serif",
@@ -372,7 +372,7 @@ export default function Venue({ data, isDesktop }) {
               whileInView="show"
               viewport={viewport}
               variants={fadeUp}
-              transition={{ duration: 0.85, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.7, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-col items-center text-center relative z-10"
               style={{
                 width: '100%',
@@ -429,7 +429,7 @@ export default function Venue({ data, isDesktop }) {
               whileInView="show"
               viewport={viewport}
               variants={fadeUp}
-              transition={{ duration: 0.9, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.8, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 position: 'relative',
                 background: '#FFF7F2',
