@@ -12,30 +12,30 @@ const container = {
 
 const fadeUp = {
   hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const nameReveal = {
   hidden: { opacity: 0, y: 30, filter: 'blur(6px)' },
   show: {
     opacity: 1, y: 0, filter: 'blur(0px)',
-    transition: { duration: 3.2, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 2.2, ease: [0.22, 1, 0.36, 1] },
   },
 }
 
 const nameLetters = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.2, delayChildren: 0.2 } },
+  show: { transition: { staggerChildren: 0.14, delayChildren: 0.14 } },
 }
 
 const nameLetter = {
   hidden: { opacity: 0, x: -10 },
-  show: { opacity: 1, x: 0, transition: { duration: 2.4, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, x: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const ampReveal = {
   hidden: { opacity: 0, scale: 0.7 },
-  show: { opacity: 1, scale: 1, transition: { duration: 1.8, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, scale: 1, transition: { duration: 1.0, ease: [0.22, 1, 0.36, 1] } },
 }
 
 /* ─────────────────────────────────────────

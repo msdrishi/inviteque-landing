@@ -7,7 +7,7 @@ const letterContainer = {
 }
 const letterAnim = {
   hidden: { opacity: 0, y: 15 },
-  show: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } }
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
 }
 
 function AnimatedTitle({ text, className, style }) {
@@ -33,7 +33,7 @@ function ScatterText({ text }) {
             initial={{ opacity: 0, x: randX, y: randY, rotate: randRot }}
             whileInView={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
             viewport={{ once: false, amount: 0.1 }}
-            transition={{ duration: 1.8, delay: index * 0.08 + 0.6, type: "spring", stiffness: 50, damping: 12 }}
+            transition={{ duration: 1, delay: index * 0.04 + 0.6, type: "spring", stiffness: 100, damping: 10 }}
             style={{ display: 'inline-block', whiteSpace: 'pre' }}
           >
             {char}
@@ -72,7 +72,7 @@ export default function Invitation({ data }) {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.1 }}
-        transition={{ duration: 1.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
         className="text-center mb-10 relative z-10"
       >
         <AnimatedTitle 
@@ -89,7 +89,7 @@ export default function Invitation({ data }) {
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.2 }}
-        transition={{ duration: 2.2, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
         className="relative w-[95%] max-w-[550px]"
       >
         {/* The 3D Letter Image */}
@@ -116,7 +116,7 @@ export default function Invitation({ data }) {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: false }}
-            transition={{ duration: 2.0, delay: 0.5 }}
+            transition={{ duration: 1.4, delay: 0.5 }}
             className="w-full h-full flex flex-col items-center justify-center"
           >
 

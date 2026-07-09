@@ -9,7 +9,7 @@ const letterContainer = {
 }
 const letterAnim = {
   hidden: { opacity: 0, y: 15 },
-  show: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } }
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } }
 }
 
 function AnimatedTitle({ text, className, style }) {

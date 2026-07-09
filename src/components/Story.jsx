@@ -8,7 +8,7 @@ const letterContainer = {
 }
 const letterAnim = {
   hidden: { opacity: 0, y: 15 },
-  show: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } }
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } }
 }
 
 function AnimatedTitle({ text, className, style }) {
@@ -73,7 +73,7 @@ export default function Story({ data, isDesktop }) {
   const items = data.items.slice(0, 3)
 
   const slowTextTransition = (delay = 0) => ({
-    duration: 2.2,
+    duration: 1.6,
     delay,
     ease: [0.22, 1, 0.36, 1], // Smooth ease out
   })
@@ -192,14 +192,11 @@ export default function Story({ data, isDesktop }) {
         {items[0] && (
           <motion.div
             className="moments-photo-1"
-            initial={isDesktop ? undefined : { opacity: 0, x: -60 }}
-            whileInView={isDesktop ? undefined : { opacity: 1, x: 0 }}
-            viewport={isDesktop ? undefined : { once: false, amount: 0.15 }}
-            transition={isDesktop ? undefined : { duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              opacity: isDesktop ? p1Op : undefined,
-              x: isDesktop ? p1X : undefined,
+              opacity: p1Op,
+              x: p1X,
               rotate: -4,
+              willChange: 'transform, opacity',
               position: 'relative',
               background: 'rgba(255,255,255,0.9)',
               padding: '8px',
@@ -234,14 +231,11 @@ export default function Story({ data, isDesktop }) {
         {items[1] && (
           <motion.div
             className="moments-photo-2"
-            initial={isDesktop ? undefined : { opacity: 0, x: 60 }}
-            whileInView={isDesktop ? undefined : { opacity: 1, x: 0 }}
-            viewport={isDesktop ? undefined : { once: false, amount: 0.15 }}
-            transition={isDesktop ? undefined : { duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              opacity: isDesktop ? p2Op : undefined,
-              x: isDesktop ? p2X : undefined,
+              opacity: p2Op,
+              x: p2X,
               rotate: 5,
+              willChange: 'transform, opacity',
               position: 'relative',
               background: 'rgba(255,255,255,0.9)',
               padding: '8px',
@@ -293,14 +287,11 @@ export default function Story({ data, isDesktop }) {
         {items[2] && (
           <motion.div
             className="moments-photo-3"
-            initial={isDesktop ? undefined : { opacity: 0, x: -60 }}
-            whileInView={isDesktop ? undefined : { opacity: 1, x: 0 }}
-            viewport={isDesktop ? undefined : { once: false, amount: 0.15 }}
-            transition={isDesktop ? undefined : { duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              opacity: isDesktop ? p3Op : undefined,
-              x: isDesktop ? p3X : undefined,
+              opacity: p3Op,
+              x: p3X,
               rotate: -3,
+              willChange: 'transform, opacity',
               position: 'relative',
               background: 'rgba(255,255,255,0.9)',
               padding: '8px',

@@ -81,7 +81,7 @@ export default function Countdown({ data, isDesktop }) {
               initial={{ opacity: 0, y: 14, scale: 0.99 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: false, amount: 0.25 }}
-              transition={{ duration: 1.8, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.1, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
               className="w-full"
               style={isDesktop ? { maxWidth: '58vw' } : { maxWidth: '420px' }}
             >
@@ -96,7 +96,7 @@ export default function Countdown({ data, isDesktop }) {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: false, amount: 0.25 }}
                         transition={{
-                          duration: 1.6,
+                          duration: 1.0,
                           ease: [0.22, 1, 0.36, 1],
                           delay: idx * 0.08,
                         }}
