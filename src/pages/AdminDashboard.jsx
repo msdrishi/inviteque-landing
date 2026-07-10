@@ -54,6 +54,14 @@ export default function AdminDashboard() {
   const [chartWidth, setChartWidth] = useState(500)
   const chartContainerRef = useRef(null)
 
+  // Registered Users states
+  const [usersData, setUsersData] = useState([])
+  const [usersPage, setUsersPage] = useState(1)
+  const [usersTotalPages, setUsersTotalPages] = useState(1)
+  const [usersTotalItems, setUsersTotalItems] = useState(0)
+  const [usersLoading, setUsersLoading] = useState(false)
+  const usersPerPage = 10
+
   // Track container width for responsive SVG rendering
   useEffect(() => {
     if (chartContainerRef.current) {
@@ -111,6 +119,35 @@ export default function AdminDashboard() {
     }
   }
 
+  const fetchUsers = async () => {
+    if (!user || !user.token) return
+    setUsersLoading(true)
+    try {
+      const response = await fetch(`${API_URL}/api/admin/users?page=${usersPage - 1}&limit=${usersPerPage}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        }
+      })
+      if (!response.ok) throw new Error('Failed to load registered users.')
+      const resData = await response.json()
+      setUsersData(resData.users || [])
+      setUsersTotalPages(resData.totalPages || 1)
+      setUsersTotalItems(resData.totalItems || 0)
+    } catch (err) {
+      console.error(err)
+      setError(err.message)
+    } finally {
+      setUsersLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (activeTab === 'users' || activeTab === 'overview') {
+      fetchUsers()
+    }
+  }, [activeTab, usersPage, user])
+
   useEffect(() => {
     fetchData()
 
@@ -124,10 +161,84 @@ export default function AdminDashboard() {
 
   // Generate dynamic chart data based on timeframe filter
   const chartPoints = useMemo(() => {
-    if (!summary || !summary.monthlyTrend) return []
+    if (!summary) return []
+    const now = new Date()
     
-    if (timeframe === 'year') {
-      // Use actual database trends for 6-months layout
+    if (timeframe === 'week') {
+      // Last 7 days daily trend computed from actual transactions
+      const dailyData = []
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date()
+        d.setDate(now.getDate() - i)
+        d.setHours(0, 0, 0, 0)
+        
+        const dayStart = d.getTime()
+        const dayEnd = dayStart + 24 * 60 * 60 * 1000
+        
+        // Filter actual purchases on this day
+        const dayPurchases = purchases.filter(p => {
+          if (!p.paidAt) return false
+          const paidTime = new Date(p.paidAt).getTime()
+          return paidTime >= dayStart && paidTime < dayEnd
+        })
+        
+        const revenue = dayPurchases.reduce((sum, p) => sum + (p.amountPaid || 0), 0)
+        const orders = dayPurchases.length
+        const aov = orders > 0 ? Math.round(revenue / orders) : 0
+        
+        // Label format (e.g. "Jul 10")
+        const label = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+        
+        dailyData.push({
+          label,
+          revenue,
+          orders,
+          aov,
+        })
+      }
+      return dailyData.map((pt, idx) => ({ ...pt, x: idx }))
+      
+    } else if (timeframe === 'month') {
+      // Last 30 days grouped into 4 weekly periods computed from actual transactions
+      const periodData = []
+      for (let i = 3; i >= 0; i--) {
+        const periodStart = new Date()
+        periodStart.setDate(now.getDate() - (i + 1) * 7 + 1)
+        periodStart.setHours(0, 0, 0, 0)
+        
+        const periodEnd = new Date()
+        periodEnd.setDate(now.getDate() - i * 7)
+        periodEnd.setHours(23, 59, 59, 999)
+        
+        const startMs = periodStart.getTime()
+        const endMs = periodEnd.getTime()
+        
+        // Filter actual purchases in this 7-day range
+        const periodPurchases = purchases.filter(p => {
+          if (!p.paidAt) return false
+          const paidTime = new Date(p.paidAt).getTime()
+          return paidTime >= startMs && paidTime <= endMs
+        })
+        
+        const revenue = periodPurchases.reduce((sum, p) => sum + (p.amountPaid || 0), 0)
+        const orders = periodPurchases.length
+        const aov = orders > 0 ? Math.round(revenue / orders) : 0
+        
+        // Label format (e.g. "Jul 3-9")
+        const label = `${periodStart.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}-${periodEnd.toLocaleDateString(undefined, { day: 'numeric' })}`
+        
+        periodData.push({
+          label,
+          revenue,
+          orders,
+          aov,
+        })
+      }
+      return periodData.map((pt, idx) => ({ ...pt, x: idx }))
+      
+    } else {
+      // Use actual database trends for 12-months layout
+      if (!summary.monthlyTrend) return []
       return summary.monthlyTrend.map((t, idx) => ({
         label: t.month,
         revenue: t.earnings || 0,
@@ -135,41 +246,25 @@ export default function AdminDashboard() {
         aov: t.purchases > 0 ? Math.round(t.earnings / t.purchases) : 0,
         x: idx
       }))
-    } else if (timeframe === 'week') {
-      // Mock daily statistics for 7 days
-      return [
-        { label: 'Mon', revenue: 2999, orders: 1, aov: 2999 },
-        { label: 'Tue', revenue: 5998, orders: 2, aov: 2999 },
-        { label: 'Wed', revenue: 0, orders: 0, aov: 0 },
-        { label: 'Thu', revenue: 8997, orders: 3, aov: 2999 },
-        { label: 'Fri', revenue: 2999, orders: 1, aov: 2999 },
-        { label: 'Sat', revenue: 11996, orders: 4, aov: 2999 },
-        { label: 'Sun', revenue: 5998, orders: 2, aov: 2999 },
-      ].map((pt, idx) => ({ ...pt, x: idx }))
-    } else {
-      // Mock weekly stats for 30 Days (4 Weeks)
-      return [
-        { label: 'Week 1', revenue: 23992, orders: 8, aov: 2999 },
-        { label: 'Week 2', revenue: 35988, orders: 12, aov: 2999 },
-        { label: 'Week 3', revenue: 17994, orders: 6, aov: 2999 },
-        { label: 'Week 4', revenue: 41986, orders: 14, aov: 2999 },
-      ].map((pt, idx) => ({ ...pt, x: idx }))
     }
-  }, [summary, timeframe])
+  }, [summary, purchases, timeframe])
 
   // SVG Chart path calculators
   const svgChartPaths = useMemo(() => {
     if (chartPoints.length === 0) return { areaPath: '', linePath: '', coordinates: [] }
     const height = 180
-    const padding = 25
-    const drawHeight = height - padding * 2
-    const drawWidth = chartWidth - padding * 2
+    const paddingLeft = 55
+    const paddingRight = 25
+    const paddingTop = 25
+    const paddingBottom = 30
+    const drawHeight = height - paddingTop - paddingBottom
+    const drawWidth = chartWidth - paddingLeft - paddingRight
 
     const maxVal = Math.max(...chartPoints.map(p => p.revenue), 1000)
 
     const coordinates = chartPoints.map((pt, idx) => {
-      const x = padding + (idx / (chartPoints.length - 1)) * drawWidth
-      const y = height - padding - (pt.revenue / maxVal) * drawHeight
+      const x = paddingLeft + (idx / Math.max(chartPoints.length - 1, 1)) * drawWidth
+      const y = height - paddingBottom - (pt.revenue / maxVal) * drawHeight
       return { x, y, pt }
     })
 
@@ -182,15 +277,49 @@ export default function AdminDashboard() {
       linePath += ` C ${cpX} ${prev.y}, ${cpX} ${curr.y}, ${curr.x} ${curr.y}`
     }
 
-    const areaPath = `${linePath} L ${coordinates[coordinates.length - 1].x} ${height - padding} L ${coordinates[0].x} ${height - padding} Z`
+    const areaPath = `${linePath} L ${coordinates[coordinates.length - 1].x} ${height - paddingBottom} L ${coordinates[0].x} ${height - paddingBottom} Z`
 
     return { areaPath, linePath, coordinates }
   }, [chartPoints, chartWidth])
 
+  // Mouse move handler for snapping chart tooltips/crosshairs
+  const handleMouseMove = (e) => {
+    if (!svgChartPaths || !svgChartPaths.coordinates || svgChartPaths.coordinates.length === 0) return
+    
+    const target = e.currentTarget
+    if (!target) return
+    
+    const rect = target.getBoundingClientRect()
+    if (rect.width === 0) return
+
+    // Extract clientX supporting touch interactions
+    const clientX = e.clientX !== undefined ? e.clientX : (e.touches?.[0]?.clientX || 0)
+    const mouseX = clientX - rect.left
+    
+    // Scale screen-space pixel position to SVG viewBox space
+    const viewboxMouseX = mouseX * (chartWidth / rect.width)
+    
+    // Find coordinate closest to scaled cursor position
+    let closestCoord = svgChartPaths.coordinates[0]
+    let minDiff = Math.abs(closestCoord.x - viewboxMouseX)
+    let closestIdx = 0
+    
+    for (let i = 1; i < svgChartPaths.coordinates.length; i++) {
+      const coord = svgChartPaths.coordinates[i]
+      const diff = Math.abs(coord.x - viewboxMouseX)
+      if (diff < minDiff) {
+        minDiff = diff
+        closestCoord = coord
+        closestIdx = i
+      }
+    }
+    
+    setHoveredPoint({ ...closestCoord.pt, idx: closestIdx, x: closestCoord.x, y: closestCoord.y })
+  }
+
   // Template Analytics processor
   const templateAnalytics = useMemo(() => {
     if (!summary) return []
-    const usage = summary.templateUsage || {}
     const reach = summary.templateReach || {}
 
     const templateNames = {
@@ -202,15 +331,19 @@ export default function AdminDashboard() {
       'modern-chic': 'Modern Chic'
     }
 
-    const data = Object.keys(usage).map(key => {
+    const data = Object.keys(templateNames).map(key => {
       const views = reach[key] || 0
-      const purchasesCount = usage[key] || 0
+      
+      // Calculate actual paid purchases and revenue from the purchases state
+      const templatePurchases = purchases.filter(p => p.templateId === key)
+      const purchasesCount = templatePurchases.length
+      const revenue = templatePurchases.reduce((sum, p) => sum + (p.amountPaid || 0), 0)
+      
       const rate = views > 0 ? ((purchasesCount / views) * 100).toFixed(1) : '0.0'
-      const revenue = purchasesCount * 2999 // Fixed cost per package
 
       return {
         id: key,
-        name: templateNames[key] || key,
+        name: templateNames[key],
         views,
         purchases: purchasesCount,
         rate: parseFloat(rate),
@@ -228,7 +361,56 @@ export default function AdminDashboard() {
         return fieldA < fieldB ? 1 : -1
       }
     })
-  }, [summary, templateSortBy, templateSortAsc])
+  }, [summary, purchases, templateSortBy, templateSortAsc])
+
+  // Coupon efficiency ROI calculations
+  const couponRoiData = useMemo(() => {
+    const roiMap = {}
+    
+    // Process all active coupons first
+    coupons.forEach(c => {
+      roiMap[c.code.toUpperCase()] = {
+        code: c.code.toUpperCase(),
+        discountPercentage: c.discountPercentage,
+        usageCount: 0,
+        netRevenue: 0,
+        discountGiven: 0
+      }
+    })
+    
+    // Process actual purchases
+    purchases.forEach(p => {
+      if (!p.couponCode) return
+      const code = p.couponCode.trim().toUpperCase()
+      
+      if (!roiMap[code]) {
+        // Fallback for coupon used in transaction history but not in active coupons list
+        roiMap[code] = {
+          code,
+          discountPercentage: 0,
+          usageCount: 0,
+          netRevenue: 0,
+          discountGiven: 0
+        }
+      }
+      
+      const roi = roiMap[code]
+      roi.usageCount += 1
+      roi.netRevenue += p.amountPaid || 0
+      
+      const pct = roi.discountPercentage || 0
+      if (pct > 0 && pct < 100) {
+        roi.discountGiven += (p.amountPaid || 0) * (pct / (100 - pct))
+      } else {
+        // Infer discount assuming standard base price of 2999
+        const basePrice = 2999.0
+        const diff = Math.max(0, basePrice - (p.amountPaid || 0))
+        roi.discountGiven += diff
+      }
+    })
+    
+    return Object.values(roiMap).sort((a, b) => b.netRevenue - a.netRevenue)
+  }, [coupons, purchases])
 
   // Filter & Search recent transactions
   const filteredPurchases = useMemo(() => {
@@ -436,7 +618,8 @@ export default function AdminDashboard() {
             { id: 'transactions', label: 'Transactions', icon: '💸' },
             { id: 'templates', label: 'Templates', icon: '🎨' },
             { id: 'coupons', label: 'Coupons', icon: '🏷️' },
-            { id: 'website', label: 'Web Analytics', icon: '🌐' }
+            { id: 'website', label: 'Web Analytics', icon: '🌐' },
+            { id: 'users', label: 'Registered Users', icon: '👥' }
           ].map(tab => (
             <button
               key={tab.id}
@@ -488,6 +671,7 @@ export default function AdminDashboard() {
             <option value="templates">Templates</option>
             <option value="coupons">Coupons</option>
             <option value="website">Web Analytics</option>
+            <option value="users">Registered Users</option>
           </select>
           <button onClick={logout} className="rounded-lg bg-red-50 p-2 text-xs font-bold text-red-600">
             🔌
@@ -542,7 +726,7 @@ export default function AdminDashboard() {
           {activeTab === 'overview' && (
             <div className="space-y-8">
               {/* KPI Cards Grid */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
                 {[
                   {
                     title: 'Website Visitors',
@@ -571,6 +755,14 @@ export default function AdminDashboard() {
                     change: '+15.7%',
                     icon: '🏦',
                     color: 'text-amber-500'
+                  },
+                  {
+                    title: 'Avg Order Value (AOV)',
+                    val: `₹${(summary?.totalTransactions > 0 ? Math.round(summary.totalEarnings / summary.totalTransactions) : 0).toLocaleString()}`,
+                    change: 'AOV Sparkline',
+                    icon: '🏷️',
+                    color: 'text-rose-500',
+                    isAov: true
                   }
                 ].map((card, idx) => (
                   <motion.div
@@ -578,16 +770,60 @@ export default function AdminDashboard() {
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: idx * 0.05 }}
-                    className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                    className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between h-32 relative overflow-hidden"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-400">{card.title}</span>
-                      <span className="text-xl">{card.icon}</span>
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-400">{card.title}</span>
+                        <span className="text-xl">{card.icon}</span>
+                      </div>
+                      <div className="mt-3 flex items-baseline gap-2">
+                        <span className="text-2xl font-extrabold text-slate-900">{card.val}</span>
+                        {!card.isAov && <span className="text-xs font-bold text-emerald-500">{card.change}</span>}
+                      </div>
                     </div>
-                    <div className="mt-3 flex items-baseline gap-2">
-                      <span className="text-2xl font-extrabold text-slate-900">{card.val}</span>
-                      <span className="text-xs font-bold text-emerald-500">{card.change}</span>
-                    </div>
+                    
+                    {/* Sparkline for AOV */}
+                    {card.isAov && chartPoints.length > 0 && (
+                      <div className="absolute bottom-0 right-0 left-0 h-10 w-full opacity-60">
+                        {(() => {
+                          const maxAov = Math.max(...chartPoints.map(p => p.aov), 100)
+                          const minAov = Math.min(...chartPoints.map(p => p.aov), 0)
+                          const range = Math.max(maxAov - minAov, 1)
+                          
+                          const points = chartPoints.map((pt, i) => {
+                            const x = (i / Math.max(chartPoints.length - 1, 1)) * 300
+                            const y = 38 - ((pt.aov - minAov) / range) * 32
+                            return { x, y }
+                          })
+                          
+                          if (points.length === 0) return null
+                          
+                          let path = `M ${points[0].x} ${points[0].y}`
+                          for (let i = 1; i < points.length; i++) {
+                            const prev = points[i - 1]
+                            const curr = points[i]
+                            const cpX = (prev.x + curr.x) / 2
+                            path += ` C ${cpX} ${prev.y}, ${cpX} ${curr.y}, ${curr.x} ${curr.y}`
+                          }
+                          
+                          const area = `${path} L ${points[points.length - 1].x} 40 L ${points[0].x} 40 Z`
+                          
+                          return (
+                            <svg width="100%" height="100%" viewBox="0 0 300 40" preserveAspectRatio="none" className="block">
+                              <defs>
+                                <linearGradient id="aovSparklineGrad" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.2" />
+                                  <stop offset="100%" stopColor="#f43f5e" stopOpacity="0" />
+                                </linearGradient>
+                              </defs>
+                              <path d={area} fill="url(#aovSparklineGrad)" />
+                              <path d={path} fill="none" stroke="#f43f5e" strokeWidth="2" />
+                            </svg>
+                          )
+                        })()}
+                      </div>
+                    )}
                   </motion.div>
                 ))}
               </div>
@@ -604,31 +840,146 @@ export default function AdminDashboard() {
                   </div>
                   <div ref={chartContainerRef} className="relative h-48 w-full select-none">
                     {chartPoints.length > 0 && svgChartPaths.coordinates.length > 0 ? (
-                      <svg width="100%" height="100%" viewBox={`0 0 ${chartWidth} 180`} preserveAspectRatio="none">
+                      <svg 
+                        width="100%" 
+                        height="100%" 
+                        viewBox={`0 0 ${chartWidth} 180`} 
+                        preserveAspectRatio="none"
+                        onMouseMove={handleMouseMove}
+                        onMouseLeave={() => setHoveredPoint(null)}
+                        onTouchMove={(e) => { if (e.touches.length) handleMouseMove(e.touches[0]) }}
+                        onTouchEnd={() => setHoveredPoint(null)}
+                      >
                         <defs>
                           <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor="#0f172a" stopOpacity="0.15" />
                             <stop offset="100%" stopColor="#0f172a" stopOpacity="0" />
                           </linearGradient>
                         </defs>
+                        
+                        {/* Y-Axis Gridlines & Labels */}
+                        {(() => {
+                          const drawHeight = 180 - 25 - 30
+                          const maxVal = Math.max(...chartPoints.map(p => p.revenue), 1000)
+                          const steps = [0, maxVal * 0.25, maxVal * 0.5, maxVal * 0.75, maxVal]
+                          return steps.map((val, idx) => {
+                            const y = 180 - 30 - (val / maxVal) * drawHeight
+                            return (
+                              <g key={`y-grid-${idx}`}>
+                                <line
+                                  x1={55}
+                                  y1={y}
+                                  x2={chartWidth - 25}
+                                  y2={y}
+                                  stroke="#e2e8f0"
+                                  strokeWidth="1"
+                                  strokeDasharray="4 4"
+                                  opacity={idx === 0 ? 0.8 : 0.4}
+                                />
+                                <text
+                                  x={45}
+                                  y={y + 3}
+                                  textAnchor="end"
+                                  className="fill-slate-400 font-bold text-[9px]"
+                                >
+                                  ₹{val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}
+                                </text>
+                              </g>
+                            )
+                          })
+                        })()}
+
+                        {/* Active Y-value highlight tag */}
+                        {hoveredPoint && (
+                          <g>
+                            <rect
+                              x={5}
+                              y={hoveredPoint.y - 8}
+                              width={45}
+                              height={16}
+                              rx={4}
+                              fill="#0f172a"
+                            />
+                            <text
+                              x={45}
+                              y={hoveredPoint.y + 3}
+                              textAnchor="end"
+                              className="fill-white font-extrabold text-[8px]"
+                            >
+                              ₹{hoveredPoint.revenue >= 1000 ? `${(hoveredPoint.revenue / 1000).toFixed(1)}k` : hoveredPoint.revenue}
+                            </text>
+                          </g>
+                        )}
+
+                        {/* X-Axis Labels */}
+                        {svgChartPaths.coordinates.map((coord, idx) => (
+                          <text
+                            key={`x-lbl-${idx}`}
+                            x={coord.x}
+                            y={180 - 8}
+                            textAnchor="middle"
+                            className="fill-slate-500 font-bold text-[9px]"
+                          >
+                            {coord.pt.label}
+                          </text>
+                        ))}
+
+                        {/* Hover vertical & horizontal crosshairs */}
+                        {hoveredPoint && (
+                          <>
+                            {/* Vertical crosshair */}
+                            <line
+                              x1={hoveredPoint.x}
+                              y1={25}
+                              x2={hoveredPoint.x}
+                              y2={180 - 30}
+                              stroke="#64748b"
+                              strokeWidth="1.5"
+                              strokeDasharray="3 3"
+                            />
+                            {/* Horizontal crosshair */}
+                            <line
+                              x1={55}
+                              y1={hoveredPoint.y}
+                              x2={hoveredPoint.x}
+                              y2={hoveredPoint.y}
+                              stroke="#64748b"
+                              strokeWidth="1.5"
+                              strokeDasharray="3 3"
+                            />
+                          </>
+                        )}
+
                         {/* Area */}
                         <path d={svgChartPaths.areaPath} fill="url(#chartGradient)" />
+                        
                         {/* Path line */}
                         <path d={svgChartPaths.linePath} fill="none" stroke="#0f172a" strokeWidth="2.5" />
                         
-                        {/* Interactive nodes */}
+                        {/* Node amount text values */}
+                        {svgChartPaths.coordinates.map((coord, idx) => (
+                          <text
+                            key={`y-val-${idx}`}
+                            x={coord.x}
+                            y={coord.y - 10}
+                            textAnchor="middle"
+                            className="fill-slate-700 font-bold text-[9px]"
+                          >
+                            ₹{coord.pt.revenue >= 1000 ? `${(coord.pt.revenue / 1000).toFixed(1)}k` : coord.pt.revenue}
+                          </text>
+                        ))}
+
+                        {/* Node circles */}
                         {svgChartPaths.coordinates.map((coord, idx) => (
                           <circle
                             key={idx}
                             cx={coord.x}
                             cy={coord.y}
-                            r={hoveredPoint?.idx === idx ? 6 : 4}
-                            fill="#0f172a"
+                            r={hoveredPoint?.idx === idx ? 6.5 : 4}
+                            fill={hoveredPoint?.idx === idx ? '#0f172a' : '#3b82f6'}
                             stroke="white"
                             strokeWidth="2"
-                            onMouseEnter={() => setHoveredPoint({ ...coord.pt, idx, x: coord.x, y: coord.y })}
-                            onMouseLeave={() => setHoveredPoint(null)}
-                            className="cursor-pointer transition-all"
+                            className="pointer-events-none transition-all duration-150"
                           />
                         ))}
                       </svg>
@@ -700,6 +1051,87 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               </div>
+              {/* Conversion Funnel & Template Sales Revenue */}
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                {/* Funnel chart */}
+                <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-6">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-800">Conversion Funnel Analytics</h3>
+                    <p className="text-[10px] text-slate-400">Step-by-step platform conversion and drop-off rate tracking</p>
+                  </div>
+                  
+                  {(() => {
+                    const visitors = summary?.uniqueVisitors || 0
+                    const signups = summary?.totalMembers || 0
+                    const customized = Object.values(summary?.templateUsage || {}).reduce((sum, v) => sum + v, 0)
+                    const purchasesCount = summary?.totalTransactions || 0
+                    
+                    const stages = [
+                      { label: '1. Unique Visitors', val: visitors, rate: 100, color: 'bg-blue-600' },
+                      { label: '2. Registered Users', val: signups, rate: visitors > 0 ? Math.round((signups / visitors) * 100) : 0, color: 'bg-indigo-600' },
+                      { label: '3. Customized Invites', val: customized, rate: signups > 0 ? Math.round((customized / signups) * 100) : 0, color: 'bg-purple-600' },
+                      { label: '4. Paid Purchases', val: purchasesCount, rate: customized > 0 ? Math.round((purchasesCount / customized) * 100) : 0, color: 'bg-emerald-600' }
+                    ]
+                    
+                    return (
+                      <div className="space-y-4 pt-2">
+                        {stages.map((stage, idx) => {
+                          const prevStage = idx > 0 ? stages[idx - 1] : null
+                          const dropoff = prevStage ? 100 - Math.round((stage.val / Math.max(prevStage.val, 1)) * 100) : 0
+                          
+                          return (
+                            <div key={idx} className="space-y-2">
+                              <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+                                <span>{stage.label}</span>
+                                <span className="font-mono text-slate-900">{stage.val.toLocaleString()} ({stage.rate}%)</span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <div className="h-4 flex-1 rounded-full bg-slate-100 overflow-hidden">
+                                  <div className={`h-full rounded-full ${stage.color} transition-all duration-500`} style={{ width: `${stage.rate}%` }} />
+                                </div>
+                                {idx > 0 && (
+                                  <span className="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full shrink-0">
+                                    ↓ {dropoff}% drop-off
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )
+                  })()}
+                </div>
+
+                {/* Template Sales Revenue Distribution */}
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-800">Revenue by Template</h3>
+                    <p className="text-[10px] text-slate-400 mb-4">Earnings distribution share per design</p>
+                    
+                    <div className="space-y-4">
+                      {templateAnalytics.map((t, idx) => {
+                        const totalRevenue = templateAnalytics.reduce((sum, item) => sum + item.revenue, 0)
+                        const percentage = totalRevenue > 0 ? Math.round((t.revenue / totalRevenue) * 100) : 0
+                        return (
+                          <div key={idx} className="space-y-1">
+                            <div className="flex justify-between text-xs font-bold text-slate-500">
+                              <span className="capitalize">{t.name.replace(/-/g, ' ')}</span>
+                              <span>₹{t.revenue.toLocaleString()} ({percentage}%)</span>
+                            </div>
+                            <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                              <div className="h-full bg-slate-900 rounded-full" style={{ width: `${percentage}%` }} />
+                            </div>
+                          </div>
+                        )
+                      })}
+                      {templateAnalytics.length === 0 && (
+                        <div className="py-6 text-center text-xs text-slate-400">No template sales data yet.</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               {/* Summary table highlights */}
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -759,6 +1191,80 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               </div>
+
+              {/* Coupon ROI Tracker & Recent Sign-ups */}
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                {/* Coupon ROI Tracker */}
+                <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-800">Coupon Marketing Performance (ROI Tracker)</h3>
+                    <p className="text-[10px] text-slate-400">Campaign returns, usages, and discounts given</p>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse text-left text-xs text-slate-500">
+                      <thead className="border-b border-slate-100 bg-slate-50 text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                        <tr>
+                          <th className="px-4 py-3">Promo Code</th>
+                          <th className="px-4 py-3">Discount Rate</th>
+                          <th className="px-4 py-3">Usage Count</th>
+                          <th className="px-4 py-3">Discounts Given</th>
+                          <th className="px-4 py-3">Net Revenue</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {couponRoiData.slice(0, 5).map((c, idx) => (
+                          <tr key={idx} className="hover:bg-slate-50/50">
+                            <td className="px-4 py-3 font-mono font-bold text-slate-900 uppercase">{c.code}</td>
+                            <td className="px-4 py-3 font-semibold text-slate-800">{c.discountPercentage || 'N/A'}%</td>
+                            <td className="px-4 py-3 font-bold text-slate-900">{c.usageCount} uses</td>
+                            <td className="px-4 py-3 text-red-500 font-semibold">-₹{Math.round(c.discountGiven).toLocaleString()}</td>
+                            <td className="px-4 py-3 font-extrabold text-emerald-600">₹{Math.round(c.netRevenue).toLocaleString()}</td>
+                          </tr>
+                        ))}
+                        {couponRoiData.length === 0 && (
+                          <tr>
+                            <td colSpan="5" className="py-6 text-center text-xs text-slate-400">No coupon campaign activities recorded.</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Registered Users Mini Feed */}
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-sm font-bold text-slate-800">Recent Sign-ups</h3>
+                        <p className="text-[10px] text-slate-400">Recently registered platform members</p>
+                      </div>
+                      <button onClick={() => setActiveTab('users')} className="text-xs font-bold text-slate-500 hover:text-slate-900">
+                        View All
+                      </button>
+                    </div>
+                    <div className="divide-y divide-slate-100 overflow-hidden mt-3">
+                      {usersData.slice(0, 4).map((u, idx) => (
+                        <div key={idx} className="flex items-center justify-between py-3">
+                          <div className="truncate max-w-[150px]">
+                            <p className="text-xs font-bold text-slate-800 truncate">{u.name}</p>
+                            <p className="text-[10px] text-slate-400 truncate">{u.email}</p>
+                          </div>
+                          <span className="text-[9px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full shrink-0">
+                            {u.createdAt ? new Date(u.createdAt).toLocaleDateString(undefined, {
+                              month: 'short',
+                              day: 'numeric'
+                            }) : 'N/A'}
+                          </span>
+                        </div>
+                      ))}
+                      {usersData.length === 0 && (
+                        <div className="py-6 text-center text-xs text-slate-400">No user sign-ups found.</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -797,7 +1303,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* Transactions Table */}
-              <div className="overflow-x-auto">
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full border-collapse text-left text-xs text-slate-500">
                   <thead className="border-b border-slate-100 bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                     <tr>
@@ -835,6 +1341,61 @@ export default function AdminDashboard() {
                     )}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Mobile/Tablet Card View */}
+              <div className="grid grid-cols-1 gap-4 md:hidden">
+                {paginatedPurchases.map((p, idx) => (
+                  <div key={idx} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                      <div>
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Order ID</span>
+                        <p className="text-xs font-bold text-slate-900 font-mono truncate">{p.code || p.inviteId}</p>
+                      </div>
+                      <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-extrabold text-emerald-600">
+                        Paid
+                      </span>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-xs">
+                      <div>
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Customer</span>
+                        <span className="font-bold text-slate-800">{p.userName || 'Customer'}</span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Email</span>
+                        <span className="text-slate-600 break-all">{p.userEmail || 'N/A'}</span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Template</span>
+                        <span className="font-semibold text-slate-700 capitalize">
+                          {p.templateId ? p.templateId.replace(/-/g, ' ') : 'N/A'}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Amount</span>
+                        <span className="font-bold text-slate-900">₹{(p.amountPaid || 0).toLocaleString()}</span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Coupon</span>
+                        <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-mono text-slate-500 font-bold">
+                          {p.couponCode || 'None'}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Date</span>
+                        <span className="text-slate-600">
+                          {p.paidAt ? new Date(p.paidAt).toLocaleDateString() : 'N/A'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {filteredPurchases.length === 0 && (
+                  <div className="rounded-2xl border border-dashed border-slate-200 py-10 text-center text-xs text-slate-400">
+                    No transactions recorded.
+                  </div>
+                )}
               </div>
 
               {/* Pagination controls */}
@@ -892,7 +1453,8 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Desktop View */}
+                <div className="hidden md:block overflow-x-auto">
                   <table className="w-full border-collapse text-left text-xs text-slate-500">
                     <thead className="border-b border-slate-100 bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                       <tr>
@@ -925,6 +1487,42 @@ export default function AdminDashboard() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+
+                {/* Mobile/Tablet Card View */}
+                <div className="grid grid-cols-1 gap-4 md:hidden">
+                  {templateAnalytics.map((t, idx) => (
+                    <div key={idx} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <span className="text-sm font-extrabold text-slate-900 capitalize">{t.name.replace(/-/g, ' ')}</span>
+                        <span className="text-xs font-bold text-slate-500">{t.views} views</span>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Purchases</span>
+                          <span className="font-bold text-slate-800">{t.purchases} sales</span>
+                        </div>
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Revenue</span>
+                          <span className="font-extrabold text-slate-900">₹{t.revenue.toLocaleString()}</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5 pt-2 border-t border-slate-100">
+                        <div className="flex justify-between text-xs font-bold text-slate-700">
+                          <span>Conversion Rate</span>
+                          <span>{t.rate}%</span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                          <div 
+                            className={`h-full rounded-full ${t.rate > 4 ? 'bg-emerald-500' : t.rate > 1.5 ? 'bg-amber-500' : 'bg-red-500'}`} 
+                            style={{ width: `${Math.min(t.rate * 10, 100)}%` }} 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -1132,6 +1730,118 @@ export default function AdminDashboard() {
                   </p>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* TAB 6: REGISTERED USERS */}
+          {activeTab === 'users' && (
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                  <h3 className="text-sm font-bold text-slate-800">Registered Users Console</h3>
+                  <p className="text-[10px] text-slate-400">Total registered members: {usersTotalItems}</p>
+                </div>
+              </div>
+
+              {usersLoading ? (
+                <div className="py-16 text-center text-xs font-semibold text-slate-400">
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-900 border-t-transparent mx-auto mb-3" />
+                  Loading registered members...
+                </div>
+              ) : (
+                <>
+                  {/* Desktop view */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full border-collapse text-left text-xs text-slate-500">
+                      <thead className="border-b border-slate-100 bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        <tr>
+                          <th className="px-6 py-4">User Name</th>
+                          <th className="px-6 py-4">Email Address</th>
+                          <th className="px-6 py-4">Registration Date & Time</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {usersData.map((u, idx) => (
+                          <tr key={u.id || idx} className="hover:bg-slate-50/50 transition-colors">
+                            <td className="px-6 py-4 font-bold text-slate-900">{u.name}</td>
+                            <td className="px-6 py-4 font-semibold text-slate-800">{u.email}</td>
+                            <td className="px-6 py-4 text-slate-500">
+                              {u.createdAt ? new Date(u.createdAt).toLocaleString(undefined, {
+                                dateStyle: 'medium',
+                                timeStyle: 'short'
+                              }) : 'N/A'}
+                            </td>
+                          </tr>
+                        ))}
+                        {usersData.length === 0 && (
+                          <tr>
+                            <td colSpan="3" className="py-10 text-center text-xs text-slate-400">No users found.</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile/Tablet Card View */}
+                  <div className="grid grid-cols-1 gap-4 md:hidden">
+                    {usersData.map((u, idx) => (
+                      <div key={u.id || idx} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                          <span className="text-xs font-bold text-slate-900">{u.name}</span>
+                          <span className="rounded bg-slate-100 px-2 py-0.5 text-[9px] font-bold text-slate-500">
+                            User
+                          </span>
+                        </div>
+                        <div className="space-y-2 text-xs">
+                          <div>
+                            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Email</span>
+                            <span className="font-semibold text-slate-800 break-all">{u.email}</span>
+                          </div>
+                          <div>
+                            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Registered At</span>
+                            <span className="text-slate-600">
+                              {u.createdAt ? new Date(u.createdAt).toLocaleString(undefined, {
+                                dateStyle: 'medium',
+                                timeStyle: 'short'
+                              }) : 'N/A'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {usersData.length === 0 && (
+                      <div className="rounded-2xl border border-dashed border-slate-200 py-10 text-center text-xs text-slate-400">
+                        No users registered.
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Pagination controls */}
+                  {usersTotalPages > 1 && (
+                    <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+                      <span className="text-xs text-slate-400">
+                        Page <span className="font-bold text-slate-700">{usersPage}</span> of <span className="font-bold text-slate-700">{usersTotalPages}</span>
+                      </span>
+                      <div className="flex gap-2">
+                        <button
+                          disabled={usersPage === 1}
+                          onClick={() => setUsersPage(prev => prev - 1)}
+                          className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-600 disabled:opacity-40"
+                        >
+                          Previous
+                        </button>
+                        <button
+                          disabled={usersPage === usersTotalPages}
+                          onClick={() => setUsersPage(prev => prev + 1)}
+                          className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-600 disabled:opacity-40"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           )}
 
