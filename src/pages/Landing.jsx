@@ -575,7 +575,7 @@ export default function Landing() {
             <span className="font-parisienne text-3xl font-normal text-iqText hidden sm:inline leading-none select-none relative -top-[2px]">Inviteque</span>
           </Link>
 
-          <div className="hidden items-center gap-8 md:flex">
+          <div className="hidden items-center gap-8 lg:flex">
             <a href="#about" className="text-sm font-semibold text-iqText/70 hover:text-iqText transition-colors">
               How it Works
             </a>
@@ -590,7 +590,7 @@ export default function Landing() {
             </a>
           </div>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-3 rounded-full border border-iqBorder bg-iqBg/50 px-4 py-1.5 shadow-sm">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-iqText text-[10px] font-bold text-white">
@@ -625,7 +625,7 @@ export default function Landing() {
           </div>
 
           {/* Mobile Navigation */}
-          <div className="flex md:hidden">
+          <div className="flex lg:hidden">
             <MobileNav />
           </div>
         </nav>

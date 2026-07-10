@@ -37,7 +37,7 @@ export default function MobileNav() {
       {/* Hamburger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex h-10 w-10 items-center justify-center rounded-lg md:hidden"
+        className="flex h-10 w-10 items-center justify-center rounded-lg lg:hidden"
         aria-label="Toggle menu"
       >
         <svg
@@ -219,8 +219,19 @@ export default function MobileNav() {
                       </button>
                       <button
                         onClick={() => {
-                          resetDraft()
-                          handleNavigate('/builder/template-1')
+                          setIsOpen(false)
+                          if (window.location.pathname === '/') {
+                            const el = document.getElementById('templates')
+                            if (el) {
+                              el.scrollIntoView({ behavior: 'smooth' })
+                            }
+                          } else {
+                            navigate('/')
+                            setTimeout(() => {
+                              const el = document.getElementById('templates')
+                              if (el) el.scrollIntoView({ behavior: 'smooth' })
+                            }, 150)
+                          }
                         }}
                         className="w-full rounded-full bg-black px-4 py-3 text-center font-bold text-white transition hover:opacity-90"
                       >
