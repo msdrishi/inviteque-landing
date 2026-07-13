@@ -12,7 +12,8 @@ const fadeUp = {
 }
 
 /* ── Leaf SVG — bottom-left & right corner decoration ── */
-function LeafSprig({ flip = false }) {
+function LeafSprig({ flip = false, colors }) {
+  const strokeColor = colors?.primary || "#7B1E2B"
   return (
     <svg
       viewBox="0 0 90 50"
@@ -26,20 +27,22 @@ function LeafSprig({ flip = false }) {
       }}
     >
       {/* Main stem */}
-      <path d="M10 42 Q35 28 80 10" stroke="#7B1E2B" strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M10 42 Q35 28 80 10" stroke={strokeColor} strokeWidth="1.2" strokeLinecap="round"/>
       {/* Leaves */}
-      <path d="M22 36 Q18 22 32 20 Q28 34 22 36Z" fill="#7B1E2B" opacity="0.6"/>
-      <path d="M38 28 Q36 14 50 13 Q46 27 38 28Z" fill="#7B1E2B" opacity="0.5"/>
-      <path d="M54 20 Q54 6 68 6 Q63 19 54 20Z" fill="#7B1E2B" opacity="0.4"/>
+      <path d="M22 36 Q18 22 32 20 Q28 34 22 36Z" fill={strokeColor} opacity="0.6"/>
+      <path d="M38 28 Q36 14 50 13 Q46 27 38 28Z" fill={strokeColor} opacity="0.5"/>
+      <path d="M54 20 Q54 6 68 6 Q63 19 54 20Z" fill={strokeColor} opacity="0.4"/>
       {/* Small berries */}
-      <circle cx="18" cy="38" r="2.2" fill="#7B1E2B" opacity="0.35"/>
-      <circle cx="70" cy="9"  r="2"   fill="#7B1E2B" opacity="0.3"/>
+      <circle cx="18" cy="38" r="2.2" fill={strokeColor} opacity="0.35"/>
+      <circle cx="70" cy="9"  r="2"   fill={strokeColor} opacity="0.3"/>
     </svg>
   )
 }
 
 /* ── Social icon circle ── */
-function SocialIcon({ href = '#', label, children }) {
+function SocialIcon({ href = '#', label, children, colors }) {
+  const borderCol = colors?.border || 'rgba(123, 30, 43, 0.25)'
+  const textCol = colors?.primaryLight || 'rgba(123, 30, 43, 0.65)'
   return (
     <a
       href={href}
@@ -50,20 +53,20 @@ function SocialIcon({ href = '#', label, children }) {
         width: 40,
         height: 40,
         borderRadius: '50%',
-        border: '1.5px solid rgba(123, 30, 43, 0.25)',
+        border: `1.5px solid ${borderCol}`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: 'rgba(123, 30, 43, 0.65)',
+        color: textCol,
         textDecoration: 'none',
         transition: 'border-color 0.2s, background 0.2s',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.borderColor = 'rgba(123, 30, 43, 0.5)'
-        e.currentTarget.style.background = 'rgba(123, 30, 43, 0.05)'
+        e.currentTarget.style.borderColor = colors?.borderHover || 'rgba(123, 30, 43, 0.5)'
+        e.currentTarget.style.background = colors?.bgHover || 'rgba(123, 30, 43, 0.05)'
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.borderColor = 'rgba(123, 30, 43, 0.25)'
+        e.currentTarget.style.borderColor = borderCol
         e.currentTarget.style.background = 'transparent'
       }}
     >
@@ -103,16 +106,37 @@ const WhatsAppIcon = () => (
   </svg>
 )
 
-/* ── Main Footer ── */
-export default function Footer({ data }) {
+export default function Footer({ data, theme }) {
   if (!data) return null
+
+  const colors = theme === 'green' ? {
+    primary: '#3D5236',
+    primaryDark: '#2B3B25',
+    primaryLight: 'rgba(61,82,54,0.65)',
+    border: 'rgba(61,82,54,0.25)',
+    borderHover: 'rgba(61,82,54,0.5)',
+    bgHover: 'rgba(61,82,54,0.05)',
+    bg: '#FBF7F0',
+    bgSvg: `rgba(61,82,54,0.06)`,
+    bgSvgSecondary: `rgba(61,82,54,0.04)`
+  } : {
+    primary: '#7B1E2B',
+    primaryDark: '#7B1E2B',
+    primaryLight: 'rgba(123,30,43,0.65)',
+    border: 'rgba(123,30,43,0.25)',
+    borderHover: 'rgba(123,30,43,0.5)',
+    bgHover: 'rgba(123,30,43,0.05)',
+    bg: '#FFF6F2',
+    bgSvg: `rgba(123,30,43,0.06)`,
+    bgSvgSecondary: `rgba(123,30,43,0.04)`
+  }
 
   return (
     <footer
       id={data.id}
       style={{
-        background: '#FFF6F2',
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 30 Q15 15, 30 30 T59 30' stroke='rgba(123, 30, 43, 0.06)' stroke-width='1' fill='none' stroke-linecap='round'/%3E%3Cpath d='M30 1 Q45 15, 30 30 T30 59' stroke='rgba(123, 30, 43, 0.04)' stroke-width='1' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='15' cy='15' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='45' cy='15' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='15' cy='45' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='45' cy='45' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(216, 178, 110, 0.06)'/%3E%3C/svg%3E")`,
+        background: colors.bg,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 30 Q15 15, 30 30 T59 30' stroke='${colors.bgSvg}' stroke-width='1' fill='none' stroke-linecap='round'/%3E%3Cpath d='M30 1 Q45 15, 30 30 T30 59' stroke='${colors.bgSvgSecondary}' stroke-width='1' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='15' cy='15' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='45' cy='15' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='15' cy='45' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='45' cy='45' r='1.5' fill='rgba(216, 178, 110, 0.08)'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(216, 178, 110, 0.06)'/%3E%3C/svg%3E")`,
         backgroundSize: '60px 60px',
         padding: '36px 24px 28px',
         position: 'relative',
@@ -156,7 +180,7 @@ export default function Footer({ data }) {
             fontSize: 'clamp(9px, 2.6vw, 11px)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: 'rgba(123, 30, 43, 0.65)',
+            color: colors.primaryLight,
             marginBottom: 6,
           }}
         >
@@ -181,7 +205,7 @@ export default function Footer({ data }) {
               fontFamily: "'Parisienne', cursive",
               fontSize: 'clamp(35px, 10vw, 40px)',
               fontWeight: 400,
-              color: '#7B1E2B',
+              color: colors.primaryDark,
               lineHeight: 1,
               letterSpacing: '0.02em',
             }}
@@ -197,7 +221,7 @@ export default function Footer({ data }) {
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: 400,
             fontSize: 'clamp(9.5px, 2.8vw, 12px)',
-            color: 'rgba(123, 30, 43, 0.7)',
+            color: colors.primaryLight,
             lineHeight: 1.6,
             marginBottom: 14,
             maxWidth: 260,
@@ -213,10 +237,10 @@ export default function Footer({ data }) {
           variants={fadeUp}
           style={{ display: 'flex', gap: 14, justifyContent: 'center', marginBottom: 16 }}
         >
-          <SocialIcon href="https://www.instagram.com/invitequeofficial" label="Instagram">
+          <SocialIcon href="https://www.instagram.com/invitequeofficial" label="Instagram" colors={colors}>
             <InstagramIcon />
           </SocialIcon>
-          <SocialIcon href="https://wa.me/inviteque" label="WhatsApp">
+          <SocialIcon href="https://wa.me/inviteque" label="WhatsApp" colors={colors}>
             <WhatsAppIcon />
           </SocialIcon>
         </motion.div>
@@ -232,15 +256,13 @@ export default function Footer({ data }) {
             fontWeight: 500,
             fontSize: 'clamp(9.5px, 2.8vw, 12px)',
             letterSpacing: '0.06em',
-            color: 'rgba(123, 30, 43, 0.7)',
+            color: colors.primaryLight,
             textDecoration: 'none',
             marginBottom: 0,
           }}
         >
           www.inviteque.com
         </motion.a>
-
-
 
       </motion.div>
 
@@ -254,7 +276,7 @@ export default function Footer({ data }) {
           pointerEvents: 'none',
         }}
       >
-        <LeafSprig />
+        <LeafSprig colors={colors} />
       </div>
       <div
         aria-hidden="true"
@@ -265,7 +287,7 @@ export default function Footer({ data }) {
           pointerEvents: 'none',
         }}
       >
-        <LeafSprig flip />
+        <LeafSprig flip colors={colors} />
       </div>
     </footer>
   )

@@ -172,8 +172,8 @@ export default function TemplateAuraOfElegance({ savedData }) {
           {showGallery && <Story data={data.story} />}
           <Invitation data={data.invitation} />
           <Venue data={data.venue} />
-          {showSchedule && <Events data={data.events} />}
-          <Countdown data={data.countdown} />
+          {showSchedule && <Events data={data.events} bgImage="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" />}
+          <Countdown data={data.countdown} centerText={true} />
           <Footer data={data.footer} />
         </div>
       </div>
@@ -235,13 +235,13 @@ export default function TemplateAuraOfElegance({ savedData }) {
         {/* 5) Wedding Schedule Section (Reception, Haldi, Wedding Vows side-by-side) */}
         {showSchedule && (
           <div className="w-full">
-            <Events data={data.events} isDesktop={true} />
+            <Events data={data.events} isDesktop={true} bgImage="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" />
           </div>
         )}
 
         {/* 6) Forever / Countdown Section */}
         <div className="w-full">
-          <Countdown data={data.countdown} isDesktop={true} />
+          <Countdown data={data.countdown} isDesktop={true} centerText={true} />
         </div>
 
         {/* Footer Section */}

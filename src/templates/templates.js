@@ -29,8 +29,8 @@ export const templates = [
     description: 'Capture the magic of a starlit evening with this warm, glowing invitation theme.',
     priceLabel: '₹999',
     thumbnail: t2,
-    href: '/templates/template-2',
-    available: false,
+    href: '/templates/twilight-serenade',
+    available: true,
   },
   {
     id: 'template-3',

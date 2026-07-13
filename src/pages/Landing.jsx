@@ -29,8 +29,8 @@ const templateCardPop = {
 const InfiniteCarouselCard = memo(function InfiniteCarouselCard({ t, i, total, time, isMobile }) {
   const duration = 70000;
   // Reduce orbit spacing on mobile to compress carousel
-  const orbitX = isMobile ? 820 : 1100;
-  const orbitZ = isMobile ? 3300 : 1000;
+  const orbitX = isMobile ? 850 : 1100;
+  const orbitZ = isMobile ? 1800 : 1000;
 
   const pos = useTransform(time, tValue => {
     const rawPos = (tValue / duration) + (i / total);
@@ -749,7 +749,7 @@ export default function Landing() {
 
       {/* 3) Template grid */}
       <section id="templates" className="border-t border-iqBorder">
-        <div className="mx-auto w-full max-w-7xl px-5 py-14 md:py-16">
+        <div className="mx-auto w-full max-w-7xl px-5 py-20 md:py-28">
           <motion.div
             variants={staggerChildren}
             initial="hidden"
@@ -768,7 +768,7 @@ export default function Landing() {
             </motion.p>
           </motion.div>
 
-          <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-14">
             {visibleTemplates.map((t, index) => (
               <motion.article
                 key={t.id}
@@ -797,7 +797,7 @@ export default function Landing() {
                   </div>
                 </div>
 
-                <div className="px-5 py-5">
+                <div className="p-6 md:p-8">
                   <h3 className="text-sm font-bold md:text-base">{t.name}</h3>
                   <p className="mt-1 text-xs text-iqText/70 line-clamp-2">{t.description}</p>
 
@@ -1073,9 +1073,13 @@ export default function Landing() {
               className="w-full max-w-md rounded-[2.5rem] border border-iqBorder bg-white p-8 md:p-12 shadow-luxury text-center"
             >
               <h3 className="text-lg font-bold uppercase tracking-widest text-iqText/50">Template Pricing</h3>
-              <div className="mt-6 flex items-baseline justify-center gap-1">
-                <span className="text-6xl font-extrabold text-iqText">₹999</span>
-                <span className="text-lg font-medium text-iqText/40">per template</span>
+              <div className="mt-6 flex flex-col items-center justify-center">
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-xl md:text-2xl font-bold text-iqText/30 line-through">₹2,999</span>
+                  <span className="text-5xl md:text-6xl font-extrabold text-iqText">₹999</span>
+                </div>
+                <span className="text-[10px] font-bold tracking-wider text-green-700 bg-green-50 px-3 py-1 rounded-full mt-2.5">66% OFF — LIMITED LAUNCH OFFER</span>
+                <span className="text-xs font-medium text-iqText/40 mt-2">one-time flat fee</span>
               </div>
               <p className="mt-6 text-sm font-medium text-iqText/60">
                 Everything you need to create a stunning wedding invite website.

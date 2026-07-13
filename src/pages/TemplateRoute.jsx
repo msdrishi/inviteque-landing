@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react'
 import { Navigate, useParams, useNavigate } from 'react-router-dom'
 import TemplateRoyalWedding from './TemplateRoyalWedding.jsx'
 import TemplateAuraOfElegance from './TemplateAuraOfElegance.jsx'
+import TemplateTwilightSerenade from './TemplateTwilightSerenade.jsx'
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
 import { API_URL } from '../config'
 
 const TEMPLATE_MAP = {
   'royal-wedding': TemplateRoyalWedding,
   'aura-of-elegance': TemplateAuraOfElegance,
+  'template-2': TemplateTwilightSerenade,
+  'twilight-serenade': TemplateTwilightSerenade,
   'template-1': TemplateRoyalWedding, // Fallback for old links
 }
 

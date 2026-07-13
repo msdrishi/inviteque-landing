@@ -190,6 +190,25 @@ body::before {
     min-height: auto !important;
     aspect-ratio: 3 / 2 !important;
   }
+}
 
+/* Butterfly Wing Flutter Animations */
+@keyframes flutter-top {
+    from { transform: rotateX(0); }
+    to { transform: rotateX(70deg); }
+}
 
+@keyframes flutter-bottom {
+    from { transform: rotateX(0); }
+    to { transform: rotateX(-70deg); }
+}
+
+.butterfly__wing--top {
+    transform-origin: 50px 50px;
+    animation: flutter-top 150ms alternate infinite ease-in-out;
+}
+
+.butterfly__wing--bottom {
+    transform-origin: 50px 50px;
+    animation: flutter-bottom 150ms alternate infinite ease-in-out;
 }

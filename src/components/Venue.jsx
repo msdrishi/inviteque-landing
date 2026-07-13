@@ -53,8 +53,36 @@ const CornerFloral = ({ top, left, right, bottom, rotate = 0 }) => (
   </svg>
 )
 
-export default function Venue({ data, isDesktop }) {
+export default function Venue({ data, isDesktop, bgImage, theme }) {
   if (!data) return null
+
+  const colors = theme === 'green' ? {
+    primary: '#3D5236',
+    primaryDark: '#2B3B25',
+    primaryLight: '#5F7C56',
+    border: 'rgba(61,82,54,0.3)',
+    borderSolid: 'rgba(61,82,54,0.4)',
+    bg: '#FBF7F0',
+    accent: '#3D5236',
+    qrColor: '3D5236',
+    qrBg: 'FBF7F0',
+    btnBg: 'rgba(61, 82, 54, 0.08)',
+    btnBorder: 'rgba(61, 82, 54, 0.2)',
+    btnHover: 'rgba(61, 82, 54, 0.12)'
+  } : {
+    primary: '#7B1E2B',
+    primaryDark: '#8A2D3B',
+    primaryLight: '#9C5E67',
+    border: 'rgba(216,178,110,0.7)',
+    borderSolid: 'rgba(216,178,110,0.6)',
+    bg: '#FFF7F2',
+    accent: '#D8B26E',
+    qrColor: '6D1220',
+    qrBg: 'FFF7F2',
+    btnBg: 'rgba(123, 30, 43, 0.08)',
+    btnBorder: 'rgba(123, 30, 43, 0.2)',
+    btnHover: 'rgba(123, 30, 43, 0.12)'
+  }
 
   const addressTextRaw = String(data.address || data.location || 'MG Road')
   // Remove venue name from address to avoid duplication with the title
@@ -87,30 +115,32 @@ export default function Venue({ data, isDesktop }) {
   return (
     <section 
       id={data.id} 
-      className={isDesktop ? "relative w-full overflow-hidden px-4 py-6 flex flex-col items-center text-center venue-section" : "relative w-full overflow-hidden px-4 py-6 flex flex-col items-center text-center"}
+      className={isDesktop 
+        ? "relative w-full overflow-hidden px-4 py-6 flex flex-col items-center text-center venue-section" 
+        : "relative w-full overflow-hidden px-4 py-6 flex flex-col items-center text-center"
+      }
       style={isDesktop ? {
         aspectRatio: '3 / 2',
         minHeight: 'auto',
-        backgroundColor: '#FFF7F2',
-        backgroundImage: `url("https://res.cloudinary.com/djbxuk2xr/image/upload/v1782033908/io3izfnqso0mtsob8zlk.png")`,
+        backgroundColor: bgImage ? 'transparent' : colors.bg,
+        backgroundImage: `url(${bgImage || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782033908/io3izfnqso0mtsob8zlk.png"})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'scroll',
         paddingTop: 'clamp(80px, 12svh, 120px)',
         paddingBottom: 'clamp(52px, 10svh, 96px)',
-        clipPath: 'url(#venueTopCurveClip)',
       } : {
         minHeight: '100svh',
-        backgroundColor: '#FFF7F2',
-        backgroundImage: `url(${locationImg})`,
+        backgroundColor: bgImage ? 'transparent' : colors.bg,
+        backgroundImage: `url(${bgImage || locationImg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'scroll',
         paddingTop: 'clamp(80px, 12svh, 120px)',
         paddingBottom: 'clamp(52px, 10svh, 96px)',
-        clipPath: 'url(#venueTopCurveClip)',
       }}
     >
+
       <CornerFloral top="10px" left="10px" rotate={0} />
       <CornerFloral top="10px" right="10px" rotate={90} />
       <CornerFloral bottom="6px" left="4px" rotate={-90} />
@@ -133,7 +163,7 @@ export default function Venue({ data, isDesktop }) {
             pointerEvents: 'none',
           }}
         >
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="#D8B26E">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill={colors.accent}>
             <path d="M12 3c2.2 0 4 1.8 4 4 0 1.6-1.2 3.4-4 6.5C9.2 10.4 8 8.6 8 7c0-2.2 1.8-4 4-4z"/>
           </svg>
         </motion.div>
@@ -167,9 +197,9 @@ export default function Venue({ data, isDesktop }) {
                 fontSize: 'clamp(28px, 3.2vw, 36px)',
                 letterSpacing: '0.14em',
                 fontWeight: 600,
-                color: '#7B1E2B',
+                color: colors.primary,
                 marginBottom: '8px',
-                textShadow: '0 14px 28px rgba(123, 30, 43, 0.16)',
+                textShadow: theme === 'green' ? 'none' : '0 14px 28px rgba(123, 30, 43, 0.16)',
               }}
             />
             <motion.p
@@ -181,9 +211,9 @@ export default function Venue({ data, isDesktop }) {
               className="flex items-center justify-center gap-3 relative z-10"
               style={{ marginBottom: '14px' }}
             >
-              <span style={{ width: '56px', height: '1px', backgroundColor: 'rgba(216,178,110,0.7)' }} />
-              <PinIconSolid size={16} color="#D8B26E" />
-              <span style={{ width: '56px', height: '1px', backgroundColor: 'rgba(216,178,110,0.7)' }} />
+              <span style={{ width: '56px', height: '1px', backgroundColor: colors.border }} />
+              <PinIconSolid size={16} color={colors.accent} />
+              <span style={{ width: '56px', height: '1px', backgroundColor: colors.border }} />
             </motion.p>
 
             <motion.h3 
@@ -197,10 +227,10 @@ export default function Venue({ data, isDesktop }) {
                 fontFamily: "'Cinzel', serif",
                 fontSize: 'clamp(22px, 2.8vw, 30px)',
                 fontWeight: 600,
-                color: '#8A2D3B',
+                color: colors.primaryDark,
                 margin: '6px 0 8px 0',
                 letterSpacing: '0.16em',
-                textShadow: '0 14px 28px rgba(122, 30, 43, 0.16)',
+                textShadow: theme === 'green' ? 'none' : '0 14px 28px rgba(122, 30, 43, 0.16)',
               }}
             >
               {venueTitle}
@@ -217,7 +247,7 @@ export default function Venue({ data, isDesktop }) {
                 width: '100%',
                 maxWidth: '620px',
                 marginTop: '4px',
-                color: '#9C5E67',
+                color: colors.primaryLight,
                 fontStyle: 'normal',
               }}
             >
@@ -227,10 +257,10 @@ export default function Venue({ data, isDesktop }) {
                   fontWeight: 500,
                   fontSize: 'clamp(16px, 1.8vw, 20px)',
                   lineHeight: 1.6,
-                  color: '#9C5E67',
+                  color: colors.primaryLight,
                   whiteSpace: 'normal',
                   overflowWrap: 'anywhere',
-                  textShadow: '0 12px 24px rgba(255, 247, 242, 0.64)',
+                  textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
                 }}
               >
                 {addressTextPretty}
@@ -248,10 +278,10 @@ export default function Venue({ data, isDesktop }) {
               transition={{ duration: 1.2, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 position: 'relative',
-                background: '#FFF7F2',
+                background: colors.bg,
                 borderRadius: '16px',
-                border: '1px solid rgba(216,178,110,0.6)',
-                boxShadow: '0 15px 35px rgba(109,18,32,0.1), 0 5px 12px rgba(216,178,110,0.15)',
+                border: `1px solid ${colors.borderSolid}`,
+                boxShadow: theme === 'green' ? '0 15px 35px rgba(61,82,54,0.08)' : '0 15px 35px rgba(109,18,32,0.1), 0 5px 12px rgba(216,178,110,0.15)',
                 padding: '14px 24px',
                 zIndex: 3,
                 display: 'flex',
@@ -260,15 +290,15 @@ export default function Venue({ data, isDesktop }) {
               }}
             >
               <motion.img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(String(data.mapUrl))}&color=6D1220&bgcolor=FFF7F2`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(String(data.mapUrl))}&color=${colors.qrColor}&bgcolor=${colors.qrBg}`}
                 alt="QR Code for Location"
                 width={130}
                 height={130}
                 style={{
                   display: 'block',
                   borderRadius: '10px',
-                  border: '1px solid rgba(216,178,110,0.44)',
-                  backgroundColor: '#FFF7F2',
+                  border: `1px solid ${colors.borderSolid}`,
+                  backgroundColor: colors.bg,
                   padding: '4px',
                 }}
                 loading="lazy"
@@ -278,7 +308,7 @@ export default function Venue({ data, isDesktop }) {
                   fontFamily: "'Montserrat', sans-serif",
                   fontSize: '14px',
                   fontWeight: 600,
-                  color: '#9C5E67',
+                  color: colors.primaryLight,
                   letterSpacing: '0.1em'
                 }}>Scan to locate or</span>
                 <a
@@ -292,21 +322,21 @@ export default function Venue({ data, isDesktop }) {
                     gap: 6,
                     padding: '10px 20px',
                     borderRadius: '20px',
-                    background: 'rgba(123, 30, 43, 0.08)',
-                    border: '1px solid rgba(123, 30, 43, 0.2)',
+                    background: colors.btnBg,
+                    border: `1px solid ${colors.btnBorder}`,
                     fontFamily: "'Montserrat', sans-serif",
                     fontSize: '13px',
                     fontWeight: 600,
-                    color: '#7B1E2B',
+                    color: colors.primary,
                     textDecoration: 'none',
                     transition: 'all 0.3s ease',
                     cursor: 'pointer',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.background = 'rgba(123, 30, 43, 0.12)'
+                    e.currentTarget.style.background = colors.btnHover
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.background = 'rgba(123, 30, 43, 0.08)'
+                    e.currentTarget.style.background = colors.btnBg
                   }}
                 >
                   📍 Open in Maps
@@ -327,9 +357,9 @@ export default function Venue({ data, isDesktop }) {
                 fontSize: 'clamp(24px, 5.2vw, 34px)',
                 letterSpacing: '0.14em',
                 fontWeight: 600,
-                color: '#7B1E2B',
+                color: colors.primary,
                 marginBottom: '12px',
-                textShadow: '0 14px 28px rgba(123, 30, 43, 0.16)',
+                textShadow: theme === 'green' ? 'none' : '0 14px 28px rgba(123, 30, 43, 0.16)',
               }}
             />
 
@@ -342,9 +372,9 @@ export default function Venue({ data, isDesktop }) {
               className="flex items-center justify-center gap-3 relative z-10"
               style={{ marginBottom: '16px' }}
             >
-              <span style={{ width: '56px', height: '1px', backgroundColor: 'rgba(216,178,110,0.7)' }} />
-              <PinIconSolid size={16} color="#D8B26E" />
-              <span style={{ width: '56px', height: '1px', backgroundColor: 'rgba(216,178,110,0.7)' }} />
+              <span style={{ width: '56px', height: '1px', backgroundColor: colors.border }} />
+              <PinIconSolid size={16} color={colors.accent} />
+              <span style={{ width: '56px', height: '1px', backgroundColor: colors.border }} />
             </motion.p>
 
             <motion.h3 
@@ -358,10 +388,10 @@ export default function Venue({ data, isDesktop }) {
                 fontFamily: "'Cinzel', serif",
                 fontSize: 'clamp(18px, 4.2vw, 28px)',
                 fontWeight: 600,
-                color: '#8A2D3B',
+                color: colors.primaryDark,
                 margin: '10px 0 6px 0',
                 letterSpacing: '0.16em',
-                textShadow: '0 14px 28px rgba(122, 30, 43, 0.16)',
+                textShadow: theme === 'green' ? 'none' : '0 14px 28px rgba(122, 30, 43, 0.16)',
               }}
             >
               {venueTitle}
@@ -379,15 +409,15 @@ export default function Venue({ data, isDesktop }) {
                 maxWidth: '520px',
                 padding: 0,
                 marginTop: '14px',
-                color: '#9C5E67',
+                color: colors.primaryLight,
                 fontStyle: 'normal',
                 textAlign: 'center',
               }}
             >
               <span style={{ display: 'inline-flex', items: 'center', gap: 8 }}>
-                <span style={{ width: 54, height: 1, background: 'rgba(216,178,110,0.66)' }} />
-                <PinIconSolid size={16} color="#D8B26E" />
-                <span style={{ width: 54, height: 1, background: 'rgba(216,178,110,0.66)' }} />
+                <span style={{ width: 54, height: 1, background: colors.border }} />
+                <PinIconSolid size={16} color={colors.accent} />
+                <span style={{ width: 54, height: 1, background: colors.border }} />
               </span>
 
               <AnimatedTitle 
@@ -398,9 +428,9 @@ export default function Venue({ data, isDesktop }) {
                   fontWeight: 300,
                   fontSize: '11px',
                   letterSpacing: '0.34em',
-                  color: '#9C5E67',
+                  color: colors.primaryLight,
                   textTransform: 'uppercase',
-                  textShadow: '0 8px 18px rgba(255, 247, 242, 0.64)',
+                  textShadow: theme === 'green' ? 'none' : '0 8px 18px rgba(255, 247, 242, 0.64)',
                 }}
               />
 
@@ -411,10 +441,10 @@ export default function Venue({ data, isDesktop }) {
                   fontWeight: 500,
                   fontSize: 'clamp(13px, 2.8vw, 15px)',
                   lineHeight: 1.68,
-                  color: '#9C5E67',
+                  color: colors.primaryLight,
                   whiteSpace: 'normal',
                   overflowWrap: 'anywhere',
-                  textShadow: '0 12px 24px rgba(255, 247, 242, 0.64)',
+                  textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
                 }}
               >
                 {addressTextPretty}
@@ -432,10 +462,10 @@ export default function Venue({ data, isDesktop }) {
               transition={{ duration: 1.2, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
               style={{
                 position: 'relative',
-                background: '#FFF7F2',
+                background: colors.bg,
                 borderRadius: '16px',
-                border: '1px solid rgba(216,178,110,0.5)',
-                boxShadow: '0 10px 24px rgba(109,18,32,0.06)',
+                border: `1px solid ${colors.borderSolid}`,
+                boxShadow: theme === 'green' ? '0 10px 24px rgba(61,82,54,0.04)' : '0 10px 24px rgba(109,18,32,0.06)',
                 padding: '12px 14px',
                 zIndex: 3,
                 display: 'flex',
@@ -448,15 +478,15 @@ export default function Venue({ data, isDesktop }) {
               }}
             >
               <motion.img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(String(data.mapUrl))}&color=6D1220&bgcolor=FFF7F2`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(String(data.mapUrl))}&color=${colors.qrColor}&bgcolor=${colors.qrBg}`}
                 alt="QR Code for Location"
                 width={86}
                 height={86}
                 style={{
                   display: 'block',
                   borderRadius: '8px',
-                  border: '1px solid rgba(216,178,110,0.44)',
-                  backgroundColor: '#FFF7F2',
+                  border: `1px solid ${colors.borderSolid}`,
+                  backgroundColor: colors.bg,
                   padding: '4px',
                 }}
                 loading="lazy"
@@ -472,12 +502,12 @@ export default function Venue({ data, isDesktop }) {
                   gap: 5,
                   padding: '6px 14px',
                   borderRadius: '16px',
-                  background: 'rgba(123, 30, 43, 0.08)',
-                  border: '1px solid rgba(123, 30, 43, 0.2)',
+                  background: colors.btnBg,
+                  border: `1px solid ${colors.btnBorder}`,
                   fontFamily: "'Montserrat', sans-serif",
                   fontSize: '10px',
                   fontWeight: 600,
-                  color: '#7B1E2B',
+                  color: colors.primary,
                   textDecoration: 'none',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
@@ -489,7 +519,6 @@ export default function Venue({ data, isDesktop }) {
           )}
         </div>
       )}
-
     </section>
   )
 }

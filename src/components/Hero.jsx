@@ -130,7 +130,7 @@ function DateRow({ dateLine, isDesktop }) {
   let day = '', month = '', year = ''
   if (parts.length >= 3) {
     day = parts[0]
-    month = parts.slice(1, -1).join(' ').toUpperCase()
+    month = parts.slice(1, -1).join(' ').toUpperCase().slice(0, 3)
     year = parts[parts.length - 1]
   }
   return (
@@ -277,7 +277,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             variants={nameLetters}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 8svh, 44px)',
               fontWeight: 100,
               lineHeight: 0.92,
               color: '#7B0F1A',
@@ -305,7 +305,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             transition={{ repeat: Infinity, duration: 7, ease: 'linear' }}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 8svh, 44px)',
               fontWeight: 100,
               lineHeight: 0.92,
               whiteSpace: 'nowrap',
@@ -338,10 +338,10 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         </motion.div>
 
         {/* & */}
-        <motion.div variants={ampReveal} style={{ marginTop: isDesktop ? 10 : -2 }}>
+        <motion.div variants={ampReveal} style={{ marginTop: isDesktop ? 10 : 8 }}>
           <span style={{
             fontFamily: "'Parisienne', 'Spectral', cursive",
-            fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
+            fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(16px, 5.5svh, 28px)',
             fontWeight: 100,
             lineHeight: 1,
             color: '#7B0F1A',
@@ -353,12 +353,12 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         </motion.div>
 
         {/* ── Bride name ── */}
-        <motion.div variants={nameReveal} style={{ marginTop: isDesktop ? 10 : -4, position: 'relative' }}>
+        <motion.div variants={nameReveal} style={{ marginTop: isDesktop ? 10 : 6, position: 'relative' }}>
           <motion.span
             variants={nameLetters}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 8svh, 44px)',
               fontWeight: 100,
               lineHeight: 0.92,
               color: '#7B0F1A',
@@ -386,7 +386,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             transition={{ repeat: Infinity, duration: 7, ease: 'linear', delay: 1 }}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 10svh, 60px)',
+              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 8svh, 44px)',
               fontWeight: 100,
               lineHeight: 0.92,
               whiteSpace: 'nowrap',
@@ -422,7 +422,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         <motion.div
           variants={fadeUp}
           style={{
-            marginTop: isDesktop ? 'clamp(12px, 2vw, 24px)' : 4, display: 'flex', flexDirection: 'column',
+            marginTop: isDesktop ? 'clamp(16px, 2vw, 24px)' : 18, display: 'flex', flexDirection: 'column',
             alignItems: 'center', gap: 20, width: '100%'
           }}
         >
@@ -447,7 +447,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
           <motion.div
             variants={fadeUp}
             style={{
-              marginTop: isDesktop ? 12 : 6,
+              marginTop: isDesktop ? 14 : 10,
               marginBottom: isDesktop ? -4 : -2,
               display: 'flex',
               flexDirection: 'column',
@@ -470,12 +470,12 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         )}
 
         {/* ── Date row ── */}
-        <div style={{ marginTop: isDesktop ? 12 : 3 }}>
+        <div style={{ marginTop: isDesktop ? 14 : 8 }}>
           <DateRow dateLine={data.dateLine} isDesktop={isDesktop} />
         </div>
 
         {/* Day of week */}
-        <motion.div variants={fadeUp} style={{ marginTop: isDesktop ? 8 : 0 }}>
+        <motion.div variants={fadeUp} style={{ marginTop: isDesktop ? 10 : 6 }}>
           <span style={{
             fontFamily: "'Parisienne', cursive",
             fontSize: isDesktop ? 'clamp(24px, 2.4vw, 34px)' : 'clamp(18px, 4.5svh, 30px)',
@@ -494,30 +494,118 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
           </svg>
         </motion.div>
 
-        {/* ── Venue ── */}
+        {/* ── Venue (desktop only) ── */}
+        {isDesktop && (
+          <motion.div
+            variants={fadeUp}
+            style={{
+              marginTop: 4, display: 'flex', flexDirection: 'column',
+              alignItems: 'center', gap: 2
+            }}
+          >
+            <PinIcon />
+
+            {/* Venue details rendered dynamically from address parts */}
+            {data.addressParts && data.addressParts.length > 0 ? (
+              <div className="flex flex-col items-center">
+                <p style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 800,
+                  fontSize: 'clamp(12px, 1.2vw, 16px)',
+                  letterSpacing: '0.2em',
+                  textTransform: 'uppercase',
+                  color: '#7B0F1A',
+                  marginTop: 2,
+                  lineHeight: 1.2,
+                  textAlign: 'center',
+                  padding: '0 10px'
+                }}>
+                  {data.addressParts[0]}
+                </p>
+                {data.addressParts.length > 1 && (
+                  <p style={{
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontWeight: 600,
+                    fontSize: 'clamp(9.5px, 0.9vw, 12px)',
+                    letterSpacing: '0.22em',
+                    textTransform: 'uppercase',
+                    color: '#7B0F1A',
+                    opacity: 0.8,
+                    textAlign: 'center',
+                    padding: '0 20px',
+                    marginTop: '4px'
+                  }}>
+                    {data.addressParts.slice(1).join(', ')}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <>
+                <p style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 800,
+                  fontSize: 'clamp(12px, 1.2vw, 16px)',
+                  letterSpacing: '0.2em',
+                  textTransform: 'uppercase',
+                  color: '#7B0F1A',
+                  marginTop: 2,
+                  lineHeight: 1.2,
+                }}>
+                  {data.venueName}
+                </p>
+                <p style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 600,
+                  fontSize: 'clamp(9.5px, 0.9vw, 12px)',
+                  letterSpacing: '0.22em',
+                  textTransform: 'uppercase',
+                  color: '#7B0F1A',
+                  opacity: 0.8,
+                }}>
+                  {data.venueCity}
+                </p>
+              </>
+            )}
+
+            {data.hashtag && (
+              <p style={{
+                fontFamily: "'Parisienne', cursive",
+                fontSize: 'clamp(16px, 1.6vw, 22px)',
+                fontWeight: 400,
+                color: '#7B0F1A',
+                opacity: 0.7,
+                marginTop: 1,
+              }}>
+                {data.hashtag}
+              </p>
+            )}
+          </motion.div>
+        )}
+
+      </motion.div>
+
+      {/* ── Venue (mobile only, rendered at bottom) ── */}
+      {!isDesktop && (
         <motion.div
+          initial="hidden"
+          animate="show"
           variants={fadeUp}
-          style={{
-            marginTop: 4, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', gap: 2
-          }}
+          className="absolute left-0 right-0 z-10 flex flex-col items-center gap-1.5 px-8"
+          style={{ bottom: 'clamp(85px, 12.5vh, 125px)' }}
         >
           <PinIcon />
-
-          {/* Venue details rendered dynamically from address parts */}
           {data.addressParts && data.addressParts.length > 0 ? (
             <div className="flex flex-col items-center">
               <p style={{
                 fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 800,
-                fontSize: isDesktop ? 'clamp(12px, 1.2vw, 16px)' : 'clamp(9px, 1.5svh, 13px)',
+                fontSize: 'clamp(9px, 1.5svh, 13px)',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 color: '#7B0F1A',
                 marginTop: 2,
                 lineHeight: 1.2,
                 textAlign: 'center',
-                padding: '0 10px'
               }}>
                 {data.addressParts[0]}
               </p>
@@ -525,14 +613,13 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
                 <p style={{
                   fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 600,
-                  fontSize: isDesktop ? 'clamp(9.5px, 0.9vw, 12px)' : 'clamp(7px, 1.1svh, 9.5px)',
+                  fontSize: 'clamp(7px, 1.1svh, 9.5px)',
                   letterSpacing: '0.22em',
                   textTransform: 'uppercase',
                   color: '#7B0F1A',
                   opacity: 0.8,
                   textAlign: 'center',
-                  padding: '0 20px',
-                  marginTop: '4px'
+                  marginTop: '2px'
                 }}>
                   {data.addressParts.slice(1).join(', ')}
                 </p>
@@ -543,7 +630,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
               <p style={{
                 fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 800,
-                fontSize: isDesktop ? 'clamp(12px, 1.2vw, 16px)' : 'clamp(9px, 1.5svh, 13px)',
+                fontSize: 'clamp(9px, 1.5svh, 13px)',
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 color: '#7B0F1A',
@@ -555,7 +642,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
               <p style={{
                 fontFamily: "'Montserrat', sans-serif",
                 fontWeight: 600,
-                fontSize: isDesktop ? 'clamp(9.5px, 0.9vw, 12px)' : 'clamp(7px, 1.1svh, 9.5px)',
+                fontSize: 'clamp(7px, 1.1svh, 9.5px)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
                 color: '#7B0F1A',
@@ -569,7 +656,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
           {data.hashtag && (
             <p style={{
               fontFamily: "'Parisienne', cursive",
-              fontSize: isDesktop ? 'clamp(16px, 1.6vw, 22px)' : 'clamp(12px, 2.8svh, 18px)',
+              fontSize: 'clamp(12px, 2.8svh, 18px)',
               fontWeight: 400,
               color: '#7B0F1A',
               opacity: 0.7,
@@ -579,8 +666,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             </p>
           )}
         </motion.div>
-
-      </motion.div>
+      )}
 
 
 

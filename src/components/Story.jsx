@@ -44,7 +44,7 @@ function Tape({ top, bottom, left, right, rotate, width = 70, height = 26 }) {
 }
 
 /* ─── Main Gallery Section ──────────────── */
-export default function Story({ data, isDesktop }) {
+export default function Story({ data, isDesktop, bgImage }) {
   const containerRef = useRef(null)
   
   const { scrollYProgress } = useScroll({
@@ -92,7 +92,7 @@ export default function Story({ data, isDesktop }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        backgroundImage: `url(${texturePink})`,
+        backgroundImage: `url(${bgImage || texturePink})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'repeat',
         backgroundAttachment: 'scroll',

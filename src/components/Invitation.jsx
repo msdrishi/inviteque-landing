@@ -44,7 +44,7 @@ function ScatterText({ text }) {
   )
 }
 
-export default function Invitation({ data }) {
+export default function Invitation({ data, bgImage }) {
   if (!data) return null
 
   // Fallback text if data.message is empty
@@ -60,8 +60,10 @@ export default function Invitation({ data }) {
       id={data.id}
       className="relative w-full overflow-hidden flex flex-col justify-center items-center invitation-section"
       style={{
-        backgroundColor: '#fff6f2',
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c-2.5-5-10-5-10 0 0 5 7.5 5 10 10 2.5-5 10-5 10 0 0-5-7.5-5-10-10z' fill='%238B1E2D' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+        backgroundColor: bgImage ? 'transparent' : '#fff6f2',
+        backgroundImage: bgImage ? `url(${bgImage})` : `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c-2.5-5-10-5-10 0 0 5 7.5 5 10 10 2.5-5 10-5 10 0 0-5-7.5-5-10-10z' fill='%238B1E2D' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+        backgroundSize: bgImage ? 'cover' : 'auto',
+        backgroundPosition: bgImage ? 'center' : 'left top',
         paddingTop: '60px',
         paddingBottom: '20px'
       }}

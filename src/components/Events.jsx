@@ -1,7 +1,4 @@
-import { useEffect } from 'react'
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
-
-const PITCH = 112;
+import { motion } from 'framer-motion'
 
 const letterContainer = {
   hidden: { opacity: 0 },
@@ -14,7 +11,7 @@ const letterAnim = {
 
 function AnimatedTitle({ text, className, style }) {
   return (
-    <motion.h2 variants={letterContainer} initial="hidden" whileInView="show" viewport={{ once: false, amount: 0.1 }} className={className} style={style}>
+    <motion.h2 variants={letterContainer} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} className={className} style={style}>
       {text.split('').map((char, index) => (
         <motion.span key={index} variants={letterAnim} style={{ display: 'inline-block' }}>{char === ' ' ? '\u00A0' : char}</motion.span>
       ))}
@@ -22,52 +19,33 @@ function AnimatedTitle({ text, className, style }) {
   )
 }
 
-function EventItem({ item, index, scrollY, isDesktop }) {
-  const itemY = index * PITCH;
-  
-  // screenY is the physical position of this item inside the frame
-  const screenY = useTransform(scrollY, y => y + itemY);
-  
-  // Center of the frame: center values scale for desktop frame height
-  const fadeStart = isDesktop ? -50 : -45;
-  const fadePeak = isDesktop ? 120 : 110;
-  const fadeEnd = isDesktop ? 300 : 280;
-  const containerOpacity = useTransform(screenY, [fadeStart, fadePeak, fadeEnd], [0, 1, 0]);
-
-  return (
-    <motion.div 
-      className={`absolute left-0 right-0 mx-auto w-[85%] ${isDesktop ? 'max-w-[360px]' : 'max-w-[340px]'} flex justify-center`}
-      style={{ y: screenY, opacity: containerOpacity }}
-    >
-      {/* Event Card */}
-      <div 
-        className={`relative w-full ${isDesktop ? 'p-[14px] rounded-[22px] gap-4' : 'p-[12px] rounded-[20px] gap-3'} flex items-center bg-[#ffffff]/80 border border-[#d5b28c]/40 shadow-[0_5px_15px_rgba(0,0,0,0.04)]`}
-      >
-         <div className={`rounded-full flex items-center justify-center shrink-0 shadow-inner bg-[#fff0ec] text-[#8B1E2D] ${isDesktop ? 'w-[48px] h-[48px]' : 'w-[44px] h-[44px]'}`}>
-           {item.icon}
-         </div>
-         <div>
-           <div className={`${isDesktop ? 'text-[11px]' : 'text-[10px]'} font-bold tracking-[0.15em] uppercase text-[#8B1E2D] mb-1`} style={{ fontFamily: "'Montserrat', sans-serif" }}>
-             {item.date ? `${item.time}  |  ${item.date}` : item.time}
-           </div>
-           <h3 className={`${isDesktop ? 'text-[20px]' : 'text-[18px]'} font-bold text-[#5C0A14]`} style={{ fontFamily: "'Playfair Display', serif" }}>
-             {item.name}
-           </h3>
-         </div>
-      </div>
-    </motion.div>
-  )
-}
-
-export default function Events({ data, isDesktop }) {
+export default function Events({ data, isDesktop, theme, bgImage }) {
   if (!data) return null
+
+  const colors = theme === 'green' ? {
+    primary: '#3D5236',
+    primaryDark: '#2B3B25',
+    accentBg: '#EAF0E8',
+    border: '#A7BCA3',
+    textAccent: '#5F7C56',
+    bg: '#FFFFFF',
+    gold: '#D4AF37',
+  } : {
+    primary: '#8B1E2D',
+    primaryDark: '#5C0A14',
+    accentBg: '#fff0ec',
+    border: '#d5b28c',
+    textAccent: '#a07870',
+    bg: '#FFFFFF',
+    gold: '#D4AF37',
+  }
 
   const defaultEvents = [
     {
       time: "11:00 AM",
       name: "Haldi Ceremony",
       icon: (
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4 12h16c0 4.4-3.6 8-8 8s-8-3.6-8-8z" />
           <path d="M12 12V4M9 5l3-1 3 1" />
           <circle cx="7" cy="8" r="0.5" fill="currentColor" />
@@ -80,7 +58,7 @@ export default function Events({ data, isDesktop }) {
       time: "04:00 PM",
       name: "Wedding Vows",
       icon: (
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="9" cy="12" r="5" />
           <circle cx="15" cy="12" r="5" />
           <path d="M9 7l1-2 1 2" />
@@ -91,7 +69,7 @@ export default function Events({ data, isDesktop }) {
       time: "07:00 PM",
       name: "Grand Reception",
       icon: (
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
           <path d="M5 15c0-4 3.5-7 7-7s7 3 7 7" />
           <path d="M12 8V6M10 6h4" />
           <path d="M3 15h18" />
@@ -103,99 +81,196 @@ export default function Events({ data, isDesktop }) {
 
   const items = (data.items !== undefined)
     ? (data.items || []).map((item, i) => ({
-        icon: item.icon || defaultEvents[i % defaultEvents.length]?.icon,
+        icon: item.icon || defaultEvents[i % defaultEvents.length]?.icon || '✦',
         time: item.time || '',
         name: item.name || item.title || '',
         date: item.date || ''
       }))
-    : defaultEvents.map((item, i) => ({
+    : defaultEvents.map((item) => ({
         ...item,
         date: ''
       }));
 
   if (items.length === 0) {
-    return null;
+    return null
   }
-
-  const displayItems = [...items, ...items, ...items, ...items, ...items, ...items]
-  
-  const scrollY = useMotionValue(0)
-  const totalHeight = items.length * PITCH
-
-  useEffect(() => {
-    const controls = animate(scrollY, [0, -totalHeight], {
-      repeat: Infinity,
-      ease: "linear",
-      duration: items.length * 3.5,
-    })
-    return () => controls.stop()
-  }, [totalHeight, scrollY, items.length])
 
   return (
     <section 
       id={data.id || 'events'} 
-      className="w-full px-4 py-24 relative flex flex-col items-center justify-center overflow-hidden"
+      className="w-full min-h-[100svh] md:min-h-screen px-6 py-28 relative flex flex-col items-center justify-center overflow-hidden bg-cover bg-center"
       style={{ 
-        backgroundColor: '#fff6f2',
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 40c-5-10-15-15-20-15 0 10 10 20 20 20 5-10 15-15 20-15 0 10-10 20-20 20z' fill='%238B1E2D' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E")`
+        backgroundImage: bgImage ? `linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url(${bgImage})` : 'none',
+        backgroundColor: colors.bg 
       }}
     >
-      
       {/* ── Title Section ── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="flex flex-col items-center text-center z-10 mb-12"
+        className="flex flex-col items-center text-center z-10 mb-16"
       >
-        <div className="flex items-center gap-2 mb-3 opacity-60">
-          <div className="w-1 h-1 rotate-45 bg-[#b58372]"></div>
-          <svg width="24" height="10" viewBox="0 0 24 10" fill="none">
-            <path d="M12 0C12 5 7 5 0 5C7 5 12 5 12 10C12 5 17 5 24 5C17 5 12 5 12 0Z" fill="#b58372"/>
-          </svg>
-          <div className="w-1 h-1 rotate-45 bg-[#b58372]"></div>
-        </div>
+        {theme === 'green' ? (
+          <>
+            <p
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontSize: 'clamp(11px, 2.8vw, 13px)',
+                color: colors.gold,
+                margin: '0 0 6px 0',
+                fontWeight: 600,
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Celebrating the Moments
+            </p>
+            <AnimatedTitle 
+              text="WEDDING SCHEDULE"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                color: colors.primaryDark,
+                fontSize: 'clamp(22px, 5vw, 32px)',
+                fontWeight: 700,
+                letterSpacing: '0.18em',
+                margin: 0,
+                textTransform: 'uppercase',
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <div className="flex items-center gap-2 mb-3 opacity-60">
+              <div className="w-1 h-1 rotate-45" style={{ backgroundColor: colors.textAccent }}></div>
+              <svg width="24" height="10" viewBox="0 0 24 10" fill="none">
+                <path d="M12 0C12 5 7 5 0 5C7 5 12 5 12 10C12 5 17 5 24 5C17 5 12 5 12 0Z" fill={colors.textAccent}/>
+              </svg>
+              <div className="w-1 h-1 rotate-45" style={{ backgroundColor: colors.textAccent }}></div>
+            </div>
 
-        <AnimatedTitle 
-          text="WEDDING SCHEDULE"
-          style={{ fontFamily: "'Cinzel', serif", color: '#721c24', fontSize: 'clamp(18px, 4vw, 26px)', fontWeight: 700, letterSpacing: '0.08em' }}
+            <AnimatedTitle 
+              text="WEDDING SCHEDULE"
+              style={{ fontFamily: "'Cinzel', serif", color: colors.primaryDark, fontSize: 'clamp(18px, 4vw, 30px)', fontWeight: 700, letterSpacing: '0.08em' }}
+            />
+
+            <div className="flex items-center gap-3 mt-3 opacity-70">
+              <div className="w-1.5 h-1.5 rotate-45" style={{ backgroundColor: colors.textAccent }}></div>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", color: colors.textAccent, fontSize: '10px', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase' }}>
+                Celebrating Love, Together
+              </p>
+              <div className="w-1.5 h-1.5 rotate-45" style={{ backgroundColor: colors.textAccent }}></div>
+            </div>
+          </>
+        )}
+      </motion.div>
+
+      {/* ── Timeline Container ── */}
+      <div className="relative w-full max-w-[800px] mx-auto z-10 flex flex-col gap-12 md:gap-16">
+        {/* Central timeline line */}
+        <div 
+          className="absolute left-[24px] md:left-1/2 top-2 bottom-2 w-[1.5px] -translate-x-[0.75px]" 
+          style={{ 
+            backgroundImage: `linear-gradient(to bottom, transparent, ${colors.primary} 15%, ${colors.primary} 85%, transparent)`,
+            opacity: 0.2 
+          }}
         />
 
-        <div className="flex items-center gap-3 mt-3 opacity-70">
-          <div className="w-1.5 h-1.5 rotate-45 bg-[#b58372]"></div>
-          <p style={{ fontFamily: "'Montserrat', sans-serif", color: '#a07870', fontSize: '10px', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase' }}>
-            Celebrating Love, Together
-          </p>
-          <div className="w-1.5 h-1.5 rotate-45 bg-[#b58372]"></div>
-        </div>
-      </motion.div>
+        {items.map((item, index) => {
+          const isEven = index % 2 === 0
+          return (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 45 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.1 }}
+              transition={{ duration: 0.9, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className={`flex flex-col md:flex-row items-start md:items-center w-full relative ${
+                isEven ? 'md:flex-row-reverse' : ''
+              }`}
+            >
+              {/* Card component */}
+              <div className={`w-full md:w-[45%] pl-[56px] md:pl-0 flex ${isEven ? 'md:justify-end md:pr-10' : 'md:justify-start md:pl-10'}`}>
+                <div 
+                  className="p-4 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-3.5 w-full text-left max-w-[290px] md:max-w-[320px] shadow-[0_6px_25px_rgba(61,82,54,0.03)] hover:shadow-[0_10px_30px_rgba(61,82,54,0.06)]"
+                  style={{
+                    borderColor: 'rgba(61, 82, 54, 0.1)',
+                    background: colors.accentBg,
+                    borderBottom: `3px solid ${colors.primary}`,
+                  }}
+                >
+                  {/* Icon on the left */}
+                  <div 
+                    className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 shadow-sm"
+                    style={{ backgroundColor: '#FFFFFF', color: colors.primary }}
+                  >
+                    {typeof item.icon === 'string' ? <span className="text-sm">{item.icon}</span> : item.icon}
+                  </div>
 
-      {/* ── Roller Layout (Same auto moving animation for both Mobile & Desktop) ── */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-        className={`relative w-full ${isDesktop ? 'max-w-[420px] h-[360px]' : 'max-w-[300px] h-[340px]'} flex justify-center items-center mt-6 z-10`}
-      >
-        {/* Inner Glass Frame */}
-        <div 
-          className="relative w-full h-full rounded-[30px] bg-gradient-to-b from-[#fdf8f7]/60 via-transparent to-[#fdf8f7]/60 border-[2px] border-[#d5b28c]/40 overflow-hidden shadow-[inset_0_20px_50px_rgba(0,0,0,0.03),_0_20px_40px_rgba(139,30,45,0.06)] backdrop-blur-sm"
-        >
-          {/* The Roller Items Track */}
-          <div className="absolute inset-0">
-             {displayItems.map((item, index) => (
-               <EventItem key={index} item={item} index={index} scrollY={scrollY} isDesktop={isDesktop} />
-             ))}
-          </div>
-          
-          {/* Top/Bottom Ambient Fade Overlays */}
-          <div className="absolute top-0 left-0 right-0 h-[100px] bg-gradient-to-b from-[#fff6f2] via-[#fff6f2]/80 to-transparent pointer-events-none z-20 rounded-t-[30px]" />
-          <div className="absolute bottom-0 left-0 right-0 h-[100px] bg-gradient-to-t from-[#fff6f2] via-[#fff6f2]/80 to-transparent pointer-events-none z-20 rounded-b-[30px]" />
-        </div>
-      </motion.div>
+                  {/* Content on the right */}
+                  <div className="flex-1 min-w-0">
+                    {/* Time + Date Badge */}
+                    <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+                      <span 
+                        className="text-[8.5px] font-bold tracking-[0.16em] uppercase px-2.5 py-0.5 rounded-full"
+                        style={{
+                          backgroundColor: '#FFFFFF',
+                          color: colors.primaryDark,
+                          fontFamily: "'Montserrat', sans-serif"
+                        }}
+                      >
+                        {item.time}
+                      </span>
+                      {item.date && (
+                        <span 
+                          className="text-[8.5px] font-bold tracking-[0.16em] uppercase opacity-75"
+                          style={{
+                            color: colors.primary,
+                            fontFamily: "'Montserrat', sans-serif"
+                          }}
+                        >
+                          {item.date}
+                        </span>
+                      )}
+                    </div>
 
+                    {/* Title */}
+                    <h3 
+                      className="text-xs md:text-sm font-semibold"
+                      style={{
+                        fontFamily: "'Montserrat', sans-serif",
+                        color: colors.primaryDark,
+                        letterSpacing: '0.02em',
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {item.name}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+
+              {/* Node Dot marker */}
+              <div 
+                className="absolute left-[24px] md:left-1/2 top-6 md:top-auto -translate-x-1/2 w-6 h-6 rounded-full border-2 flex items-center justify-center z-20 shadow-sm"
+                style={{
+                  backgroundColor: colors.bg,
+                  borderColor: colors.primary,
+                }}
+              >
+                <div 
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: colors.gold }}
+                />
+              </div>
+
+              {/* Empty space for grid alignment on desktop */}
+              <div className="hidden md:block w-[45%]" />
+            </motion.div>
+          )
+        })}
+      </div>
     </section>
   )
 }
