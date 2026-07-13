@@ -419,7 +419,7 @@ export default function TemplateTwilightSerenade({ savedData }) {
     savedData.isPaid === true ||
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
-  const showWatermark = false
+  const showWatermark = !isPaid
 
   // Determine active data source
   const activeData = savedData || (isPreview ? draftData : null)
@@ -536,14 +536,14 @@ export default function TemplateTwilightSerenade({ savedData }) {
         <div className="relative w-full max-w-[430px] min-h-[100svh] bg-[#FBF7F0] text-[#3D5236] shadow-[0_0_80px_rgba(0,0,0,0.5)]">
           {/* Watermark */}
           {showWatermark && (
-            <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.25] select-none text-[#3D5236]">
-              <span className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Cinzel', serif" }}>
+            <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.35] select-none text-[#3D5236]">
+              <span className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 preview-inviteque
               </span>
-              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Cinzel', serif" }}>
+              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 preview-inviteque
               </span>
-              <span className="absolute bottom-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Cinzel', serif" }}>
+              <span className="absolute bottom-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 preview-inviteque
               </span>
             </div>
@@ -582,12 +582,12 @@ export default function TemplateTwilightSerenade({ savedData }) {
       {/* DESKTOP VIEW */}
       <div className="hidden md:block w-full min-h-screen bg-[#FBF7F0] relative">
         {showWatermark && (
-          <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.18] select-none flex flex-col justify-around items-center text-[#3D5236]">
-            <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Cinzel', serif" }}>
-              PREVIEW — INVITEQUE
+          <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.22] select-none flex flex-col justify-around items-center text-[#3D5236]">
+            <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
             </span>
-            <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Cinzel', serif" }}>
-              PREVIEW — INVITEQUE
+            <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
             </span>
           </div>
         )}
