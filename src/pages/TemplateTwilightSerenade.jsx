@@ -188,7 +188,7 @@ function TwilightSerenadeHero({ data, isDesktop }) {
         {/* Small Intro Tag */}
         <motion.p 
           variants={fadeInSlow} 
-          className="text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#3D5236] font-bold mb-2 sm:mb-2.5"
+          className="text-[9px] sm:text-xs tracking-[0.3em] uppercase text-[#3D5236] font-bold mb-2 sm:mb-2.5"
           style={{ fontFamily: "'Cinzel', serif" }}
         >
           Save the Date
@@ -536,12 +536,15 @@ export default function TemplateTwilightSerenade({ savedData }) {
         <div className="relative w-full max-w-[430px] min-h-[100svh] bg-[#FBF7F0] text-[#3D5236] shadow-[0_0_80px_rgba(0,0,0,0.5)]">
           {/* Watermark */}
           {showWatermark && (
-            <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.28] select-none text-[#3D5236]/30">
+            <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.25] select-none text-[#3D5236]">
               <span className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Cinzel', serif" }}>
-                PREVIEW
+                preview-inviteque
               </span>
               <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Cinzel', serif" }}>
-                PREVIEW
+                preview-inviteque
+              </span>
+              <span className="absolute bottom-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Cinzel', serif" }}>
+                preview-inviteque
               </span>
             </div>
           )}
@@ -581,7 +584,10 @@ export default function TemplateTwilightSerenade({ savedData }) {
         {showWatermark && (
           <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.18] select-none flex flex-col justify-around items-center text-[#3D5236]">
             <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Cinzel', serif" }}>
-              PREVIEW — TWILIGHT SERENADE
+              PREVIEW — INVITEQUE
+            </span>
+            <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Cinzel', serif" }}>
+              PREVIEW — INVITEQUE
             </span>
           </div>
         )}
