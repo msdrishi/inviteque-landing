@@ -16,17 +16,17 @@ export default function StoryTwilightSerenade({ data, isDesktop, bgImage }) {
     offset: ["start end", "start start"]
   })
 
-  // Apply spring for super smooth, slower transitions
+  // Apply a balanced, responsive spring configuration
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 28,
-    damping: 22,
-    mass: 1.0
+    stiffness: 100,
+    damping: 25,
+    mass: 0.25
   })
 
   const smoothEntryProgress = useSpring(entryProgress, {
-    stiffness: 28,
-    damping: 22,
-    mass: 1.0
+    stiffness: 100,
+    damping: 25,
+    mass: 0.25
   })
 
   if (!data || !Array.isArray(data.items)) return null
@@ -37,14 +37,14 @@ export default function StoryTwilightSerenade({ data, isDesktop, bgImage }) {
   const card0Op = useTransform(smoothEntryProgress, [0.2, 0.85], [0, 1])
   const card0Scale = useTransform(smoothProgress, [0.35, 0.65], [1, 0.93])
 
-  // Card 1: Slides up as scroll begins (completing by 0.38)
-  const card1Y = useTransform(smoothProgress, [0.08, 0.38], ['100vh', '0vh'])
-  const card1Op = useTransform(smoothProgress, [0.08, 0.23], [0, 1])
-  const card1Scale = useTransform(smoothProgress, [0.48, 0.78], [1, 0.95])
+  // Card 1: Slides up as scroll begins (completing by 0.35)
+  const card1Y = useTransform(smoothProgress, [0.05, 0.35], ['100vh', '0vh'])
+  const card1Op = useTransform(smoothProgress, [0.05, 0.20], [0, 1])
+  const card1Scale = useTransform(smoothProgress, [0.40, 0.70], [1, 0.95])
 
-  // Card 2: Slides up soon after Card 1 completes (completing by 0.75)
-  const card2Y = useTransform(smoothProgress, [0.45, 0.75], ['100vh', '0vh'])
-  const card2Op = useTransform(smoothProgress, [0.45, 0.60], [0, 1])
+  // Card 2: Slides up soon after Card 1 completes (completing by 0.68)
+  const card2Y = useTransform(smoothProgress, [0.38, 0.68], ['100vh', '0vh'])
+  const card2Op = useTransform(smoothProgress, [0.38, 0.53], [0, 1])
 
   // Tilt/rotate angles for the zig-zag effect
   const cardRotations = [-5, 4, -3]
@@ -82,7 +82,7 @@ export default function StoryTwilightSerenade({ data, isDesktop, bgImage }) {
     <div 
       ref={containerRef} 
       className="relative w-full"
-      style={{ height: '360vh' }} // Slowed scroll locked scrollbar spacing to 360vh
+      style={{ height: '270vh' }} // Balanced container height at 270vh
     >
       {/* Sticky viewport container */}
       <div 

@@ -23,6 +23,14 @@ export default function Payment() {
   // Get template details
   const template = templates.find(t => t.id === templateId)
 
+  const isTwilight = templateId === 'template-2' || templateId === 'twilight-serenade'
+  const coverImage = isTwilight 
+    ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
+    : themeImg
+  const headerGradient = isTwilight
+    ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
+    : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
+
   const TEMPLATE_PRICE = 999 // Price in INR
 
   if (authLoading) {
@@ -192,6 +200,39 @@ export default function Payment() {
             amount: draftData.amountPaid || finalPrice,
             code: savedInvite.code,
             isUpdate: true
+          }
+        })
+        return
+      }
+
+      // If final price is 0 (100% discount coupon applied), bypass Razorpay flow entirely
+      if (finalPrice <= 0) {
+        const verifyRes = await fetch(`${API_URL}/api/payments/verify`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user?.token}`
+          },
+          body: JSON.stringify({
+            inviteCode: savedInvite.code,
+            amountPaid: 0,
+            inviteRequest: { ...inviteRequest, status: 'PAID' }
+          })
+        })
+
+        if (!verifyRes.ok) {
+          throw new Error('Failed to mark purchase as successful.')
+        }
+
+        navigate('/payment-confirmation', {
+          state: {
+            orderId: savedInvite.id,
+            inviteUrl,
+            draftData,
+            template,
+            amount: 0,
+            code: savedInvite.code,
+            isUpdate: isAlreadyPaid
           }
         })
         return
@@ -385,9 +426,9 @@ export default function Payment() {
               className="rounded-[2.5rem] border border-iqBorder bg-white overflow-hidden shadow-luxury"
             >
               {/* Template Image / Header */}
-              <div className="h-40 md:h-52 overflow-hidden bg-gradient-to-br from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14] relative">
+              <div className={`h-40 md:h-52 overflow-hidden bg-gradient-to-br ${headerGradient} relative`}>
                 <img
-                  src={themeImg}
+                  src={coverImage}
                   alt={template.name}
                   className="w-full h-full object-cover opacity-50"
                 />

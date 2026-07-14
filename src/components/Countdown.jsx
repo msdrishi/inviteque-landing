@@ -138,7 +138,7 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText 
           <div
             className={`absolute inset-x-0 flex justify-center px-4 md:px-10 ${
               centerText 
-                ? 'top-1/2 -translate-y-1/2' 
+                ? 'top-1/2 -translate-y-1/2 md:top-[40%]' 
                 : (isDesktop ? 'top-[34%]' : 'top-[30%]')
             }`}
           >

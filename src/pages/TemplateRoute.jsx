@@ -14,10 +14,50 @@ const TEMPLATE_MAP = {
   'template-1': TemplateRoyalWedding, // Fallback for old links
 }
 
-const ASSETS_TO_PRELOAD = [
-  "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1780830584/bevo6p9kp87xs9glyczu.png",
-  "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029563/kozuh0rafoxa9zwysfjq.png"
-]
+const TEMPLATE_ASSETS = {
+  'twilight-serenade': [
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964627/smartphone.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964624/photo-section-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964626/photo-section-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964619/message-section-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964623/message-section-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964612/location-section-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964614/location-section-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964566/countdown-section-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964573/countdown-section-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964628/twilight-photo-1.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964629/twilight-photo-2.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964631/twilight-photo-3.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964586/divider-flowers-mobile.png"
+  ],
+  'aura-of-elegance': [
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1780830584/bevo6p9kp87xs9glyczu.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782033902/nelfh17u4fep6v8ksoei.webp",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029563/kozuh0rafoxa9zwysfjq.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png"
+  ]
+}
+
+const extractImageUrls = (data) => {
+  const urls = [];
+  if (!data) return urls;
+
+  if (data.coupleData?.groomPhoto) urls.push(data.coupleData.groomPhoto);
+  if (data.coupleData?.bridePhoto) urls.push(data.coupleData.bridePhoto);
+  if (data.coupleData?.couplePhoto) urls.push(data.coupleData.couplePhoto);
+
+  if (data.storyData?.photos && Array.isArray(data.storyData.photos)) {
+    data.storyData.photos.forEach(p => { if (p) urls.push(p); });
+  }
+
+  if (data.galleryData?.photos && Array.isArray(data.galleryData.photos)) {
+    data.galleryData.photos.forEach(p => { if (p) urls.push(p); });
+  }
+
+  return urls.filter(Boolean);
+};
 
 const preloadImages = (urls) => {
   return Promise.all(
@@ -26,7 +66,7 @@ const preloadImages = (urls) => {
         const img = new Image()
         img.src = url
         img.onload = resolve
-        img.onerror = resolve // Resolve anyway to avoid blocking the app on load failure
+        img.onerror = resolve
       })
     })
   )
@@ -40,43 +80,49 @@ export default function TemplateRoute() {
   const [showSplash, setShowSplash] = useState(true)
 
   useEffect(() => {
-    // 1. Fetch data if code is present
-    const dataPromise = code
-      ? fetch(`${API_URL}/api/invites/${code}`)
-          .then(res => {
-            if (!res.ok) {
-              navigate('/', { replace: true })
-              return null
-            }
-            return res.json()
-          })
-          .then(data => {
-            if (data) {
-              setInviteData(data)
-              return data
-            }
-            return null
-          })
-          .catch(err => {
-            console.error("Failed to fetch invite:", err)
-            navigate('/', { replace: true })
-            return null
-          })
-      : Promise.resolve(null)
+    let active = true;
 
-    // 2. Preload core template assets
-    const assetsPromise = preloadImages(ASSETS_TO_PRELOAD)
+    async function loadAll() {
+      try {
+        let fetchedData = null;
+        if (code) {
+          const res = await fetch(`${API_URL}/api/invites/${code}`);
+          if (res.ok) {
+            fetchedData = await res.json();
+            if (active) setInviteData(fetchedData);
+          } else {
+            if (active) navigate('/', { replace: true });
+            return;
+          }
+        }
 
-    // 3. Minimum timeout to allow the splash to be readable and display logo
-    const delayPromise = new Promise(resolve => setTimeout(resolve, 1500))
+        const staticAssets = TEMPLATE_ASSETS[templateId] || [];
+        const dynamicAssets = extractImageUrls(fetchedData);
+        const allAssets = [...staticAssets, ...dynamicAssets];
 
-    // Wait for all to resolve
-    Promise.all([dataPromise, assetsPromise, delayPromise]).then(() => {
-      setLoading(false)
-    })
-  }, [code, navigate])
+        const assetsPromise = preloadImages(allAssets);
+        const delayPromise = new Promise(resolve => setTimeout(resolve, 1500));
 
-  // Completely unmount splash overlay 500ms after loading finishes (duration of fade out)
+        await Promise.all([assetsPromise, delayPromise]);
+        
+        if (active) {
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error("Failed to load template assets:", err);
+        if (active) {
+          navigate('/', { replace: true });
+        }
+      }
+    }
+
+    loadAll();
+
+    return () => {
+      active = false;
+    };
+  }, [code, templateId, navigate])
+
   useEffect(() => {
     if (!loading) {
       const timer = setTimeout(() => {

@@ -572,7 +572,7 @@ export default function Landing() {
         <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2 whitespace-nowrap">
             <img src={logo} alt="Inviteque" className="h-8 w-auto" />
-            <span className="font-parisienne text-3xl font-normal text-iqText hidden sm:inline leading-none select-none relative -top-[2px]">Inviteque</span>
+            <span className="font-parisienne text-3xl font-normal text-iqText hidden sm:inline leading-none select-none relative top-[3.10px]">Inviteque</span>
           </Link>
 
           <div className="hidden items-center gap-8 lg:flex">

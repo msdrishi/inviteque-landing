@@ -359,8 +359,33 @@ export default function Builder() {
     return Object.keys(newErrors).length === 0
   }
 
+  const validateStep2 = () => {
+    const newErrors = {}
+    if (formData.showSchedule && Array.isArray(formData.scheduleItems)) {
+      formData.scheduleItems.forEach((item, index) => {
+        if (!item.title?.trim()) {
+          newErrors[`scheduleItem_${index}_title`] = 'Event name is required'
+        }
+        const timeVal = item.time || ''
+        const hasDigits = /\d+/.test(timeVal)
+        if (!timeVal.trim() || !hasDigits) {
+          newErrors[`scheduleItem_${index}_time`] = 'Event time is required'
+        }
+      })
+    }
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
   const handleNextStep = () => {
     if (step === 1 && !validateStep1()) {
+      return
+    }
+    nextStep()
+  }
+
+  const handleNextStep2 = () => {
+    if (!validateStep2()) {
       return
     }
     nextStep()
@@ -899,6 +924,9 @@ export default function Builder() {
                                         onChange={(e) => handleScheduleChange(idx, 'title', e.target.value)}
                                         className="w-full rounded-xl border border-iqBorder bg-transparent px-3 py-2 text-sm outline-none focus:border-iqText transition-colors"
                                       />
+                                      {errors[`scheduleItem_${idx}_title`] && (
+                                        <p className="text-xs text-red-500 mt-0.5">{errors[`scheduleItem_${idx}_title`]}</p>
+                                      )}
                                     </div>
 
                                     <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
@@ -970,6 +998,9 @@ export default function Builder() {
                                             <option value="PM">PM</option>
                                           </select>
                                         </div>
+                                        {errors[`scheduleItem_${idx}_time`] && (
+                                          <p className="text-xs text-red-500 mt-0.5">{errors[`scheduleItem_${idx}_time`]}</p>
+                                        )}
                                       </div>
 
                                       {/* Date / Day */}
@@ -1011,7 +1042,7 @@ export default function Builder() {
                   </button>
                   <button
                     type="button"
-                    onClick={nextStep}
+                    onClick={handleNextStep2}
                     className="flex-[2] rounded-full bg-black py-3 md:py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90"
                   >
                     Review My Invitation

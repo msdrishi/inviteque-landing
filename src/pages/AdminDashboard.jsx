@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { API_URL } from '../config'
 import { motion, AnimatePresence } from 'framer-motion'
+import { templates } from '../templates/templates'
 
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
 
@@ -322,14 +323,13 @@ export default function AdminDashboard() {
     if (!summary) return []
     const reach = summary.templateReach || {}
 
-    const templateNames = {
-      'royal-wedding': 'Royal Wedding',
-      'aura-of-elegance': 'Aura of Elegance',
-      'timeless-grace': 'Timeless Grace',
-      'minimal-love': 'Minimal Love',
-      'floral-romance': 'Floral Romance',
-      'modern-chic': 'Modern Chic'
-    }
+    const templateNames = {}
+    templates.forEach(t => {
+      templateNames[t.id] = t.name
+    })
+    // Add legacy fallbacks for database backward-compatibility
+    templateNames['template-2'] = 'Twilight Serenade (Legacy)'
+    templateNames['template-1'] = 'Royal Wedding (Legacy)'
 
     const data = Object.keys(templateNames).map(key => {
       const views = reach[key] || 0
@@ -1287,9 +1287,9 @@ export default function AdminDashboard() {
                     className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs outline-none font-bold"
                   >
                     <option value="ALL">All Templates</option>
-                    <option value="aura-of-elegance">Aura of Elegance</option>
-                    <option value="royal-wedding">Royal Wedding</option>
-                    <option value="timeless-grace">Timeless Grace</option>
+                    {templates.map(t => (
+                      <option key={t.id} value={t.id}>{t.name}</option>
+                    ))}
                   </select>
                 </div>
                 

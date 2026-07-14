@@ -106,6 +106,14 @@ export default function InviteDetails() {
 
   const inviteUrl = `${window.location.origin}/templates/${invite.templateId}/${invite.code}`
 
+  const isTwilight = invite?.templateId === 'template-2' || invite?.templateId === 'twilight-serenade'
+  const coverImage = isTwilight 
+    ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
+    : themeImg
+  const headerGradient = isTwilight
+    ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
+    : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
+
   return (
     <div className="min-h-screen flex flex-col bg-iqBg font-saas">
       {/* Header */}
@@ -113,11 +121,11 @@ export default function InviteDetails() {
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-8 w-auto" />
-            <span className="text-sm font-bold text-iqText">Invitation Details</span>
+            <span className="text-sm font-bold text-black">Invitation Details</span>
           </div>
           <button
             onClick={() => navigate('/account')}
-            className="text-sm font-semibold text-iqText/60 hover:text-iqText transition-colors"
+            className="text-sm font-semibold text-black/60 hover:text-black transition-colors"
           >
             ← Back to Account
           </button>
@@ -134,10 +142,10 @@ export default function InviteDetails() {
         >
           {/* Summary Section */}
           <div className="text-center space-y-2">
-            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-iqText">
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-black">
               {invite.coupleData?.groomName} & {invite.coupleData?.brideName}
             </h1>
-            <p className="text-iqText/50 font-medium">
+            <p className="text-black/60 font-medium">
               Created on {new Date(invite.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
           </div>
@@ -148,9 +156,9 @@ export default function InviteDetails() {
             className="rounded-[2.5rem] border border-iqBorder bg-white overflow-hidden shadow-luxury"
           >
             {/* Visual Header */}
-            <div className="h-48 md:h-64 overflow-hidden bg-gradient-to-br from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14] relative">
+            <div className={`h-48 md:h-64 overflow-hidden bg-gradient-to-br ${headerGradient} relative`}>
               <img 
-                src={themeImg}
+                src={coverImage}
                 alt={invite.templateId}
                 className="w-full h-full object-cover opacity-60"
               />
@@ -170,12 +178,12 @@ export default function InviteDetails() {
             <div className="p-8 md:p-10 space-y-8">
               {/* Live Link Section */}
               <div className="space-y-4">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-iqText/40 block">Live Invitation Link</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-black/60 block">Live Invitation Link</label>
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 p-2 sm:p-1.5 rounded-3xl border border-iqBorder bg-iqBg/30">
                   <input
                     readOnly
                     value={inviteUrl}
-                    className="flex-1 bg-transparent px-4 py-3 sm:py-2 text-[11px] sm:text-sm font-mono text-iqText/70 outline-none truncate"
+                    className="flex-1 bg-transparent px-4 py-3 sm:py-2 text-[11px] sm:text-sm font-mono text-black outline-none truncate"
                   />
                   <button
                     onClick={handleCopyUrl}
@@ -189,25 +197,25 @@ export default function InviteDetails() {
               </div>
 
               {/* Event Details Grid */}
-              <div className="grid grid-cols-2 gap-8 py-8 border-y border-iqBorder">
+              <div className="grid grid-cols-2 gap-8 py-8 border-y border-iqBorder text-black">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-iqText/40">Date</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">Date</span>
                   <p className="font-bold">{invite.heroData?.weddingDate} {invite.heroData?.weddingMonth} {invite.heroData?.weddingYear}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-iqText/40">Time</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">Time</span>
                   <p className="font-bold">{invite.heroData?.weddingTime || '09:00 AM - 10:30 AM'}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-iqText/40">Venue</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">Venue</span>
                   <p className="font-bold truncate">{invite.venueData?.mahalName || invite.venueData?.venueCity}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-iqText/40">Gallery</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">Gallery</span>
                   <p className="font-bold">{invite.scheduleData?.showGallery ? 'Enabled' : 'Disabled'}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-iqText/40">Schedule</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">Schedule</span>
                   <p className="font-bold">{invite.scheduleData?.showSchedule ? `${invite.scheduleData.items?.length || 0} Events` : 'Disabled'}</p>
                 </div>
               </div>
@@ -216,7 +224,7 @@ export default function InviteDetails() {
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <button
                   onClick={() => navigate(`/builder/${invite.templateId}?code=${invite.code}`)}
-                  className="flex-1 rounded-full border border-iqBorder py-4 text-sm font-bold text-iqText transition hover:bg-iqText hover:text-white shadow-sm hover:shadow-lg"
+                  className="flex-1 rounded-full border border-iqBorder py-4 text-sm font-bold text-black transition hover:bg-black hover:text-white shadow-sm hover:shadow-lg"
                 >
                   Edit Details
                 </button>
@@ -227,12 +235,12 @@ export default function InviteDetails() {
                   <span>Share on WhatsApp</span>
                 </button>
               </div>
-
+ 
               <div className="flex justify-center">
                 <Link 
                   to={`/templates/${invite.templateId}/${invite.code}`}
                   target="_blank"
-                  className="text-xs font-bold text-iqText/40 hover:text-iqText hover:underline transition-all"
+                  className="text-xs font-bold text-black/60 hover:text-black hover:underline transition-all"
                 >
                   View Live Invitation
                 </Link>

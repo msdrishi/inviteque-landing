@@ -24,7 +24,7 @@ export const templates = [
     popular: true,
   },
   {
-    id: 'template-2',
+    id: 'twilight-serenade',
     name: 'Twilight Serenade',
     description: 'Capture the magic of a starlit evening with this warm, glowing invitation theme.',
     priceLabel: '₹999',
