@@ -216,7 +216,8 @@ export default function Payment() {
           body: JSON.stringify({
             inviteCode: savedInvite.code,
             amountPaid: 0,
-            inviteRequest: { ...inviteRequest, status: 'PAID' }
+            couponCode: appliedCoupon ? appliedCoupon.code : null,
+            inviteRequest: { ...inviteRequest, status: 'PAID', couponCode: appliedCoupon ? appliedCoupon.code : null }
           })
         })
 
@@ -335,7 +336,8 @@ export default function Payment() {
                 razorpayPaymentId: response.razorpay_payment_id,
                 razorpaySignature: response.razorpay_signature,
                 amountPaid: finalPrice,
-                inviteRequest: { ...inviteRequest, status: 'PAID' }
+                couponCode: appliedCoupon ? appliedCoupon.code : null,
+                inviteRequest: { ...inviteRequest, status: 'PAID', couponCode: appliedCoupon ? appliedCoupon.code : null }
               })
             })
 

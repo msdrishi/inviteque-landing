@@ -29,6 +29,7 @@ export default function AdminDashboard() {
   const [coupons, setCoupons] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [selectedPurchase, setSelectedPurchase] = useState(null)
 
   // Search, pagination & sorting states
   const [txSearch, setTxSearch] = useState('')
@@ -323,36 +324,113 @@ export default function AdminDashboard() {
     if (!summary) return []
     const reach = summary.templateReach || {}
 
-    const templateNames = {}
+    // Legacy template mapping
+    const LEGACY_MAPPING = {
+      'template-1': 'royal-wedding',
+      'template-2': 'twilight-serenade'
+    }
+
+    // Build unique template definition map
+    const templateDefs = {}
     templates.forEach(t => {
-      templateNames[t.id] = t.name
+      templateDefs[t.id] = { id: t.id, name: t.name }
     })
-    // Add legacy fallbacks for database backward-compatibility
-    templateNames['template-2'] = 'Twilight Serenade (Legacy)'
-    templateNames['template-1'] = 'Royal Wedding (Legacy)'
 
-    const data = Object.keys(templateNames).map(key => {
-      const views = reach[key] || 0
-      
-      // Calculate actual paid purchases and revenue from the purchases state
-      const templatePurchases = purchases.filter(p => p.templateId === key)
-      const purchasesCount = templatePurchases.length
-      const revenue = templatePurchases.reduce((sum, p) => sum + (p.amountPaid || 0), 0)
-      
-      const rate = views > 0 ? ((purchasesCount / views) * 100).toFixed(1) : '0.0'
+    // Ensure 'royal-wedding' exists as a core template name
+    if (!templateDefs['royal-wedding']) {
+      templateDefs['royal-wedding'] = { id: 'royal-wedding', name: 'Royal Wedding' }
+    }
 
-      return {
-        id: key,
-        name: templateNames[key],
-        views,
-        purchases: purchasesCount,
-        rate: parseFloat(rate),
-        revenue
+    // Aggregate counts by resolved template ID
+    const aggregated = {}
+    
+    // Initialize aggregation for all unique definitions
+    Object.keys(templateDefs).forEach(id => {
+      aggregated[id] = {
+        id,
+        name: templateDefs[id].name,
+        views: 0,
+        previewViews: 0,
+        purchaseViews: 0,
+        purchases: 0,
+        revenue: 0
       }
     })
 
+    // 1. Process reach (views)
+    Object.keys(reach).forEach(key => {
+      const resolvedId = LEGACY_MAPPING[key] || key
+      if (!aggregated[resolvedId]) {
+        aggregated[resolvedId] = {
+          id: resolvedId,
+          name: resolvedId.replace(/-/g, ' '),
+          views: 0,
+          previewViews: 0,
+          purchaseViews: 0,
+          purchases: 0,
+          revenue: 0
+        }
+      }
+      aggregated[resolvedId].views += reach[key] || 0
+    })
+
+    // 2. Process purchases and revenue from transactions
+    purchases.forEach(p => {
+      const resolvedId = LEGACY_MAPPING[p.templateId] || p.templateId || 'unknown'
+      if (!aggregated[resolvedId]) {
+        aggregated[resolvedId] = {
+          id: resolvedId,
+          name: resolvedId.replace(/-/g, ' '),
+          views: 0,
+          previewViews: 0,
+          purchaseViews: 0,
+          purchases: 0,
+          revenue: 0
+        }
+      }
+      aggregated[resolvedId].purchases += 1
+      aggregated[resolvedId].revenue += p.amountPaid || 0
+    })
+
+    // 3. Process fine-grained preview vs purchase views from visitors log
+    visitors.forEach(v => {
+      const resolvedId = LEGACY_MAPPING[v.templateId] || v.templateId
+      if (resolvedId && aggregated[resolvedId]) {
+        if (v.inviteCode || (v.path && v.path.split('/')[3])) {
+          aggregated[resolvedId].purchaseViews += 1
+        } else {
+          aggregated[resolvedId].previewViews += 1
+        }
+      }
+    })
+
+    // Sync views consistency
+    const data = Object.values(aggregated).map(t => {
+      let previews = t.previewViews
+      let purchasesCount = t.purchaseViews
+      if (previews === 0 && purchasesCount === 0 && t.views > 0) {
+        previews = t.views
+      } else if (previews + purchasesCount > 0 && t.views > 0) {
+        const total = previews + purchasesCount
+        previews = Math.round((previews / total) * t.views)
+        purchasesCount = t.views - previews
+      }
+      
+      const rate = previews > 0 ? ((t.purchases / previews) * 100).toFixed(1) : '0.0'
+      
+      return {
+        ...t,
+        previewViews: previews,
+        purchaseViews: purchasesCount,
+        rate: parseFloat(rate)
+      }
+    })
+
+    // Filter out items that have 0 views and 0 sales to keep list clean
+    const filteredData = data.filter(t => t.views > 0 || t.purchases > 0 || t.id === 'aura-of-elegance' || t.id === 'twilight-serenade')
+
     // Sort templates
-    return data.sort((a, b) => {
+    return filteredData.sort((a, b) => {
       let fieldA = a[templateSortBy]
       let fieldB = b[templateSortBy]
       if (templateSortAsc) {
@@ -361,7 +439,7 @@ export default function AdminDashboard() {
         return fieldA < fieldB ? 1 : -1
       }
     })
-  }, [summary, purchases, templateSortBy, templateSortAsc])
+  }, [summary, purchases, visitors, templateSortBy, templateSortAsc])
 
   // Coupon efficiency ROI calculations
   const couponRoiData = useMemo(() => {
@@ -1148,13 +1226,17 @@ export default function AdminDashboard() {
                   </div>
                   <div className="divide-y divide-slate-100 overflow-hidden">
                     {purchases.slice(0, 4).map((p, idx) => (
-                      <div key={idx} className="flex items-center justify-between py-3">
+                      <div 
+                        key={idx} 
+                        onClick={() => setSelectedPurchase(p)}
+                        className="flex items-center justify-between py-3 cursor-pointer hover:bg-slate-50 px-2 rounded-xl transition-all duration-200"
+                      >
                         <div>
                           <p className="text-xs font-bold text-slate-800">{p.userName || 'Customer'}</p>
                           <p className="text-[10px] text-slate-400">{p.code || p.inviteId}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-xs font-bold text-slate-800">₹{(p.amountPaid || 0).toLocaleString()}</p>
+                          <p className="text-xs font-bold text-slate-800 font-mono">₹{(p.amountPaid || 0).toLocaleString()}</p>
                           <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[9px] font-bold text-emerald-600">Paid</span>
                         </div>
                       </div>
@@ -1320,12 +1402,16 @@ export default function AdminDashboard() {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {paginatedPurchases.map((p, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="px-6 py-4 font-bold text-slate-900 truncate max-w-[120px]">{p.code || p.inviteId}</td>
+                      <tr 
+                        key={idx} 
+                        onClick={() => setSelectedPurchase(p)}
+                        className="hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        <td className="px-6 py-4 font-bold text-slate-900 truncate max-w-[120px] font-mono">{p.code || p.inviteId}</td>
                         <td className="px-6 py-4 font-semibold text-slate-800">{p.userName || 'Customer'}</td>
                         <td className="px-6 py-4">{p.userEmail || 'N/A'}</td>
                         <td className="px-6 py-4 font-medium text-slate-600 capitalize">{p.templateId ? p.templateId.replace(/-/g, ' ') : 'N/A'}</td>
-                        <td className="px-6 py-4 font-bold text-slate-900">₹{(p.amountPaid || 0).toLocaleString()}</td>
+                        <td className="px-6 py-4 font-bold text-slate-900 font-mono">₹{(p.amountPaid || 0).toLocaleString()}</td>
                         <td className="px-6 py-4"><span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-mono text-slate-500">{p.couponCode || 'None'}</span></td>
                         <td className="px-6 py-4">
                           <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600">Paid</span>
@@ -1346,7 +1432,11 @@ export default function AdminDashboard() {
               {/* Mobile/Tablet Card View */}
               <div className="grid grid-cols-1 gap-4 md:hidden">
                 {paginatedPurchases.map((p, idx) => (
-                  <div key={idx} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3">
+                  <div 
+                    key={idx} 
+                    onClick={() => setSelectedPurchase(p)}
+                    className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3 cursor-pointer hover:bg-slate-50 transition-all duration-200"
+                  >
                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                       <div>
                         <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Order ID</span>
@@ -1374,7 +1464,7 @@ export default function AdminDashboard() {
                       </div>
                       <div>
                         <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Amount</span>
-                        <span className="font-bold text-slate-900">₹{(p.amountPaid || 0).toLocaleString()}</span>
+                        <span className="font-bold text-slate-900 font-mono">₹{(p.amountPaid || 0).toLocaleString()}</span>
                       </div>
                       <div>
                         <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Coupon</span>
@@ -1459,6 +1549,8 @@ export default function AdminDashboard() {
                     <thead className="border-b border-slate-100 bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                       <tr>
                         <th className="px-6 py-4">Template ID / Name</th>
+                        <th className="px-6 py-4">Preview Views</th>
+                        <th className="px-6 py-4">Purchased Invite Views</th>
                         <th className="px-6 py-4">Total Views</th>
                         <th className="px-6 py-4">Purchases Count</th>
                         <th className="px-6 py-4">Conversion Rate</th>
@@ -1469,7 +1561,9 @@ export default function AdminDashboard() {
                       {templateAnalytics.map((t, idx) => (
                         <tr key={idx} className="hover:bg-slate-50/50">
                           <td className="px-6 py-4 font-bold text-slate-900 capitalize">{t.name.replace(/-/g, ' ')}</td>
-                          <td className="px-6 py-4 font-semibold text-slate-800">{t.views} views</td>
+                          <td className="px-6 py-4 font-semibold text-slate-500">{t.previewViews} views</td>
+                          <td className="px-6 py-4 font-semibold text-slate-500">{t.purchaseViews} views</td>
+                          <td className="px-6 py-4 font-bold text-slate-800">{t.views} total</td>
                           <td className="px-6 py-4 font-semibold text-slate-800">{t.purchases} sales</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
@@ -1495,10 +1589,18 @@ export default function AdminDashboard() {
                     <div key={idx} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
                       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                         <span className="text-sm font-extrabold text-slate-900 capitalize">{t.name.replace(/-/g, ' ')}</span>
-                        <span className="text-xs font-bold text-slate-500">{t.views} views</span>
+                        <span className="text-xs font-bold text-slate-500">{t.views} total views</span>
                       </div>
                       
                       <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Preview Views</span>
+                          <span className="font-semibold text-slate-600">{t.previewViews} views</span>
+                        </div>
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Purchased Views</span>
+                          <span className="font-semibold text-slate-600">{t.purchaseViews} views</span>
+                        </div>
                         <div>
                           <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Purchases</span>
                           <span className="font-bold text-slate-800">{t.purchases} sales</span>
@@ -1511,7 +1613,7 @@ export default function AdminDashboard() {
 
                       <div className="space-y-1.5 pt-2 border-t border-slate-100">
                         <div className="flex justify-between text-xs font-bold text-slate-700">
-                          <span>Conversion Rate</span>
+                          <span>Conversion Rate (on Previews)</span>
                           <span>{t.rate}%</span>
                         </div>
                         <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
@@ -1844,9 +1946,150 @@ export default function AdminDashboard() {
               )}
             </div>
           )}
-
         </div>
       </main>
+
+      {/* Selected Purchase Detail Modal */}
+      <AnimatePresence>
+        {selectedPurchase && (
+          <div className="fixed inset-0 z-50 flex items-center justify-end bg-slate-900/40 backdrop-blur-sm">
+            {/* Backdrop Click */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedPurchase(null)}
+              className="absolute inset-0"
+            />
+
+            {/* Modal Drawer */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="relative z-10 flex h-full w-full max-w-md flex-col border-l border-slate-200 bg-white shadow-2xl"
+            >
+              {/* Header */}
+              <div className="flex h-16 items-center justify-between border-b border-slate-100 px-6">
+                <div>
+                  <h3 className="text-sm font-bold text-slate-950">Purchase Details</h3>
+                  <p className="text-[10px] text-slate-400 font-mono">{selectedPurchase.code || selectedPurchase.inviteId}</p>
+                </div>
+                <button 
+                  onClick={() => setSelectedPurchase(null)}
+                  className="rounded-full p-2 hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-700"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                {/* Couple Card */}
+                <div className="rounded-2xl bg-gradient-to-tr from-amber-50/50 to-rose-50/50 border border-rose-100/50 p-5 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-md">
+                      💍 Active Wedding
+                    </span>
+                    <span className="text-[10px] font-semibold text-slate-400 capitalize">
+                      {selectedPurchase.templateId ? selectedPurchase.templateId.replace(/-/g, ' ') : 'N/A'}
+                    </span>
+                  </div>
+
+                  <div className="text-center py-2">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">The Couple</p>
+                    <h4 className="text-xl font-extrabold text-slate-900 mt-1">
+                      {selectedPurchase.groomName && selectedPurchase.brideName 
+                        ? `${selectedPurchase.groomName} & ${selectedPurchase.brideName}`
+                        : selectedPurchase.coupleNames || selectedPurchase.userName || 'No Names Provided'}
+                    </h4>
+                  </div>
+                </div>
+
+                {/* Metrics */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Invite Views</span>
+                    <span className="text-xl font-extrabold text-slate-950 font-mono">
+                      {(() => {
+                        const code = selectedPurchase.code || selectedPurchase.inviteId
+                        const views = visitors.filter(v => v.inviteCode === code || (v.path && v.path.endsWith('/' + code))).length
+                        return views.toLocaleString()
+                      })()}
+                    </span>
+                    <span className="text-[9px] text-slate-400 block mt-0.5">guest page views</span>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Template Price</span>
+                    <span className="text-xl font-extrabold text-slate-950 font-mono">₹999</span>
+                    <span className="text-[9px] text-slate-400 block mt-0.5">standard tier</span>
+                  </div>
+                </div>
+
+                {/* Order Details */}
+                <div className="space-y-4">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Transaction & Billing</h4>
+                  
+                  <div className="rounded-2xl border border-slate-100 divide-y divide-slate-100 overflow-hidden text-xs">
+                    <div className="flex justify-between p-4 bg-slate-50/30">
+                      <span className="font-semibold text-slate-500">Customer Name</span>
+                      <span className="font-bold text-slate-900">{selectedPurchase.userName || 'Customer'}</span>
+                    </div>
+
+                    <div className="flex justify-between p-4 bg-slate-50/30">
+                      <span className="font-semibold text-slate-500">Email Address</span>
+                      <span className="font-semibold text-slate-800 break-all">{selectedPurchase.userEmail || 'N/A'}</span>
+                    </div>
+
+                    <div className="flex justify-between p-4 bg-slate-50/30">
+                      <span className="font-semibold text-slate-500">Transaction ID</span>
+                      <span className="font-mono font-bold text-slate-900 truncate max-w-[180px]">
+                        {selectedPurchase.razorpayPaymentId || 'N/A'}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between p-4 bg-slate-50/30">
+                      <span className="font-semibold text-slate-500">Coupon Used</span>
+                      <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-slate-600">
+                        {selectedPurchase.couponCode || 'NONE'}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between p-4 bg-slate-50/30">
+                      <span className="font-semibold text-slate-500">Amount Paid</span>
+                      <span className="font-bold text-emerald-600 font-mono">₹{(selectedPurchase.amountPaid || 0).toLocaleString()}</span>
+                    </div>
+
+                    <div className="flex justify-between p-4 bg-slate-50/30">
+                      <span className="font-semibold text-slate-500">Payment Date</span>
+                      <span className="font-semibold text-slate-700">
+                        {selectedPurchase.paidAt ? new Date(selectedPurchase.paidAt).toLocaleString(undefined, {
+                          dateStyle: 'medium',
+                          timeStyle: 'short'
+                        }) : 'N/A'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer Actions */}
+              <div className="border-t border-slate-100 p-6 flex gap-3">
+                <a
+                  href={`/templates/${selectedPurchase.templateId}/${selectedPurchase.code || selectedPurchase.inviteId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 rounded-xl bg-slate-900 py-3 text-center text-xs font-bold text-white shadow hover:opacity-90 transition active:scale-[0.98]"
+                >
+                  🔗 View Live Invitation
+                </a>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
