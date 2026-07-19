@@ -168,8 +168,8 @@ export default function TemplateRoute() {
             </div>
 
             {/* Premium Text under Logo */}
-            <div className="mt-6 text-center">
-              <h2 className="font-parisienne text-4xl font-normal text-iqText opacity-80">Inviteque</h2>
+            <div className="mt-2 text-center">
+              <h2 className="font-parisienne text-2xl font-normal text-iqText opacity-80">Inviteque</h2>
             </div>
           </div>
 
