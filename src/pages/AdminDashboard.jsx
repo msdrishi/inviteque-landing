@@ -427,7 +427,7 @@ export default function AdminDashboard() {
     })
 
     // Filter out items that have 0 views and 0 sales to keep list clean
-    const filteredData = data.filter(t => t.views > 0 || t.purchases > 0 || t.id === 'aura-of-elegance' || t.id === 'twilight-serenade')
+    const filteredData = data.filter(t => t.views > 0 || t.purchases > 0 || t.id === 'aura-of-elegance' || t.id === 'twilight-serenade' || t.id === 'template-3')
 
     // Sort templates
     return filteredData.sort((a, b) => {

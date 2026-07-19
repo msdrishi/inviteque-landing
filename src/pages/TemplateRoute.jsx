@@ -3,6 +3,14 @@ import { Navigate, useParams, useNavigate } from 'react-router-dom'
 import TemplateRoyalWedding from './TemplateRoyalWedding.jsx'
 import TemplateAuraOfElegance from './TemplateAuraOfElegance.jsx'
 import TemplateTwilightSerenade from './TemplateTwilightSerenade.jsx'
+import TemplateRoyalPalace from './TemplateRoyalPalace.jsx'
+
+// Import Template 3 Assets for Preloading
+import template3HeroBg from '../assets/themes/template3/hero_bg.png'
+import template3MessageBg from '../assets/themes/template3/message_bg.png'
+import template3VenueBg from '../assets/themes/template3/venue_bg.png'
+import template3DesktopBg from '../assets/themes/template3/desktop_bg.png'
+
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
 import { API_URL } from '../config'
 
@@ -12,6 +20,8 @@ const TEMPLATE_MAP = {
   'template-2': TemplateTwilightSerenade,
   'twilight-serenade': TemplateTwilightSerenade,
   'template-1': TemplateRoyalWedding, // Fallback for old links
+  'template-3': TemplateRoyalPalace,
+  'royal-palace': TemplateRoyalPalace,
 }
 
 const TEMPLATE_ASSETS = {
@@ -37,6 +47,18 @@ const TEMPLATE_ASSETS = {
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029563/kozuh0rafoxa9zwysfjq.png",
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png",
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png"
+  ],
+  'template-3': [
+    template3HeroBg,
+    template3MessageBg,
+    template3VenueBg,
+    template3DesktopBg
+  ],
+  'royal-palace': [
+    template3HeroBg,
+    template3MessageBg,
+    template3VenueBg,
+    template3DesktopBg
   ]
 }
 

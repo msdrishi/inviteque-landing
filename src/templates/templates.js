@@ -34,12 +34,13 @@ export const templates = [
   },
   {
     id: 'template-3',
-    name: 'Blossom Whisper',
-    description: 'Delicate and romantic, this theme brings a soft, poetic touch to your wedding announcement.',
+    name: 'Royal Palace',
+    description: 'A majestic, heritage-rich invitation featuring intricate traditional patterns, gold borders, and royal typography.',
     priceLabel: '₹999',
     thumbnail: t3,
     href: '/templates/template-3',
-    available: false,
+    available: true,
+    popular: true,
   },
   {
     id: 'template-4',
