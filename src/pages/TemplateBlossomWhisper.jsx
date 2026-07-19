@@ -13,7 +13,7 @@ import messageBg from '../assets/themes/template3/message_bg.png'
 import venueBg from '../assets/themes/template3/venue_bg.png'
 import desktopBg from '../assets/themes/template3/desktop_bg.png'
 
-export default function TemplateRoyalPalace({ savedData }) {
+export default function TemplateBlossomWhisper({ savedData }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData } = useDraft()
@@ -172,16 +172,16 @@ export default function TemplateRoyalPalace({ savedData }) {
         )}
 
         {/* ── SECTION 1: HERO ── */}
-        <RoyalPalaceHero data={data.hero} />
+        <BlossomWhisperHero data={data.hero} />
 
         {/* ── SECTION 2: PHOTO STORY (Diagonal slide out) ── */}
-        {showGallery && <RoyalPalaceStory data={data.story} />}
+        {showGallery && <BlossomWhisperStory data={data.story} />}
 
         {/* ── SECTION 3: HEART MESSAGE (Palace arch theme) ── */}
-        <RoyalPalaceMessage data={data.invitation} />
+        <BlossomWhisperMessage data={data.invitation} />
 
         {/* ── SECTION 4: LOCATION / VENUE (Animated Map compass/pin & QR code) ── */}
-        <RoyalPalaceVenue data={data.venue} />
+        <BlossomWhisperVenue data={data.venue} />
 
         {/* ── SECTION 5: TIMELINE SCHEDULE ── */}
         {showSchedule && (
@@ -191,7 +191,7 @@ export default function TemplateRoyalPalace({ savedData }) {
         )}
 
         {/* ── SECTION 6: COUNTDOWN ── */}
-        <RoyalPalaceCountdown data={data.countdown} />
+        <BlossomWhisperCountdown data={data.countdown} />
 
         {/* ── SECTION 7: FOOTER ── */}
         <Footer data={data.footer} theme="red" />
@@ -203,7 +203,7 @@ export default function TemplateRoyalPalace({ savedData }) {
 /* ──────────────────────────────────────────────────────────────────────────
    1. HERO COMPONENT
    ────────────────────────────────────────────────────────────────────────── */
-function RoyalPalaceHero({ data }) {
+function BlossomWhisperHero({ data }) {
   // Parsing date values
   const dateParts = useMemo(() => {
     const parts = String(data.dateLine || '').trim().split(/\s+/)
@@ -323,7 +323,7 @@ function RoyalPalaceHero({ data }) {
 /* ──────────────────────────────────────────────────────────────────────────
    2. PHOTO STORY COMPONENT (Diagonal Reveal)
    ────────────────────────────────────────────────────────────────────────── */
-function RoyalPalaceStory({ data }) {
+function BlossomWhisperStory({ data }) {
   const containerRef = useRef(null)
 
   const { scrollYProgress } = useScroll({
@@ -437,7 +437,7 @@ function RoyalPalaceStory({ data }) {
 /* ──────────────────────────────────────────────────────────────────────────
    3. MESSAGE COMPONENT
    ────────────────────────────────────────────────────────────────────────── */
-function RoyalPalaceMessage({ data }) {
+function BlossomWhisperMessage({ data }) {
   return (
     <section 
       className="relative min-h-[100svh] flex flex-col items-center justify-center py-20 px-8 bg-cover bg-center"
@@ -482,7 +482,7 @@ function RoyalPalaceMessage({ data }) {
 /* ──────────────────────────────────────────────────────────────────────────
    4. VENUE COMPONENT (Compass / QR Code Map Interaction)
    ────────────────────────────────────────────────────────────────────────── */
-function RoyalPalaceVenue({ data }) {
+function BlossomWhisperVenue({ data }) {
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&color=d4af37&bgcolor=2e0004&data=${encodeURIComponent(data.mapUrl || 'https://maps.google.com')}`
 
   return (
@@ -573,7 +573,7 @@ function RoyalPalaceVenue({ data }) {
 /* ──────────────────────────────────────────────────────────────────────────
    6. COUNTDOWN COMPONENT
    ────────────────────────────────────────────────────────────────────────── */
-function RoyalPalaceCountdown({ data }) {
+function BlossomWhisperCountdown({ data }) {
   const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' })
 
   useEffect(() => {

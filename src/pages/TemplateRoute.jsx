@@ -3,7 +3,7 @@ import { Navigate, useParams, useNavigate } from 'react-router-dom'
 import TemplateRoyalWedding from './TemplateRoyalWedding.jsx'
 import TemplateAuraOfElegance from './TemplateAuraOfElegance.jsx'
 import TemplateTwilightSerenade from './TemplateTwilightSerenade.jsx'
-import TemplateRoyalPalace from './TemplateRoyalPalace.jsx'
+import TemplateBlossomWhisper from './TemplateBlossomWhisper.jsx'
 
 // Import Template 3 Assets for Preloading
 import template3HeroBg from '../assets/themes/template3/hero_bg.png'
@@ -20,8 +20,8 @@ const TEMPLATE_MAP = {
   'template-2': TemplateTwilightSerenade,
   'twilight-serenade': TemplateTwilightSerenade,
   'template-1': TemplateRoyalWedding, // Fallback for old links
-  'template-3': TemplateRoyalPalace,
-  'royal-palace': TemplateRoyalPalace,
+  'template-3': TemplateBlossomWhisper,
+  'blossom-whisper': TemplateBlossomWhisper,
 }
 
 const TEMPLATE_ASSETS = {
@@ -54,7 +54,7 @@ const TEMPLATE_ASSETS = {
     template3VenueBg,
     template3DesktopBg
   ],
-  'royal-palace': [
+  'blossom-whisper': [
     template3HeroBg,
     template3MessageBg,
     template3VenueBg,
