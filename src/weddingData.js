@@ -90,8 +90,8 @@ export const weddingData = {
       return isNaN(d) ? 'Wednesday' : d.toLocaleDateString('en-US', { weekday: 'long' })
     })(),
     venueName: inviteData.event?.venueName || inviteData.content?.venueAddress?.split?.(',')?.[0] || '',
-    fullAddress: inviteData.content?.venueAddress || 'Palace Grounds, Bellary Rd',
-    addressParts: (inviteData.content?.venueAddress || 'Palace Grounds, Bellary Rd').split(',').map(s => s.trim()),
+    fullAddress: inviteData.content?.venueAddress || '',
+    addressParts: (inviteData.content?.venueAddress || '').split(',').map(s => s.trim()).filter(Boolean),
     hashtag: `#${(getCouple(inviteData)?.groomName || 'Groom').trim().replace(/\s+/g, '')}${(getCouple(inviteData)?.brideName || 'Bride').trim().replace(/\s+/g, '')}Forever`,
     monogram: `${getCouple(inviteData)?.groomName?.[0] || 'A'} & ${getCouple(inviteData)?.brideName?.[0] || 'M'}`,
     backgroundImage: heroBg || heroArch,

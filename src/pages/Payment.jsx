@@ -486,9 +486,9 @@ export default function Payment() {
                         type="text"
                         placeholder="Enter coupon code"
                         value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                        onChange={(e) => setCouponCode(e.target.value)}
                         disabled={appliedCoupon !== null || isValidatingCoupon}
-                        className="flex-1 px-4 py-2.5 text-sm font-semibold border border-iqBorder rounded-xl focus:outline-none focus:ring-2 focus:ring-black disabled:bg-iqBg/50 uppercase w-full"
+                        className="flex-1 px-4 py-2.5 text-sm font-semibold border border-iqBorder rounded-xl focus:outline-none focus:ring-2 focus:ring-black disabled:bg-iqBg/50 w-full"
                       />
                       {appliedCoupon ? (
                         <button

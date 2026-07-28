@@ -507,37 +507,27 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
 
             {/* Venue details rendered dynamically from address parts */}
             {data.addressParts && data.addressParts.length > 0 ? (
-              <div className="flex flex-col items-center">
-                <p style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 800,
-                  fontSize: 'clamp(12px, 1.2vw, 16px)',
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  color: '#7B0F1A',
-                  marginTop: 2,
-                  lineHeight: 1.2,
-                  textAlign: 'center',
-                  padding: '0 10px'
-                }}>
-                  {data.addressParts[0]}
-                </p>
-                {data.addressParts.length > 1 && (
-                  <p style={{
-                    fontFamily: "'Montserrat', sans-serif",
-                    fontWeight: 600,
-                    fontSize: 'clamp(9.5px, 0.9vw, 12px)',
-                    letterSpacing: '0.22em',
-                    textTransform: 'uppercase',
-                    color: '#7B0F1A',
-                    opacity: 0.8,
-                    textAlign: 'center',
-                    padding: '0 20px',
-                    marginTop: '4px'
-                  }}>
-                    {data.addressParts.slice(1).join(', ')}
+              <div className="flex flex-col items-center gap-1">
+                {data.addressParts.map((part, index) => (
+                  <p
+                    key={index}
+                    style={{
+                      fontFamily: "'Montserrat', sans-serif",
+                      fontWeight: index === 0 ? 800 : 600,
+                      fontSize: index === 0 ? 'clamp(12px, 1.2vw, 16px)' : 'clamp(9.5px, 0.9vw, 12px)',
+                      letterSpacing: index === 0 ? '0.2em' : '0.22em',
+                      textTransform: 'uppercase',
+                      color: '#7B0F1A',
+                      opacity: index === 0 ? 1 : 0.8,
+                      textAlign: 'center',
+                      lineHeight: 1.2,
+                      padding: '0 10px',
+                      marginTop: index === 0 ? 2 : 0,
+                    }}
+                  >
+                    {part}
                   </p>
-                )}
+                ))}
               </div>
             ) : (
               <>
@@ -595,35 +585,25 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         >
           <PinIcon />
           {data.addressParts && data.addressParts.length > 0 ? (
-            <div className="flex flex-col items-center">
-              <p style={{
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: 800,
-                fontSize: 'clamp(9px, 1.5svh, 13px)',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: '#7B0F1A',
-                marginTop: 2,
-                lineHeight: 1.2,
-                textAlign: 'center',
-              }}>
-                {data.addressParts[0]}
-              </p>
-              {data.addressParts.length > 1 && (
-                <p style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 600,
-                  fontSize: 'clamp(7px, 1.1svh, 9.5px)',
-                  letterSpacing: '0.22em',
-                  textTransform: 'uppercase',
-                  color: '#7B0F1A',
-                  opacity: 0.8,
-                  textAlign: 'center',
-                  marginTop: '2px'
-                }}>
-                  {data.addressParts.slice(1).join(', ')}
+            <div className="flex flex-col items-center gap-0.5">
+              {data.addressParts.map((part, index) => (
+                <p
+                  key={index}
+                  style={{
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontWeight: index === 0 ? 800 : 600,
+                    fontSize: index === 0 ? 'clamp(9px, 1.5svh, 13px)' : 'clamp(7px, 1.1svh, 9.5px)',
+                    letterSpacing: index === 0 ? '0.2em' : '0.22em',
+                    textTransform: 'uppercase',
+                    color: '#7B0F1A',
+                    opacity: index === 0 ? 1 : 0.8,
+                    textAlign: 'center',
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {part}
                 </p>
-              )}
+              ))}
             </div>
           ) : (
             <>

@@ -84,24 +84,17 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
     btnHover: 'rgba(123, 30, 43, 0.12)'
   }
 
-  const addressTextRaw = String(data.address || data.location || 'MG Road')
+  const addressTextRaw = String(data.address || data.location || '')
   // Remove venue name from address to avoid duplication with the title
   const venueCityPart = data.venueCity ? String(data.venueCity).trim() : ''
   const venueTitleBase = data.venueName ? String(data.venueName).trim() : ''
   const venueTitle = (venueTitleBase
     ? `${venueTitleBase}${venueCityPart ? `, ${venueCityPart}` : ''}`
-    : 'Palace Ground'
+    : ''
   )
 
-  // Strip the venue name from the full address so it doesn't repeat
+  // Keep full raw address intact
   let addressTextPretty = addressTextRaw
-  if (venueTitleBase) {
-    // Remove "VenueName, " or "VenueName" from the start of the address
-    const regex = new RegExp(`^${venueTitleBase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*,?\\s*`, 'i')
-    addressTextPretty = addressTextRaw.replace(regex, '').trim()
-  }
-  // If stripping removed everything, fall back to raw
-  if (!addressTextPretty) addressTextPretty = addressTextRaw
 
   const viewport = { once: false, amount: 0.15 }
   const petals = [
@@ -216,56 +209,78 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
               <span style={{ width: '56px', height: '1px', backgroundColor: colors.border }} />
             </motion.p>
 
-            <motion.h3 
-              initial="hidden"
-              whileInView="show"
-              viewport={viewport}
-              variants={fadeUp}
-              transition={{ duration: 1.1, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="font-semibold relative z-10"
-              style={{
-                fontFamily: "'Cinzel', serif",
-                fontSize: 'clamp(22px, 2.8vw, 30px)',
-                fontWeight: 600,
-                color: colors.primaryDark,
-                margin: '6px 0 8px 0',
-                letterSpacing: '0.16em',
-                textShadow: theme === 'green' ? 'none' : '0 14px 28px rgba(122, 30, 43, 0.16)',
-              }}
-            >
-              {venueTitle}
-            </motion.h3>
 
-            <motion.address
-              initial="hidden"
-              whileInView="show"
-              viewport={viewport}
-              variants={fadeUp}
-              transition={{ duration: 1.1, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
-              className="flex flex-col items-center text-center relative z-10"
-              style={{
-                width: '100%',
-                maxWidth: '620px',
-                marginTop: '4px',
-                color: colors.primaryLight,
-                fontStyle: 'normal',
-              }}
-            >
-              <span
+
+            {(data.venueLine1 || data.venueLine2 || addressTextPretty) && (
+              <motion.address
+                initial="hidden"
+                whileInView="show"
+                viewport={viewport}
+                variants={fadeUp}
+                transition={{ duration: 1.1, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-col items-center text-center relative z-10"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 500,
-                  fontSize: 'clamp(16px, 1.8vw, 20px)',
-                  lineHeight: 1.6,
+                  width: '100%',
+                  maxWidth: '620px',
+                  marginTop: '4px',
                   color: colors.primaryLight,
-                  whiteSpace: 'normal',
-                  overflowWrap: 'anywhere',
-                  textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                  fontStyle: 'normal',
                 }}
               >
-                {addressTextPretty}
-              </span>
-            </motion.address>
+                {data.venueLine1 || data.venueLine2 ? (
+                  <>
+                    {data.venueLine1 && (
+                      <span
+                        style={{
+                          fontFamily: "'Montserrat', sans-serif",
+                          fontWeight: 500,
+                          fontSize: 'clamp(16px, 1.8vw, 20px)',
+                          lineHeight: 1.6,
+                          color: colors.primaryLight,
+                          whiteSpace: 'normal',
+                          overflowWrap: 'anywhere',
+                          textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                        }}
+                      >
+                        {data.venueLine1}
+                      </span>
+                    )}
+                    {data.venueLine2 && (
+                      <span
+                        style={{
+                          fontFamily: "'Montserrat', sans-serif",
+                          fontWeight: 500,
+                          fontSize: 'clamp(16px, 1.8vw, 20px)',
+                          lineHeight: 1.6,
+                          color: colors.primaryLight,
+                          whiteSpace: 'normal',
+                          overflowWrap: 'anywhere',
+                          textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                          marginTop: '4px',
+                        }}
+                      >
+                        {data.venueLine2}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <span
+                    style={{
+                      fontFamily: "'Montserrat', sans-serif",
+                      fontWeight: 500,
+                      fontSize: 'clamp(16px, 1.8vw, 20px)',
+                      lineHeight: 1.6,
+                      color: colors.primaryLight,
+                      whiteSpace: 'normal',
+                      overflowWrap: 'anywhere',
+                      textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                    }}
+                  >
+                    {addressTextPretty}
+                  </span>
+                )}
+              </motion.address>
+            )}
           </div>
 
           {/* Bottom: QR Code card */}
@@ -377,25 +392,7 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
               <span style={{ width: '56px', height: '1px', backgroundColor: colors.border }} />
             </motion.p>
 
-            <motion.h3 
-              initial="hidden"
-              whileInView="show"
-              viewport={viewport}
-              variants={fadeUp}
-              transition={{ duration: 1.1, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="font-semibold relative z-10"
-              style={{
-                fontFamily: "'Cinzel', serif",
-                fontSize: 'clamp(18px, 4.2vw, 28px)',
-                fontWeight: 600,
-                color: colors.primaryDark,
-                margin: '10px 0 6px 0',
-                letterSpacing: '0.16em',
-                textShadow: theme === 'green' ? 'none' : '0 14px 28px rgba(122, 30, 43, 0.16)',
-              }}
-            >
-              {venueTitle}
-            </motion.h3>
+
 
             <motion.address
               initial="hidden"
@@ -408,47 +405,65 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
                 width: '100%',
                 maxWidth: '520px',
                 padding: 0,
-                marginTop: '14px',
+                marginTop: '6px',
                 color: colors.primaryLight,
                 fontStyle: 'normal',
                 textAlign: 'center',
               }}
             >
-              <span style={{ display: 'inline-flex', items: 'center', gap: 8 }}>
-                <span style={{ width: 54, height: 1, background: colors.border }} />
-                <PinIconSolid size={16} color={colors.accent} />
-                <span style={{ width: 54, height: 1, background: colors.border }} />
-              </span>
-
-              <AnimatedTitle 
-                text="ADDRESS"
-                style={{
-                  marginTop: 8,
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 300,
-                  fontSize: '11px',
-                  letterSpacing: '0.34em',
-                  color: colors.primaryLight,
-                  textTransform: 'uppercase',
-                  textShadow: theme === 'green' ? 'none' : '0 8px 18px rgba(255, 247, 242, 0.64)',
-                }}
-              />
-
-              <span
-                style={{
-                  marginTop: 6,
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontWeight: 500,
-                  fontSize: 'clamp(13px, 2.8vw, 15px)',
-                  lineHeight: 1.68,
-                  color: colors.primaryLight,
-                  whiteSpace: 'normal',
-                  overflowWrap: 'anywhere',
-                  textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
-                }}
-              >
-                {addressTextPretty}
-              </span>
+              {data.venueLine1 || data.venueLine2 ? (
+                <>
+                  {data.venueLine1 && (
+                    <span
+                      style={{
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontWeight: 500,
+                        fontSize: 'clamp(13px, 2.8vw, 15px)',
+                        lineHeight: 1.68,
+                        color: colors.primaryLight,
+                        whiteSpace: 'normal',
+                        overflowWrap: 'anywhere',
+                        textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                      }}
+                    >
+                      {data.venueLine1}
+                    </span>
+                  )}
+                  {data.venueLine2 && (
+                    <span
+                      style={{
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontWeight: 500,
+                        fontSize: 'clamp(13px, 2.8vw, 15px)',
+                        lineHeight: 1.68,
+                        color: colors.primaryLight,
+                        whiteSpace: 'normal',
+                        overflowWrap: 'anywhere',
+                        textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                        marginTop: '4px',
+                      }}
+                    >
+                      {data.venueLine2}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span
+                  style={{
+                    marginTop: 0,
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontWeight: 500,
+                    fontSize: 'clamp(13px, 2.8vw, 15px)',
+                    lineHeight: 1.68,
+                    color: colors.primaryLight,
+                    whiteSpace: 'normal',
+                    overflowWrap: 'anywhere',
+                    textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                  }}
+                >
+                  {addressTextPretty}
+                </span>
+              )}
             </motion.address>
           </div>
 

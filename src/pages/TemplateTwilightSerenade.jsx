@@ -198,7 +198,7 @@ function TwilightSerenadeHero({ data, isDesktop }) {
         <motion.h1 
           variants={nameContainerVariant}
           className={`text-[#3D5236] uppercase tracking-[0.06em] select-none font-bold ${
-            isDesktop ? 'text-5xl md:text-6xl mb-2' : 'text-3xl sm:text-4xl mb-1.5'
+            isDesktop ? 'text-4xl md:text-5xl mb-2' : 'text-2xl sm:text-3xl mb-1.5'
           }`}
           style={{ fontFamily: "'Cinzel', serif", lineHeight: '1.2' }}
         >
@@ -356,13 +356,36 @@ function TwilightSerenadeHero({ data, isDesktop }) {
               <circle cx="12" cy="10" r="3.2" />
             </svg>
           </div>
-          <p 
-            className="text-xs sm:text-sm text-[#3D5236] tracking-[0.18em] uppercase font-bold text-center leading-relaxed"
-            style={{ fontFamily: "'Cinzel', serif" }}
-          >
-            {data.venueName}
-            <span className="block mt-0.5 text-[11px] sm:text-xs text-[#3D5236]/90 font-semibold tracking-[0.15em]">{data.venueCity}</span>
-          </p>
+          {data.addressParts && data.addressParts.length > 0 ? (
+            <div className="flex flex-col items-center gap-0.5">
+              {data.addressParts.map((part, index) => (
+                <p 
+                  key={index}
+                  className="text-[#3D5236] tracking-[0.18em] uppercase font-bold text-center leading-relaxed"
+                  style={{ 
+                    fontFamily: "'Cinzel', serif",
+                    fontSize: isDesktop 
+                      ? (index === 0 ? 'clamp(14px, 1.4vw, 17px)' : 'clamp(11px, 1.0vw, 13px)') 
+                      : (index === 0 ? 'clamp(11px, 1.5svh, 13px)' : 'clamp(9px, 1.2svh, 10.5px)'),
+                    opacity: index === 0 ? 1 : 0.95
+                  }}
+                >
+                  {part}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <p 
+              className="text-[#3D5236] tracking-[0.18em] uppercase font-bold text-center leading-relaxed"
+              style={{ 
+                fontFamily: "'Cinzel', serif",
+                fontSize: isDesktop ? 'clamp(14px, 1.4vw, 17px)' : 'clamp(11px, 1.5svh, 13px)'
+              }}
+            >
+              {data.venueName}
+              <span className="block mt-0.5 text-[#3D5236]/90 font-semibold tracking-[0.15em]" style={{ fontSize: isDesktop ? 'clamp(11px, 1.0vw, 13px)' : 'clamp(9px, 1.2svh, 10.5px)' }}>{data.venueCity}</span>
+            </p>
+          )}
         </motion.div>
       </motion.div>
 
@@ -439,8 +462,37 @@ export default function TemplateTwilightSerenade({ savedData }) {
       weddingTime: savedData
         ? (savedData.heroData?.weddingTime || '09:00 AM - 10:30 AM')
         : (draftData.weddingTime || '09:00 AM - 10:30 AM'),
-      venueName: (savedData ? savedData.venueData.mahalName : draftData.mahalName) || '',
-      venueCity: (savedData ? savedData.venueData.venueCity : draftData.venueCity) || '',
+      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || '',
+      venueCity: (savedData
+        ? [savedData.venueData?.venueCity || savedData.venueCity, savedData.venueData?.state || savedData.state].filter(Boolean).join(', ')
+        : [draftData.venueCity, draftData.state].filter(Boolean).join(', ')
+      ) || '',
+      addressParts: savedData
+        ? [
+            savedData.venueData?.mahalName || savedData.mahalName,
+            savedData.venueData?.venueAddress || savedData.venueName,
+            savedData.venueData?.venueCity || savedData.venueCity,
+            savedData.venueData?.state || savedData.state
+          ].map(s => String(s || '').trim()).filter(Boolean)
+        : [
+            draftData.mahalName,
+            draftData.venueAddress,
+            draftData.venueCity,
+            draftData.state
+          ].map(s => String(s || '').trim()).filter(Boolean),
+      fullAddress: savedData
+        ? [
+            savedData.venueData?.mahalName || savedData.mahalName,
+            savedData.venueData?.venueAddress || savedData.venueName,
+            savedData.venueData?.venueCity || savedData.venueCity,
+            savedData.venueData?.state || savedData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+        : [
+            draftData.mahalName,
+            draftData.venueAddress,
+            draftData.venueCity,
+            draftData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
       hashtag: (() => {
         const groom = savedData ? savedData.coupleData.groomName : draftData.groomName
         const bride = savedData ? savedData.coupleData.brideName : draftData.brideName
@@ -458,11 +510,39 @@ export default function TemplateTwilightSerenade({ savedData }) {
     },
     venue: {
       ...staticData.venue,
-      venueName: (savedData ? savedData.venueData.mahalName : draftData.mahalName) || '',
+      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || '',
+      venueLine1: savedData
+        ? [
+            savedData.venueData?.mahalName || savedData.mahalName,
+            savedData.venueData?.venueAddress || savedData.venueName
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+        : [
+            draftData.mahalName,
+            draftData.venueAddress
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
+      venueLine2: savedData
+        ? [
+            savedData.venueData?.venueCity || savedData.venueCity,
+            savedData.venueData?.state || savedData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+        : [
+            draftData.venueCity,
+            draftData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
       location: savedData
-        ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean).join(', ')
-        : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
-      mapUrl: (savedData ? savedData.venueData.mapLink : draftData.mapLink) || staticData.venue.mapUrl,
+        ? [
+            savedData.venueData?.mahalName || savedData.mahalName,
+            savedData.venueData?.venueAddress || savedData.venueName,
+            savedData.venueData?.venueCity || savedData.venueCity,
+            savedData.venueData?.state || savedData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+        : [
+            draftData.mahalName,
+            draftData.venueAddress,
+            draftData.venueCity,
+            draftData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
+      mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData.mapLink) || staticData.venue.mapUrl,
     },
     countdown: {
       ...staticData.countdown,

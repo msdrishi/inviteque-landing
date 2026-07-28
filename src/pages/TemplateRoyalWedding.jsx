@@ -46,12 +46,32 @@ export default function TemplateRoyalWedding({ savedData }) {
       venueName: (savedData ? savedData.venueData.mahalName : draftData.mahalName) || '',
       venueCity: (savedData ? savedData.venueData.venueCity : draftData.venueCity) || '',
       addressParts: savedData
-        ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean)
-        : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean),
+        ? [
+            savedData.venueData?.mahalName || savedData.mahalName,
+            savedData.venueData?.venueAddress || savedData.venueName,
+            savedData.venueData?.venueCity || savedData.venueCity,
+            savedData.venueData?.state || savedData.state
+          ].map(s => String(s || '').trim()).filter(Boolean)
+        : [
+            draftData.mahalName,
+            draftData.venueAddress,
+            draftData.venueCity,
+            draftData.state
+          ].map(s => String(s || '').trim()).filter(Boolean),
       fullAddress: savedData
-        ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean).join(', ')
-        : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
-      mapUrl: savedData ? savedData.venueData.mapLink : draftData.mapLink,
+        ? [
+            savedData.venueData?.mahalName || savedData.mahalName,
+            savedData.venueData?.venueAddress || savedData.venueName,
+            savedData.venueData?.venueCity || savedData.venueCity,
+            savedData.venueData?.state || savedData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+        : [
+            draftData.mahalName,
+            draftData.venueAddress,
+            draftData.venueCity,
+            draftData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
+      mapUrl: savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData.mapLink,
       hashtag: (() => {
         const groom = savedData ? savedData.coupleData.groomName : draftData.groomName
         const bride = savedData ? savedData.coupleData.brideName : draftData.brideName
@@ -69,11 +89,39 @@ export default function TemplateRoyalWedding({ savedData }) {
     },
     venue: {
       ...staticData.venue,
-      venueName: (savedData ? savedData.venueData.mahalName : draftData.mahalName) || '',
+      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || '',
+      venueLine1: savedData
+        ? [
+            savedData.venueData?.mahalName || savedData.mahalName,
+            savedData.venueData?.venueAddress || savedData.venueName
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+        : [
+            draftData.mahalName,
+            draftData.venueAddress
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
+      venueLine2: savedData
+        ? [
+            savedData.venueData?.venueCity || savedData.venueCity,
+            savedData.venueData?.state || savedData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+        : [
+            draftData.venueCity,
+            draftData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
       location: savedData
-        ? [savedData.venueData.mahalName, savedData.venueData.venueAddress, savedData.venueData.venueCity, savedData.venueData.state].filter(Boolean).join(', ')
-        : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', '),
-      mapUrl: (savedData ? savedData.venueData.mapLink : draftData.mapLink) || staticData.venue.mapUrl,
+        ? [
+            savedData.venueData?.mahalName || savedData.mahalName,
+            savedData.venueData?.venueAddress || savedData.venueName,
+            savedData.venueData?.venueCity || savedData.venueCity,
+            savedData.venueData?.state || savedData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+        : [
+            draftData.mahalName,
+            draftData.venueAddress,
+            draftData.venueCity,
+            draftData.state
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
+      mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData.mapLink) || staticData.venue.mapUrl,
     },
     countdown: {
       ...staticData.countdown,

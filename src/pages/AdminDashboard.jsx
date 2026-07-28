@@ -532,7 +532,7 @@ export default function AdminDashboard() {
           'Authorization': `Bearer ${user.token}`
         },
         body: JSON.stringify({
-          code: newCouponCode.trim().toUpperCase(),
+          code: newCouponCode.trim(),
           discountPercentage: parseInt(newCouponDiscount)
         })
       })

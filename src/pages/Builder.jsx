@@ -421,11 +421,6 @@ export default function Builder() {
     const { name, value, type, checked } = e.target
     let finalValue = type === 'checkbox' ? checked : value
 
-    // Apply proper case to couple names
-    if ((name === 'groomName' || name === 'brideName') && type !== 'checkbox') {
-      finalValue = toProperCase(value)
-    }
-
     // Handle date input separately
     if (name === 'weddingDateInput' && type !== 'checkbox') {
       const { day, month, year } = parseDateInput(value)
