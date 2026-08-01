@@ -133,8 +133,8 @@ function EverlastingVowsHero({ data, isDesktop }) {
     <section 
       className={`relative overflow-hidden flex flex-col items-center text-center select-none ${
         isDesktop 
-          ? 'h-screen w-full justify-center py-20 px-8' 
-          : 'h-[100svh] w-full justify-start pt-[12svh] pb-8 px-6'
+          ? 'h-screen w-full justify-start pt-[10vh] pb-16 px-8' 
+          : 'h-[100svh] w-full justify-start pt-[6svh] sm:pt-[8svh] pb-8 px-6'
       }`}
     >
       {/* Parallax background */}
@@ -155,7 +155,7 @@ function EverlastingVowsHero({ data, isDesktop }) {
       {/* Falling Gold Petals */}
       <FallingPetals />
 
-      {/* Hero Content Panel (Positioned elegantly to overlay inside the palace arch) */}
+      {/* Hero Content Panel (Positioned upper-center elegantly inside the palace arch) */}
       <motion.div 
         initial="hidden"
         animate="show"
@@ -184,14 +184,14 @@ function EverlastingVowsHero({ data, isDesktop }) {
           Save the Date
         </motion.p>
 
-        {/* Couple Names - Luxury layout with gold glare */}
+        {/* Couple Names - Reduced Desktop font size & responsive layout */}
         <motion.h1 
           variants={nameContainerVariant}
           className="text-[#8A6E1E] uppercase tracking-[0.1em] select-none font-bold mb-4"
           style={{ 
             fontFamily: "'Cinzel', serif", 
             lineHeight: '1.2',
-            fontSize: isDesktop ? 'clamp(3rem, 5.5vw, 5rem)' : 'clamp(2rem, 7.5vw, 2.8rem)'
+            fontSize: isDesktop ? 'clamp(2.2rem, 3.8vw, 3.4rem)' : 'clamp(1.8rem, 6.5vw, 2.5rem)'
           }}
         >
           <span className="block mb-0.5 sm:mb-1 relative" style={{ display: 'block', position: 'relative' }}>

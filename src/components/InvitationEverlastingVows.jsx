@@ -86,11 +86,23 @@ export default function InvitationEverlastingVows({ data, isDesktop }) {
     offset: ["start end", "end start"]
   })
 
-  // Smooth scroll progress for fluidity
+  // Track screen width to use mobile video on tablet (<= 1024px)
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 1024)
+
+  useEffect(() => {
+    const checkViewport = () => {
+      setIsTabletOrMobile(window.innerWidth <= 1024)
+    }
+    window.addEventListener('resize', checkViewport)
+    return () => window.removeEventListener('resize', checkViewport)
+  }, [])
+
+  // Smooth scroll progress for ultra-fluid video scrubbing
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
+    stiffness: 120,
+    damping: 35,
+    mass: 0.2,
+    restDelta: 0.0005
   })
 
   // Map scroll progress to video time
@@ -107,8 +119,8 @@ export default function InvitationEverlastingVows({ data, isDesktop }) {
 
     const unsubscribe = smoothProgress.on('change', (progress) => {
       if (video.duration && !isNaN(video.duration)) {
-        const targetTime = progress * video.duration
-        if (Math.abs(video.currentTime - targetTime) > 0.03) {
+        const targetTime = Math.min(video.duration, Math.max(0, progress * video.duration))
+        if (Math.abs(video.currentTime - targetTime) > 0.015) {
           video.currentTime = targetTime
         }
       }
@@ -120,8 +132,8 @@ export default function InvitationEverlastingVows({ data, isDesktop }) {
     }
   }, [smoothProgress])
 
-  // Video path
-  const videoSrc = isDesktop
+  // Video path - uses mobile video on tablet (<=1024px) and mobile devices
+  const videoSrc = (isDesktop && !isTabletOrMobile)
     ? "/backgrounds/Everlasting Vows/wedding-message/welcome_desktop.mp4"
     : "/backgrounds/Everlasting Vows/wedding-message/welcome_mobile.mp4"
 
