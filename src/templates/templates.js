@@ -43,13 +43,13 @@ export const templates = [
     popular: true,
   },
   {
-    id: 'template-4',
+    id: 'everlastingvows',
     name: 'Everlasting Vows',
     description: 'Sophisticated and bold, focusing on the strength of your commitment through clean, modern design.',
     priceLabel: '₹999',
     thumbnail: t4,
-    href: '/templates/template-4',
-    available: false,
+    href: '/templates/everlastingvows',
+    available: true,
   },
   {
     id: 'template-5',

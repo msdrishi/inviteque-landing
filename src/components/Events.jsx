@@ -30,6 +30,14 @@ export default function Events({ data, isDesktop, theme, bgImage }) {
     textAccent: '#5F7C56',
     bg: '#FFFFFF',
     gold: '#D4AF37',
+  } : theme === 'gold' ? {
+    primary: '#8A6E1E',
+    primaryDark: '#705915',
+    accentBg: '#FFFDF2',
+    border: 'rgba(138, 110, 30, 0.4)',
+    textAccent: '#B0923E',
+    bg: '#FFFDF2',
+    gold: '#D4AF37',
   } : {
     primary: '#8B1E2D',
     primaryDark: '#5C0A14',
@@ -112,7 +120,7 @@ export default function Events({ data, isDesktop, theme, bgImage }) {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="flex flex-col items-center text-center z-10 mb-16"
       >
-        {theme === 'green' ? (
+        {(theme === 'green' || theme === 'gold') ? (
           <>
             <p
               style={{

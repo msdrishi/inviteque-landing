@@ -69,6 +69,19 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
     btnBg: 'rgba(61, 82, 54, 0.08)',
     btnBorder: 'rgba(61, 82, 54, 0.2)',
     btnHover: 'rgba(61, 82, 54, 0.12)'
+  } : theme === 'gold' ? {
+    primary: '#8A6E1E',
+    primaryDark: '#705915',
+    primaryLight: '#B0923E',
+    border: 'rgba(138, 110, 30, 0.3)',
+    borderSolid: 'rgba(138, 110, 30, 0.4)',
+    bg: '#FFFDF2',
+    accent: '#8A6E1E',
+    qrColor: '8A6E1E',
+    qrBg: 'FFFDF2',
+    btnBg: 'rgba(138, 110, 30, 0.08)',
+    btnBorder: 'rgba(138, 110, 30, 0.2)',
+    btnHover: 'rgba(138, 110, 30, 0.12)'
   } : {
     primary: '#7B1E2B',
     primaryDark: '#8A2D3B',
@@ -273,7 +286,7 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
                       color: colors.primaryLight,
                       whiteSpace: 'normal',
                       overflowWrap: 'anywhere',
-                      textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                      textShadow: (theme === 'green' || theme === 'gold') ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
                     }}
                   >
                     {addressTextPretty}
@@ -296,7 +309,7 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
                 background: colors.bg,
                 borderRadius: '16px',
                 border: `1px solid ${colors.borderSolid}`,
-                boxShadow: theme === 'green' ? '0 15px 35px rgba(61,82,54,0.08)' : '0 15px 35px rgba(109,18,32,0.1), 0 5px 12px rgba(216,178,110,0.15)',
+                boxShadow: theme === 'green' ? '0 15px 35px rgba(61,82,54,0.08)' : theme === 'gold' ? '0 15px 35px rgba(138,110,30,0.08)' : '0 15px 35px rgba(109,18,32,0.1), 0 5px 12px rgba(216,178,110,0.15)',
                 padding: '14px 24px',
                 zIndex: 3,
                 display: 'flex',
@@ -374,7 +387,7 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
                 fontWeight: 600,
                 color: colors.primary,
                 marginBottom: '12px',
-                textShadow: theme === 'green' ? 'none' : '0 14px 28px rgba(123, 30, 43, 0.16)',
+                textShadow: (theme === 'green' || theme === 'gold') ? 'none' : '0 14px 28px rgba(123, 30, 43, 0.16)',
               }}
             />
 
@@ -423,7 +436,7 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
                         color: colors.primaryLight,
                         whiteSpace: 'normal',
                         overflowWrap: 'anywhere',
-                        textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                        textShadow: (theme === 'green' || theme === 'gold') ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
                       }}
                     >
                       {data.venueLine1}
@@ -439,7 +452,7 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
                         color: colors.primaryLight,
                         whiteSpace: 'normal',
                         overflowWrap: 'anywhere',
-                        textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                        textShadow: (theme === 'green' || theme === 'gold') ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
                         marginTop: '4px',
                       }}
                     >
@@ -458,7 +471,7 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
                     color: colors.primaryLight,
                     whiteSpace: 'normal',
                     overflowWrap: 'anywhere',
-                    textShadow: theme === 'green' ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
+                    textShadow: (theme === 'green' || theme === 'gold') ? 'none' : '0 12px 24px rgba(255, 247, 242, 0.64)',
                   }}
                 >
                   {addressTextPretty}
@@ -480,7 +493,7 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
                 background: colors.bg,
                 borderRadius: '16px',
                 border: `1px solid ${colors.borderSolid}`,
-                boxShadow: theme === 'green' ? '0 10px 24px rgba(61,82,54,0.04)' : '0 10px 24px rgba(109,18,32,0.06)',
+                boxShadow: theme === 'green' ? '0 10px 24px rgba(61,82,54,0.04)' : theme === 'gold' ? '0 10px 24px rgba(138,110,30,0.04)' : '0 10px 24px rgba(109,18,32,0.06)',
                 padding: '12px 14px',
                 zIndex: 3,
                 display: 'flex',

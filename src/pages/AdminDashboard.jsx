@@ -327,7 +327,8 @@ export default function AdminDashboard() {
     // Legacy template mapping
     const LEGACY_MAPPING = {
       'template-1': 'royal-wedding',
-      'template-2': 'twilight-serenade'
+      'template-2': 'twilight-serenade',
+      'template-4': 'everlastingvows'
     }
 
     // Build unique template definition map
@@ -427,7 +428,7 @@ export default function AdminDashboard() {
     })
 
     // Filter out items that have 0 views and 0 sales to keep list clean
-    const filteredData = data.filter(t => t.views > 0 || t.purchases > 0 || t.id === 'aura-of-elegance' || t.id === 'twilight-serenade' || t.id === 'template-3')
+    const filteredData = data.filter(t => t.views > 0 || t.purchases > 0 || t.id === 'aura-of-elegance' || t.id === 'twilight-serenade' || t.id === 'template-3' || t.id === 'template-4' || t.id === 'everlastingvows')
 
     // Sort templates
     return filteredData.sort((a, b) => {

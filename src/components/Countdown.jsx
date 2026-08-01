@@ -30,7 +30,11 @@ const leafConfig = Array.from({ length: 14 }).map((_, i) => {
   return { left: leftPos, duration, delay, size, x1, x2 };
 });
 
-function FallingLeaves() {
+function FallingLeaves({ theme }) {
+  const isGold = theme === 'gold'
+  const fillCol = isGold ? 'rgba(212,175,55,0.85)' : '#404D29'
+  const strokeCol = isGold ? 'rgba(170,130,10,0.6)' : '#2B351B'
+
   return (
     <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden" style={{ height: '100%' }}>
       {leafConfig.map((p, i) => (
@@ -56,18 +60,22 @@ function FallingLeaves() {
             ease: 'linear'
           }}
         >
-          <svg viewBox="0 0 40 60" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            {/* Main leaf body filled with #404D29 */}
-            <path d="M 20 5 C 40 20, 35 45, 20 55 C 5 45, 0 20, 20 5 Z" fill="#404D29" />
-            {/* Veins */}
-            <path d="M 20 5 Q 16 30, 20 55" stroke="#2B351B" strokeWidth="0.8" fill="none" opacity="0.6" />
-            <path d="M 18 20 L 10 15" stroke="#2B351B" strokeWidth="0.6" fill="none" opacity="0.5" />
-            <path d="M 21 25 L 30 20" stroke="#2B351B" strokeWidth="0.6" fill="none" opacity="0.5" />
-            <path d="M 19 35 L 12 32" stroke="#2B351B" strokeWidth="0.6" fill="none" opacity="0.5" />
-            <path d="M 21 40 L 28 38" stroke="#2B351B" strokeWidth="0.6" fill="none" opacity="0.5" />
-            {/* Stem */}
-            <path d="M 20 55 L 20 59" stroke="#2B351B" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
+          {isGold ? (
+            <svg viewBox="0 0 40 40" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 20 0 C 35 10, 35 30, 20 40 C 5 30, 5 10, 20 0 Z" fill={fillCol} />
+              <circle cx="20" cy="20" r="3" fill="#FFF3CD" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 40 60" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 20 5 C 40 20, 35 45, 20 55 C 5 45, 0 20, 20 5 Z" fill={fillCol} />
+              <path d="M 20 5 Q 16 30, 20 55" stroke={strokeCol} strokeWidth="0.8" fill="none" opacity="0.6" />
+              <path d="M 18 20 L 10 15" stroke={strokeCol} strokeWidth="0.6" fill="none" opacity="0.5" />
+              <path d="M 21 25 L 30 20" stroke={strokeCol} strokeWidth="0.6" fill="none" opacity="0.5" />
+              <path d="M 19 35 L 12 32" stroke={strokeCol} strokeWidth="0.6" fill="none" opacity="0.5" />
+              <path d="M 21 40 L 28 38" stroke={strokeCol} strokeWidth="0.6" fill="none" opacity="0.5" />
+              <path d="M 20 55 L 20 59" stroke={strokeCol} strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          )}
         </motion.div>
       ))}
     </div>
@@ -110,9 +118,10 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText 
 
   const headerTop = String(data.headerTop || 'COUNTING DOWN TO')
   const isGreen = theme === 'green'
-  const textColor = isGreen ? '#3D5236' : '#7B0F1A'
-  const labelColor = isGreen ? '#5F7C56' : '#9C5E67'
-  const bevelColor = isGreen ? '#2B3B25' : '#5C0A14'
+  const isGold = theme === 'gold'
+  const textColor = isGreen ? '#3D5236' : isGold ? '#8A6E1E' : '#7B0F1A'
+  const labelColor = isGreen ? '#5F7C56' : isGold ? '#B0923E' : '#9C5E67'
+  const bevelColor = isGreen ? '#2B3B25' : isGold ? '#705915' : '#5C0A14'
 
   return (
     <section
@@ -128,8 +137,8 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText 
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      {/* Falling Leaves Effect for Green Theme (Twilight Serenade) */}
-      {isGreen && <FallingLeaves />}
+      {/* Falling Leaves Effect for Green / Gold Theme */}
+      {(isGreen || isGold) && <FallingLeaves theme={theme} />}
 
       {/* Overlayed content */}
       <div className="absolute inset-0 z-10">

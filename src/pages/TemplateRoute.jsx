@@ -4,6 +4,7 @@ import TemplateRoyalWedding from './TemplateRoyalWedding.jsx'
 import TemplateAuraOfElegance from './TemplateAuraOfElegance.jsx'
 import TemplateTwilightSerenade from './TemplateTwilightSerenade.jsx'
 import TemplateBlossomWhisper from './TemplateBlossomWhisper.jsx'
+import TemplateEverlastingVows from './TemplateEverlastingVows.jsx'
 
 // Import Template 3 Assets for Preloading
 import template3HeroBg from '../assets/themes/template3/hero_bg.png'
@@ -22,6 +23,9 @@ const TEMPLATE_MAP = {
   'template-1': TemplateRoyalWedding, // Fallback for old links
   'template-3': TemplateBlossomWhisper,
   'blossom-whisper': TemplateBlossomWhisper,
+  'template-4': TemplateEverlastingVows,
+  'everlasting-vows': TemplateEverlastingVows,
+  'everlastingvows': TemplateEverlastingVows,
 }
 
 const TEMPLATE_ASSETS = {
@@ -59,6 +63,36 @@ const TEMPLATE_ASSETS = {
     template3MessageBg,
     template3VenueBg,
     template3DesktopBg
+  ],
+  'template-4': [
+    "/backgrounds/Everlasting%20Vows/hero_desktop.png",
+    "/backgrounds/Everlasting%20Vows/hero_mobile.png",
+    "/backgrounds/Everlasting%20Vows/photo_desktop.png",
+    "/backgrounds/Everlasting%20Vows/photo_mobile.png",
+    "/backgrounds/Everlasting%20Vows/wedding_desktop.png",
+    "/backgrounds/Everlasting%20Vows/wedding_mobile.png",
+    "/backgrounds/Everlasting%20Vows/venue_desktop.png",
+    "/backgrounds/Everlasting%20Vows/venue_mobile.png"
+  ],
+  'everlasting-vows': [
+    "/backgrounds/Everlasting%20Vows/hero_desktop.png",
+    "/backgrounds/Everlasting%20Vows/hero_mobile.png",
+    "/backgrounds/Everlasting%20Vows/photo_desktop.png",
+    "/backgrounds/Everlasting%20Vows/photo_mobile.png",
+    "/backgrounds/Everlasting%20Vows/wedding_desktop.png",
+    "/backgrounds/Everlasting%20Vows/wedding_mobile.png",
+    "/backgrounds/Everlasting%20Vows/venue_desktop.png",
+    "/backgrounds/Everlasting%20Vows/venue_mobile.png"
+  ],
+  'everlastingvows': [
+    "/backgrounds/Everlasting%20Vows/hero_desktop.png",
+    "/backgrounds/Everlasting%20Vows/hero_mobile.png",
+    "/backgrounds/Everlasting%20Vows/photo_desktop.png",
+    "/backgrounds/Everlasting%20Vows/photo_mobile.png",
+    "/backgrounds/Everlasting%20Vows/wedding_desktop.png",
+    "/backgrounds/Everlasting%20Vows/wedding_mobile.png",
+    "/backgrounds/Everlasting%20Vows/venue_desktop.png",
+    "/backgrounds/Everlasting%20Vows/venue_mobile.png"
   ]
 }
 

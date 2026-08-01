@@ -119,6 +119,16 @@ export default function Footer({ data, theme }) {
     bg: '#FBF7F0',
     bgSvg: `rgba(61,82,54,0.06)`,
     bgSvgSecondary: `rgba(61,82,54,0.04)`
+  } : theme === 'gold' ? {
+    primary: '#8A6E1E',
+    primaryDark: '#705915',
+    primaryLight: 'rgba(138,110,30,0.65)',
+    border: 'rgba(138,110,30,0.25)',
+    borderHover: 'rgba(138,110,30,0.5)',
+    bgHover: 'rgba(138,110,30,0.05)',
+    bg: '#FFFDF2',
+    bgSvg: `rgba(138,110,30,0.06)`,
+    bgSvgSecondary: `rgba(138,110,30,0.04)`
   } : {
     primary: '#7B1E2B',
     primaryDark: '#7B1E2B',
