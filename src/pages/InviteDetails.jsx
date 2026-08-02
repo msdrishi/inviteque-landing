@@ -108,16 +108,21 @@ export default function InviteDetails() {
 
   const isTwilight = invite?.templateId === 'template-2' || invite?.templateId === 'twilight-serenade'
   const isEverlasting = invite?.templateId === 'template-4' || invite?.templateId === 'everlasting-vows' || invite?.templateId === 'everlastingvows'
+  const isRoyalPalace = invite?.templateId === 'template-3' || invite?.templateId === 'royal-palace'
   const coverImage = isTwilight 
     ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
     : isEverlasting
       ? "/backgrounds/Everlasting%20Vows/hero_desktop.png"
-      : themeImg
+      : isRoyalPalace
+        ? "/backgrounds/Royal Palace/hero-desktop.png"
+        : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
     : isEverlasting
       ? "from-[#705915] via-[#8A6E1E] to-[#705915]"
-      : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
+      : isRoyalPalace
+        ? "from-[#5C0A14] via-[#8A6E1E] to-[#5C0A14]"
+        : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
 
   return (
     <div className="min-h-screen flex flex-col bg-iqBg font-saas">

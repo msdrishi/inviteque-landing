@@ -1,0 +1,236 @@
+import { motion } from 'framer-motion'
+const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
+
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
+}
+const fadeUp = {
+  hidden: { opacity: 0, y: 16 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+}
+
+function LeafSprig({ flip = false, colors }) {
+  const strokeColor = colors?.primary || "#D4AF37"
+  return (
+    <svg
+      viewBox="0 0 90 50"
+      width="78"
+      height="44"
+      fill="none"
+      aria-hidden="true"
+      style={{
+        transform: flip ? 'scaleX(-1)' : undefined,
+        opacity: 0.35,
+      }}
+    >
+      <path d="M10 42 Q35 28 80 10" stroke={strokeColor} strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M22 36 Q18 22 32 20 Q28 34 22 36Z" fill={strokeColor} opacity="0.6"/>
+      <path d="M38 28 Q36 14 50 13 Q46 27 38 28Z" fill={strokeColor} opacity="0.5"/>
+      <path d="M54 20 Q54 6 68 6 Q63 19 54 20Z" fill={strokeColor} opacity="0.4"/>
+      <circle cx="18" cy="38" r="2.2" fill={strokeColor} opacity="0.35"/>
+      <circle cx="70" cy="9"  r="2"   fill={strokeColor} opacity="0.3"/>
+    </svg>
+  )
+}
+
+function SocialIcon({ href = '#', label, children, colors }) {
+  const borderCol = colors?.border || 'rgba(138, 110, 30, 0.25)'
+  const textCol = colors?.primaryLight || 'rgba(123, 30, 43, 0.65)'
+  return (
+    <a
+      href={href}
+      aria-label={label}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius: '50%',
+        border: `1.5px solid ${borderCol}`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: textCol,
+        textDecoration: 'none',
+        transition: 'border-color 0.2s, background 0.2s',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = colors?.borderHover || 'rgba(212, 175, 55, 0.5)'
+        e.currentTarget.style.background = colors?.bgHover || 'rgba(123, 30, 43, 0.05)'
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = borderCol
+        e.currentTarget.style.background = 'transparent'
+      }}
+    >
+      {children}
+    </a>
+  )
+}
+
+const GlobeIcon = () => (
+  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>
+  </svg>
+)
+
+const InstagramIcon = () => (
+  <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5"/>
+    <circle cx="12" cy="12" r="4.5"/>
+    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+  </svg>
+)
+
+const FacebookIcon = () => (
+  <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor">
+    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+  </svg>
+)
+
+const WhatsAppIcon = () => (
+  <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.22-1.632A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 01-5.042-1.378l-.361-.214-3.742.981.999-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.53 6.53 2.106 12 2.106c5.471 0 9.894 4.424 9.894 9.894 0 5.471-4.423 9.894-9.894 9.894z"/>
+  </svg>
+)
+
+export default function FooterRoyalPalace({ data }) {
+  if (!data) return null
+
+  // Red & Gold Theme Colors for Royal Palace
+  const colors = {
+    primary: '#7B0F1A',
+    primaryDark: '#5C0A14',
+    primaryLight: 'rgba(123,30,43,0.7)',
+    border: 'rgba(212,175,55,0.4)',
+    borderHover: 'rgba(212,175,55,0.7)',
+    bgHover: 'rgba(123,30,43,0.04)',
+    bg: '#FFFDF2',
+    bgSvg: `rgba(212,175,55,0.08)`,
+    bgSvgSecondary: `rgba(212,175,55,0.06)`
+  }
+
+  return (
+    <footer
+      id={data.id || 'footer'}
+      style={{
+        background: colors.bg,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 30 Q15 15, 30 30 T59 30' stroke='${colors.bgSvg}' stroke-width='1' fill='none' stroke-linecap='round'/%3E%3Cpath d='M30 1 Q45 15, 30 30 T30 59' stroke='${colors.bgSvgSecondary}' stroke-width='1' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='15' cy='15' r='1.5' fill='rgba(212, 175, 55, 0.08)'/%3E%3Ccircle cx='45' cy='15' r='1.5' fill='rgba(212, 175, 55, 0.08)'/%3E%3Ccircle cx='15' cy='45' r='1.5' fill='rgba(212, 175, 55, 0.08)'/%3E%3Ccircle cx='45' cy='45' r='1.5' fill='rgba(212, 175, 55, 0.08)'/%3E%3Ccircle cx='30' cy='30' r='2' fill='rgba(212, 175, 55, 0.06)'/%3E%3C/svg%3E")`,
+        backgroundSize: '60px 60px',
+        padding: '36px 24px 28px',
+        position: 'relative',
+        overflow: 'hidden',
+        width: '100%',
+      }}
+    >
+      {/* Subtle radial glow overlay */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(ellipse 70% 60% at 50% 40%, rgba(212, 175, 55, 0.05) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: false, amount: 0.25 }}
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          gap: 0,
+        }}
+      >
+        {/* Crafted by */}
+        <motion.p
+          variants={fadeUp}
+          style={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontWeight: 600,
+            fontSize: 'clamp(9px, 2.6vw, 11px)',
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: colors.primaryLight,
+            marginBottom: 6,
+          }}
+        >
+          Crafted by
+        </motion.p>
+
+        {/* Brand name — Parisienne script + heart swash */}
+        <motion.h4
+          variants={fadeUp}
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontStyle: 'italic',
+            fontSize: 'clamp(28px, 6vw, 36px)',
+            color: colors.primary,
+            fontWeight: 'normal',
+            margin: '0 0 16px 0',
+            lineHeight: 1.1,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <LeafSprig flip colors={colors} />
+          <span>Inviteque</span>
+          <LeafSprig colors={colors} />
+        </motion.h4>
+
+        {/* Social media links row */}
+        <motion.div
+          variants={fadeUp}
+          style={{
+            display: 'flex',
+            gap: 14,
+            marginBottom: 20,
+          }}
+        >
+          <SocialIcon href="https://inviteque.com" label="Website" colors={colors}>
+            <GlobeIcon />
+          </SocialIcon>
+          <SocialIcon href="https://instagram.com/inviteque" label="Instagram" colors={colors}>
+            <InstagramIcon />
+          </SocialIcon>
+          <SocialIcon href="https://facebook.com/inviteque" label="Facebook" colors={colors}>
+            <FacebookIcon />
+          </SocialIcon>
+          <SocialIcon href="https://wa.me/91XXXXXXXXXX" label="WhatsApp" colors={colors}>
+            <WhatsAppIcon />
+          </SocialIcon>
+        </motion.div>
+
+        {/* Copyright notice */}
+        <motion.p
+          variants={fadeUp}
+          style={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontWeight: 500,
+            fontSize: '9px',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: colors.primaryLight,
+            opacity: 0.8,
+            margin: 0,
+          }}
+        >
+          &copy; {new Date().getFullYear()} INVITEQUE. ALL RIGHTS RESERVED.
+        </motion.p>
+      </motion.div>
+    </footer>
+  )
+}

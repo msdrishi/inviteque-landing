@@ -5,6 +5,7 @@ import TemplateAuraOfElegance from './TemplateAuraOfElegance.jsx'
 import TemplateTwilightSerenade from './TemplateTwilightSerenade.jsx'
 import TemplateBlossomWhisper from './TemplateBlossomWhisper.jsx'
 import TemplateEverlastingVows from './TemplateEverlastingVows.jsx'
+import TemplateRoyalPalace from './TemplateRoyalPalace.jsx'
 
 // Import Template 3 Assets for Preloading
 import template3HeroBg from '../assets/themes/template3/hero_bg.png'
@@ -21,7 +22,8 @@ const TEMPLATE_MAP = {
   'template-2': TemplateTwilightSerenade,
   'twilight-serenade': TemplateTwilightSerenade,
   'template-1': TemplateRoyalWedding, // Fallback for old links
-  'template-3': TemplateBlossomWhisper,
+  'template-3': TemplateRoyalPalace,
+  'royal-palace': TemplateRoyalPalace,
   'blossom-whisper': TemplateBlossomWhisper,
   'template-4': TemplateEverlastingVows,
   'everlasting-vows': TemplateEverlastingVows,
@@ -53,10 +55,28 @@ const TEMPLATE_ASSETS = {
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png"
   ],
   'template-3': [
-    template3HeroBg,
-    template3MessageBg,
-    template3VenueBg,
-    template3DesktopBg
+    "/backgrounds/Royal Palace/hero-desktop.png",
+    "/backgrounds/Royal Palace/hero-mobile.png",
+    "/backgrounds/Royal Palace/photo-desktop.png",
+    "/backgrounds/Royal Palace/photo-mobile.png",
+    "/backgrounds/Royal Palace/message-desktop.png",
+    "/backgrounds/Royal Palace/message-moboile.png",
+    "/backgrounds/Royal Palace/venue-desktop.png",
+    "/backgrounds/Royal Palace/venue-mobile.png",
+    "/backgrounds/Royal Palace/countdown-deskotp.png",
+    "/backgrounds/Royal Palace/countdown-mobile.png"
+  ],
+  'royal-palace': [
+    "/backgrounds/Royal Palace/hero-desktop.png",
+    "/backgrounds/Royal Palace/hero-mobile.png",
+    "/backgrounds/Royal Palace/photo-desktop.png",
+    "/backgrounds/Royal Palace/photo-mobile.png",
+    "/backgrounds/Royal Palace/message-desktop.png",
+    "/backgrounds/Royal Palace/message-moboile.png",
+    "/backgrounds/Royal Palace/venue-desktop.png",
+    "/backgrounds/Royal Palace/venue-mobile.png",
+    "/backgrounds/Royal Palace/countdown-deskotp.png",
+    "/backgrounds/Royal Palace/countdown-mobile.png"
   ],
   'blossom-whisper': [
     template3HeroBg,

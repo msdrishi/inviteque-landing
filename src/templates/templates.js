@@ -39,7 +39,7 @@ export const templates = [
     priceLabel: '₹999',
     thumbnail: t3,
     href: '/templates/template-3',
-    available: true,
+    available: false,
     popular: true,
   },
   {
