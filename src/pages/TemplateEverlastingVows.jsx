@@ -10,21 +10,23 @@ import Venue from '../components/Venue.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
-// Local public background assets (space URL encoded)
-const desktopBg = "/backgrounds/Everlasting%20Vows/hero_desktop.png"
-const smartphoneBg = "/backgrounds/Everlasting%20Vows/hero_mobile.png"
-const photoBgDesktop = "/backgrounds/Everlasting%20Vows/photo_desktop.png"
-const photoBgMobile = "/backgrounds/Everlasting%20Vows/photo_mobile.png"
-const messageBgDesktop = "/backgrounds/Everlasting%20Vows/wedding_desktop.png"
-const messageBgMobile = "/backgrounds/Everlasting%20Vows/wedding_mobile.png"
-const locationBgDesktop = "/backgrounds/Everlasting%20Vows/venue_desktop.png"
-const locationBgMobile = "/backgrounds/Everlasting%20Vows/venue_mobile.png"
-const countdownBgDesktop = "/backgrounds/Everlasting%20Vows/countdown_desktop.png"
-const countdownBgMobile = "/backgrounds/Everlasting%20Vows/countdown_mobile.png"
+import cMapping from '../everlastingVowsCloudinaryMapping.json'
 
-const defaultPhoto1 = "/backgrounds/Everlasting%20Vows/photocards/template-4-1.png"
-const defaultPhoto2 = "/backgrounds/Everlasting%20Vows/photocards/template-4-2.png"
-const defaultPhoto3 = "/backgrounds/Everlasting%20Vows/photocards/template-4-3.png"
+// Background assets (Cloudinary CDN with local fallback)
+const desktopBg = cMapping['hero_desktop.png'] || "/backgrounds/Everlasting%20Vows/hero_desktop.png"
+const smartphoneBg = cMapping['hero_mobile.png'] || "/backgrounds/Everlasting%20Vows/hero_mobile.png"
+const photoBgDesktop = cMapping['photo_desktop.png'] || "/backgrounds/Everlasting%20Vows/photo_desktop.png"
+const photoBgMobile = cMapping['photo_mobile.png'] || "/backgrounds/Everlasting%20Vows/photo_mobile.png"
+const messageBgDesktop = cMapping['wedding-message/desktop.png'] || "/backgrounds/Everlasting%20Vows/wedding-message/desktop.png"
+const messageBgMobile = cMapping['wedding-message/mobile.png'] || "/backgrounds/Everlasting%20Vows/wedding-message/mobile.png"
+const locationBgDesktop = cMapping['venue_desktop.png'] || "/backgrounds/Everlasting%20Vows/venue_desktop.png"
+const locationBgMobile = cMapping['venue_mobile.png'] || "/backgrounds/Everlasting%20Vows/venue_mobile.png"
+const countdownBgDesktop = cMapping['countdown_desktop.png'] || "/backgrounds/Everlasting%20Vows/countdown_desktop.png"
+const countdownBgMobile = cMapping['countdown_mobile.png'] || "/backgrounds/Everlasting%20Vows/countdown_mobile.png"
+
+const defaultPhoto1 = cMapping['photocards/template-4-1.png'] || "/backgrounds/Everlasting%20Vows/photocards/template-4-1.png"
+const defaultPhoto2 = cMapping['photocards/template-4-2.png'] || "/backgrounds/Everlasting%20Vows/photocards/template-4-2.png"
+const defaultPhoto3 = cMapping['photocards/template-4-3.png'] || "/backgrounds/Everlasting%20Vows/photocards/template-4-3.png"
 
 const petalConfig = Array.from({ length: 14 }).map((_, i) => {
   const isLeft = i % 2 === 0;
@@ -461,21 +463,8 @@ export default function TemplateEverlastingVows({ savedData }) {
         ? [savedData.venueData?.venueCity || savedData.venueCity, savedData.venueData?.state || savedData.state].filter(Boolean).join(', ')
         : [draftData.venueCity, draftData.state].filter(Boolean).join(', ')
       ) || 'New Delhi, India',
-      addressParts: (savedData
-        ? [
-            savedData.venueData?.mahalName || savedData.mahalName,
-            savedData.venueData?.venueAddress || savedData.venueName,
-            savedData.venueData?.venueCity || savedData.venueCity,
-            savedData.venueData?.state || savedData.state
-          ].map(s => String(s || '').trim()).filter(Boolean)
-        : [
-            draftData.mahalName,
-            draftData.venueAddress,
-            draftData.venueCity,
-            draftData.state
-          ].map(s => String(s || '').trim()).filter(Boolean)
-      ).length > 0 ? (
-        savedData
+      addressParts: (() => {
+        const rawParts = savedData
           ? [
               savedData.venueData?.mahalName || savedData.mahalName,
               savedData.venueData?.venueAddress || savedData.venueName,
@@ -488,7 +477,18 @@ export default function TemplateEverlastingVows({ savedData }) {
               draftData.venueCity,
               draftData.state
             ].map(s => String(s || '').trim()).filter(Boolean)
-      ) : ['The Leela Palace', 'New Delhi, India'],
+
+        if (rawParts.length > 0) {
+          // Flatten comma-separated strings inside parts so each line is clean and distinct
+          return rawParts.flatMap(part => part.split(',').map(s => s.trim()).filter(Boolean))
+        }
+
+        // Complete default venue address if no user inputs exist
+        return [
+          'The Leela Palace, Diplomatic Enclave, Chanakyapuri',
+          'New Delhi, Delhi 110021'
+        ]
+      })(),
       fullAddress: (savedData
         ? [
             savedData.venueData?.mahalName || savedData.mahalName,
@@ -502,7 +502,7 @@ export default function TemplateEverlastingVows({ savedData }) {
             draftData.venueCity,
             draftData.state
           ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
-      ) || 'The Leela Palace, New Delhi, India',
+      ) || 'The Leela Palace, Diplomatic Enclave, Chanakyapuri, New Delhi, Delhi 110021',
       hashtag: (() => {
         const groom = savedData ? savedData.coupleData.groomName : draftData.groomName
         const bride = savedData ? savedData.coupleData.brideName : draftData.brideName
@@ -619,8 +619,8 @@ export default function TemplateEverlastingVows({ savedData }) {
       dayOfWeek: 'Friday',
       venueName: 'The Leela Palace',
       venueCity: 'New Delhi, India',
-      addressParts: ['The Leela Palace', 'New Delhi, India'],
-      fullAddress: 'The Leela Palace, New Delhi, India',
+      addressParts: ['The Leela Palace, Diplomatic Enclave, Chanakyapuri', 'New Delhi, Delhi 110021'],
+      fullAddress: 'The Leela Palace, Diplomatic Enclave, Chanakyapuri, New Delhi, Delhi 110021',
     },
     venue: {
       ...staticData.venue,
@@ -689,7 +689,7 @@ export default function TemplateEverlastingVows({ savedData }) {
 
           <EverlastingVowsHero data={data.hero} isDesktop={false} />
           {showGallery && <Story data={data.story} bgImage={photoBgMobile} isDesktop={false} />}
-          <Invitation data={data.invitation} isDesktop={false} />
+          <Invitation data={data.invitation} isDesktop={false} bgImage={messageBgMobile} />
           <Venue data={data.venue} bgImage={locationBgMobile} theme="gold" isDesktop={false} />
           {showSchedule && <Events data={data.events} theme="gold" bgImage={photoBgMobile} isDesktop={false} />}
           <Countdown data={data.countdown} bgImage={countdownBgMobile} theme="gold" isDesktop={false} />
@@ -736,7 +736,7 @@ export default function TemplateEverlastingVows({ savedData }) {
           </div>
         )}
         <div className="w-full">
-          <Invitation data={data.invitation} isDesktop={true} />
+          <Invitation data={data.invitation} isDesktop={true} bgImage={messageBgDesktop} />
         </div>
         <div className="w-full">
           <Venue data={data.venue} isDesktop={true} bgImage={locationBgDesktop} theme="gold" />

@@ -89,9 +89,11 @@ export const weddingData = {
       const d = new Date(getWeddingDateLine(inviteData) || '')
       return isNaN(d) ? 'Wednesday' : d.toLocaleDateString('en-US', { weekday: 'long' })
     })(),
-    venueName: inviteData.event?.venueName || inviteData.content?.venueAddress?.split?.(',')?.[0] || '',
-    fullAddress: inviteData.content?.venueAddress || '',
-    addressParts: (inviteData.content?.venueAddress || '').split(',').map(s => s.trim()).filter(Boolean),
+    venueName: inviteData.event?.venueName || 'The Leela Palace',
+    fullAddress: inviteData.content?.venueAddress || 'The Leela Palace, Diplomatic Enclave, Chanakyapuri, New Delhi, Delhi 110021',
+    addressParts: (inviteData.content?.venueAddress || '').split(',').map(s => s.trim()).filter(Boolean).length > 0
+      ? (inviteData.content?.venueAddress || '').split(',').map(s => s.trim()).filter(Boolean)
+      : ['The Leela Palace, Diplomatic Enclave, Chanakyapuri', 'New Delhi, Delhi 110021'],
     hashtag: `#${(getCouple(inviteData)?.groomName || 'Groom').trim().replace(/\s+/g, '')}${(getCouple(inviteData)?.brideName || 'Bride').trim().replace(/\s+/g, '')}Forever`,
     monogram: `${getCouple(inviteData)?.groomName?.[0] || 'A'} & ${getCouple(inviteData)?.brideName?.[0] || 'M'}`,
     backgroundImage: heroBg || heroArch,
