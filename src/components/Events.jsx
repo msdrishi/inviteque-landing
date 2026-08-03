@@ -106,12 +106,24 @@ export default function Events({ data, isDesktop, theme, bgImage }) {
   return (
     <section 
       id={data.id || 'events'} 
-      className="w-full min-h-[100svh] md:min-h-screen px-6 py-28 relative flex flex-col items-center justify-center overflow-hidden bg-cover bg-center"
+      className="w-full min-h-[100svh] md:min-h-screen px-6 py-28 relative flex flex-col items-center justify-center overflow-hidden"
       style={{ 
-        backgroundImage: bgImage ? `linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url(${bgImage})` : 'none',
         backgroundColor: colors.bg 
       }}
     >
+      {/* Background Image as native img tag for consistent composting */}
+      {bgImage && (
+        <>
+          <img
+            src={bgImage}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover z-0 pointer-events-none"
+          />
+          {/* Overlay to replicate CSS linear-gradient overlay */}
+          <div className="absolute inset-0 bg-white/85 z-[1] pointer-events-none" />
+        </>
+      )}
       {/* ── Title Section ── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

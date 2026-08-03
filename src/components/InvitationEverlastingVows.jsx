@@ -197,7 +197,6 @@ export default function InvitationEverlastingVows({ data, isDesktop }) {
       trigger: containerRef.current,
       start: 'top top',
       end: 'bottom bottom',
-      pin: stickyRef.current,
       scrub: 0.1,
       ease: 'none',
       onUpdate: (self) => {
@@ -222,13 +221,13 @@ export default function InvitationEverlastingVows({ data, isDesktop }) {
   return (
     <div 
       ref={containerRef}
-      className="relative w-full"
+      className="relative w-full bg-[#FFFDF2]"
       style={{ height: '260vh' }}
     >
       {/* Sticky Fullscreen Visual Viewport */}
       <div 
         ref={stickyRef}
-        className="sticky top-0 w-full h-[100svh] overflow-hidden flex flex-col items-center justify-center bg-[#FFFDF7]"
+        className="sticky top-0 w-full h-[100svh] overflow-hidden flex flex-col items-center justify-center bg-[#FFFDF2]"
       >
         {/* APPLE-STYLE SCROLL CANVAS */}
         <canvas

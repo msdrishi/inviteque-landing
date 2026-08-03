@@ -88,12 +88,24 @@ export default function StoryEverlastingVows({ data, isDesktop, bgImage }) {
     >
       {/* Sticky viewport container */}
       <div 
-        className="sticky top-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center bg-cover bg-center"
+        className="sticky top-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center"
         style={{
-          backgroundImage: bgImage ? `linear-gradient(rgba(255, 253, 242, 0.85), rgba(255, 253, 242, 0.85)), url(${bgImage})` : 'none',
           backgroundColor: '#FFFDF2',
         }}
       >
+        {/* Background Image as native img tag for consistent composting */}
+        {bgImage && (
+          <>
+            <img
+              src={bgImage}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover z-0 pointer-events-none"
+            />
+            {/* Overlay to replicate CSS linear-gradient overlay */}
+            <div className="absolute inset-0 bg-[#FFFDF2]/85 z-[1] pointer-events-none" />
+          </>
+        )}
         {/* Decorative corner accents for a garden vibe */}
         <CornerLeaves top={12} left={12} rotate={0} />
         <CornerLeaves top={12} right={12} rotate={90} />

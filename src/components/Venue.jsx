@@ -128,24 +128,23 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
       style={isDesktop ? {
         aspectRatio: '3 / 2',
         minHeight: 'auto',
-        backgroundColor: bgImage ? 'transparent' : colors.bg,
-        backgroundImage: `url(${bgImage || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782033908/io3izfnqso0mtsob8zlk.png"})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'scroll',
+        backgroundColor: colors.bg,
         paddingTop: 'clamp(80px, 12svh, 120px)',
         paddingBottom: 'clamp(52px, 10svh, 96px)',
       } : {
         minHeight: '100svh',
-        backgroundColor: bgImage ? 'transparent' : colors.bg,
-        backgroundImage: `url(${bgImage || locationImg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'scroll',
+        backgroundColor: colors.bg,
         paddingTop: 'clamp(80px, 12svh, 120px)',
         paddingBottom: 'clamp(52px, 10svh, 96px)',
       }}
     >
+      {/* Background Image as native img tag for consistent composting */}
+      <img
+        src={bgImage || locationImg}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover z-0 pointer-events-none"
+      />
 
       <CornerFloral top="10px" left="10px" rotate={0} />
       <CornerFloral top="10px" right="10px" rotate={90} />
