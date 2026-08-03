@@ -202,7 +202,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 20, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
           }}
-          className="text-[#E8C36A] font-normal leading-normal tracking-wide capitalize text-[52px] sm:text-[68px] lg:text-[84px]"
+          className="text-[#E8C36A] font-normal leading-normal tracking-wider uppercase text-[52px] sm:text-[68px] lg:text-[84px]"
           style={{ fontFamily: "'Oliver A', cursive" }}
         >
           {data.groomName || "Arjun"}
@@ -247,7 +247,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 20, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 1.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
           }}
-          className="text-[#E8C36A] font-normal leading-normal tracking-wide capitalize text-[52px] sm:text-[68px] lg:text-[84px] mb-6 sm:mb-8"
+          className="text-[#E8C36A] font-normal leading-normal tracking-wider uppercase text-[52px] sm:text-[68px] lg:text-[84px] mb-6 sm:mb-8"
           style={{ fontFamily: "'Oliver A', cursive" }}
         >
           {data.brideName || "Meera"}
@@ -298,7 +298,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
         }}
         initial="hidden"
         animate="show"
-        className="absolute bottom-0 w-[110%] sm:w-[95%] lg:w-[80%] max-w-[1200px] z-10 pointer-events-none"
+        className="absolute bottom-[-35px] sm:bottom-[-65px] w-[110%] sm:w-[95%] lg:w-[80%] max-w-[1200px] z-10 pointer-events-none"
       >
         <svg 
           viewBox="0 0 1200 400" 
