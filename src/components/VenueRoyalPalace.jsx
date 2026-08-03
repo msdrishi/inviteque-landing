@@ -97,23 +97,24 @@ export default function VenueRoyalPalace({ data, isDesktop, bgImage }) {
         aspectRatio: '3 / 2',
         minHeight: 'auto',
         backgroundColor: '#5C0A14',
-        backgroundImage: `url("${bgImage}")`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'scroll',
         paddingTop: 'clamp(80px, 12svh, 120px)',
         paddingBottom: 'clamp(52px, 10svh, 96px)',
       } : {
         minHeight: '100svh',
         backgroundColor: '#5C0A14',
-        backgroundImage: `url("${bgImage}")`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'scroll',
         paddingTop: 'clamp(80px, 12svh, 120px)',
         paddingBottom: 'clamp(52px, 10svh, 96px)',
       }}
     >
+      {/* Background Image as native img tag for consistent composting */}
+      {bgImage && (
+        <img
+          src={bgImage}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover z-0 pointer-events-none"
+        />
+      )}
       <CornerFloral top="10px" left="10px" rotate={0} />
       <CornerFloral top="10px" right="10px" rotate={90} />
       <CornerFloral bottom="6px" left="4px" rotate={-90} />

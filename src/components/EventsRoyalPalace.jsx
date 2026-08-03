@@ -70,11 +70,17 @@ export default function EventsRoyalPalace({ data, isDesktop, bgImage }) {
   return (
     <section 
       id={data.id || 'events'} 
-      className="w-full min-h-[100svh] md:min-h-screen px-6 py-28 relative flex flex-col items-center justify-center overflow-hidden bg-[#5C0A14] bg-cover bg-center"
-      style={{ 
-        backgroundImage: bgImage ? `url("${bgImage}")` : 'none',
-      }}
+      className="w-full min-h-[100svh] md:min-h-screen px-6 py-28 relative flex flex-col items-center justify-center overflow-hidden bg-[#5C0A14]"
     >
+      {/* Background Image as native img tag for consistent composting */}
+      {bgImage && (
+        <img
+          src={bgImage}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover z-0 pointer-events-none"
+        />
+      )}
       {/* Title Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
