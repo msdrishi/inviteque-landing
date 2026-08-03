@@ -92,8 +92,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
     return { day: '22', month: 'Nov', year: '2026' }
   }, [data.dateLine])
 
-  const heroBgDesktop = "/backgrounds/Royal Palace/hero-desktop.png"
-  const heroBgMobile = "/backgrounds/Royal Palace/hero-mobile.png"
+  const heroBgDesktop = "/backgrounds/Royal Palace/desktop-hero.png"
+  const heroBgMobile = "/backgrounds/Royal Palace/mobile-hero.png"
 
   return (
     <section 
@@ -202,8 +202,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 20, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
           }}
-          className="text-[#E8C36A] font-light leading-none uppercase tracking-wider text-[46px] sm:text-[62px] lg:text-[76px]"
-          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          className="text-[#E8C36A] font-normal leading-normal tracking-wide capitalize text-[52px] sm:text-[68px] lg:text-[84px]"
+          style={{ fontFamily: "'Oliver A', cursive" }}
         >
           {data.groomName || "Arjun"}
         </motion.h1>
@@ -247,8 +247,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 20, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 1.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
           }}
-          className="text-[#E8C36A] font-light leading-none uppercase tracking-wider text-[46px] sm:text-[62px] lg:text-[76px] mb-6 sm:mb-8"
-          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          className="text-[#E8C36A] font-normal leading-normal tracking-wide capitalize text-[52px] sm:text-[68px] lg:text-[84px] mb-6 sm:mb-8"
+          style={{ fontFamily: "'Oliver A', cursive" }}
         >
           {data.brideName || "Meera"}
         </motion.h1>
