@@ -103,6 +103,24 @@ export default function InvitationRoyalPalace({ data, bgImage }) {
 
   if (!data) return null
 
+  const containerVariants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.12
+      }
+    }
+  }
+
+  const childVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+    }
+  }
+
   return (
     <section
       ref={containerRef}
@@ -125,13 +143,21 @@ export default function InvitationRoyalPalace({ data, bgImage }) {
       {/* Falling Gold Petals Effect */}
       <FallingGoldPetals />
 
-      {/* Main Content Area - Aligned perfectly */}
-      <div className="relative z-10 w-full max-w-[500px] p-8 sm:p-10 flex flex-col items-center text-center">
+      {/* Main Content Area - Stagger Animated */}
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        className="relative z-10 w-full max-w-[500px] p-8 sm:p-10 flex flex-col items-center text-center"
+      >
         {/* Traditional Mandala Design */}
-        <RoyalMandalaDivider />
+        <motion.div variants={childVariants}>
+          <RoyalMandalaDivider />
+        </motion.div>
 
         {/* Title */}
-        <div className="mb-6">
+        <motion.div variants={childVariants} className="mb-6">
           <AnimatedTitle 
             text="The honor of your presence"
             style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 'clamp(10px, 2.5vw, 12px)', color: '#E3C57C', fontWeight: 500, margin: 0, letterSpacing: '3px', textTransform: 'uppercase' }}
@@ -140,14 +166,11 @@ export default function InvitationRoyalPalace({ data, bgImage }) {
             text="is requested"
             style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 'clamp(32px, 8vw, 42px)', color: '#E3C57C', fontWeight: 'normal', margin: '4px 0 0 0' }}
           />
-        </div>
+        </motion.div>
 
         {/* Custom Message Body */}
         <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          variants={childVariants}
           className="text-[#E3C57C] max-w-[340px] mb-6"
           style={{ 
             fontFamily: "'Cormorant Garamond', serif", 
@@ -161,10 +184,7 @@ export default function InvitationRoyalPalace({ data, bgImage }) {
 
         {/* Couple Names */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.0, ease: "easeOut" }}
+          variants={childVariants}
           className="my-2 text-center"
         >
           <h3 
@@ -188,12 +208,12 @@ export default function InvitationRoyalPalace({ data, bgImage }) {
         </motion.div>
 
         {/* Sub Monogram */}
-        <div className="mt-6 flex items-center justify-center gap-2 opacity-50">
+        <motion.div variants={childVariants} className="mt-6 flex items-center justify-center gap-2 opacity-50">
           <div className="h-[0.5px] bg-[#E3C57C] w-8" />
           <span className="text-[#E3C57C] text-[10px]" style={{ fontFamily: "'Montserrat', sans-serif", letterSpacing: '3px' }}>ROYAL UNION</span>
           <div className="h-[0.5px] bg-[#E3C57C] w-8" />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

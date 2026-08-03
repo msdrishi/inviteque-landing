@@ -10,17 +10,19 @@ import Venue from '../components/VenueRoyalPalace.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
+import cMapping from '../royalPalaceCloudinaryMapping.json'
+
 // Local Theme Background Assets (configured with absolute URL paths)
-const heroBgDesktop = "/backgrounds/Royal Palace/hero-desktop.png"
-const heroBgMobile = "/backgrounds/Royal Palace/hero-mobile.png"
-const photoBgDesktop = "/backgrounds/Royal Palace/photo-desktop.png"
-const photoBgMobile = "/backgrounds/Royal Palace/photo-mobile.png"
-const messageBgDesktop = "/backgrounds/Royal Palace/message-desktop.png"
-const messageBgMobile = "/backgrounds/Royal Palace/message-moboile.png"
-const venueBgDesktop = "/backgrounds/Royal Palace/venue-desktop.png"
-const venueBgMobile = "/backgrounds/Royal Palace/venue-mobile.png"
-const countdownBgDesktop = "/backgrounds/Royal Palace/countdown-deskotp.png"
-const countdownBgMobile = "/backgrounds/Royal Palace/countdown-mobile.png"
+const heroBgDesktop = cMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/hero-desktop.png"
+const heroBgMobile = cMapping['hero-mobile.png'] || "/backgrounds/Royal Palace/hero-mobile.png"
+const photoBgDesktop = cMapping['photo-desktop.png'] || "/backgrounds/Royal Palace/photo-desktop.png"
+const photoBgMobile = cMapping['photo-mobile.png'] || "/backgrounds/Royal Palace/photo-mobile.png"
+const messageBgDesktop = cMapping['message-desktop.png'] || "/backgrounds/Royal Palace/message-desktop.png"
+const messageBgMobile = cMapping['message-moboile.png'] || "/backgrounds/Royal Palace/message-moboile.png"
+const venueBgDesktop = cMapping['venue-desktop.png'] || "/backgrounds/Royal Palace/venue-desktop.png"
+const venueBgMobile = cMapping['venue-mobile.png'] || "/backgrounds/Royal Palace/venue-mobile.png"
+const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "/backgrounds/Royal Palace/countdown-deskotp.png"
+const countdownBgMobile = cMapping['countdown-mobile.png'] || "/backgrounds/Royal Palace/countdown-mobile.png"
 
 const fallbackPhoto1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964628/twilight-photo-1.png"
 const fallbackPhoto2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964629/twilight-photo-2.png"

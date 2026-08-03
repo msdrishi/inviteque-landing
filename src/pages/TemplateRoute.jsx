@@ -6,6 +6,7 @@ import TemplateTwilightSerenade from './TemplateTwilightSerenade.jsx'
 import TemplateBlossomWhisper from './TemplateBlossomWhisper.jsx'
 import TemplateEverlastingVows from './TemplateEverlastingVows.jsx'
 import TemplateRoyalPalace from './TemplateRoyalPalace.jsx'
+import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 
 // Import Template 3 Assets for Preloading
 import template3HeroBg from '../assets/themes/template3/hero_bg.png'
@@ -54,30 +55,8 @@ const TEMPLATE_ASSETS = {
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png",
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png"
   ],
-  'template-3': [
-    "/backgrounds/Royal Palace/hero-desktop.png",
-    "/backgrounds/Royal Palace/hero-mobile.png",
-    "/backgrounds/Royal Palace/photo-desktop.png",
-    "/backgrounds/Royal Palace/photo-mobile.png",
-    "/backgrounds/Royal Palace/message-desktop.png",
-    "/backgrounds/Royal Palace/message-moboile.png",
-    "/backgrounds/Royal Palace/venue-desktop.png",
-    "/backgrounds/Royal Palace/venue-mobile.png",
-    "/backgrounds/Royal Palace/countdown-deskotp.png",
-    "/backgrounds/Royal Palace/countdown-mobile.png"
-  ],
-  'royal-palace': [
-    "/backgrounds/Royal Palace/hero-desktop.png",
-    "/backgrounds/Royal Palace/hero-mobile.png",
-    "/backgrounds/Royal Palace/photo-desktop.png",
-    "/backgrounds/Royal Palace/photo-mobile.png",
-    "/backgrounds/Royal Palace/message-desktop.png",
-    "/backgrounds/Royal Palace/message-moboile.png",
-    "/backgrounds/Royal Palace/venue-desktop.png",
-    "/backgrounds/Royal Palace/venue-mobile.png",
-    "/backgrounds/Royal Palace/countdown-deskotp.png",
-    "/backgrounds/Royal Palace/countdown-mobile.png"
-  ],
+  'template-3': Object.values(royalPalaceMapping),
+  'royal-palace': Object.values(royalPalaceMapping),
   'blossom-whisper': [
     template3HeroBg,
     template3MessageBg,
@@ -214,10 +193,12 @@ export default function TemplateRoute() {
     return <Navigate to="/" replace />
   }
 
+  const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true'
+
   return (
     <div className="relative w-full min-h-screen">
-      {/* Template Component is only mounted when loading finishes, preserving animations */}
-      {!loading && (
+      {/* Template Component is mounted in the background as soon as data/preview is ready */}
+      {(inviteData || isPreview) && (
         <TemplateComponent savedData={inviteData} />
       )}
 
