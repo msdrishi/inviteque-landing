@@ -99,7 +99,7 @@ export default function InvitationRoyalPalace({ data, bgImage }) {
   })
 
   // Smooth springs for background parallax
-  const bgY = useSpring(useTransform(scrollYProgress, [0, 1], ['0%', '-6%']), { stiffness: 45, damping: 15 })
+  const bgY = useSpring(useTransform(scrollYProgress, [0, 1], ['3%', '-3%']), { stiffness: 45, damping: 15 })
 
   if (!data) return null
 
@@ -107,12 +107,12 @@ export default function InvitationRoyalPalace({ data, bgImage }) {
     <section
       ref={containerRef}
       id={data.id || "invitation"}
-      className="relative w-full min-h-[100svh] overflow-hidden flex flex-col justify-center items-center py-16 px-6 bg-[#FFFDF2]"
+      className="relative w-full min-h-[100svh] overflow-hidden flex flex-col justify-center items-center py-16 px-6 bg-[#5C0A14]"
     >
       {/* Parallax Background Image */}
       <motion.div
         className="absolute inset-0 z-0 will-change-transform"
-        style={{ y: bgY, scale: 1.05, transformOrigin: 'center' }}
+        style={{ y: bgY, scale: 1.12, transformOrigin: 'center' }}
       >
         <img
           src={bgImage}

@@ -88,7 +88,7 @@ export default function StoryRoyalPalace({ data, isDesktop, bgImage }) {
       style={{ height: '270vh' }}
     >
       {/* Sticky Viewport */}
-      <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center bg-[#FFFDF2]">
+      <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center bg-[#5C0A14]">
         {/* Background image container via <img> to prevent unquoted spaces issue */}
         {bgImage && (
           <img

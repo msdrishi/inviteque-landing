@@ -77,7 +77,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
   const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight)
 
   const { scrollY } = useScroll()
-  const rawY = useTransform(scrollY, [0, 800], ['0%', '-4%'])
+  const rawY = useTransform(scrollY, [0, 800], ['2%', '-3%'])
   const bgY = useSpring(rawY, { stiffness: 55, damping: 18 })
 
   useEffect(() => {
@@ -138,7 +138,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
       {/* Parallax background */}
       <motion.div
         className="absolute inset-0 z-0 will-change-transform"
-        style={{ y: bgY, scale: 1.05, transformOrigin: 'center' }}
+        style={{ y: bgY, scale: 1.12, transformOrigin: 'center' }}
       >
         <img
           src={isDesktop ? heroBgDesktop : heroBgMobile}
@@ -629,10 +629,10 @@ export default function TemplateRoyalPalace({ savedData }) {
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
 
   return (
-    <div className="relative min-h-screen bg-[#FFFDF2] text-[#7B0F1A]">
+    <div className="relative min-h-screen bg-[#5C0A14] text-[#E3C57C]">
       {/* MOBILE VIEW */}
       <div className="md:hidden flex justify-center items-start min-h-screen bg-[#1a1a1a]">
-        <div className="relative w-full max-w-[430px] min-h-[100svh] bg-[#FFFDF2] text-[#7B0F1A] shadow-[0_0_80px_rgba(0,0,0,0.5)]">
+        <div className="relative w-full max-w-[430px] min-h-[100svh] bg-[#5C0A14] text-[#E3C57C] shadow-[0_0_80px_rgba(0,0,0,0.5)]">
           {/* Watermark */}
           {showWatermark && (
             <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.35] select-none text-[#8A6E1E]">
@@ -679,7 +679,7 @@ export default function TemplateRoyalPalace({ savedData }) {
       </div>
 
       {/* DESKTOP VIEW */}
-      <div className="hidden md:block w-full min-h-screen bg-[#FFFDF2] relative">
+      <div className="hidden md:block w-full min-h-screen bg-[#5C0A14] relative">
         {showWatermark && (
           <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.22] select-none flex flex-col justify-around items-center text-[#8A6E1E]">
             <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
