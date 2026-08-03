@@ -150,12 +150,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
         </g>
       </svg>
 
-      {/* Hero content wrapper */}
       <motion.div 
         initial="hidden"
         animate="show"
         style={{ y: contentY }}
-        className="relative z-20 flex flex-col items-center w-[85%] sm:w-[75%] lg:w-[65%] max-w-[800px] text-center select-none"
+        className="relative z-20 flex flex-col items-center w-[85%] sm:w-[75%] lg:w-[65%] max-w-[800px] text-center select-none -translate-y-[25px] sm:-translate-y-[50px]"
       >
         {/* Monogram */}
         <motion.div 
@@ -179,7 +178,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 15, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 0.7, duration: 0.6 } }
           }}
-          className="text-[9px] sm:text-[11px] uppercase text-[#E2BF77] font-semibold mb-2"
+          className="text-[8px] sm:text-[9.5px] uppercase text-[#E2BF77] font-semibold mb-1.5"
           style={{ fontFamily: "'Montserrat', sans-serif", letterSpacing: '4px' }}
         >
           Together with their families
@@ -190,7 +189,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 15, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 0.8, duration: 0.6 } }
           }}
-          className="text-[8px] sm:text-[10px] uppercase text-[#E2BF77]/80 font-medium mb-5 sm:mb-6"
+          className="text-[7.5px] sm:text-[8.5px] uppercase text-[#E2BF77]/80 font-medium mb-4 sm:mb-5"
           style={{ fontFamily: "'Montserrat', sans-serif", letterSpacing: '3px' }}
         >
           Joyfully Invite You To Celebrate The Wedding Of
@@ -202,8 +201,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 20, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
           }}
-          className="text-[#E8C36A] font-normal leading-normal tracking-wider uppercase text-[52px] sm:text-[68px] lg:text-[84px]"
-          style={{ fontFamily: "'Oliver A', cursive" }}
+          className="text-[#E8C36A] font-medium leading-none tracking-widest uppercase text-[60px] sm:text-[82px] lg:text-[98px]"
+          style={{ fontFamily: "'Made Mirage', serif" }}
         >
           {data.groomName || "Arjun"}
         </motion.h1>
@@ -247,8 +246,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 20, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 1.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
           }}
-          className="text-[#E8C36A] font-normal leading-normal tracking-wider uppercase text-[52px] sm:text-[68px] lg:text-[84px] mb-6 sm:mb-8"
-          style={{ fontFamily: "'Oliver A', cursive" }}
+          className="text-[#E8C36A] font-medium leading-none tracking-widest uppercase text-[60px] sm:text-[82px] lg:text-[98px] mb-6 sm:mb-8"
+          style={{ fontFamily: "'Made Mirage', serif" }}
         >
           {data.brideName || "Meera"}
         </motion.h1>
@@ -259,11 +258,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 15, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 1.4, duration: 0.8 } }
           }}
-          className="flex flex-col items-center gap-2"
+          className="flex flex-col items-center gap-1.5"
         >
           <div 
-            className="text-[#E8C36A] flex items-center justify-center gap-3 font-semibold text-[11px] sm:text-[13px]"
-            style={{ fontFamily: "'Montserrat', sans-serif", letterSpacing: '4px' }}
+            className="text-[#E8C36A] flex items-center justify-center gap-2.5 font-semibold text-[9.5px] sm:text-[11.5px]"
+            style={{ fontFamily: "'Montserrat', sans-serif", letterSpacing: '3.5px' }}
           >
             <span>{dateParts.day}</span>
             <span className="text-[#D6A24A]/40">|</span>
@@ -273,7 +272,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
           </div>
           
           <p 
-            className="text-[9px] sm:text-[11px] uppercase text-[#E2BF77] font-medium tracking-[3px]"
+            className="text-[8px] sm:text-[9.5px] uppercase text-[#E2BF77] font-medium tracking-[2.5px]"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             At Six O'clock In The Evening
@@ -281,11 +280,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
           
           {/* Venue Line */}
           <p 
-            className="text-[10px] sm:text-[12px] uppercase text-[#E8C36A] font-semibold tracking-[2px] mt-2 max-w-[280px] sm:max-w-md"
+            className="text-[9px] sm:text-[10.5px] uppercase text-[#E8C36A] font-semibold tracking-[1.5px] mt-1.5 max-w-[280px] sm:max-w-md"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             {data.venueName}
-            <span className="block text-[9px] sm:text-[10px] text-[#E2BF77] font-medium mt-1">{data.venueCity}</span>
+            <span className="block text-[8px] sm:text-[9px] text-[#E2BF77] font-medium mt-0.5">{data.venueCity}</span>
           </p>
         </motion.div>
       </motion.div>
