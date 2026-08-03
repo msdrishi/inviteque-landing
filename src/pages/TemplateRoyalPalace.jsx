@@ -97,7 +97,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
   return (
     <section 
-      className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-start pt-[8vh] sm:pt-[12vh] pb-[32vh] overflow-hidden bg-[#7D000A]"
+      className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-start pt-[13vh] sm:pt-[17vh] pb-[29vh] overflow-hidden bg-[#7D000A]"
     >
       {/* Background Images with Parallax Movement */}
       <motion.div 
