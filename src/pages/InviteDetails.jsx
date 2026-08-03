@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
 import { fadeUp } from '../motionVariants'
+import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
+import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 const themeImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029551/j3pvwk2eiuvbrxt0m39d.png"
 import { API_URL } from '../config'
 
@@ -112,9 +114,9 @@ export default function InviteDetails() {
   const coverImage = isTwilight 
     ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
     : isEverlasting
-      ? "/backgrounds/Everlasting%20Vows/hero_desktop.png"
+      ? (everlastingVowsMapping['hero_desktop.png'] || "/backgrounds/Everlasting%20Vows/hero_desktop.png")
       : isRoyalPalace
-        ? "/backgrounds/Royal Palace/hero-desktop.png"
+        ? (royalPalaceMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/hero-desktop.png")
         : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
