@@ -79,7 +79,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
   const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight)
 
   const { scrollY } = useScroll()
-  const rawY = useTransform(scrollY, [0, 800], ['2%', '-3%'])
+  const rawY = useTransform(scrollY, [0, 800], ['2%', '-3%'], { clamp: true })
   const bgY = useSpring(rawY, { stiffness: 55, damping: 18 })
 
   useEffect(() => {

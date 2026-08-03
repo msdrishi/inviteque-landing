@@ -96,7 +96,7 @@ export default function VenueRoyalPalace({ data, isDesktop, bgImage }) {
       style={isDesktop ? {
         aspectRatio: '3 / 2',
         minHeight: 'auto',
-        backgroundColor: bgImage ? 'transparent' : colors.bg,
+        backgroundColor: '#5C0A14',
         backgroundImage: `url("${bgImage}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -105,7 +105,7 @@ export default function VenueRoyalPalace({ data, isDesktop, bgImage }) {
         paddingBottom: 'clamp(52px, 10svh, 96px)',
       } : {
         minHeight: '100svh',
-        backgroundColor: bgImage ? 'transparent' : colors.bg,
+        backgroundColor: '#5C0A14',
         backgroundImage: `url("${bgImage}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',

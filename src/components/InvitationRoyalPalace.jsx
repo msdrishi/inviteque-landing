@@ -99,7 +99,7 @@ export default function InvitationRoyalPalace({ data, bgImage }) {
   })
 
   // Smooth springs for background parallax
-  const bgY = useSpring(useTransform(scrollYProgress, [0, 1], ['3%', '-3%']), { stiffness: 45, damping: 15 })
+  const bgY = useSpring(useTransform(scrollYProgress, [0, 1], ['3%', '-3%'], { clamp: true }), { stiffness: 45, damping: 15 })
 
   if (!data) return null
 

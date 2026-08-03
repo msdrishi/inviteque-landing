@@ -110,7 +110,7 @@ export default function CountdownRoyalPalace({ data, isDesktop, bgImage, centerT
   return (
     <section
       id={data.id || 'countdown'}
-      className="relative w-full overflow-hidden"
+      className="relative w-full overflow-hidden bg-[#5C0A14]"
       style={isDesktop ? { aspectRatio: '3 / 2', minHeight: 'auto' } : { minHeight: '92svh' }}
     >
       {/* Background image */}
