@@ -198,7 +198,7 @@ export default function TemplateRoute() {
   return (
     <div className="relative w-full min-h-screen">
       {/* Template Component is mounted in the background as soon as data/preview is ready */}
-      {(inviteData || isPreview) && (
+      {(!code || inviteData || isPreview) && (
         <TemplateComponent savedData={inviteData} />
       )}
 
