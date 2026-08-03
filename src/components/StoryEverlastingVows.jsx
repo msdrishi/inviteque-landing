@@ -18,17 +18,15 @@ export default function StoryEverlastingVows({ data, isDesktop, bgImage }) {
 
   // Apply a balanced, responsive spring configuration
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 25,
-    max: 1.0,
-    mass: 0.25
+    stiffness: 45,
+    damping: 18,
+    mass: 0.2
   })
 
   const smoothEntryProgress = useSpring(entryProgress, {
-    stiffness: 100,
-    damping: 25,
-    max: 1.0,
-    mass: 0.25
+    stiffness: 45,
+    damping: 18,
+    mass: 0.2
   })
 
   if (!data || !Array.isArray(data.items)) return null
@@ -84,7 +82,7 @@ export default function StoryEverlastingVows({ data, isDesktop, bgImage }) {
     <div 
       ref={containerRef} 
       className="relative w-full"
-      style={{ height: '270vh' }}
+      style={{ height: '330vh' }}
     >
       {/* Sticky viewport container */}
       <div 

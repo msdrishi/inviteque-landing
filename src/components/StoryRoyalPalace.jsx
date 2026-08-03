@@ -18,15 +18,15 @@ export default function StoryRoyalPalace({ data, isDesktop, bgImage }) {
 
   // Apply springs
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 25,
-    mass: 0.25
+    stiffness: 45,
+    damping: 18,
+    mass: 0.2
   })
 
   const smoothEntryProgress = useSpring(entryProgress, {
-    stiffness: 100,
-    damping: 25,
-    mass: 0.25
+    stiffness: 45,
+    damping: 18,
+    mass: 0.2
   })
 
   if (!data || !Array.isArray(data.items)) return null
@@ -85,7 +85,7 @@ export default function StoryRoyalPalace({ data, isDesktop, bgImage }) {
     <div 
       ref={containerRef} 
       className="relative w-full"
-      style={{ height: '270vh' }}
+      style={{ height: '330vh' }}
     >
       {/* Sticky Viewport */}
       <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center bg-[#5C0A14]">
