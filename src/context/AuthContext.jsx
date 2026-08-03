@@ -195,7 +195,8 @@ export function AuthProvider({ children }) {
       }
 
       if (!response.ok) {
-        throw new Error('Failed to save invitation')
+        const errData = await response.json().catch(() => ({}))
+        throw new Error(errData.message || 'Failed to save invitation')
       }
 
       return await response.json()
