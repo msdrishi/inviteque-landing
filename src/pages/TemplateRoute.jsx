@@ -7,6 +7,7 @@ import TemplateBlossomWhisper from './TemplateBlossomWhisper.jsx'
 import TemplateEverlastingVows from './TemplateEverlastingVows.jsx'
 import TemplateRoyalPalace from './TemplateRoyalPalace.jsx'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
+import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 
 // Import Template 3 Assets for Preloading
 import template3HeroBg from '../assets/themes/template3/hero_bg.png'
@@ -63,36 +64,9 @@ const TEMPLATE_ASSETS = {
     template3VenueBg,
     template3DesktopBg
   ],
-  'template-4': [
-    "/backgrounds/Everlasting%20Vows/hero_desktop.png",
-    "/backgrounds/Everlasting%20Vows/hero_mobile.png",
-    "/backgrounds/Everlasting%20Vows/photo_desktop.png",
-    "/backgrounds/Everlasting%20Vows/photo_mobile.png",
-    "/backgrounds/Everlasting%20Vows/wedding_desktop.png",
-    "/backgrounds/Everlasting%20Vows/wedding_mobile.png",
-    "/backgrounds/Everlasting%20Vows/venue_desktop.png",
-    "/backgrounds/Everlasting%20Vows/venue_mobile.png"
-  ],
-  'everlasting-vows': [
-    "/backgrounds/Everlasting%20Vows/hero_desktop.png",
-    "/backgrounds/Everlasting%20Vows/hero_mobile.png",
-    "/backgrounds/Everlasting%20Vows/photo_desktop.png",
-    "/backgrounds/Everlasting%20Vows/photo_mobile.png",
-    "/backgrounds/Everlasting%20Vows/wedding_desktop.png",
-    "/backgrounds/Everlasting%20Vows/wedding_mobile.png",
-    "/backgrounds/Everlasting%20Vows/venue_desktop.png",
-    "/backgrounds/Everlasting%20Vows/venue_mobile.png"
-  ],
-  'everlastingvows': [
-    "/backgrounds/Everlasting%20Vows/hero_desktop.png",
-    "/backgrounds/Everlasting%20Vows/hero_mobile.png",
-    "/backgrounds/Everlasting%20Vows/photo_desktop.png",
-    "/backgrounds/Everlasting%20Vows/photo_mobile.png",
-    "/backgrounds/Everlasting%20Vows/wedding_desktop.png",
-    "/backgrounds/Everlasting%20Vows/wedding_mobile.png",
-    "/backgrounds/Everlasting%20Vows/venue_desktop.png",
-    "/backgrounds/Everlasting%20Vows/venue_mobile.png"
-  ]
+  'template-4': Object.values(everlastingVowsMapping),
+  'everlasting-vows': Object.values(everlastingVowsMapping),
+  'everlastingvows': Object.values(everlastingVowsMapping)
 }
 
 const extractImageUrls = (data) => {
