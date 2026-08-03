@@ -399,20 +399,7 @@ export default function Payment() {
   }
 
   return (
-    <div 
-      className="min-h-screen bg-iqBg font-saas text-iqText flex flex-col relative"
-      style={isEverlasting ? {
-        backgroundImage: `url("${coverImage}")`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      } : {}}
-    >
-      {/* Translucent overlay for Everlasting Vows to keep high readability */}
-      {isEverlasting && (
-        <div className="absolute inset-0 bg-[#FFFDF2]/85 backdrop-blur-[4px] z-0 pointer-events-none" />
-      )}
-
+    <div className="min-h-screen bg-iqBg font-saas text-iqText flex flex-col">
       {/* Header */}
       <header className="border-b border-iqBorder bg-white/80 backdrop-blur-md sticky top-0 z-30">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
@@ -430,7 +417,7 @@ export default function Payment() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 mx-auto w-full max-w-2xl px-6 py-8 md:py-12 relative z-10">
+      <main className="flex-1 mx-auto w-full max-w-2xl px-6 py-8 md:py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
