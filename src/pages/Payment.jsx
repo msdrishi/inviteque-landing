@@ -6,6 +6,8 @@ import { API_URL } from '../config'
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
 import { fadeUp } from '../motionVariants'
 import { templates } from '../templates/templates'
+import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
+import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 const themeImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029551/j3pvwk2eiuvbrxt0m39d.png"
 
 export default function Payment() {
@@ -29,9 +31,9 @@ export default function Payment() {
   const coverImage = isTwilight 
     ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
     : isEverlasting
-      ? "/backgrounds/Everlasting%20Vows/hero_desktop.png"
+      ? (everlastingVowsMapping['hero_desktop.png'] || "/backgrounds/Everlasting%20Vows/hero_desktop.png")
       : isRoyalPalace
-        ? "/backgrounds/Royal Palace/hero-desktop.png"
+        ? (royalPalaceMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/hero-desktop.png")
         : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
@@ -232,7 +234,8 @@ export default function Payment() {
         })
 
         if (!verifyRes.ok) {
-          throw new Error('Failed to mark purchase as successful.')
+          const errData = await verifyRes.json().catch(() => ({}))
+          throw new Error(errData.message || 'Failed to mark purchase as successful.')
         }
 
         navigate('/payment-confirmation', {
@@ -285,7 +288,8 @@ export default function Payment() {
         })
 
         if (!verifyRes.ok) {
-          throw new Error('Failed to mark purchase as successful.')
+          const errData = await verifyRes.json().catch(() => ({}))
+          throw new Error(errData.message || 'Failed to mark purchase as successful.')
         }
 
         navigate('/payment-confirmation', {
@@ -352,7 +356,8 @@ export default function Payment() {
             })
 
             if (!verifyRes.ok) {
-              throw new Error('Payment verification failed.')
+              const errData = await verifyRes.json().catch(() => ({}))
+              throw new Error(errData.message || 'Payment verification failed.')
             }
 
             navigate('/payment-confirmation', {
@@ -394,7 +399,20 @@ export default function Payment() {
   }
 
   return (
-    <div className="min-h-screen bg-iqBg font-saas text-iqText flex flex-col">
+    <div 
+      className="min-h-screen bg-iqBg font-saas text-iqText flex flex-col relative"
+      style={isEverlasting ? {
+        backgroundImage: `url("${coverImage}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      } : {}}
+    >
+      {/* Translucent overlay for Everlasting Vows to keep high readability */}
+      {isEverlasting && (
+        <div className="absolute inset-0 bg-[#FFFDF2]/85 backdrop-blur-[4px] z-0 pointer-events-none" />
+      )}
+
       {/* Header */}
       <header className="border-b border-iqBorder bg-white/80 backdrop-blur-md sticky top-0 z-30">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
@@ -412,7 +430,7 @@ export default function Payment() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 mx-auto w-full max-w-2xl px-6 py-8 md:py-12">
+      <main className="flex-1 mx-auto w-full max-w-2xl px-6 py-8 md:py-12 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
