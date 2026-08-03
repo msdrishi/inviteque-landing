@@ -77,8 +77,8 @@ function FallingGoldPetals() {
 
 function RoyalPalaceHero({ data, isDesktop }) {
   const { scrollY } = useScroll()
-  const rawY = useTransform(scrollY, [0, 800], [0, -60], { clamp: true })
-  const contentY = useSpring(rawY, { stiffness: 55, damping: 20 })
+  const bgRawY = useTransform(scrollY, [0, 800], [0, 80], { clamp: true })
+  const bgY = useSpring(bgRawY, { stiffness: 55, damping: 20 })
 
   const dateParts = useMemo(() => {
     const parts = String(data.dateLine || '').trim().split(/\s+/)
@@ -97,16 +97,19 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
   return (
     <section 
-      className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-center overflow-hidden bg-[#7D000A]"
+      className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-start pt-[8vh] sm:pt-[12vh] pb-[32vh] overflow-hidden bg-[#7D000A]"
     >
-      {/* Background Images */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      {/* Background Images with Parallax Movement */}
+      <motion.div 
+        style={{ y: bgY }}
+        className="absolute inset-0 z-0 pointer-events-none scale-110"
+      >
         <img 
           src={isDesktop ? heroBgDesktop : heroBgMobile} 
           alt="" 
           className="w-full h-full object-cover" 
         />
-      </div>
+      </motion.div>
 
       {/* Royal double border framing the page */}
       <div className="absolute inset-0 pointer-events-none z-30">
@@ -150,11 +153,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
         </g>
       </svg>
 
+      {/* Hero content wrapper (Static position in top 70% of screen) */}
       <motion.div 
         initial="hidden"
         animate="show"
-        style={{ y: contentY }}
-        className="relative z-20 flex flex-col items-center w-[85%] sm:w-[75%] lg:w-[65%] max-w-[800px] text-center select-none -translate-y-[25px] sm:-translate-y-[50px]"
+        className="relative z-20 flex flex-col items-center w-[85%] sm:w-[75%] lg:w-[65%] max-w-[800px] text-center select-none"
       >
         {/* Monogram */}
         <motion.div 
@@ -162,7 +165,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { scale: 0.8, opacity: 0 },
             show: { scale: 1, opacity: 0.85, transition: { delay: 0.6, duration: 0.8 } }
           }}
-          className="mb-3 sm:mb-4"
+          className="mb-2"
         >
           <svg viewBox="0 0 40 40" width="36" height="36" fill="none" className="stroke-[#E8C36A]">
             <circle cx="20" cy="20" r="18" strokeWidth="1" strokeDasharray="3,3" />
@@ -178,7 +181,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 15, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 0.7, duration: 0.6 } }
           }}
-          className="text-[8px] sm:text-[9.5px] uppercase text-[#E2BF77] font-semibold mb-1.5"
+          className="text-[8px] sm:text-[9px] uppercase text-[#E2BF77] font-semibold mb-0.5"
           style={{ fontFamily: "'Montserrat', sans-serif", letterSpacing: '4px' }}
         >
           Together with their families
@@ -189,7 +192,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 15, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 0.8, duration: 0.6 } }
           }}
-          className="text-[7.5px] sm:text-[8.5px] uppercase text-[#E2BF77]/80 font-medium mb-4 sm:mb-5"
+          className="text-[7.5px] sm:text-[8px] uppercase text-[#E2BF77]/80 font-medium mb-3 sm:mb-4"
           style={{ fontFamily: "'Montserrat', sans-serif", letterSpacing: '3px' }}
         >
           Joyfully Invite You To Celebrate The Wedding Of
@@ -201,7 +204,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 20, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
           }}
-          className="text-[#E8C36A] font-medium leading-none tracking-widest uppercase text-[60px] sm:text-[82px] lg:text-[98px]"
+          className="text-[#E8C36A] font-medium leading-none tracking-widest uppercase text-[36px] sm:text-[52px] lg:text-[64px]"
           style={{ fontFamily: "'Made Mirage', serif" }}
         >
           {data.groomName || "Arjun"}
@@ -213,7 +216,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { scale: 0.7, opacity: 0 },
             show: { scale: 1, opacity: 1, transition: { delay: 1.05, duration: 0.6 } }
           }}
-          className="flex items-center justify-center gap-3 my-2 sm:my-3 text-[#D6A24A]"
+          className="flex items-center justify-center gap-3 my-1.5 sm:my-2.5 text-[#D6A24A]"
         >
           {/* Floral Sprig */}
           <svg viewBox="0 0 100 20" className="w-16 sm:w-20 text-[#D6A24A] opacity-70" fill="none" stroke="currentColor" strokeWidth="1.2">
@@ -225,7 +228,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             <circle cx="82" cy="9" r="1.5" fill="currentColor" stroke="none" />
           </svg>
           <span 
-            className="text-[28px] sm:text-[36px] lg:text-[44px] font-normal italic lowercase"
+            className="text-[24px] sm:text-[32px] lg:text-[40px] font-normal italic lowercase"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             &amp;
@@ -246,7 +249,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 20, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 1.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
           }}
-          className="text-[#E8C36A] font-medium leading-none tracking-widest uppercase text-[60px] sm:text-[82px] lg:text-[98px] mb-6 sm:mb-8"
+          className="text-[#E8C36A] font-medium leading-none tracking-widest uppercase text-[36px] sm:text-[52px] lg:text-[64px] mb-4 sm:mb-5"
           style={{ fontFamily: "'Made Mirage', serif" }}
         >
           {data.brideName || "Meera"}
@@ -258,10 +261,10 @@ function RoyalPalaceHero({ data, isDesktop }) {
             hidden: { y: 15, opacity: 0 },
             show: { y: 0, opacity: 1, transition: { delay: 1.4, duration: 0.8 } }
           }}
-          className="flex flex-col items-center gap-1.5"
+          className="flex flex-col items-center gap-1"
         >
           <div 
-            className="text-[#E8C36A] flex items-center justify-center gap-2.5 font-semibold text-[9.5px] sm:text-[11.5px]"
+            className="text-[#E8C36A] flex items-center justify-center gap-2.5 font-semibold text-[9px] sm:text-[10.5px]"
             style={{ fontFamily: "'Montserrat', sans-serif", letterSpacing: '3.5px' }}
           >
             <span>{dateParts.day}</span>
@@ -272,7 +275,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
           </div>
           
           <p 
-            className="text-[8px] sm:text-[9.5px] uppercase text-[#E2BF77] font-medium tracking-[2.5px]"
+            className="text-[7.5px] sm:text-[8.5px] uppercase text-[#E2BF77] font-medium tracking-[2.5px]"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             At Six O'clock In The Evening
@@ -280,11 +283,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
           
           {/* Venue Line */}
           <p 
-            className="text-[9px] sm:text-[10.5px] uppercase text-[#E8C36A] font-semibold tracking-[1.5px] mt-1.5 max-w-[280px] sm:max-w-md"
+            className="text-[8.5px] sm:text-[9.5px] uppercase text-[#E8C36A] font-semibold tracking-[1.5px] mt-1 max-w-[280px] sm:max-w-md"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             {data.venueName}
-            <span className="block text-[8px] sm:text-[9px] text-[#E2BF77] font-medium mt-0.5">{data.venueCity}</span>
+            <span className="block text-[7.5px] sm:text-[8.5px] text-[#E2BF77] font-medium mt-0.5">{data.venueCity}</span>
           </p>
         </motion.div>
       </motion.div>
@@ -336,6 +339,43 @@ function RoyalPalaceHero({ data, isDesktop }) {
           <path d="M 150 320 H 240 M 280 320 H 360 M 480 320 H 520 M 680 320 H 720 M 840 320 H 920 M 960 320 H 1050" strokeDasharray="4,4" />
         </svg>
       </motion.div>
+
+      {/* Scroll down indicator button */}
+      <motion.button
+        type="button"
+        onClick={() => {
+          window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })
+        }}
+        aria-label="Scroll down"
+        className="absolute z-40 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        style={{ bottom: 'clamp(20px, 4vh, 40px)' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3.0 }}
+      >
+        <motion.div
+          animate={{ y: [0, 5, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+          style={{
+            width: 38,
+            height: 38,
+            borderRadius: '50%',
+            border: '1.5px solid rgba(212,175,55,0.4)',
+            background: 'rgba(255,253,242,0.7)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <svg viewBox="0 0 18 11" width="13" height="8" fill="none" aria-hidden="true">
+            <path d="M1 1.5 L9 9.5 L17 1.5"
+              stroke="#7B0F1A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+              opacity="0.8"
+            />
+          </svg>
+        </motion.div>
+      </motion.button>
     </section>
   )
 }
