@@ -107,7 +107,7 @@ export default function InvitationRoyalPalace({ data, bgImage }) {
     <section
       ref={containerRef}
       id={data.id || "invitation"}
-      className="relative w-full min-h-[100svh] overflow-hidden flex flex-col justify-center items-center py-16 px-6 bg-[#5C0A14]"
+      className="relative w-full min-h-0 md:min-h-screen overflow-hidden flex flex-col justify-center items-center py-20 md:py-28 px-6 bg-[#5C0A14]"
     >
       {/* Parallax Background Image */}
       <motion.div
