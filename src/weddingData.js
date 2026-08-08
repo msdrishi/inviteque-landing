@@ -114,18 +114,20 @@ export const weddingData = {
   },
   venue: {
     id: 'venue',
-    title: inviteData.event?.sectionTitle,
-    venueName: inviteData.event?.venueName || inviteData.content?.venueAddress,
-    location: inviteData.event?.address || inviteData.content?.venueAddress,
+    title: inviteData.event?.sectionTitle || 'Our Venue',
+    venueName: inviteData.event?.venueName || inviteData.content?.venueAddress || 'The Leela Palace',
+    venueLine1: 'The Leela Palace, Diplomatic Enclave, Chanakyapuri',
+    venueLine2: 'New Delhi, Delhi 110021',
+    location: inviteData.event?.address || inviteData.content?.venueAddress || 'The Leela Palace, Diplomatic Enclave, Chanakyapuri, New Delhi, Delhi 110021',
     venueCity: (() => {
-      const addr = inviteData.event?.address || inviteData.content?.venueAddress || ''
+      const addr = inviteData.event?.address || inviteData.content?.venueAddress || 'The Leela Palace, Diplomatic Enclave, Chanakyapuri, New Delhi, Delhi 110021'
       const parts = String(addr).split(',').map(s => s.trim()).filter(Boolean)
       if (parts.length >= 2) return parts[parts.length - 2]
       if (parts.length === 1) return parts[0]
-      return ''
+      return 'New Delhi'
     })(),
-    mapLabel: inviteData.event?.mapLabel,
-    mapUrl: inviteData.event?.mapUrl || inviteData.content?.mapLink,
+    mapLabel: inviteData.event?.mapLabel || 'Locate on Map',
+    mapUrl: inviteData.event?.mapUrl || inviteData.content?.mapLink || 'https://maps.google.com',
     backgroundImage: locationImg,
   },
   date: {

@@ -54,7 +54,8 @@ const TEMPLATE_ASSETS = {
     "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782033902/nelfh17u4fep6v8ksoei.webp",
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029563/kozuh0rafoxa9zwysfjq.png",
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png"
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786194482/sbwivzirylzohych9vju.png"
   ],
   'template-3': Object.values(royalPalaceMapping),
   'royal-palace': Object.values(royalPalaceMapping),
@@ -130,9 +131,10 @@ export default function TemplateRoute() {
         const allAssets = [...staticAssets, ...dynamicAssets];
 
         const assetsPromise = preloadImages(allAssets);
+        const fontsPromise = document.fonts.ready;
         const delayPromise = new Promise(resolve => setTimeout(resolve, 1500));
 
-        await Promise.all([assetsPromise, delayPromise]);
+        await Promise.all([assetsPromise, fontsPromise, delayPromise]);
         
         if (active) {
           setLoading(false);
@@ -171,8 +173,8 @@ export default function TemplateRoute() {
 
   return (
     <div className="relative w-full min-h-screen">
-      {/* Template Component is mounted in the background as soon as data/preview is ready */}
-      {(!code || inviteData || isPreview) && (
+      {/* Template Component is mounted only when loading finishes */}
+      {!loading && (!code || inviteData || isPreview) && (
         <TemplateComponent savedData={inviteData} />
       )}
 

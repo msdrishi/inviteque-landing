@@ -89,8 +89,8 @@ export default function TemplateAuraOfElegance({ savedData }) {
     },
     venue: {
       ...staticData.venue,
-      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || '',
-      venueLine1: savedData
+      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || staticData.venue.venueName,
+      venueLine1: (savedData
         ? [
             savedData.venueData?.mahalName || savedData.mahalName,
             savedData.venueData?.venueAddress || savedData.venueName
@@ -98,8 +98,9 @@ export default function TemplateAuraOfElegance({ savedData }) {
         : [
             draftData.mahalName,
             draftData.venueAddress
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
-      venueLine2: savedData
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+      ) || staticData.venue.venueLine1,
+      venueLine2: (savedData
         ? [
             savedData.venueData?.venueCity || savedData.venueCity,
             savedData.venueData?.state || savedData.state
@@ -107,8 +108,9 @@ export default function TemplateAuraOfElegance({ savedData }) {
         : [
             draftData.venueCity,
             draftData.state
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
-      location: savedData
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+      ) || staticData.venue.venueLine2,
+      location: (savedData
         ? [
             savedData.venueData?.mahalName || savedData.mahalName,
             savedData.venueData?.venueAddress || savedData.venueName,
@@ -120,7 +122,8 @@ export default function TemplateAuraOfElegance({ savedData }) {
             draftData.venueAddress,
             draftData.venueCity,
             draftData.state
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+      ) || staticData.venue.location,
       mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData.mapLink) || staticData.venue.mapUrl,
     },
     countdown: {
@@ -277,7 +280,7 @@ export default function TemplateAuraOfElegance({ savedData }) {
 
         {/* 4) Venue Section (Details + QR Code map card side-by-side) */}
         <div className="w-full">
-          <Venue data={data.venue} isDesktop={true} />
+          <Venue data={data.venue} isDesktop={true} bgImage="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786194482/sbwivzirylzohych9vju.png" />
         </div>
 
         {/* 5) Wedding Schedule Section (Reception, Haldi, Wedding Vows side-by-side) */}

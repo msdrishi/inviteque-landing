@@ -93,13 +93,7 @@ export default function VenueRoyalPalace({ data, isDesktop, bgImage }) {
         ? "relative w-full overflow-hidden px-4 py-6 flex flex-col items-center text-center venue-section" 
         : "relative w-full overflow-hidden px-4 py-6 flex flex-col items-center text-center"
       }
-      style={isDesktop ? {
-        aspectRatio: '3 / 2',
-        minHeight: 'auto',
-        backgroundColor: '#5C0A14',
-        paddingTop: 'clamp(80px, 12svh, 120px)',
-        paddingBottom: 'clamp(52px, 10svh, 96px)',
-      } : {
+      style={{
         minHeight: '100svh',
         backgroundColor: '#5C0A14',
         paddingTop: 'clamp(80px, 12svh, 120px)',

@@ -34,6 +34,15 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Argeta';
+  src: url('./assets/fonts/argeta.regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -201,11 +210,8 @@ body::before {
     min-height: auto !important;
   }
 
-  /* Venue */
-  .venue-section {
-    min-height: auto !important;
-    aspect-ratio: 3 / 2 !important;
-  }
+
+  /* Venue section inherits full-width and full-height default settings on desktop */
 }
 
 /* Butterfly Wing Flutter Animations */
