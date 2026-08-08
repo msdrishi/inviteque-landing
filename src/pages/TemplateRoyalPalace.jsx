@@ -77,7 +77,7 @@ const AmpersandDivider = ({ color = '#C59B3F' }) => (
     </svg>
 
     {/* Center Ampersand in GreatVibes font */}
-    <span className="text-[48px] leading-[0.6] text-[#C59B3F] flex-shrink-0 pb-1.5" style={{ fontFamily: "'GreatVibes', cursive" }}>
+    <span className="text-[32px] leading-[0.8] text-[#C59B3F] flex-shrink-0 pb-0.5" style={{ fontFamily: "'GreatVibes', cursive" }}>
       &amp;
     </span>
 
@@ -122,13 +122,13 @@ function toPascalCase(str) {
     .join(' ');
 }
 
-// Name Typewriter Animation Variants (Smoother Stagger + Soft Blur Fade Transition)
+// Name Typewriter Animation Variants (Slower & Smoother Stagger + Soft Blur Fade)
 const groomContainerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
+      staggerChildren: 0.12,
       delayChildren: 1.1
     }
   }
@@ -139,19 +139,19 @@ const brideContainerVariants = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 1.9
+      staggerChildren: 0.12,
+      delayChildren: 2.1
     }
   }
 }
 
 const letterAnimVariants = {
-  hidden: { opacity: 0, y: 5, filter: 'blur(3px)' },
+  hidden: { opacity: 0, y: 6, filter: 'blur(4px)' },
   show: {
     opacity: 1,
     y: 0,
     filter: 'blur(0px)',
-    transition: { duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }
+    transition: { duration: 0.8, ease: "easeOut" }
   }
 }
 
@@ -202,8 +202,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
 
 
-      {/* Hero content wrapper (Restricted to top 60% of viewport) */}
-      <div className="relative z-20 flex flex-col items-center justify-between w-[92%] sm:w-[85%] max-w-[700px] text-center h-[58svh] mt-[5svh]">
+      {/* Hero content wrapper (Restricted to top 60-65% of viewport) */}
+      <div className="relative z-20 flex flex-col items-center justify-start w-[92%] sm:w-[85%] max-w-[700px] text-center mt-[4.5svh] gap-2.5">
         
         {/* Header Block (Intro Text + Leaf + Heart) */}
         <div className="flex flex-col items-center w-full">
@@ -255,7 +255,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
         </div>
 
         {/* Center Block: couple names animated last with glare shine */}
-        <div className="flex flex-col items-center w-full">
+        <div className="flex flex-col items-center w-full mt-0.5">
           {/* Groom Name (Rohan) */}
           <motion.h1 
             initial="hidden"
@@ -307,7 +307,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1.7, duration: 1.0, ease: "easeOut" }}
+            transition={{ delay: 1.8, duration: 1.0, ease: "easeOut" }}
             className="flex items-center justify-center w-full"
           >
             <AmpersandDivider color="#C59B3F" />
@@ -362,13 +362,13 @@ function RoyalPalaceHero({ data, isDesktop }) {
         </div>
 
         {/* Date, Time, and Venue block */}
-        <div className="flex flex-col items-center w-full">
+        <div className="flex flex-col items-center w-full mt-0.5">
           {/* Marriage Subtitle */}
           <motion.p 
             initial={{ opacity: 0, y: 12 }} 
             animate={{ opacity: 1, y: 0 }} 
-            transition={{ delay: 2.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F] text-center mb-2"
+            transition={{ delay: 3.0, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F] text-center mb-1.5"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             ARE GETTING MARRIED
@@ -378,8 +378,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
             <motion.span 
               initial={{ opacity: 0, y: 12 }} 
               animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 2.7, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[8.5px] uppercase tracking-[0.2em] font-semibold text-[#7D553E] mb-0.5"
+              transition={{ delay: 3.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="text-[9.5px] sm:text-[10px] uppercase tracking-[0.2em] font-semibold text-[#7D553E] mb-0.5"
             >
               {(data.dayOfWeek || "SUNDAY").toUpperCase()}
             </motion.span>
@@ -387,23 +387,23 @@ function RoyalPalaceHero({ data, isDesktop }) {
             <motion.div 
               initial={{ opacity: 0, y: 12 }} 
               animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 2.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: 3.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center justify-center gap-3"
             >
               <div className="border-t border-b border-[#C59B3F]/40 py-1 px-2.5">
-                <span className="text-[9.5px] tracking-[0.25em] font-bold text-[#5A2C16]">
+                <span className="text-[11px] tracking-[0.25em] font-bold text-[#5A2C16]">
                   {(dateParts.month || "MAY").toUpperCase().slice(0, 3)}
                 </span>
               </div>
 
               <div className="border-l border-r border-[#C59B3F]/50 px-4">
-                <span className="text-[25px] font-bold leading-none text-[#C59B3F]" style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}>
+                <span className="text-[35px] font-bold leading-none text-[#C59B3F]" style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}>
                   {dateParts.day || "25"}
                 </span>
               </div>
 
               <div className="border-t border-b border-[#C59B3F]/40 py-1 px-2.5">
-                <span className="text-[9.5px] tracking-[0.25em] font-bold text-[#5A2C16]">
+                <span className="text-[11px] tracking-[0.25em] font-bold text-[#5A2C16]">
                   {dateParts.year || "2025"}
                 </span>
               </div>
@@ -412,8 +412,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
             <motion.span 
               initial={{ opacity: 0, y: 12 }} 
               animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 3.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] mt-1"
+              transition={{ delay: 3.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.2em] text-[#7D553E] mt-1"
             >
               {(data.weddingTime || "AT 6:00 PM ONWARDS").toUpperCase()}
             </motion.span>
@@ -421,11 +421,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
         </div>
 
         {/* Location & Resort Address Details */}
-        <div className="flex flex-col items-center text-center w-full">
+        <div className="flex flex-col items-center text-center w-full mt-0.5">
           <motion.div 
             initial={{ opacity: 0, y: 12 }} 
             animate={{ opacity: 1, y: 0 }} 
-            transition={{ delay: 3.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ delay: 3.8, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             <LeafDivider color="#C59B3F" />
           </motion.div>
@@ -434,14 +434,14 @@ function RoyalPalaceHero({ data, isDesktop }) {
             <motion.div 
               initial={{ opacity: 0, y: 12 }} 
               animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 3.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: 4.0, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               <LocationIcon color="#C59B3F" />
             </motion.div>
             <motion.h3 
               initial={{ opacity: 0, y: 12 }} 
               animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 3.7, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: 4.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="text-[10px] sm:text-[10.5px] font-bold tracking-[0.1em] text-[#5A2C16] uppercase max-w-[280px] mt-1"
             >
               {data.venueName || "SUNSHINE GARDEN RESORT"}
@@ -449,7 +449,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             <motion.p 
               initial={{ opacity: 0, y: 12 }} 
               animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 3.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: 4.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="text-[7.5px] tracking-[0.15em] text-[#7D553E] uppercase mt-0.5 max-w-[260px] leading-relaxed"
             >
               {data.venueCity || "KANAKAPURA ROAD, BENGALURU, KARNATAKA 560062"}
@@ -469,7 +469,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
         className="absolute bottom-[3%] left-1/2 -translate-x-1/2 z-20 flex flex-col items-center focus:outline-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.7 }}
-        transition={{ delay: 4.3, duration: 0.8 }}
+        transition={{ delay: 4.8, duration: 0.8 }}
       >
         <motion.div
           animate={{ y: [0, 4, 0] }}
