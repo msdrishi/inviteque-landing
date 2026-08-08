@@ -61,6 +61,14 @@ const CornerAccent = ({ top, left, right, bottom, color = '#C59B3F' }) => (
   />
 )
 
+function toPascalCase(str) {
+  return String(str || '')
+    .toLowerCase()
+    .split(/\s+/)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 /* ─────────────────────────────────────────
    1. HERO SECTION
    ───────────────────────────────────────── */
@@ -91,6 +99,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
         {/* Soft overlay to blend top portion with text */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF6]/45 via-transparent to-[#FFFDF6]/15" />
       </div>
+
+
 
       {/* Hero content wrapper (Restricted to top 60% of viewport) */}
       <div className="relative z-20 flex flex-col items-center justify-between w-[92%] sm:w-[85%] max-w-[700px] text-center h-[58svh] mt-[5svh] select-none">
@@ -140,27 +150,27 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
         {/* Center Block: Bold couple names animated last with glare shine */}
         <div className="flex flex-col items-center w-full">
-          {/* Groom Name (ROHAN) - BOLD */}
+          {/* Groom Name (Rohan) - BOLD */}
           <motion.h1 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.0, duration: 2.0, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[#5A2C16] font-bold leading-none tracking-[0.05em] uppercase text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none"
-            style={{ fontFamily: "'Zaslia', serif", fontWeight: 900 }}
+            className="text-[#5A2C16] font-bold leading-none tracking-[0.05em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none"
+            style={{ fontFamily: "'Wistania', serif", fontWeight: 900 }}
           >
             <span className="relative block">
-              <span className="relative z-10">{data.groomName || "ROHAN"}</span>
+              <span className="relative z-10">{toPascalCase(data.groomName || "Rohan")}</span>
               <motion.span
                 animate={{ backgroundPosition: ['120% center', '-220% center'] }}
                 transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
                 className="absolute inset-0 pointer-events-none z-20 block"
                 style={{
-                  fontFamily: "'Zaslia', serif",
+                  fontFamily: "'Wistania', serif",
                   fontSize: 'inherit',
                   fontWeight: 900,
                   lineHeight: 'inherit',
                   letterSpacing: 'inherit',
-                  textTransform: 'inherit',
+                  textTransform: 'none',
                   background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
                   backgroundSize: '200% 100%',
                   WebkitBackgroundClip: 'text',
@@ -170,7 +180,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
                 }}
                 aria-hidden="true"
               >
-                {data.groomName || "ROHAN"}
+                {toPascalCase(data.groomName || "Rohan")}
               </motion.span>
             </span>
           </motion.h1>
@@ -183,31 +193,31 @@ function RoyalPalaceHero({ data, isDesktop }) {
             className="flex items-center justify-center gap-4 my-1 text-[#C59B3F]"
           >
             <span className="text-sm">☙</span>
-            <span className="text-2xl font-bold" style={{ fontFamily: "'Zaslia', serif", fontWeight: 700 }}>&amp;</span>
+            <span className="text-2xl font-bold" style={{ fontFamily: "'Wistania', serif", fontWeight: 700 }}>&amp;</span>
             <span className="text-sm">❧</span>
           </motion.div>
 
-          {/* Bride Name (ANAYA) - BOLD */}
+          {/* Bride Name (Anaya) - BOLD */}
           <motion.h1 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 4.2, duration: 2.0, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[#5A2C16] font-bold leading-none tracking-[0.05em] uppercase text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none"
-            style={{ fontFamily: "'Zaslia', serif", fontWeight: 900 }}
+            className="text-[#5A2C16] font-bold leading-none tracking-[0.05em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none"
+            style={{ fontFamily: "'Wistania', serif", fontWeight: 900 }}
           >
             <span className="relative block">
-              <span className="relative z-10">{data.brideName || "ANAYA"}</span>
+              <span className="relative z-10">{toPascalCase(data.brideName || "Anaya")}</span>
               <motion.span
                 animate={{ backgroundPosition: ['120% center', '-220% center'] }}
                 transition={{ repeat: Infinity, duration: 6, ease: 'linear', delay: 1.2 }}
                 className="absolute inset-0 pointer-events-none z-20 block"
                 style={{
-                  fontFamily: "'Zaslia', serif",
+                  fontFamily: "'Wistania', serif",
                   fontSize: 'inherit',
                   fontWeight: 900,
                   lineHeight: 'inherit',
                   letterSpacing: 'inherit',
-                  textTransform: 'inherit',
+                  textTransform: 'none',
                   background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
                   backgroundSize: '200% 100%',
                   WebkitBackgroundClip: 'text',
@@ -217,7 +227,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
                 }}
                 aria-hidden="true"
               >
-                {data.brideName || "ANAYA"}
+                {toPascalCase(data.brideName || "Anaya")}
               </motion.span>
             </span>
           </motion.h1>
