@@ -1,20 +1,13 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDraft } from '../context/DraftContext.jsx'
-import Countdown from '../components/CountdownRoyalPalace.jsx'
-import Events from '../components/EventsRoyalPalace.jsx'
-import Footer from '../components/FooterRoyalPalace.jsx'
-import Invitation from '../components/InvitationRoyalPalace.jsx'
-import Story from '../components/StoryRoyalPalace.jsx'
-import Venue from '../components/VenueRoyalPalace.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-
 import cMapping from '../royalPalaceCloudinaryMapping.json'
 
-// Local Theme Background Assets (configured with absolute URL paths)
-const heroBgDesktop = cMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/desktop-hero.png"
-const heroBgMobile = cMapping['hero-mobile.png'] || "/backgrounds/Royal Palace/mobile-hero.png"
+// Background Assets (Cloudinary URLs with local fallback)
+const heroBgDesktop = cMapping['hero-desktop.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786208151/royal-palace-hero-desktop.png"
+const heroBgMobile = cMapping['hero-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786208162/royal-palace-hero-mobile.png"
 const photoBgDesktop = cMapping['photo-desktop.png'] || "/backgrounds/Royal Palace/photo-desktop.png"
 const photoBgMobile = cMapping['photo-mobile.png'] || "/backgrounds/Royal Palace/photo-mobile.png"
 const messageBgDesktop = cMapping['message-desktop.png'] || "/backgrounds/Royal Palace/message-desktop.png"
@@ -24,57 +17,53 @@ const venueBgMobile = cMapping['venue-mobile.png'] || "/backgrounds/Royal Palace
 const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "/backgrounds/Royal Palace/countdown-deskotp.png"
 const countdownBgMobile = cMapping['countdown-mobile.png'] || "/backgrounds/Royal Palace/countdown-mobile.png"
 
-const fallbackPhoto1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964628/twilight-photo-1.png"
-const fallbackPhoto2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964629/twilight-photo-2.png"
-const fallbackPhoto3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964631/twilight-photo-3.png"
+const fallbackPhoto1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1779029555/yrekh9qkgebpcds6dplq.png"
+const fallbackPhoto2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1779029557/lly3pbmivrtjn203eclo.png"
+const fallbackPhoto3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1779029558/enoivgqhs1oi2bxery8n.png"
 
-const petalConfig = Array.from({ length: 14 }).map((_, i) => {
-  const isLeft = i % 2 === 0;
-  const leftPos = isLeft ? Math.random() * 20 : 80 + Math.random() * 20;
-  const duration = 6 + Math.random() * 8;
-  const delay = Math.random() * 5;
-  const size = 6 + Math.random() * 10;
-  const x1 = Math.random() * 60 - 30;
-  const x2 = Math.random() * 60 - 30;
-  return { left: leftPos, duration, delay, size, x1, x2 };
-});
-
-function FallingGoldPetals() {
-  return (
-    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden" style={{ height: '100svh' }}>
-      {petalConfig.map((p, i) => (
-        <motion.div
-          key={i}
-          className="absolute top-[-10%]"
-          style={{ 
-            left: `${p.left}%`, 
-            width: p.size, 
-            height: p.size, 
-            opacity: 0.80,
-            filter: 'drop-shadow(0px 3px 5px rgba(0,0,0,0.15))'
-          }}
-          animate={{
-            y: ['0vh', '110vh'],
-            x: [0, p.x1, p.x2],
-            rotate: [0, 360],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: 'linear'
-          }}
-        >
-          <svg viewBox="0 0 40 40" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 20 0 C 32 10, 32 30, 20 40 C 8 30, 8 10, 20 0 Z" fill="#D4AF37" />
-            <circle cx="20" cy="20" r="3" fill="#FFF3CD" />
-          </svg>
-        </motion.div>
-      ))}
-    </div>
-  )
+// Animation Variants
+const fadeUp = {
+  hidden: { opacity: 0, y: 15 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
 }
 
+// Inline Symmetrical Dividers
+const LeafDivider = ({ color = '#C59B3F' }) => (
+  <div className="flex items-center justify-center gap-1.5 my-3 select-none">
+    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color, opacity: 0.4 }} />
+    <svg viewBox="0 0 40 20" className="w-8 h-4 fill-current" style={{ color }}>
+      <path d="M20,0 C27,7 35,10 40,10 C35,10 27,13 20,20 C20,13 13,10 0,10 C13,10 20,7 20,0 Z" />
+    </svg>
+    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color, opacity: 0.4 }} />
+  </div>
+)
+
+const HeartDivider = ({ color = '#C59B3F' }) => (
+  <div className="flex items-center justify-center gap-4 w-full max-w-[180px] my-3 select-none">
+    <div className="h-[0.7px] flex-1" style={{ backgroundColor: color, opacity: 0.3 }} />
+    <span className="text-[10px]" style={{ color }}>♥</span>
+    <div className="h-[0.7px] flex-1" style={{ backgroundColor: color, opacity: 0.3 }} />
+  </div>
+)
+
+const CornerAccent = ({ top, left, right, bottom, color = '#C59B3F' }) => (
+  <div 
+    className="absolute w-4 h-4 pointer-events-none"
+    style={{
+      top, left, right, bottom,
+      borderTop: (top !== undefined) ? `1.2px solid ${color}` : undefined,
+      borderBottom: (bottom !== undefined) ? `1.2px solid ${color}` : undefined,
+      borderLeft: (left !== undefined) ? `1.2px solid ${color}` : undefined,
+      borderRight: (right !== undefined) ? `1.2px solid ${color}` : undefined,
+      opacity: 0.7,
+      zIndex: 5
+    }}
+  />
+)
+
+/* ─────────────────────────────────────────
+   1. HERO SECTION
+   ───────────────────────────────────────── */
 function RoyalPalaceHero({ data, isDesktop }) {
   const dateParts = useMemo(() => {
     const parts = String(data.dateLine || '').trim().split(/\s+/)
@@ -85,230 +74,621 @@ function RoyalPalaceHero({ data, isDesktop }) {
         year: parts[2]
       }
     }
-    return { day: '22', month: 'Nov', year: '2026' }
+    return { day: '25', month: 'MAY', year: '2025' }
   }, [data.dateLine])
-
-
 
   return (
     <section 
-      className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-start pt-[28vh] md:pt-[10vh] overflow-hidden bg-[#5C0A14]"
+      className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-between py-12 px-6 overflow-hidden bg-[#FFFDF6] text-[#5A2C16]"
     >
-      {/* Background Images without Scrollable Animation or Overlay */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none"
-      >
+      {/* Background Image Container */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <img 
           src={isDesktop ? heroBgDesktop : heroBgMobile} 
           alt="" 
           className="w-full h-full object-cover" 
         />
+        {/* Soft overlay to blend top portion with text */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF6]/45 via-transparent to-[#FFFDF6]/15" />
       </div>
 
-      {/* Royal double border framing the page */}
-      <div className="absolute inset-0 pointer-events-none z-30">
-        <div className="absolute inset-[11px] md:inset-[18px] lg:inset-[26px] border border-[#D6A24A]/40" />
-        <div className="absolute inset-[15px] md:inset-[22px] lg:inset-[30px] border border-[#D6A24A]/15 border-dashed" />
-        
-        {/* Decorative gold corner brackets */}
-        <div className="absolute top-[9px] md:top-[16px] lg:top-[24px] left-[9px] md:left-[16px] lg:left-[24px] w-6 h-6 border-t border-l border-[#D6A24A]" />
-        <div className="absolute top-[9px] md:top-[16px] lg:top-[24px] right-[9px] md:right-[16px] lg:right-[24px] w-6 h-6 border-t border-r border-[#D6A24A]" />
-        <div className="absolute bottom-[9px] md:bottom-[16px] lg:bottom-[24px] left-[9px] md:left-[16px] lg:left-[24px] w-6 h-6 border-b border-l border-[#D6A24A]" />
-        <div className="absolute bottom-[9px] md:bottom-[16px] lg:bottom-[24px] right-[9px] md:right-[16px] lg:right-[24px] w-6 h-6 border-b border-r border-[#D6A24A]" />
+      {/* Decorative Border Frame */}
+      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/30 pointer-events-none z-10">
+        <CornerAccent top="6px" left="6px" />
+        <CornerAccent top="6px" right="6px" />
+        <CornerAccent bottom="6px" left="6px" />
+        <CornerAccent bottom="6px" right="6px" />
       </div>
 
-      {/* Hero content wrapper (Static position in top 70% of screen) */}
+      {/* Header (Top Leaf Divider & Intro text) */}
       <motion.div 
         initial="hidden"
-        animate="show"
-        className="relative z-20 flex flex-col items-center w-[85%] sm:w-[75%] lg:w-[65%] max-w-[800px] text-center select-none"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="relative z-20 flex flex-col items-center w-full mt-6"
       >
-        {/* Intro Line 1 */}
+        {/* Top decorative branch */}
+        <motion.div variants={fadeUp} transition={{ delay: 0.3 }}>
+          <LeafDivider color="#C59B3F" />
+        </motion.div>
+
+        {/* Staggered Intro lines exactly matching detailing */}
         <motion.p 
-          variants={{
-            hidden: { opacity: 0, y: 12 },
-            show: { opacity: 1, y: 0, transition: { delay: 0.3, duration: 1.0, ease: "easeOut" } }
-          }}
-          className="text-[7.5px] sm:text-[8px] lg:text-[9px] uppercase text-[#E2BF77] font-semibold mb-0.5 tracking-[0.3em]"
+          variants={fadeUp} 
+          transition={{ delay: 0.6 }}
+          className="text-[9.5px] uppercase tracking-[0.25em] font-semibold text-[#5A2C16] opacity-90 text-center"
           style={{ fontFamily: "'Montserrat', sans-serif" }}
         >
           TOGETHER WITH THEIR FAMILIES
         </motion.p>
-        
-        {/* Intro Line 2 */}
         <motion.p 
-          variants={{
-            hidden: { opacity: 0, y: 12 },
-            show: { opacity: 0.8, y: 0, transition: { delay: 0.6, duration: 1.0, ease: "easeOut" } }
-          }}
-          className="text-[7px] sm:text-[7.5px] lg:text-[8px] uppercase text-[#E2BF77]/80 font-medium mb-3 sm:mb-4 tracking-[0.25em]"
+          variants={fadeUp} 
+          transition={{ delay: 0.8 }}
+          className="text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-1"
           style={{ fontFamily: "'Montserrat', sans-serif" }}
         >
-          JOYFULLY INVITE YOU TO CELEBRATE THE WEDDING OF
+          WE INVITE YOU TO CELEBRATE
+        </motion.p>
+        <motion.p 
+          variants={fadeUp} 
+          transition={{ delay: 1.0 }}
+          className="text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-0.5"
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
+        >
+          THE WEDDING OF
         </motion.p>
 
-        {/* Groom Name with Glass Shine */}
+        {/* Heart Divider line */}
+        <motion.div variants={fadeUp} transition={{ delay: 1.2 }}>
+          <HeartDivider color="#C59B3F" />
+        </motion.div>
+      </motion.div>
+
+      {/* Couple names positioned in the center, animated last with shine */}
+      <div className="relative z-20 my-auto py-4 flex flex-col items-center w-full">
+        {/* Groom Name (ROHAN) */}
         <motion.h1 
-          variants={{
-            hidden: { opacity: 0, y: 15 },
-            show: { opacity: 1, y: 0, transition: { delay: 3.0, duration: 2.5, ease: "easeOut" } }
-          }}
-          className="text-[#E8C36A] font-light leading-none tracking-[0.1em] uppercase text-[48px] sm:text-[64px] md:text-[72px] lg:text-[80px] relative select-none"
-          style={{ fontFamily: "'Argeta', serif", fontWeight: 200 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 3.0, duration: 2.2, ease: [0.22, 1, 0.36, 1] }}
+          className="text-[#5A2C16] font-normal leading-none tracking-[0.05em] uppercase text-[48px] sm:text-[60px] md:text-[72px] lg:text-[80px] relative select-none"
+          style={{ fontFamily: "'Cinzel', serif" }}
         >
-          <span className="relative block" style={{ display: 'block', position: 'relative' }}>
-            <span style={{ position: 'relative', zIndex: 1 }}>
-              {(data.groomName || "Arjun").toUpperCase()}
-            </span>
+          <span className="relative block">
+            <span className="relative z-10">{data.groomName || "ROHAN"}</span>
             <motion.span
-              animate={{ backgroundPosition: ['100% center', '-200% center'] }}
+              animate={{ backgroundPosition: ['120% center', '-220% center'] }}
               transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
+              className="absolute inset-0 pointer-events-none z-20 block"
               style={{
-                fontFamily: "'Argeta', serif",
+                fontFamily: "'Cinzel', serif",
                 fontSize: 'inherit',
                 fontWeight: 'inherit',
                 lineHeight: 'inherit',
                 letterSpacing: 'inherit',
                 textTransform: 'inherit',
-                position: 'absolute',
-                inset: 0,
-                pointerEvents: 'none',
                 background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
-                backgroundSize: '200% 250%',
+                backgroundSize: '200% 100%',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
                 color: 'transparent',
-                zIndex: 2,
-                display: 'block',
               }}
               aria-hidden="true"
             >
-              {(data.groomName || "Arjun").toUpperCase()}
+              {data.groomName || "ROHAN"}
             </motion.span>
           </span>
         </motion.h1>
 
-        {/* Flanked Ampersand */}
+        {/* Ampersand flanked by branch decorators */}
         <motion.div 
-          variants={{
-            hidden: { opacity: 0, y: 10 },
-            show: { opacity: 1, y: 0, transition: { delay: 3.6, duration: 1.5, ease: "easeOut" } }
-          }}
-          className="flex items-center justify-center gap-3 my-0.5 md:my-1 text-[#D6A24A]"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 3.6, duration: 1.2, ease: "easeOut" }}
+          className="flex items-center justify-center gap-4 my-2 text-[#C59B3F]"
         >
-          <span 
-            className="text-[28px] sm:text-[36px] md:text-[40px] lg:text-[44px] font-normal italic"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            &amp;
-          </span>
+          <span className="text-sm">☙</span>
+          <span className="text-3xl font-light" style={{ fontFamily: "'Cinzel', serif" }}>&amp;</span>
+          <span className="text-sm">❧</span>
         </motion.div>
 
-        {/* Bride Name with Glass Shine */}
+        {/* Bride Name (ANAYA) */}
         <motion.h1 
-          variants={{
-            hidden: { opacity: 0, y: 15 },
-            show: { opacity: 1, y: 0, transition: { delay: 4.2, duration: 2.5, ease: "easeOut" } }
-          }}
-          className="text-[#E8C36A] font-light leading-none tracking-[0.1em] uppercase text-[48px] sm:text-[64px] md:text-[72px] lg:text-[80px] mb-2 md:mb-3"
-          style={{ fontFamily: "'Argeta', serif", fontWeight: 200 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 4.2, duration: 2.2, ease: [0.22, 1, 0.36, 1] }}
+          className="text-[#5A2C16] font-normal leading-none tracking-[0.05em] uppercase text-[48px] sm:text-[60px] md:text-[72px] lg:text-[80px] relative select-none"
+          style={{ fontFamily: "'Cinzel', serif" }}
         >
-          <span className="relative block" style={{ display: 'block', position: 'relative' }}>
-            <span style={{ position: 'relative', zIndex: 1 }}>
-              {(data.brideName || "Meera").toUpperCase()}
-            </span>
+          <span className="relative block">
+            <span className="relative z-10">{data.brideName || "ANAYA"}</span>
             <motion.span
-              animate={{ backgroundPosition: ['100% center', '-200% center'] }}
-              transition={{ repeat: Infinity, duration: 6, ease: 'linear', delay: 1.0 }}
+              animate={{ backgroundPosition: ['120% center', '-220% center'] }}
+              transition={{ repeat: Infinity, duration: 6, ease: 'linear', delay: 1.2 }}
+              className="absolute inset-0 pointer-events-none z-20 block"
               style={{
-                fontFamily: "'Argeta', serif",
+                fontFamily: "'Cinzel', serif",
                 fontSize: 'inherit',
                 fontWeight: 'inherit',
                 lineHeight: 'inherit',
                 letterSpacing: 'inherit',
                 textTransform: 'inherit',
-                position: 'absolute',
-                inset: 0,
-                pointerEvents: 'none',
                 background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
-                backgroundSize: '200% 250%',
+                backgroundSize: '200% 100%',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
                 color: 'transparent',
-                zIndex: 2,
-                display: 'block',
               }}
               aria-hidden="true"
             >
-              {(data.brideName || "Meera").toUpperCase()}
+              {data.brideName || "ANAYA"}
             </motion.span>
           </span>
         </motion.h1>
+      </div>
 
+      {/* Footer Details (Date box, Venue details, RSVP message) */}
+      <motion.div 
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="relative z-20 flex flex-col items-center w-full mb-4"
+      >
         {/* Marriage Subtitle */}
-        <motion.p
-          variants={{
-            hidden: { opacity: 0, y: 12 },
-            show: { opacity: 1, y: 0, transition: { delay: 0.9, duration: 1.0, ease: "easeOut" } }
-          }}
-          className="text-[9px] sm:text-[10px] lg:text-[11.5px] uppercase text-[#E2BF77] font-semibold mt-2.5 mb-2.5 tracking-[0.3em]"
+        <motion.p 
+          variants={fadeUp} 
+          transition={{ delay: 1.2 }}
+          className="text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F] text-center mb-3"
           style={{ fontFamily: "'Montserrat', sans-serif" }}
         >
           ARE GETTING MARRIED
         </motion.p>
 
-        {/* Date, Time, and Venue Container (Staggered Children) */}
-        <div className="flex flex-col items-center gap-1 mb-4">
-          {/* Date Line */}
-          <motion.div 
-            variants={{
-              hidden: { opacity: 0, y: 12 },
-              show: { opacity: 1, y: 0, transition: { delay: 1.2, duration: 1.0, ease: "easeOut" } }
-            }}
-            className="text-[#E8C36A] flex items-center justify-center gap-2.5 font-semibold text-[8px] sm:text-[9px] lg:text-[10px] tracking-[0.3em]"
-            style={{ fontFamily: "'Montserrat', sans-serif" }}
+        {/* Date block layout with lines */}
+        <motion.div 
+          variants={fadeUp} 
+          transition={{ delay: 1.4 }}
+          className="flex flex-col items-center gap-1.5 w-full"
+        >
+          <span className="text-[9px] uppercase tracking-[0.25em] font-semibold text-[#7D553E] mb-0.5">
+            {(data.dayOfWeek || "SUNDAY").toUpperCase()}
+          </span>
+
+          <div className="flex items-center justify-center gap-4">
+            {/* MONTH */}
+            <div className="border-t border-b border-[#C59B3F]/40 py-1.5 px-3">
+              <span className="text-[10px] tracking-[0.25em] font-bold text-[#5A2C16]">
+                {(dateParts.month || "MAY").toUpperCase().slice(0, 3)}
+              </span>
+            </div>
+
+            {/* DAY - Gold vertical borders */}
+            <div className="border-l border-r border-[#C59B3F]/50 px-5">
+              <span className="text-[28px] font-semibold leading-none text-[#C59B3F]" style={{ fontFamily: "'Cinzel', serif" }}>
+                {dateParts.day || "25"}
+              </span>
+            </div>
+
+            {/* YEAR */}
+            <div className="border-t border-b border-[#C59B3F]/40 py-1.5 px-3">
+              <span className="text-[10px] tracking-[0.25em] font-bold text-[#5A2C16]">
+                {dateParts.year || "2025"}
+              </span>
+            </div>
+          </div>
+
+          <span className="text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] mt-1.5">
+            {(data.weddingTime || "AT 6:00 PM ONWARDS").toUpperCase()}
+          </span>
+        </motion.div>
+
+        {/* Leaf divider */}
+        <motion.div variants={fadeUp} transition={{ delay: 1.6 }}>
+          <LeafDivider color="#C59B3F" />
+        </motion.div>
+
+        {/* Location details */}
+        <motion.div 
+          variants={fadeUp} 
+          transition={{ delay: 1.8 }}
+          className="flex flex-col items-center text-center mt-1"
+        >
+          <div className="flex items-center justify-center gap-1.5 text-[#C59B3F] mb-1">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+          </div>
+          <h3 className="text-[11px] font-bold tracking-[0.1em] text-[#5A2C16] uppercase max-w-[280px]">
+            {data.venueName || "SUNSHINE GARDEN RESORT"}
+          </h3>
+          <p className="text-[7.5px] tracking-[0.15em] text-[#7D553E] uppercase mt-1 max-w-[260px] leading-relaxed">
+            {data.venueCity || "KANAKAPURA ROAD, BENGALURU, KARNATAKA 560062"}
+          </p>
+        </motion.div>
+
+        {/* Mini heart & RSVP text */}
+        <motion.div 
+          variants={fadeUp} 
+          transition={{ delay: 2.0 }}
+          className="flex flex-col items-center mt-4 text-center"
+        >
+          <span className="text-[8px] text-[#C59B3F] mb-1.5">♥</span>
+          <p className="text-[8.5px] uppercase tracking-[0.2em] font-semibold text-[#5A2C16]">
+            WE CAN'T WAIT TO CELEBRATE
+          </p>
+          <p className="text-[8.5px] uppercase tracking-[0.2em] font-semibold text-[#5A2C16] mt-0.5">
+            THIS SPECIAL DAY WITH YOU!
+          </p>
+        </motion.div>
+
+        {/* Scroll button */}
+        <motion.button
+          type="button"
+          onClick={() => {
+            const el = document.getElementById('story')
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }}
+          className="mt-6 flex flex-col items-center focus:outline-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.7 }}
+          transition={{ delay: 4.8 }}
+        >
+          <motion.div
+            animate={{ y: [0, 4, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+            className="w-7 h-7 rounded-full border border-[#C59B3F]/40 flex items-center justify-center bg-white/70"
           >
-            <span>{(dateParts.day || '').toUpperCase()}</span>
-            <span className="text-[#D6A24A]/40">|</span>
-            <span>{(dateParts.month || '').toUpperCase()}</span>
-            <span className="text-[#D6A24A]/40">|</span>
-            <span>{(dateParts.year || '').toUpperCase()}</span>
+            <span className="text-[8px] text-[#5A2C16]">▼</span>
           </motion.div>
-          
-          {/* Time Line */}
-          <motion.p 
-            variants={{
-              hidden: { opacity: 0, y: 12 },
-              show: { opacity: 1, y: 0, transition: { delay: 1.5, duration: 1.0, ease: "easeOut" } }
-            }}
-            className="text-[7px] sm:text-[7.5px] lg:text-[8px] uppercase text-[#E2BF77] font-medium tracking-[0.25em]"
-            style={{ fontFamily: "'Montserrat', sans-serif" }}
-          >
-            {(data.weddingTime || '').toUpperCase()}
-          </motion.p>
-          
-          {/* Venue Line */}
-          <motion.p 
-            variants={{
-              hidden: { opacity: 0, y: 12 },
-              show: { opacity: 1, y: 0, transition: { delay: 1.8, duration: 1.0, ease: "easeOut" } }
-            }}
-            className="text-[7.5px] sm:text-[8.5px] lg:text-[9px] uppercase text-[#E8C36A] font-semibold tracking-[0.2em] mt-1 max-w-[280px] sm:max-w-md"
-            style={{ fontFamily: "'Montserrat', sans-serif" }}
-          >
-            {(data.venueName || '').toUpperCase()}
-            <span className="block text-[6.5px] sm:text-[7.5px] lg:text-[8px] text-[#E2BF77] font-medium mt-0.5 tracking-[0.15em]">
-              {(data.venueCity || '').toUpperCase()}
-            </span>
-          </motion.p>
-        </div>
+        </motion.button>
       </motion.div>
     </section>
   )
 }
 
+/* ─────────────────────────────────────────
+   2. PHOTO CARDS (Moments / Story)
+   ───────────────────────────────────────── */
+function RoyalPalaceStory({ data, isDesktop }) {
+  const items = data.items || []
+  if (items.length === 0) return null
+
+  return (
+    <section 
+      id="story"
+      className="relative w-full py-16 px-6 bg-[#FFFDF6] text-[#5A2C16] flex flex-col items-center overflow-hidden"
+    >
+      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/15 pointer-events-none z-10" />
+
+      {/* Section Title */}
+      <div className="text-center mb-10 relative z-20">
+        <span className="text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F]">OUR MOMENTS</span>
+        <h2 className="text-2xl font-light tracking-widest uppercase mt-1" style={{ fontFamily: "'Cinzel', serif" }}>
+          Captured Love
+        </h2>
+        <LeafDivider color="#C59B3F" />
+      </div>
+
+      {/* Grid wrapper */}
+      <div className="w-full max-w-[1000px] z-20">
+        {isDesktop ? (
+          // Desktop: side-by-side row layout
+          <div className="flex justify-center items-stretch gap-6">
+            {items.slice(0, 3).map((item, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.0, delay: idx * 0.15 }}
+                className="flex-1 bg-white p-3.5 border border-[#C59B3F]/30 shadow-md relative"
+              >
+                <CornerAccent top="4px" left="4px" />
+                <CornerAccent top="4px" right="4px" />
+                <CornerAccent bottom="4px" left="4px" />
+                <CornerAccent bottom="4px" right="4px" />
+                
+                <div className="w-full aspect-[4/5] overflow-hidden border border-[#C59B3F]/15">
+                  <img src={item.image} alt="" className="w-full h-full object-cover hover:scale-105 transition duration-700" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          // Mobile: stacked layouts
+          <div className="flex flex-col gap-8 w-full max-w-[340px] mx-auto">
+            {items.slice(0, 3).map((item, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.8 }}
+                className="bg-white p-3 border border-[#C59B3F]/25 shadow-sm relative"
+              >
+                <CornerAccent top="4px" left="4px" />
+                <CornerAccent top="4px" right="4px" />
+                <CornerAccent bottom="4px" left="4px" />
+                <CornerAccent bottom="4px" right="4px" />
+
+                <div className="w-full aspect-[4/5] overflow-hidden border border-[#C59B3F]/10">
+                  <img src={item.image} alt="" className="w-full h-full object-cover" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+/* ─────────────────────────────────────────
+   3. WELCOMING MESSAGE (Invitation)
+   ───────────────────────────────────────── */
+function RoyalPalaceInvitation({ data, isDesktop }) {
+  if (!data) return null
+  const defaultMsg = "We are excited to invite you to celebrate our wedding with us. This special day would not be complete without your presence."
+  const paragraphs = String(data.message || defaultMsg).split('\n').filter(Boolean)
+
+  return (
+    <section className="relative w-full py-20 px-6 bg-[#FFFDF6] text-[#5A2C16] flex flex-col items-center overflow-hidden">
+      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/15 pointer-events-none z-10" />
+
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.98 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2 }}
+        className="w-full max-w-[550px] bg-white p-8 md:p-12 border border-[#C59B3F]/35 shadow-lg relative z-20 text-center flex flex-col items-center"
+      >
+        <CornerAccent top="8px" left="8px" />
+        <CornerAccent top="8px" right="8px" />
+        <CornerAccent bottom="8px" left="8px" />
+        <CornerAccent bottom="8px" right="8px" />
+
+        <span className="text-[9px] uppercase tracking-[0.25em] font-bold text-[#C59B3F] mb-1">THE INVITATION</span>
+        <h2 className="text-2xl md:text-3xl font-light tracking-widest uppercase mb-4" style={{ fontFamily: "'Cinzel', serif" }}>
+          Welcome Message
+        </h2>
+        
+        <LeafDivider color="#C59B3F" />
+
+        <div className="mt-4 flex flex-col gap-4 text-xs md:text-sm text-[#7D553E] leading-relaxed max-w-[420px] mx-auto">
+          {paragraphs.map((p, idx) => (
+            <p key={idx}>{p.trim()}</p>
+          ))}
+        </div>
+
+        <span className="text-[#C59B3F] text-xs mt-6">♥</span>
+      </motion.div>
+    </section>
+  )
+}
+
+/* ─────────────────────────────────────────
+   4. VENUE SECTION
+   ───────────────────────────────────────── */
+function RoyalPalaceVenue({ data, isDesktop }) {
+  if (!data) return null
+  const addressText = String(data.location || data.venueLine1 || '')
+
+  return (
+    <section 
+      id="venue"
+      className="relative w-full py-16 px-6 bg-[#FFFDF6] text-[#5A2C16] flex flex-col items-center justify-center overflow-hidden"
+      style={{ minHeight: '100svh' }}
+    >
+      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/15 pointer-events-none z-10" />
+
+      {/* Section Title */}
+      <div className="text-center mb-10 relative z-20">
+        <span className="text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F]">OUR VENUE</span>
+        <h2 className="text-2xl font-light tracking-widest uppercase mt-1" style={{ fontFamily: "'Cinzel', serif" }}>
+          The Location
+        </h2>
+        <LeafDivider color="#C59B3F" />
+      </div>
+
+      {/* Layout wrapper */}
+      <div className="w-full max-w-[850px] z-20 flex flex-col md:flex-row items-center justify-center gap-10">
+        {/* Left Side: Address Details */}
+        <motion.div 
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.0 }}
+          className="flex-1 flex flex-col items-center md:items-start text-center md:text-left gap-4"
+        >
+          <div className="flex items-center gap-2 text-[#C59B3F]">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+            <span className="text-xs uppercase tracking-widest font-semibold" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              Wedding Destination
+            </span>
+          </div>
+
+          <h3 className="text-lg md:text-xl font-bold uppercase tracking-[0.05em] text-[#5A2C16] max-w-[340px]">
+            {data.venueName || "Sunshine Garden Resort"}
+          </h3>
+
+          <div className="flex flex-col gap-1 text-xs md:text-sm text-[#7D553E] max-w-[320px] leading-relaxed">
+            {data.venueLine1 && <p>{data.venueLine1}</p>}
+            {data.venueLine2 && <p>{data.venueLine2}</p>}
+            {!data.venueLine1 && !data.venueLine2 && <p>{addressText}</p>}
+          </div>
+
+          <HeartDivider color="#C59B3F" />
+        </motion.div>
+
+        {/* Right Side: QR Code Map Card */}
+        {data.mapUrl && (
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.0 }}
+            className="bg-white p-5 border border-[#C59B3F]/35 shadow-md flex flex-col items-center relative max-w-[280px]"
+          >
+            <CornerAccent top="5px" left="5px" />
+            <CornerAccent top="5px" right="5px" />
+            <CornerAccent bottom="5px" left="5px" />
+            <CornerAccent bottom="5px" right="5px" />
+
+            <img 
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(String(data.mapUrl))}&color=5a2c16&bgcolor=ffffff`}
+              alt="Google Maps QR Code"
+              width={130}
+              height={130}
+              className="border border-[#C59B3F]/15 p-1 bg-white mb-4"
+              loading="lazy"
+            />
+
+            <span className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-[#7D553E] mb-3">Scan to locate</span>
+
+            <a 
+              href={String(data.mapUrl)}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 border border-[#C59B3F] bg-[#5A2C16] text-[9.5px] text-[#FFFDF6] font-bold uppercase tracking-[0.2em] transition hover:bg-white hover:text-[#5A2C16]"
+            >
+              📍 Open in Maps
+            </a>
+          </motion.div>
+        )}
+      </div>
+    </section>
+  )
+}
+
+/* ─────────────────────────────────────────
+   5. COUNTDOWN SECTION
+   ───────────────────────────────────────── */
+function RoyalPalaceCountdown({ data }) {
+  const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' })
+
+  useEffect(() => {
+    if (!data.targetDateTimeISO) return
+
+    const calculateTime = () => {
+      const difference = +new Date(data.targetDateTimeISO) - +new Date()
+      if (difference <= 0) {
+        setTimeLeft({ days: '00', hours: '00', minutes: '00', seconds: '00' })
+        return
+      }
+
+      const d = Math.floor(difference / (1000 * 60 * 60 * 24))
+      const h = Math.floor((difference / (1000 * 60 * 60)) % 24)
+      const m = Math.floor((difference / 1000 / 60) % 60)
+      const s = Math.floor((difference / 1000) % 60)
+
+      setTimeLeft({
+        days: String(d).padStart(2, '0'),
+        hours: String(h).padStart(2, '0'),
+        minutes: String(m).padStart(2, '0'),
+        seconds: String(s).padStart(2, '0')
+      })
+    }
+
+    calculateTime()
+    const timer = setInterval(calculateTime, 1000)
+    return () => clearInterval(timer)
+  }, [data.targetDateTimeISO])
+
+  return (
+    <section className="relative w-full py-20 px-6 bg-[#FFFDF6] text-[#5A2C16] flex flex-col items-center overflow-hidden">
+      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/15 pointer-events-none z-10" />
+
+      {/* Title */}
+      <div className="text-center mb-8 relative z-20">
+        <span className="text-[9px] uppercase tracking-[0.25em] font-bold text-[#C59B3F]">COUNTDOWN</span>
+        <h2 className="text-xl font-light tracking-widest uppercase mt-0.5" style={{ fontFamily: "'Cinzel', serif" }}>
+          Days Remaining
+        </h2>
+        <LeafDivider color="#C59B3F" />
+      </div>
+
+      {/* Grid */}
+      <div className="grid grid-cols-4 gap-3 max-w-[340px] w-full z-20">
+        {[
+          { label: 'Days', val: timeLeft.days },
+          { label: 'Hours', val: timeLeft.hours },
+          { label: 'Mins', val: timeLeft.minutes },
+          { label: 'Secs', val: timeLeft.seconds }
+        ].map((unit, index) => (
+          <motion.div 
+            key={index}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: index * 0.1 }}
+            className="flex flex-col items-center bg-white p-3.5 border border-[#C59B3F]/25 shadow-sm relative"
+          >
+            <CornerAccent top="3px" left="3px" />
+            <CornerAccent top="3px" right="3px" />
+            <CornerAccent bottom="3px" left="3px" />
+            <CornerAccent bottom="3px" right="3px" />
+
+            <span className="text-xl sm:text-2xl font-bold tracking-[0.02em] font-sans leading-none text-[#5A2C16]">
+              {unit.val}
+            </span>
+            <span className="text-[7.5px] uppercase tracking-[0.15em] text-[#7D553E] mt-2 font-semibold">
+              {unit.label}
+            </span>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+/* ─────────────────────────────────────────
+   6. FOOTER SECTION
+   ───────────────────────────────────────── */
+function RoyalPalaceFooter({ data }) {
+  if (!data) return null
+  const paragraphs = String(data.message || '').split('\n').filter(Boolean)
+  const creditLines = String(data.names || '').split('\n').filter(Boolean)
+
+  return (
+    <footer className="relative w-full py-16 px-6 bg-[#FFFDF6] text-[#5A2C16] flex flex-col items-center text-center overflow-hidden">
+      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/15 pointer-events-none z-10" />
+
+      <div className="relative z-20 flex flex-col items-center max-w-[320px] w-full">
+        {/* Monogram or Icon */}
+        <div className="text-xl text-[#C59B3F] mb-3 font-serif">❦</div>
+
+        {/* Message */}
+        {paragraphs.map((p, idx) => (
+          <p key={idx} className="text-xs italic text-[#7D553E] leading-relaxed max-w-[280px]">
+            {p.trim()}
+          </p>
+        ))}
+
+        <div className="w-12 h-[0.7px] bg-[#C59B3F]/35 my-4" />
+
+        {/* Credit details */}
+        {creditLines.map((line, idx) => (
+          <p key={idx} className="text-[10px] tracking-[0.25em] font-bold text-[#5A2C16] uppercase mt-0.5">
+            {line.trim()}
+          </p>
+        ))}
+
+        {/* Branding watermark */}
+        <div className="mt-8 text-[7px] tracking-[0.3em] font-bold uppercase text-[#C59B3F]/60">
+          INVITEQUE
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+/* ─────────────────────────────────────────
+   MAIN PAGE EXPORT
+   ───────────────────────────────────────── */
 export default function TemplateRoyalPalace({ savedData }) {
   const location = useLocation()
   const { templateId } = useParams()
@@ -324,7 +704,7 @@ export default function TemplateRoyalPalace({ savedData }) {
   )
   const showWatermark = !isPaid
 
-  // Active data
+  // Select active data set
   const activeData = savedData || (isPreview ? draftData : null)
 
   const data = activeData ? {
@@ -385,13 +765,13 @@ export default function TemplateRoyalPalace({ savedData }) {
         const date = savedData ? savedData.heroData.weddingDate : draftData.weddingDate
         const year = savedData ? savedData.heroData.weddingYear : draftData.weddingYear
         const d = new Date(`${month} ${date}, ${year}`)
-        return isNaN(d.getTime()) ? 'Friday' : d.toLocaleDateString('en-US', { weekday: 'long' })
+        return isNaN(d.getTime()) ? 'SUNDAY' : d.toLocaleDateString('en-US', { weekday: 'long' })
       })(),
     },
     venue: {
       ...staticData.venue,
-      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || '',
-      venueLine1: savedData
+      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || staticData.venue.venueName,
+      venueLine1: (savedData
         ? [
             savedData.venueData?.mahalName || savedData.mahalName,
             savedData.venueData?.venueAddress || savedData.venueName
@@ -399,8 +779,9 @@ export default function TemplateRoyalPalace({ savedData }) {
         : [
             draftData.mahalName,
             draftData.venueAddress
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
-      venueLine2: savedData
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+      ) || staticData.venue.venueLine1,
+      venueLine2: (savedData
         ? [
             savedData.venueData?.venueCity || savedData.venueCity,
             savedData.venueData?.state || savedData.state
@@ -408,8 +789,9 @@ export default function TemplateRoyalPalace({ savedData }) {
         : [
             draftData.venueCity,
             draftData.state
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
-      location: savedData
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+      ) || staticData.venue.venueLine2,
+      location: (savedData
         ? [
             savedData.venueData?.mahalName || savedData.mahalName,
             savedData.venueData?.venueAddress || savedData.venueName,
@@ -421,7 +803,8 @@ export default function TemplateRoyalPalace({ savedData }) {
             draftData.venueAddress,
             draftData.venueCity,
             draftData.state
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
+          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+      ) || staticData.venue.location,
       mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData.mapLink) || staticData.venue.mapUrl,
     },
     countdown: {
@@ -454,21 +837,6 @@ export default function TemplateRoyalPalace({ savedData }) {
             ]
       })(),
     },
-    events: {
-      ...staticData.events,
-      items: (() => {
-        const scheduleItems = savedData
-          ? (savedData.scheduleData?.items || [])
-          : (Array.isArray(draftData.scheduleItems) ? draftData.scheduleItems : [])
-        const icons = ['✦', '◎', '✿', '◆', '♪']
-        return scheduleItems.map((item, index) => ({
-          icon: icons[index % icons.length],
-          time: item.time,
-          name: item.title,
-          date: item.date,
-        }))
-      })(),
-    },
     invitation: {
       ...staticData.invitation,
       groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
@@ -488,16 +856,16 @@ export default function TemplateRoyalPalace({ savedData }) {
   }
 
   const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
-  const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
 
   return (
-    <div className="relative min-h-screen bg-[#5C0A14] text-[#E3C57C]">
+    <div className="relative min-h-screen bg-[#FFFDF6] text-[#5A2C16]">
       {/* MOBILE VIEW */}
       <div className="md:hidden flex justify-center items-start min-h-screen bg-[#1a1a1a]">
-        <div className="relative w-full max-w-[430px] min-h-[100svh] bg-[#5C0A14] text-[#E3C57C] shadow-[0_0_80px_rgba(0,0,0,0.5)]">
-          {/* Watermark */}
+        <div className="relative w-full max-w-[430px] min-h-[100svh] bg-[#FFFDF6] text-[#5A2C16] shadow-[0_0_80px_rgba(0,0,0,0.5)]">
+          
+          {/* Fixed Watermark Overlay */}
           {showWatermark && (
-            <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.45] select-none text-[#E2BF77]">
+            <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.28] select-none text-[#C59B3F]">
               <span className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 preview-inviteque
               </span>
@@ -510,15 +878,15 @@ export default function TemplateRoyalPalace({ savedData }) {
             </div>
           )}
 
-          {/* Back/Proceed Controls */}
+          {/* Floating Controls for Preview */}
           {isPreview && (
             <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
               <div className="flex gap-3">
                 <button
                   onClick={() => navigate(-1)}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#D4AF37]/30 bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#7B0F1A] shadow-xl hover:scale-105 active:scale-95"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#C59B3F]/30 bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#5A2C16] shadow-xl hover:scale-105 active:scale-95"
                 >
-                  Back
+                  ← Back
                 </button>
                 <button
                   onClick={() => navigate('/payment', { state: { draftData, templateId } })}
@@ -530,34 +898,37 @@ export default function TemplateRoyalPalace({ savedData }) {
             </div>
           )}
 
+          {/* Render the 6 Sections in Order */}
           <RoyalPalaceHero data={data.hero} isDesktop={false} />
-          {showGallery && <Story data={data.story} bgImage={photoBgMobile} />}
-          <Invitation data={data.invitation} bgImage={messageBgMobile} />
-          <Venue data={data.venue} bgImage={venueBgMobile} />
-          {showSchedule && <Events data={data.events} bgImage={photoBgMobile} />}
-          <Countdown data={data.countdown} bgImage={countdownBgMobile} />
-          <Footer data={data.footer} />
+          {showGallery && <RoyalPalaceStory data={data.story} isDesktop={false} />}
+          <RoyalPalaceInvitation data={data.invitation} isDesktop={false} />
+          <RoyalPalaceVenue data={data.venue} isDesktop={false} />
+          <RoyalPalaceCountdown data={data.countdown} />
+          <RoyalPalaceFooter data={data.footer} />
         </div>
       </div>
 
       {/* DESKTOP VIEW */}
-      <div className="hidden md:block w-full min-h-screen bg-[#5C0A14] relative">
+      <div className="hidden md:block w-full min-h-screen bg-[#FFFDF6] relative">
+        
+        {/* Fixed Watermark Overlay */}
         {showWatermark && (
-          <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.32] select-none flex flex-col justify-around items-center text-[#E2BF77]">
+          <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.22] select-none flex flex-col justify-around items-center text-[#C59B3F]">
             <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-              preview-inviteque
+              PREVIEW — INVITEQUE
             </span>
             <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-              preview-inviteque
+              PREVIEW — INVITEQUE
             </span>
           </div>
         )}
 
+        {/* Floating Controls for Preview */}
         {isPreview && (
           <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
             <button
               onClick={() => navigate(-1)}
-              className="px-8 py-4 rounded-full border border-[#D4AF37]/45 bg-white/95 backdrop-blur-md text-sm font-bold text-[#7B0F1A] shadow-xl hover:scale-105 active:scale-95"
+              className="px-8 py-4 rounded-full border border-[#C59B3F]/45 bg-white/95 backdrop-blur-md text-sm font-bold text-[#5A2C16] shadow-xl hover:scale-105 active:scale-95"
             >
               ← Back to Edit
             </button>
@@ -570,30 +941,26 @@ export default function TemplateRoyalPalace({ savedData }) {
           </div>
         )}
 
+        {/* Render the 6 Sections in Order */}
         <div className="w-full">
           <RoyalPalaceHero data={data.hero} isDesktop={true} />
         </div>
         {showGallery && (
           <div className="w-full">
-            <Story data={data.story} isDesktop={true} bgImage={photoBgDesktop} />
+            <RoyalPalaceStory data={data.story} isDesktop={true} />
           </div>
         )}
         <div className="w-full">
-          <Invitation data={data.invitation} isDesktop={true} bgImage={messageBgDesktop} />
+          <RoyalPalaceInvitation data={data.invitation} isDesktop={true} />
         </div>
         <div className="w-full">
-          <Venue data={data.venue} isDesktop={true} bgImage={venueBgDesktop} />
-        </div>
-        {showSchedule && (
-          <div className="w-full">
-            <Events data={data.events} isDesktop={true} bgImage={photoBgDesktop} />
-          </div>
-        )}
-        <div className="w-full">
-          <Countdown data={data.countdown} isDesktop={true} bgImage={countdownBgDesktop} />
+          <RoyalPalaceVenue data={data.venue} isDesktop={true} />
         </div>
         <div className="w-full">
-          <Footer data={data.footer} isDesktop={true} />
+          <RoyalPalaceCountdown data={data.countdown} />
+        </div>
+        <div className="w-full">
+          <RoyalPalaceFooter data={data.footer} />
         </div>
       </div>
     </div>
