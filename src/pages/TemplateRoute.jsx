@@ -59,11 +59,11 @@ const TEMPLATE_ASSETS = {
   ],
   'template-3': [
     "/backgrounds/Royal Palace/Hero_Desktop.png",
-    "/backgrounds/Royal Palace/Hero_Mobile.png"
+    "/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"
   ],
   'royal-palace': [
     "/backgrounds/Royal Palace/Hero_Desktop.png",
-    "/backgrounds/Royal Palace/Hero_Mobile.png"
+    "/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"
   ],
   'blossom-whisper': [
     template3HeroBg,
@@ -95,14 +95,22 @@ const extractImageUrls = (data) => {
   return urls.filter(Boolean);
 };
 
-const preloadImages = (urls) => {
+const preloadAssets = (urls) => {
   return Promise.all(
     urls.map(url => {
       return new Promise((resolve) => {
-        const img = new Image()
-        img.src = url
-        img.onload = resolve
-        img.onerror = resolve
+        if (url.endsWith('.mp4')) {
+          const video = document.createElement('video');
+          video.src = url;
+          video.preload = 'auto';
+          video.onloadedmetadata = resolve;
+          video.onerror = resolve;
+        } else {
+          const img = new Image()
+          img.src = url
+          img.onload = resolve
+          img.onerror = resolve
+        }
       })
     })
   )
@@ -136,7 +144,7 @@ export default function TemplateRoute() {
         const dynamicAssets = extractImageUrls(fetchedData);
         const allAssets = [...staticAssets, ...dynamicAssets];
 
-        const assetsPromise = preloadImages(allAssets);
+        const assetsPromise = preloadAssets(allAssets);
         const fontsPromise = document.fonts.ready;
         const delayPromise = new Promise(resolve => setTimeout(resolve, 1500));
 

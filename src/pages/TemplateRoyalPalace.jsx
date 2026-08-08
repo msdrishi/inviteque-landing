@@ -178,13 +178,24 @@ function RoyalPalaceHero({ data, isDesktop }) {
     <section 
       className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-start overflow-hidden bg-[#FFFDF6] text-[#5A2C16]"
     >
-      {/* Background Image Container */}
+      {/* Background Container */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <img 
-          src={isDesktop ? heroBgDesktop : heroBgMobile} 
-          alt="" 
-          className="w-full h-full object-cover object-center" 
-        />
+        {isDesktop ? (
+          <img 
+            src={heroBgDesktop} 
+            alt="" 
+            className="w-full h-full object-cover object-center" 
+          />
+        ) : (
+          <video
+            src="/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover object-center"
+          />
+        )}
         {/* Soft overlay to blend top portion with text */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF6]/45 via-transparent to-[#FFFDF6]/15" />
       </div>
