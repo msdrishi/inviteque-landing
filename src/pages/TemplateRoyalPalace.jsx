@@ -179,7 +179,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
       className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-start overflow-hidden bg-[#FFFDF6] text-[#5A2C16]"
     >
       {/* Background Container */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         {isDesktop ? (
           <video
             src="/backgrounds/Royal Palace/Sunflowers_moving_in_wind_1080p_desktop.mp4"
@@ -188,6 +188,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             muted
             playsInline
             className="w-full h-full object-cover object-center"
+            style={{ filter: 'blur(2.5px)', transform: 'scale(1.05)' }}
           />
         ) : (
           <video
@@ -197,6 +198,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             muted
             playsInline
             className="w-full h-full object-cover object-center"
+            style={{ filter: 'blur(2.5px)', transform: 'scale(1.05)' }}
           />
         )}
         {/* Soft overlay to blend top portion with text */}
@@ -264,8 +266,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
             initial="hidden"
             animate="show"
             variants={groomContainerVariants}
-            className="text-[#5A2C16] font-bold leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
-            style={{ fontFamily: "'PrimorStylish', serif", fontWeight: 'bold' }}
+            className="text-[#5A2C16] font-normal leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
+            style={{ fontFamily: "'PrimorStylish', serif" }}
           >
             <span className="relative z-10 flex justify-center items-center flex-wrap">
               {groomNameText.split('').map((char, index) => (
@@ -280,7 +282,6 @@ function RoyalPalaceHero({ data, isDesktop }) {
               className="absolute inset-0 pointer-events-none z-20 flex justify-center items-center flex-wrap"
               style={{
                 fontFamily: "'PrimorStylish', serif",
-                fontWeight: 'bold',
                 fontSize: 'inherit',
                 lineHeight: 'inherit',
                 letterSpacing: 'inherit',
@@ -322,8 +323,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
             initial="hidden"
             animate="show"
             variants={brideContainerVariants}
-            className="text-[#5A2C16] font-bold leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
-            style={{ fontFamily: "'PrimorStylish', serif", fontWeight: 'bold' }}
+            className="text-[#5A2C16] font-normal leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
+            style={{ fontFamily: "'PrimorStylish', serif" }}
           >
             <span className="relative z-10 flex justify-center items-center flex-wrap">
               {brideNameText.split('').map((char, index) => (
@@ -338,7 +339,6 @@ function RoyalPalaceHero({ data, isDesktop }) {
               className="absolute inset-0 pointer-events-none z-20 flex justify-center items-center flex-wrap"
               style={{
                 fontFamily: "'PrimorStylish', serif",
-                fontWeight: 'bold',
                 fontSize: 'inherit',
                 lineHeight: 'inherit',
                 letterSpacing: 'inherit',
