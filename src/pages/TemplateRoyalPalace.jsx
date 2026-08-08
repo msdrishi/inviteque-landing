@@ -83,28 +83,13 @@ function RoyalPalaceHero({ data, isDesktop }) {
     >
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        {/* Desktop View (lg and larger: >= 1024px) */}
         <img 
-          src={heroBgDesktop} 
+          src={isDesktop ? heroBgDesktop : heroBgMobile} 
           alt="" 
-          className="hidden lg:block w-full h-full object-cover object-center" 
-        />
-        {/* Mobile & Tablet View (below lg: < 1024px) */}
-        <img 
-          src={heroBgMobile} 
-          alt="" 
-          className="block lg:hidden w-full h-full object-cover object-[center_top] md:object-[center_30%]" 
+          className="w-full h-full object-cover object-center" 
         />
         {/* Soft overlay to blend top portion with text */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF6]/45 via-transparent to-[#FFFDF6]/15" />
-      </div>
-
-      {/* Decorative Border Frame */}
-      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/30 pointer-events-none z-10">
-        <CornerAccent top="6px" left="6px" />
-        <CornerAccent top="6px" right="6px" />
-        <CornerAccent bottom="6px" left="6px" />
-        <CornerAccent bottom="6px" right="6px" />
       </div>
 
       {/* Hero content wrapper (Restricted to top 60% of viewport) */}
