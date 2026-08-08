@@ -57,23 +57,10 @@ const LeafDivider = ({ color = '#C59B3F' }) => (
 )
 
 const HeartDivider = ({ color = '#C59B3F' }) => (
-  <div className="flex items-center justify-center gap-2.5 w-full max-w-[200px] my-3 select-none">
-    {/* Left Line */}
-    <div className="flex-1 flex items-center justify-end">
-      <div className="h-[0.7px] w-full" style={{ backgroundColor: color, opacity: 0.35 }} />
-      <div className="w-1.5 h-1.5 rounded-full mx-1" style={{ backgroundColor: color }} />
-      <div className="w-1 h-1 rounded-full" style={{ backgroundColor: color }} />
-    </div>
-
-    {/* Heart symbol */}
-    <span className="text-xs" style={{ color }}>♥</span>
-
-    {/* Right Line */}
-    <div className="flex-1 flex-items-center justify-start">
-      <div className="w-1 h-1 rounded-full" style={{ backgroundColor: color }} />
-      <div className="w-1.5 h-1.5 rounded-full mx-1" style={{ backgroundColor: color }} />
-      <div className="h-[0.7px] w-full" style={{ backgroundColor: color, opacity: 0.35 }} />
-    </div>
+  <div className="flex items-center justify-center gap-3 w-full max-w-[180px] my-3 select-none">
+    <div className="h-[0.8px] flex-1" style={{ backgroundColor: color, opacity: 0.4 }} />
+    <span className="text-xs text-[#C59B3F] leading-none" style={{ color }}>♥</span>
+    <div className="h-[0.8px] flex-1" style={{ backgroundColor: color, opacity: 0.4 }} />
   </div>
 )
 
@@ -89,8 +76,8 @@ const AmpersandDivider = ({ color = '#C59B3F' }) => (
       <path d="M30,10.5 C27,14.5 22,15.5 20,12.5 C24,10.5 27,10.5 30,10.5 Z" />
     </svg>
 
-    {/* Center Ampersand */}
-    <span className="text-[34px] leading-none text-[#C59B3F] flex-shrink-0" style={{ fontFamily: "'PrimorStylish', serif" }}>
+    {/* Center Ampersand in GreatVibes font */}
+    <span className="text-[48px] leading-[0.6] text-[#C59B3F] flex-shrink-0 pb-1.5" style={{ fontFamily: "'GreatVibes', cursive" }}>
       &amp;
     </span>
 
@@ -135,25 +122,25 @@ function toPascalCase(str) {
     .join(' ');
 }
 
-// Name Typewriter Animation Variants
+// Name Typewriter Animation Variants (Smoother Stagger + Soft Blur Fade Transition)
 const nameContainerVariants = {
   hidden: { opacity: 0 },
   show: (delayValue) => ({
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
+      staggerChildren: 0.05,
       delayChildren: delayValue
     }
   })
 }
 
 const letterAnimVariants = {
-  hidden: { opacity: 0, scale: 0.6, y: 8 },
+  hidden: { opacity: 0, y: 5, filter: 'blur(3px)' },
   show: {
     opacity: 1,
-    scale: 1,
     y: 0,
-    transition: { duration: 0.35, ease: "easeOut" }
+    filter: 'blur(0px)',
+    transition: { duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }
   }
 }
 
@@ -247,10 +234,10 @@ function RoyalPalaceHero({ data, isDesktop }) {
             initial="hidden"
             animate="show"
             variants={nameContainerVariants}
-            className="text-[#5A2C16] font-normal leading-none tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none flex justify-center flex-wrap"
+            className="text-[#5A2C16] font-normal leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
             style={{ fontFamily: "'PrimorStylish', serif" }}
           >
-            <span className="relative z-10 flex justify-center flex-wrap">
+            <span className="relative z-10 flex justify-center items-center flex-wrap">
               {groomNameText.split('').map((char, index) => (
                 <motion.span key={index} variants={letterAnimVariants} style={{ display: 'inline-block', whiteSpace: 'pre' }}>
                   {char}
@@ -260,7 +247,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             <motion.span
               animate={{ backgroundPosition: ['120% center', '-220% center'] }}
               transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
-              className="absolute inset-0 pointer-events-none z-20 flex justify-center flex-wrap"
+              className="absolute inset-0 pointer-events-none z-20 flex justify-center items-center flex-wrap"
               style={{
                 fontFamily: "'PrimorStylish', serif",
                 fontSize: 'inherit',
@@ -273,6 +260,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
                 color: 'transparent',
+                height: '100%',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
               aria-hidden="true"
             >
@@ -300,10 +292,10 @@ function RoyalPalaceHero({ data, isDesktop }) {
             initial="hidden"
             animate="show"
             variants={nameContainerVariants}
-            className="text-[#5A2C16] font-normal leading-none tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none flex justify-center flex-wrap"
+            className="text-[#5A2C16] font-normal leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
             style={{ fontFamily: "'PrimorStylish', serif" }}
           >
-            <span className="relative z-10 flex justify-center flex-wrap">
+            <span className="relative z-10 flex justify-center items-center flex-wrap">
               {brideNameText.split('').map((char, index) => (
                 <motion.span key={index} variants={letterAnimVariants} style={{ display: 'inline-block', whiteSpace: 'pre' }}>
                   {char}
@@ -313,7 +305,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             <motion.span
               animate={{ backgroundPosition: ['120% center', '-220% center'] }}
               transition={{ repeat: Infinity, duration: 6, ease: 'linear', delay: 1.2 }}
-              className="absolute inset-0 pointer-events-none z-20 flex justify-center flex-wrap"
+              className="absolute inset-0 pointer-events-none z-20 flex justify-center items-center flex-wrap"
               style={{
                 fontFamily: "'PrimorStylish', serif",
                 fontSize: 'inherit',
@@ -326,6 +318,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
                 color: 'transparent',
+                height: '100%',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
               aria-hidden="true"
             >
