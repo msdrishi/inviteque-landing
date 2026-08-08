@@ -181,60 +181,52 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
 
       {/* Hero content wrapper (Restricted to top 60% of viewport) */}
-      <div className="relative z-20 flex flex-col items-center justify-between w-[92%] sm:w-[85%] max-w-[700px] text-center h-[58svh] mt-[5svh] select-none">
+      <div className="relative z-20 flex flex-col items-center justify-between w-[92%] sm:w-[85%] max-w-[700px] text-center h-[58svh] mt-[5svh]">
         
         {/* Header Block (Intro Text + Leaf + Heart) */}
-        <motion.div 
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="flex flex-col items-center w-full"
-        >
+        <div className="flex flex-col items-center w-full">
           {/* Top decorative branch */}
-          <motion.div variants={fadeUp} transition={{ delay: 0.2 }}>
+          <motion.div initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 0.1 }}>
             <LeafDivider color="#C59B3F" />
           </motion.div>
 
           {/* Staggered Intro lines */}
           <motion.p 
-            variants={fadeUp} 
-            transition={{ delay: 0.4 }}
+            initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 0.3 }}
             className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.25em] font-semibold text-[#5A2C16] opacity-90 text-center"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             TOGETHER WITH THEIR FAMILIES
           </motion.p>
           <motion.p 
-            variants={fadeUp} 
-            transition={{ delay: 0.6 }}
+            initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 0.5 }}
             className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-0.5"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             WE INVITE YOU TO CELEBRATE
           </motion.p>
           <motion.p 
-            variants={fadeUp} 
-            transition={{ delay: 0.8 }}
+            initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 0.7 }}
             className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-0.5"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             THE WEDDING OF
           </motion.p>
 
-          <motion.div variants={fadeUp} transition={{ delay: 1.0 }}>
+          <motion.div initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 0.9 }}>
             <HeartDivider color="#C59B3F" />
           </motion.div>
-        </motion.div>
+        </div>
 
         {/* Center Block: couple names animated last with glare shine */}
         <div className="flex flex-col items-center w-full">
           {/* Groom Name (Rohan) */}
           <motion.h1 
-            custom={2.2}
+            custom={1.1}
             initial="hidden"
             animate="show"
             variants={nameContainerVariants}
-            className="text-[#5A2C16] font-normal leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
+            className="text-[#5A2C16] font-normal leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
             style={{ fontFamily: "'PrimorStylish', serif" }}
           >
             <span className="relative z-10 flex justify-center items-center flex-wrap">
@@ -280,7 +272,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 3.4, duration: 1.0, ease: "easeOut" }}
+            transition={{ delay: 1.7, duration: 1.0, ease: "easeOut" }}
             className="flex items-center justify-center w-full"
           >
             <AmpersandDivider color="#C59B3F" />
@@ -288,11 +280,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
           {/* Bride Name (Anaya) */}
           <motion.h1 
-            custom={3.8}
+            custom={1.9}
             initial="hidden"
             animate="show"
             variants={nameContainerVariants}
-            className="text-[#5A2C16] font-normal leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
+            className="text-[#5A2C16] font-normal leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
             style={{ fontFamily: "'PrimorStylish', serif" }}
           >
             <span className="relative z-10 flex justify-center items-center flex-wrap">
@@ -336,32 +328,28 @@ function RoyalPalaceHero({ data, isDesktop }) {
         </div>
 
         {/* Date, Time, and Venue block */}
-        <motion.div 
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="flex flex-col items-center w-full"
-        >
+        <div className="flex flex-col items-center w-full">
           {/* Marriage Subtitle */}
           <motion.p 
-            variants={fadeUp} 
-            transition={{ delay: 1.2 }}
+            initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 2.5 }}
             className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F] text-center mb-2"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             ARE GETTING MARRIED
           </motion.p>
 
-          <motion.div 
-            variants={fadeUp} 
-            transition={{ delay: 1.4 }}
-            className="flex flex-col items-center gap-1 w-full"
-          >
-            <span className="text-[8.5px] uppercase tracking-[0.2em] font-semibold text-[#7D553E] mb-0.5">
+          <div className="flex flex-col items-center gap-1 w-full">
+            <motion.span 
+              initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 2.7 }}
+              className="text-[8.5px] uppercase tracking-[0.2em] font-semibold text-[#7D553E] mb-0.5"
+            >
               {(data.dayOfWeek || "SUNDAY").toUpperCase()}
-            </span>
+            </motion.span>
 
-            <div className="flex items-center justify-center gap-3">
+            <motion.div 
+              initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 2.9 }}
+              className="flex items-center justify-center gap-3"
+            >
               <div className="border-t border-b border-[#C59B3F]/40 py-1 px-2.5">
                 <span className="text-[9.5px] tracking-[0.25em] font-bold text-[#5A2C16]">
                   {(dateParts.month || "MAY").toUpperCase().slice(0, 3)}
@@ -379,41 +367,41 @@ function RoyalPalaceHero({ data, isDesktop }) {
                   {dateParts.year || "2025"}
                 </span>
               </div>
-            </div>
+            </motion.div>
 
-            <span className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] mt-1">
+            <motion.span 
+              initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 3.1 }}
+              className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] mt-1"
+            >
               {(data.weddingTime || "AT 6:00 PM ONWARDS").toUpperCase()}
-            </span>
-          </motion.div>
-        </motion.div>
+            </motion.span>
+          </div>
+        </div>
 
         {/* Location & Resort Address Details */}
-        <motion.div 
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="flex flex-col items-center text-center w-full"
-        >
-          <motion.div variants={fadeUp} transition={{ delay: 1.6 }}>
+        <div className="flex flex-col items-center text-center w-full">
+          <motion.div initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 3.3 }}>
             <LeafDivider color="#C59B3F" />
           </motion.div>
 
-          <motion.div 
-            variants={fadeUp} 
-            transition={{ delay: 1.8 }}
-            className="flex flex-col items-center text-center mt-0.5"
-          >
-            <LocationIcon color="#C59B3F" />
-            <h3 className="text-[10px] sm:text-[10.5px] font-bold tracking-[0.1em] text-[#5A2C16] uppercase max-w-[280px] mt-1">
+          <div className="flex flex-col items-center text-center mt-0.5">
+            <motion.div initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 3.5 }}>
+              <LocationIcon color="#C59B3F" />
+            </motion.div>
+            <motion.h3 
+              initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 3.7 }}
+              className="text-[10px] sm:text-[10.5px] font-bold tracking-[0.1em] text-[#5A2C16] uppercase max-w-[280px] mt-1"
+            >
               {data.venueName || "SUNSHINE GARDEN RESORT"}
-            </h3>
-            <p className="text-[7.5px] tracking-[0.15em] text-[#7D553E] uppercase mt-0.5 max-w-[260px] leading-relaxed">
+            </motion.h3>
+            <motion.p 
+              initial="hidden" animate="show" variants={fadeUp} transition={{ delay: 3.9 }}
+              className="text-[7.5px] tracking-[0.15em] text-[#7D553E] uppercase mt-0.5 max-w-[260px] leading-relaxed"
+            >
               {data.venueCity || "KANAKAPURA ROAD, BENGALURU, KARNATAKA 560062"}
-            </p>
-          </motion.div>
-
-
-        </motion.div>
+            </motion.p>
+          </div>
+        </div>
 
       </div>
 
@@ -427,7 +415,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
         className="absolute bottom-[3%] left-1/2 -translate-x-1/2 z-20 flex flex-col items-center focus:outline-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.7 }}
-        transition={{ delay: 5.2 }}
+        transition={{ delay: 4.3 }}
       >
         <motion.div
           animate={{ y: [0, 4, 0] }}
