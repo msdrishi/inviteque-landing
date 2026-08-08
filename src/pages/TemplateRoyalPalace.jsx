@@ -29,21 +29,87 @@ const fadeUp = {
 
 // Inline Symmetrical Dividers
 const LeafDivider = ({ color = '#C59B3F' }) => (
-  <div className="flex items-center justify-center gap-1.5 my-3 select-none">
-    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color, opacity: 0.4 }} />
-    <svg viewBox="0 0 40 20" className="w-8 h-4 fill-current" style={{ color }}>
-      <path d="M20,0 C27,7 35,10 40,10 C35,10 27,13 20,20 C20,13 13,10 0,10 C13,10 20,7 20,0 Z" />
+  <div className="flex items-center justify-center gap-1.5 my-3 select-none w-full max-w-[280px]">
+    {/* Left Line */}
+    <div className="flex-1 flex items-center justify-end">
+      <div className="h-[0.7px] w-full" style={{ backgroundColor: color, opacity: 0.35 }} />
+      <div className="w-1.5 h-1.5 rounded-full mx-1" style={{ backgroundColor: color }} />
+      <span className="text-[8px] inline-block" style={{ color, transform: 'rotate(180deg)' }}>❥</span>
+    </div>
+
+    {/* Center branch */}
+    <svg viewBox="0 0 80 40" className="w-12 h-6 fill-current flex-shrink-0" style={{ color }}>
+      <rect x="39" y="10" width="2" height="24" rx="1" />
+      <path d="M40,2 C42,7 42,12 40,14 C38,12 38,7 40,2 Z" />
+      <path d="M40,12 C35,11 29,13 27,17 C31,18 36,16 40,12 Z" />
+      <path d="M40,12 C45,11 51,13 53,17 C49,18 44,16 40,12 Z" />
+      <path d="M40,22 C34,22 28,25 26,29 C30,30 36,27 40,22 Z" />
+      <path d="M40,22 C46,22 52,25 54,29 C50,30 44,27 40,22 Z" />
     </svg>
-    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color, opacity: 0.4 }} />
+
+    {/* Right Line */}
+    <div className="flex-1 flex items-center justify-start">
+      <span className="text-[8px] inline-block" style={{ color }}>❥</span>
+      <div className="w-1.5 h-1.5 rounded-full mx-1" style={{ backgroundColor: color }} />
+      <div className="h-[0.7px] w-full" style={{ backgroundColor: color, opacity: 0.35 }} />
+    </div>
   </div>
 )
 
 const HeartDivider = ({ color = '#C59B3F' }) => (
-  <div className="flex items-center justify-center gap-4 w-full max-w-[180px] my-3 select-none">
-    <div className="h-[0.7px] flex-1" style={{ backgroundColor: color, opacity: 0.3 }} />
-    <span className="text-[10px]" style={{ color }}>♥</span>
-    <div className="h-[0.7px] flex-1" style={{ backgroundColor: color, opacity: 0.3 }} />
+  <div className="flex items-center justify-center gap-2.5 w-full max-w-[200px] my-3 select-none">
+    {/* Left Line */}
+    <div className="flex-1 flex items-center justify-end">
+      <div className="h-[0.7px] w-full" style={{ backgroundColor: color, opacity: 0.35 }} />
+      <div className="w-1.5 h-1.5 rounded-full mx-1" style={{ backgroundColor: color }} />
+      <div className="w-1 h-1 rounded-full" style={{ backgroundColor: color }} />
+    </div>
+
+    {/* Heart symbol */}
+    <span className="text-xs" style={{ color }}>♥</span>
+
+    {/* Right Line */}
+    <div className="flex-1 flex-items-center justify-start">
+      <div className="w-1 h-1 rounded-full" style={{ backgroundColor: color }} />
+      <div className="w-1.5 h-1.5 rounded-full mx-1" style={{ backgroundColor: color }} />
+      <div className="h-[0.7px] w-full" style={{ backgroundColor: color, opacity: 0.35 }} />
+    </div>
   </div>
+)
+
+const AmpersandDivider = ({ color = '#C59B3F' }) => (
+  <div className="flex items-center justify-center gap-5 my-1.5 text-[#C59B3F] select-none w-full max-w-[280px]">
+    {/* Left Branch */}
+    <svg viewBox="0 0 60 20" className="w-12 h-4 fill-current flex-shrink-0" style={{ color, transform: 'scaleX(-1)' }}>
+      <rect x="0" y="9" width="45" height="1.5" rx="0.5" />
+      <path d="M45,10 C50,8 55,6 60,10 C55,14 50,12 45,10 Z" />
+      <path d="M15,9 C12,5 7,4 5,7 C9,9 12,9 15,9 Z" />
+      <path d="M30,9 C27,5 22,4 20,7 C24,9 27,9 30,9 Z" />
+      <path d="M15,10.5 C12,14.5 7,15.5 5,12.5 C9,10.5 12,10.5 15,10.5 Z" />
+      <path d="M30,10.5 C27,14.5 22,15.5 20,12.5 C24,10.5 27,10.5 30,10.5 Z" />
+    </svg>
+
+    {/* Center Ampersand */}
+    <span className="text-[34px] leading-none text-[#C59B3F] flex-shrink-0" style={{ fontFamily: "'PrimorStylish', serif" }}>
+      &amp;
+    </span>
+
+    {/* Right Branch */}
+    <svg viewBox="0 0 60 20" className="w-12 h-4 fill-current flex-shrink-0" style={{ color }}>
+      <rect x="0" y="9" width="45" height="1.5" rx="0.5" />
+      <path d="M45,10 C50,8 55,6 60,10 C55,14 50,12 45,10 Z" />
+      <path d="M15,9 C12,5 7,4 5,7 C9,9 12,9 15,9 Z" />
+      <path d="M30,9 C27,5 22,4 20,7 C24,9 27,9 30,9 Z" />
+      <path d="M15,10.5 C12,14.5 7,15.5 5,12.5 C9,10.5 12,10.5 15,10.5 Z" />
+      <path d="M30,10.5 C27,14.5 22,15.5 20,12.5 C24,10.5 27,10.5 30,10.5 Z" />
+    </svg>
+  </div>
+)
+
+const LocationIcon = ({ color = '#C59B3F' }) => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className="text-[#C59B3F] mb-1 flex-shrink-0" style={{ color }}>
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+  </svg>
 )
 
 const CornerAccent = ({ top, left, right, bottom, color = '#C59B3F' }) => (
@@ -69,6 +135,28 @@ function toPascalCase(str) {
     .join(' ');
 }
 
+// Name Typewriter Animation Variants
+const nameContainerVariants = {
+  hidden: { opacity: 0 },
+  show: (delayValue) => ({
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: delayValue
+    }
+  })
+}
+
+const letterAnimVariants = {
+  hidden: { opacity: 0, scale: 0.6, y: 8 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: "easeOut" }
+  }
+}
+
 /* ─────────────────────────────────────────
    1. HERO SECTION
    ───────────────────────────────────────── */
@@ -84,6 +172,9 @@ function RoyalPalaceHero({ data, isDesktop }) {
     }
     return { day: '25', month: 'MAY', year: '2025' }
   }, [data.dateLine])
+
+  const groomNameText = toPascalCase(data.groomName || "Rohan")
+  const brideNameText = toPascalCase(data.brideName || "Anaya")
 
   return (
     <section 
@@ -113,14 +204,14 @@ function RoyalPalaceHero({ data, isDesktop }) {
           className="flex flex-col items-center w-full"
         >
           {/* Top decorative branch */}
-          <motion.div variants={fadeUp} transition={{ delay: 0.3 }}>
+          <motion.div variants={fadeUp} transition={{ delay: 0.2 }}>
             <LeafDivider color="#C59B3F" />
           </motion.div>
 
           {/* Staggered Intro lines */}
           <motion.p 
             variants={fadeUp} 
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.4 }}
             className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.25em] font-semibold text-[#5A2C16] opacity-90 text-center"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
@@ -128,7 +219,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
           </motion.p>
           <motion.p 
             variants={fadeUp} 
-            transition={{ delay: 0.7 }}
+            transition={{ delay: 0.6 }}
             className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-0.5"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
@@ -136,14 +227,14 @@ function RoyalPalaceHero({ data, isDesktop }) {
           </motion.p>
           <motion.p 
             variants={fadeUp} 
-            transition={{ delay: 0.9 }}
+            transition={{ delay: 0.8 }}
             className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-0.5"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             THE WEDDING OF
           </motion.p>
 
-          <motion.div variants={fadeUp} transition={{ delay: 1.1 }}>
+          <motion.div variants={fadeUp} transition={{ delay: 1.0 }}>
             <HeartDivider color="#C59B3F" />
           </motion.div>
         </motion.div>
@@ -152,82 +243,98 @@ function RoyalPalaceHero({ data, isDesktop }) {
         <div className="flex flex-col items-center w-full">
           {/* Groom Name (Rohan) */}
           <motion.h1 
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 3.0, duration: 2.0, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[#5A2C16] font-normal leading-none tracking-[0.05em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none"
+            custom={2.2}
+            initial="hidden"
+            animate="show"
+            variants={nameContainerVariants}
+            className="text-[#5A2C16] font-normal leading-none tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none flex justify-center flex-wrap"
             style={{ fontFamily: "'PrimorStylish', serif" }}
           >
-            <span className="relative block">
-              <span className="relative z-10">{toPascalCase(data.groomName || "Rohan")}</span>
-              <motion.span
-                animate={{ backgroundPosition: ['120% center', '-220% center'] }}
-                transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
-                className="absolute inset-0 pointer-events-none z-20 block"
-                style={{
-                  fontFamily: "'PrimorStylish', serif",
-                  fontSize: 'inherit',
-                  lineHeight: 'inherit',
-                  letterSpacing: 'inherit',
-                  textTransform: 'none',
-                  background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
-                  backgroundSize: '200% 100%',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  color: 'transparent',
-                }}
-                aria-hidden="true"
-              >
-                {toPascalCase(data.groomName || "Rohan")}
-              </motion.span>
+            <span className="relative z-10 flex justify-center flex-wrap">
+              {groomNameText.split('').map((char, index) => (
+                <motion.span key={index} variants={letterAnimVariants} style={{ display: 'inline-block', whiteSpace: 'pre' }}>
+                  {char}
+                </motion.span>
+              ))}
             </span>
+            <motion.span
+              animate={{ backgroundPosition: ['120% center', '-220% center'] }}
+              transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
+              className="absolute inset-0 pointer-events-none z-20 flex justify-center flex-wrap"
+              style={{
+                fontFamily: "'PrimorStylish', serif",
+                fontSize: 'inherit',
+                lineHeight: 'inherit',
+                letterSpacing: 'inherit',
+                textTransform: 'none',
+                background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
+                backgroundSize: '200% 100%',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}
+              aria-hidden="true"
+            >
+              {groomNameText.split('').map((char, index) => (
+                <motion.span key={index} variants={letterAnimVariants} style={{ display: 'inline-block', whiteSpace: 'pre' }}>
+                  {char}
+                </motion.span>
+              ))}
+            </motion.span>
           </motion.h1>
 
           {/* Ampersand */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 3.6, duration: 1.0, ease: "easeOut" }}
-            className="flex items-center justify-center gap-4 my-1 text-[#C59B3F]"
+            transition={{ delay: 3.4, duration: 1.0, ease: "easeOut" }}
+            className="flex items-center justify-center w-full"
           >
-            <span className="text-sm">☙</span>
-            <span className="text-2xl" style={{ fontFamily: "'PrimorStylish', serif" }}>&amp;</span>
-            <span className="text-sm">❧</span>
+            <AmpersandDivider color="#C59B3F" />
           </motion.div>
 
           {/* Bride Name (Anaya) */}
           <motion.h1 
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 4.2, duration: 2.0, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[#5A2C16] font-normal leading-none tracking-[0.05em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none"
+            custom={3.8}
+            initial="hidden"
+            animate="show"
+            variants={nameContainerVariants}
+            className="text-[#5A2C16] font-normal leading-none tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none flex justify-center flex-wrap"
             style={{ fontFamily: "'PrimorStylish', serif" }}
           >
-            <span className="relative block">
-              <span className="relative z-10">{toPascalCase(data.brideName || "Anaya")}</span>
-              <motion.span
-                animate={{ backgroundPosition: ['120% center', '-220% center'] }}
-                transition={{ repeat: Infinity, duration: 6, ease: 'linear', delay: 1.2 }}
-                className="absolute inset-0 pointer-events-none z-20 block"
-                style={{
-                  fontFamily: "'PrimorStylish', serif",
-                  fontSize: 'inherit',
-                  lineHeight: 'inherit',
-                  letterSpacing: 'inherit',
-                  textTransform: 'none',
-                  background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
-                  backgroundSize: '200% 100%',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  color: 'transparent',
-                }}
-                aria-hidden="true"
-              >
-                {toPascalCase(data.brideName || "Anaya")}
-              </motion.span>
+            <span className="relative z-10 flex justify-center flex-wrap">
+              {brideNameText.split('').map((char, index) => (
+                <motion.span key={index} variants={letterAnimVariants} style={{ display: 'inline-block', whiteSpace: 'pre' }}>
+                  {char}
+                </motion.span>
+              ))}
             </span>
+            <motion.span
+              animate={{ backgroundPosition: ['120% center', '-220% center'] }}
+              transition={{ repeat: Infinity, duration: 6, ease: 'linear', delay: 1.2 }}
+              className="absolute inset-0 pointer-events-none z-20 flex justify-center flex-wrap"
+              style={{
+                fontFamily: "'PrimorStylish', serif",
+                fontSize: 'inherit',
+                lineHeight: 'inherit',
+                letterSpacing: 'inherit',
+                textTransform: 'none',
+                background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
+                backgroundSize: '200% 100%',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}
+              aria-hidden="true"
+            >
+              {brideNameText.split('').map((char, index) => (
+                <motion.span key={index} variants={letterAnimVariants} style={{ display: 'inline-block', whiteSpace: 'pre' }}>
+                  {char}
+                </motion.span>
+              ))}
+            </motion.span>
           </motion.h1>
         </div>
 
@@ -241,7 +348,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
           {/* Marriage Subtitle */}
           <motion.p 
             variants={fadeUp} 
-            transition={{ delay: 1.1 }}
+            transition={{ delay: 1.2 }}
             className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F] text-center mb-2"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
@@ -250,7 +357,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
           <motion.div 
             variants={fadeUp} 
-            transition={{ delay: 1.3 }}
+            transition={{ delay: 1.4 }}
             className="flex flex-col items-center gap-1 w-full"
           >
             <span className="text-[8.5px] uppercase tracking-[0.2em] font-semibold text-[#7D553E] mb-0.5">
@@ -290,16 +397,17 @@ function RoyalPalaceHero({ data, isDesktop }) {
           viewport={{ once: true }}
           className="flex flex-col items-center text-center w-full"
         >
-          <motion.div variants={fadeUp} transition={{ delay: 1.5 }}>
+          <motion.div variants={fadeUp} transition={{ delay: 1.6 }}>
             <LeafDivider color="#C59B3F" />
           </motion.div>
 
           <motion.div 
             variants={fadeUp} 
-            transition={{ delay: 1.7 }}
+            transition={{ delay: 1.8 }}
             className="flex flex-col items-center text-center mt-0.5"
           >
-            <h3 className="text-[10px] sm:text-[10.5px] font-bold tracking-[0.1em] text-[#5A2C16] uppercase max-w-[280px]">
+            <LocationIcon color="#C59B3F" />
+            <h3 className="text-[10px] sm:text-[10.5px] font-bold tracking-[0.1em] text-[#5A2C16] uppercase max-w-[280px] mt-1">
               {data.venueName || "SUNSHINE GARDEN RESORT"}
             </h3>
             <p className="text-[7.5px] tracking-[0.15em] text-[#7D553E] uppercase mt-0.5 max-w-[260px] leading-relaxed">
@@ -310,13 +418,17 @@ function RoyalPalaceHero({ data, isDesktop }) {
           {/* Mini heart & RSVP text */}
           <motion.div 
             variants={fadeUp} 
-            transition={{ delay: 1.9 }}
+            transition={{ delay: 2.0 }}
             className="flex flex-col items-center mt-2.5 text-center"
           >
             <span className="text-[8px] text-[#C59B3F] mb-1">♥</span>
             <p className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] font-bold text-[#5A2C16]">
-              WE CAN'T WAIT TO CELEBRATE THIS SPECIAL DAY WITH YOU!
+              WE CAN'T WAIT TO CELEBRATE
             </p>
+            <p className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] font-bold text-[#5A2C16]">
+              THIS SPECIAL DAY WITH YOU!
+            </p>
+             
           </motion.div>
         </motion.div>
 
@@ -332,7 +444,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
         className="absolute bottom-[3%] left-1/2 -translate-x-1/2 z-20 flex flex-col items-center focus:outline-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.7 }}
-        transition={{ delay: 4.8 }}
+        transition={{ delay: 5.2 }}
       >
         <motion.div
           animate={{ y: [0, 4, 0] }}
