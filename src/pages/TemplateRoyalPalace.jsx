@@ -79,14 +79,21 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
   return (
     <section 
-      className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-between py-12 px-6 overflow-hidden bg-[#FFFDF6] text-[#5A2C16]"
+      className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-start overflow-hidden bg-[#FFFDF6] text-[#5A2C16]"
     >
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* Desktop View (lg and larger: >= 1024px) */}
         <img 
-          src={isDesktop ? heroBgDesktop : heroBgMobile} 
+          src={heroBgDesktop} 
           alt="" 
-          className="w-full h-full object-cover" 
+          className="hidden lg:block w-full h-full object-cover object-center" 
+        />
+        {/* Mobile & Tablet View (below lg: < 1024px) */}
+        <img 
+          src={heroBgMobile} 
+          alt="" 
+          className="block lg:hidden w-full h-full object-cover object-[center_top] md:object-[center_30%]" 
         />
         {/* Soft overlay to blend top portion with text */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF6]/45 via-transparent to-[#FFFDF6]/15" />
@@ -100,250 +107,248 @@ function RoyalPalaceHero({ data, isDesktop }) {
         <CornerAccent bottom="6px" right="6px" />
       </div>
 
-      {/* Header (Top Leaf Divider & Intro text) */}
-      <motion.div 
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        className="relative z-20 flex flex-col items-center w-full mt-6"
-      >
-        {/* Top decorative branch */}
-        <motion.div variants={fadeUp} transition={{ delay: 0.3 }}>
-          <LeafDivider color="#C59B3F" />
-        </motion.div>
-
-        {/* Staggered Intro lines exactly matching detailing */}
-        <motion.p 
-          variants={fadeUp} 
-          transition={{ delay: 0.6 }}
-          className="text-[9.5px] uppercase tracking-[0.25em] font-semibold text-[#5A2C16] opacity-90 text-center"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
-        >
-          TOGETHER WITH THEIR FAMILIES
-        </motion.p>
-        <motion.p 
-          variants={fadeUp} 
-          transition={{ delay: 0.8 }}
-          className="text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-1"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
-        >
-          WE INVITE YOU TO CELEBRATE
-        </motion.p>
-        <motion.p 
-          variants={fadeUp} 
-          transition={{ delay: 1.0 }}
-          className="text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-0.5"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
-        >
-          THE WEDDING OF
-        </motion.p>
-
-        {/* Heart Divider line */}
-        <motion.div variants={fadeUp} transition={{ delay: 1.2 }}>
-          <HeartDivider color="#C59B3F" />
-        </motion.div>
-      </motion.div>
-
-      {/* Couple names positioned in the center, animated last with shine */}
-      <div className="relative z-20 my-auto py-4 flex flex-col items-center w-full">
-        {/* Groom Name (ROHAN) */}
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 3.0, duration: 2.2, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[#5A2C16] font-normal leading-none tracking-[0.05em] uppercase text-[48px] sm:text-[60px] md:text-[72px] lg:text-[80px] relative select-none"
-          style={{ fontFamily: "'Cinzel', serif" }}
-        >
-          <span className="relative block">
-            <span className="relative z-10">{data.groomName || "ROHAN"}</span>
-            <motion.span
-              animate={{ backgroundPosition: ['120% center', '-220% center'] }}
-              transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
-              className="absolute inset-0 pointer-events-none z-20 block"
-              style={{
-                fontFamily: "'Cinzel', serif",
-                fontSize: 'inherit',
-                fontWeight: 'inherit',
-                lineHeight: 'inherit',
-                letterSpacing: 'inherit',
-                textTransform: 'inherit',
-                background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
-                backgroundSize: '200% 100%',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                color: 'transparent',
-              }}
-              aria-hidden="true"
-            >
-              {data.groomName || "ROHAN"}
-            </motion.span>
-          </span>
-        </motion.h1>
-
-        {/* Ampersand flanked by branch decorators */}
+      {/* Hero content wrapper (Restricted to top 60% of viewport) */}
+      <div className="relative z-20 flex flex-col items-center justify-between w-[92%] sm:w-[85%] max-w-[700px] text-center h-[58svh] mt-[5svh] select-none">
+        
+        {/* Header Block (Intro Text + Leaf + Heart) */}
         <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 3.6, duration: 1.2, ease: "easeOut" }}
-          className="flex items-center justify-center gap-4 my-2 text-[#C59B3F]"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="flex flex-col items-center w-full"
         >
-          <span className="text-sm">☙</span>
-          <span className="text-3xl font-light" style={{ fontFamily: "'Cinzel', serif" }}>&amp;</span>
-          <span className="text-sm">❧</span>
+          {/* Top decorative branch */}
+          <motion.div variants={fadeUp} transition={{ delay: 0.3 }}>
+            <LeafDivider color="#C59B3F" />
+          </motion.div>
+
+          {/* Staggered Intro lines */}
+          <motion.p 
+            variants={fadeUp} 
+            transition={{ delay: 0.5 }}
+            className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.25em] font-semibold text-[#5A2C16] opacity-90 text-center"
+            style={{ fontFamily: "'Montserrat', sans-serif" }}
+          >
+            TOGETHER WITH THEIR FAMILIES
+          </motion.p>
+          <motion.p 
+            variants={fadeUp} 
+            transition={{ delay: 0.7 }}
+            className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-0.5"
+            style={{ fontFamily: "'Montserrat', sans-serif" }}
+          >
+            WE INVITE YOU TO CELEBRATE
+          </motion.p>
+          <motion.p 
+            variants={fadeUp} 
+            transition={{ delay: 0.9 }}
+            className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-0.5"
+            style={{ fontFamily: "'Montserrat', sans-serif" }}
+          >
+            THE WEDDING OF
+          </motion.p>
+
+          <motion.div variants={fadeUp} transition={{ delay: 1.1 }}>
+            <HeartDivider color="#C59B3F" />
+          </motion.div>
         </motion.div>
 
-        {/* Bride Name (ANAYA) */}
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 4.2, duration: 2.2, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[#5A2C16] font-normal leading-none tracking-[0.05em] uppercase text-[48px] sm:text-[60px] md:text-[72px] lg:text-[80px] relative select-none"
-          style={{ fontFamily: "'Cinzel', serif" }}
+        {/* Center Block: Bold couple names animated last with glare shine */}
+        <div className="flex flex-col items-center w-full">
+          {/* Groom Name (ROHAN) - BOLD */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 3.0, duration: 2.0, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[#5A2C16] font-bold leading-none tracking-[0.05em] uppercase text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none"
+            style={{ fontFamily: "'Cinzel', serif", fontWeight: 900 }}
+          >
+            <span className="relative block">
+              <span className="relative z-10">{data.groomName || "ROHAN"}</span>
+              <motion.span
+                animate={{ backgroundPosition: ['120% center', '-220% center'] }}
+                transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
+                className="absolute inset-0 pointer-events-none z-20 block"
+                style={{
+                  fontFamily: "'Cinzel', serif",
+                  fontSize: 'inherit',
+                  fontWeight: 900,
+                  lineHeight: 'inherit',
+                  letterSpacing: 'inherit',
+                  textTransform: 'inherit',
+                  background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
+                  backgroundSize: '200% 100%',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                }}
+                aria-hidden="true"
+              >
+                {data.groomName || "ROHAN"}
+              </motion.span>
+            </span>
+          </motion.h1>
+
+          {/* Ampersand */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 3.6, duration: 1.0, ease: "easeOut" }}
+            className="flex items-center justify-center gap-4 my-1 text-[#C59B3F]"
+          >
+            <span className="text-sm">☙</span>
+            <span className="text-2xl font-bold" style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}>&amp;</span>
+            <span className="text-sm">❧</span>
+          </motion.div>
+
+          {/* Bride Name (ANAYA) - BOLD */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 4.2, duration: 2.0, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[#5A2C16] font-bold leading-none tracking-[0.05em] uppercase text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none"
+            style={{ fontFamily: "'Cinzel', serif", fontWeight: 900 }}
+          >
+            <span className="relative block">
+              <span className="relative z-10">{data.brideName || "ANAYA"}</span>
+              <motion.span
+                animate={{ backgroundPosition: ['120% center', '-220% center'] }}
+                transition={{ repeat: Infinity, duration: 6, ease: 'linear', delay: 1.2 }}
+                className="absolute inset-0 pointer-events-none z-20 block"
+                style={{
+                  fontFamily: "'Cinzel', serif",
+                  fontSize: 'inherit',
+                  fontWeight: 900,
+                  lineHeight: 'inherit',
+                  letterSpacing: 'inherit',
+                  textTransform: 'inherit',
+                  background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
+                  backgroundSize: '200% 100%',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                }}
+                aria-hidden="true"
+              >
+                {data.brideName || "ANAYA"}
+              </motion.span>
+            </span>
+          </motion.h1>
+        </div>
+
+        {/* Date, Time, and Venue block */}
+        <motion.div 
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="flex flex-col items-center w-full"
         >
-          <span className="relative block">
-            <span className="relative z-10">{data.brideName || "ANAYA"}</span>
-            <motion.span
-              animate={{ backgroundPosition: ['120% center', '-220% center'] }}
-              transition={{ repeat: Infinity, duration: 6, ease: 'linear', delay: 1.2 }}
-              className="absolute inset-0 pointer-events-none z-20 block"
-              style={{
-                fontFamily: "'Cinzel', serif",
-                fontSize: 'inherit',
-                fontWeight: 'inherit',
-                lineHeight: 'inherit',
-                letterSpacing: 'inherit',
-                textTransform: 'inherit',
-                background: 'linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.6) 50%, transparent 60%)',
-                backgroundSize: '200% 100%',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                color: 'transparent',
-              }}
-              aria-hidden="true"
-            >
-              {data.brideName || "ANAYA"}
-            </motion.span>
-          </span>
-        </motion.h1>
+          {/* Marriage Subtitle */}
+          <motion.p 
+            variants={fadeUp} 
+            transition={{ delay: 1.1 }}
+            className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F] text-center mb-2"
+            style={{ fontFamily: "'Montserrat', sans-serif" }}
+          >
+            ARE GETTING MARRIED
+          </motion.p>
+
+          <motion.div 
+            variants={fadeUp} 
+            transition={{ delay: 1.3 }}
+            className="flex flex-col items-center gap-1 w-full"
+          >
+            <span className="text-[8.5px] uppercase tracking-[0.2em] font-semibold text-[#7D553E] mb-0.5">
+              {(data.dayOfWeek || "SUNDAY").toUpperCase()}
+            </span>
+
+            <div className="flex items-center justify-center gap-3">
+              <div className="border-t border-b border-[#C59B3F]/40 py-1 px-2.5">
+                <span className="text-[9.5px] tracking-[0.25em] font-bold text-[#5A2C16]">
+                  {(dateParts.month || "MAY").toUpperCase().slice(0, 3)}
+                </span>
+              </div>
+
+              <div className="border-l border-r border-[#C59B3F]/50 px-4">
+                <span className="text-[25px] font-bold leading-none text-[#C59B3F]" style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}>
+                  {dateParts.day || "25"}
+                </span>
+              </div>
+
+              <div className="border-t border-b border-[#C59B3F]/40 py-1 px-2.5">
+                <span className="text-[9.5px] tracking-[0.25em] font-bold text-[#5A2C16]">
+                  {dateParts.year || "2025"}
+                </span>
+              </div>
+            </div>
+
+            <span className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] mt-1">
+              {(data.weddingTime || "AT 6:00 PM ONWARDS").toUpperCase()}
+            </span>
+          </motion.div>
+        </motion.div>
+
+        {/* Location & Resort Address Details */}
+        <motion.div 
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="flex flex-col items-center text-center w-full"
+        >
+          <motion.div variants={fadeUp} transition={{ delay: 1.5 }}>
+            <LeafDivider color="#C59B3F" />
+          </motion.div>
+
+          <motion.div 
+            variants={fadeUp} 
+            transition={{ delay: 1.7 }}
+            className="flex flex-col items-center text-center mt-0.5"
+          >
+            <h3 className="text-[10px] sm:text-[10.5px] font-bold tracking-[0.1em] text-[#5A2C16] uppercase max-w-[280px]">
+              {data.venueName || "SUNSHINE GARDEN RESORT"}
+            </h3>
+            <p className="text-[7.5px] tracking-[0.15em] text-[#7D553E] uppercase mt-0.5 max-w-[260px] leading-relaxed">
+              {data.venueCity || "KANAKAPURA ROAD, BENGALURU, KARNATAKA 560062"}
+            </p>
+          </motion.div>
+
+          {/* Mini heart & RSVP text */}
+          <motion.div 
+            variants={fadeUp} 
+            transition={{ delay: 1.9 }}
+            className="flex flex-col items-center mt-2.5 text-center"
+          >
+            <span className="text-[8px] text-[#C59B3F] mb-1">♥</span>
+            <p className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] font-bold text-[#5A2C16]">
+              WE CAN'T WAIT TO CELEBRATE THIS SPECIAL DAY WITH YOU!
+            </p>
+          </motion.div>
+        </motion.div>
+
       </div>
 
-      {/* Footer Details (Date box, Venue details, RSVP message) */}
-      <motion.div 
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        className="relative z-20 flex flex-col items-center w-full mb-4"
+      {/* Scroll indicator - absolutely positioned at bottom of screen (bottom 4% area) */}
+      <motion.button
+        type="button"
+        onClick={() => {
+          const el = document.getElementById('story')
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }}
+        className="absolute bottom-[3%] left-1/2 -translate-x-1/2 z-20 flex flex-col items-center focus:outline-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.7 }}
+        transition={{ delay: 4.8 }}
       >
-        {/* Marriage Subtitle */}
-        <motion.p 
-          variants={fadeUp} 
-          transition={{ delay: 1.2 }}
-          className="text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F] text-center mb-3"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
+        <motion.div
+          animate={{ y: [0, 4, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+          className="w-7 h-7 rounded-full border border-[#C59B3F]/40 flex items-center justify-center bg-white/70"
         >
-          ARE GETTING MARRIED
-        </motion.p>
-
-        {/* Date block layout with lines */}
-        <motion.div 
-          variants={fadeUp} 
-          transition={{ delay: 1.4 }}
-          className="flex flex-col items-center gap-1.5 w-full"
-        >
-          <span className="text-[9px] uppercase tracking-[0.25em] font-semibold text-[#7D553E] mb-0.5">
-            {(data.dayOfWeek || "SUNDAY").toUpperCase()}
-          </span>
-
-          <div className="flex items-center justify-center gap-4">
-            {/* MONTH */}
-            <div className="border-t border-b border-[#C59B3F]/40 py-1.5 px-3">
-              <span className="text-[10px] tracking-[0.25em] font-bold text-[#5A2C16]">
-                {(dateParts.month || "MAY").toUpperCase().slice(0, 3)}
-              </span>
-            </div>
-
-            {/* DAY - Gold vertical borders */}
-            <div className="border-l border-r border-[#C59B3F]/50 px-5">
-              <span className="text-[28px] font-semibold leading-none text-[#C59B3F]" style={{ fontFamily: "'Cinzel', serif" }}>
-                {dateParts.day || "25"}
-              </span>
-            </div>
-
-            {/* YEAR */}
-            <div className="border-t border-b border-[#C59B3F]/40 py-1.5 px-3">
-              <span className="text-[10px] tracking-[0.25em] font-bold text-[#5A2C16]">
-                {dateParts.year || "2025"}
-              </span>
-            </div>
-          </div>
-
-          <span className="text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] mt-1.5">
-            {(data.weddingTime || "AT 6:00 PM ONWARDS").toUpperCase()}
-          </span>
+          <span className="text-[8px] text-[#5A2C16]">▼</span>
         </motion.div>
-
-        {/* Leaf divider */}
-        <motion.div variants={fadeUp} transition={{ delay: 1.6 }}>
-          <LeafDivider color="#C59B3F" />
-        </motion.div>
-
-        {/* Location details */}
-        <motion.div 
-          variants={fadeUp} 
-          transition={{ delay: 1.8 }}
-          className="flex flex-col items-center text-center mt-1"
-        >
-          <div className="flex items-center justify-center gap-1.5 text-[#C59B3F] mb-1">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-          </div>
-          <h3 className="text-[11px] font-bold tracking-[0.1em] text-[#5A2C16] uppercase max-w-[280px]">
-            {data.venueName || "SUNSHINE GARDEN RESORT"}
-          </h3>
-          <p className="text-[7.5px] tracking-[0.15em] text-[#7D553E] uppercase mt-1 max-w-[260px] leading-relaxed">
-            {data.venueCity || "KANAKAPURA ROAD, BENGALURU, KARNATAKA 560062"}
-          </p>
-        </motion.div>
-
-        {/* Mini heart & RSVP text */}
-        <motion.div 
-          variants={fadeUp} 
-          transition={{ delay: 2.0 }}
-          className="flex flex-col items-center mt-4 text-center"
-        >
-          <span className="text-[8px] text-[#C59B3F] mb-1.5">♥</span>
-          <p className="text-[8.5px] uppercase tracking-[0.2em] font-semibold text-[#5A2C16]">
-            WE CAN'T WAIT TO CELEBRATE
-          </p>
-          <p className="text-[8.5px] uppercase tracking-[0.2em] font-semibold text-[#5A2C16] mt-0.5">
-            THIS SPECIAL DAY WITH YOU!
-          </p>
-        </motion.div>
-
-        {/* Scroll button */}
-        <motion.button
-          type="button"
-          onClick={() => {
-            const el = document.getElementById('story')
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-          }}
-          className="mt-6 flex flex-col items-center focus:outline-none"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.7 }}
-          transition={{ delay: 4.8 }}
-        >
-          <motion.div
-            animate={{ y: [0, 4, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-            className="w-7 h-7 rounded-full border border-[#C59B3F]/40 flex items-center justify-center bg-white/70"
-          >
-            <span className="text-[8px] text-[#5A2C16]">▼</span>
-          </motion.div>
-        </motion.button>
-      </motion.div>
+      </motion.button>
     </section>
   )
 }
