@@ -182,7 +182,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
       <div className="absolute inset-0 z-0 pointer-events-none">
         {isDesktop ? (
           <video
-            src="/backgrounds/Royal Palace/Animating_sunflower_field_in_breeze_202608082155.mp4"
+            src="/backgrounds/Royal Palace/Sunflowers_moving_in_wind_1080p_desktop.mp4"
             autoPlay
             loop
             muted
