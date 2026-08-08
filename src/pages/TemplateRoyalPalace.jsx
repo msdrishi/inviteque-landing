@@ -188,7 +188,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             muted
             playsInline
             className="w-full h-full object-cover object-center"
-            style={{ filter: 'blur(2.5px)', transform: 'scale(1.05)' }}
+            style={{ filter: 'contrast(85%) blur(0.6px)', transform: 'scale(1.01)' }}
           />
         ) : (
           <video
@@ -198,7 +198,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             muted
             playsInline
             className="w-full h-full object-cover object-center"
-            style={{ filter: 'blur(2.5px)', transform: 'scale(1.05)' }}
+            style={{ filter: 'contrast(85%) blur(0.6px)', transform: 'scale(1.01)' }}
           />
         )}
         {/* Soft overlay to blend top portion with text */}
