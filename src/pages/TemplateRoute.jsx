@@ -57,8 +57,14 @@ const TEMPLATE_ASSETS = {
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png",
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786194482/sbwivzirylzohych9vju.png"
   ],
-  'template-3': Object.values(royalPalaceMapping),
-  'royal-palace': Object.values(royalPalaceMapping),
+  'template-3': [
+    "/backgrounds/Royal Palace/Hero_Desktop.png",
+    "/backgrounds/Royal Palace/Hero_Mobile.png"
+  ],
+  'royal-palace': [
+    "/backgrounds/Royal Palace/Hero_Desktop.png",
+    "/backgrounds/Royal Palace/Hero_Mobile.png"
+  ],
   'blossom-whisper': [
     template3HeroBg,
     template3MessageBg,

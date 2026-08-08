@@ -5,9 +5,9 @@ import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import cMapping from '../royalPalaceCloudinaryMapping.json'
 
-// Background Assets (Cloudinary URLs with local fallback)
-const heroBgDesktop = cMapping['hero-desktop.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786210493/royal-palace-hero-desktop-1786210476140.png"
-const heroBgMobile = cMapping['hero-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786210505/royal-palace-hero-mobile-1786210476140.png"
+// Background Assets (Directly from local public directory)
+const heroBgDesktop = "/backgrounds/Royal Palace/Hero_Desktop.png"
+const heroBgMobile = "/backgrounds/Royal Palace/Hero_Mobile.png"
 const photoBgDesktop = cMapping['photo-desktop.png'] || "/backgrounds/Royal Palace/photo-desktop.png"
 const photoBgMobile = cMapping['photo-mobile.png'] || "/backgrounds/Royal Palace/photo-mobile.png"
 const messageBgDesktop = cMapping['message-desktop.png'] || "/backgrounds/Royal Palace/message-desktop.png"
