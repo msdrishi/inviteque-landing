@@ -29,7 +29,7 @@ const fadeUp = {
 
 // Inline Symmetrical Dividers
 const LeafDivider = ({ color = '#C59B3F' }) => (
-  <div className="flex items-center justify-center gap-1.5 my-1 select-none w-full max-w-[280px]">
+  <div className="flex items-center justify-center gap-1.5 my-1.5 select-none w-full max-w-[280px]">
     {/* Left Line */}
     <div className="flex-1 flex items-center justify-end">
       <div className="h-[0.7px] w-full" style={{ backgroundColor: color, opacity: 0.35 }} />
@@ -57,15 +57,15 @@ const LeafDivider = ({ color = '#C59B3F' }) => (
 )
 
 const HeartDivider = ({ color = '#C59B3F' }) => (
-  <div className="flex items-center justify-center gap-3 w-full max-w-[180px] my-1 select-none">
-    <div className="h-[0.8px] flex-1" style={{ backgroundColor: color, opacity: 0.4 }} />
+  <div className="flex items-center justify-center gap-3 w-full max-w-[180px] my-1.5 select-none">
+    <div className="h-[1.2px] flex-1" style={{ backgroundColor: color, opacity: 0.75 }} />
     <span className="text-xs text-[#C59B3F] leading-none" style={{ color }}>♥</span>
-    <div className="h-[0.8px] flex-1" style={{ backgroundColor: color, opacity: 0.4 }} />
+    <div className="h-[1.2px] flex-1" style={{ backgroundColor: color, opacity: 0.75 }} />
   </div>
 )
 
 const AmpersandDivider = ({ color = '#C59B3F' }) => (
-  <div className="flex items-center justify-center gap-5 my-0.5 text-[#C59B3F] select-none w-full max-w-[280px]">
+  <div className="flex items-center justify-center gap-5 my-1 text-[#C59B3F] select-none w-full max-w-[280px]">
     {/* Left Branch */}
     <svg viewBox="0 0 60 20" className="w-12 h-4 fill-current flex-shrink-0" style={{ color, transform: 'scaleX(-1)' }}>
       <rect x="0" y="9" width="45" height="1.5" rx="0.5" />
@@ -205,8 +205,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
 
 
-      {/* Hero content wrapper (Restricted to top 50% of viewport) */}
-      <div className="relative z-20 flex flex-col items-center justify-start w-[92%] sm:w-[85%] max-w-[700px] text-center mt-[2.5svh] gap-1">
+      {/* Hero content wrapper (Restricted to top 60% of viewport) */}
+      <div className="relative z-20 flex flex-col items-center justify-start w-[92%] sm:w-[85%] max-w-[700px] text-center mt-[4svh] gap-2">
         
         {/* Header Block (Intro Text + Leaf + Heart) */}
         <div className="flex flex-col items-center w-full">
@@ -377,12 +377,12 @@ function RoyalPalaceHero({ data, isDesktop }) {
             ARE GETTING MARRIED
           </motion.p>
 
-          <div className="flex flex-col items-center gap-1 w-full">
+          <div className="flex flex-col items-center gap-1.5 w-full">
             <motion.span 
               initial={{ opacity: 0, y: 12 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 3.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[9.5px] sm:text-[10px] uppercase tracking-[0.2em] font-semibold text-[#7D553E] mb-0.5"
+              className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold text-[#7D553E] mb-0.5"
             >
               {(data.dayOfWeek || "SUNDAY").toUpperCase()}
             </motion.span>
@@ -393,20 +393,20 @@ function RoyalPalaceHero({ data, isDesktop }) {
               transition={{ delay: 3.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center justify-center gap-3"
             >
-              <div className="border-t border-b border-[#C59B3F]/40 py-1 px-2.5">
-                <span className="text-[11px] tracking-[0.25em] font-bold text-[#5A2C16]">
+              <div className="border-t border-b border-[#C59B3F]/40 py-1.5 px-3">
+                <span className="text-[13px] tracking-[0.25em] font-bold text-[#5A2C16]">
                   {(dateParts.month || "MAY").toUpperCase().slice(0, 3)}
                 </span>
               </div>
 
-              <div className="border-l border-r border-[#C59B3F]/50 px-4">
-                <span className="text-[35px] font-bold leading-none text-[#C59B3F]" style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}>
+              <div className="border-l border-r border-[#C59B3F]/50 px-5">
+                <span className="text-[42px] font-bold leading-none text-[#C59B3F]" style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}>
                   {dateParts.day || "25"}
                 </span>
               </div>
 
-              <div className="border-t border-b border-[#C59B3F]/40 py-1 px-2.5">
-                <span className="text-[11px] tracking-[0.25em] font-bold text-[#5A2C16]">
+              <div className="border-t border-b border-[#C59B3F]/40 py-1.5 px-3">
+                <span className="text-[13px] tracking-[0.25em] font-bold text-[#5A2C16]">
                   {dateParts.year || "2025"}
                 </span>
               </div>
@@ -416,7 +416,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
               initial={{ opacity: 0, y: 12 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 3.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.2em] text-[#7D553E] mt-1"
+              className="text-[10px] sm:text-[10.5px] uppercase tracking-[0.2em] text-[#7D553E] mt-1"
             >
               {(data.weddingTime || "AT 6:00 PM ONWARDS").toUpperCase()}
             </motion.span>
