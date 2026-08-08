@@ -29,7 +29,7 @@ const fadeUp = {
 
 // Inline Symmetrical Dividers
 const LeafDivider = ({ color = '#C59B3F' }) => (
-  <div className="flex items-center justify-center gap-1.5 my-3 select-none w-full max-w-[280px]">
+  <div className="flex items-center justify-center gap-1.5 my-1 select-none w-full max-w-[280px]">
     {/* Left Line */}
     <div className="flex-1 flex items-center justify-end">
       <div className="h-[0.7px] w-full" style={{ backgroundColor: color, opacity: 0.35 }} />
@@ -57,7 +57,7 @@ const LeafDivider = ({ color = '#C59B3F' }) => (
 )
 
 const HeartDivider = ({ color = '#C59B3F' }) => (
-  <div className="flex items-center justify-center gap-3 w-full max-w-[180px] my-3 select-none">
+  <div className="flex items-center justify-center gap-3 w-full max-w-[180px] my-1 select-none">
     <div className="h-[0.8px] flex-1" style={{ backgroundColor: color, opacity: 0.4 }} />
     <span className="text-xs text-[#C59B3F] leading-none" style={{ color }}>♥</span>
     <div className="h-[0.8px] flex-1" style={{ backgroundColor: color, opacity: 0.4 }} />
@@ -65,7 +65,7 @@ const HeartDivider = ({ color = '#C59B3F' }) => (
 )
 
 const AmpersandDivider = ({ color = '#C59B3F' }) => (
-  <div className="flex items-center justify-center gap-5 my-1.5 text-[#C59B3F] select-none w-full max-w-[280px]">
+  <div className="flex items-center justify-center gap-5 my-0.5 text-[#C59B3F] select-none w-full max-w-[280px]">
     {/* Left Branch */}
     <svg viewBox="0 0 60 20" className="w-12 h-4 fill-current flex-shrink-0" style={{ color, transform: 'scaleX(-1)' }}>
       <rect x="0" y="9" width="45" height="1.5" rx="0.5" />
@@ -202,8 +202,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
 
 
-      {/* Hero content wrapper (Restricted to top 60-65% of viewport) */}
-      <div className="relative z-20 flex flex-col items-center justify-start w-[92%] sm:w-[85%] max-w-[700px] text-center mt-[4.5svh] gap-2.5">
+      {/* Hero content wrapper (Restricted to top 50% of viewport) */}
+      <div className="relative z-20 flex flex-col items-center justify-start w-[92%] sm:w-[85%] max-w-[700px] text-center mt-[2.5svh] gap-1">
         
         {/* Header Block (Intro Text + Leaf + Heart) */}
         <div className="flex flex-col items-center w-full">
