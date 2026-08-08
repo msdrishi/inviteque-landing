@@ -181,10 +181,13 @@ function RoyalPalaceHero({ data, isDesktop }) {
       {/* Background Container */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         {isDesktop ? (
-          <img 
-            src={heroBgDesktop} 
-            alt="" 
-            className="w-full h-full object-cover object-center" 
+          <video
+            src="/backgrounds/Royal Palace/Animating_sunflower_field_in_breeze_202608082155.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover object-center"
           />
         ) : (
           <video

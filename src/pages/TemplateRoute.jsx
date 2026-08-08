@@ -58,11 +58,11 @@ const TEMPLATE_ASSETS = {
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786194482/sbwivzirylzohych9vju.png"
   ],
   'template-3': [
-    "/backgrounds/Royal Palace/Hero_Desktop.png",
+    "/backgrounds/Royal Palace/Animating_sunflower_field_in_breeze_202608082155.mp4",
     "/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"
   ],
   'royal-palace': [
-    "/backgrounds/Royal Palace/Hero_Desktop.png",
+    "/backgrounds/Royal Palace/Animating_sunflower_field_in_breeze_202608082155.mp4",
     "/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"
   ],
   'blossom-whisper': [
