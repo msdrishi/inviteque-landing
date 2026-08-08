@@ -264,8 +264,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
             initial="hidden"
             animate="show"
             variants={groomContainerVariants}
-            className="text-[#5A2C16] font-normal leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
-            style={{ fontFamily: "'PrimorStylish', serif" }}
+            className="text-[#5A2C16] font-bold leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
+            style={{ fontFamily: "'PrimorStylish', serif", fontWeight: 'bold' }}
           >
             <span className="relative z-10 flex justify-center items-center flex-wrap">
               {groomNameText.split('').map((char, index) => (
@@ -280,6 +280,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
               className="absolute inset-0 pointer-events-none z-20 flex justify-center items-center flex-wrap"
               style={{
                 fontFamily: "'PrimorStylish', serif",
+                fontWeight: 'bold',
                 fontSize: 'inherit',
                 lineHeight: 'inherit',
                 letterSpacing: 'inherit',
@@ -321,8 +322,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
             initial="hidden"
             animate="show"
             variants={brideContainerVariants}
-            className="text-[#5A2C16] font-normal leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
-            style={{ fontFamily: "'PrimorStylish', serif" }}
+            className="text-[#5A2C16] font-bold leading-normal tracking-[0.03em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.2em]"
+            style={{ fontFamily: "'PrimorStylish', serif", fontWeight: 'bold' }}
           >
             <span className="relative z-10 flex justify-center items-center flex-wrap">
               {brideNameText.split('').map((char, index) => (
@@ -337,6 +338,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
               className="absolute inset-0 pointer-events-none z-20 flex justify-center items-center flex-wrap"
               style={{
                 fontFamily: "'PrimorStylish', serif",
+                fontWeight: 'bold',
                 fontSize: 'inherit',
                 lineHeight: 'inherit',
                 letterSpacing: 'inherit',
