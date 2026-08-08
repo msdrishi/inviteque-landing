@@ -156,7 +156,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.0, duration: 2.0, ease: [0.22, 1, 0.36, 1] }}
             className="text-[#5A2C16] font-normal leading-none tracking-[0.05em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none"
-            style={{ fontFamily: "'Wistania', serif" }}
+            style={{ fontFamily: "'PrimorStylish', serif" }}
           >
             <span className="relative block">
               <span className="relative z-10">{toPascalCase(data.groomName || "Rohan")}</span>
@@ -165,7 +165,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
                 transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}
                 className="absolute inset-0 pointer-events-none z-20 block"
                 style={{
-                  fontFamily: "'Wistania', serif",
+                  fontFamily: "'PrimorStylish', serif",
                   fontSize: 'inherit',
                   lineHeight: 'inherit',
                   letterSpacing: 'inherit',
@@ -192,7 +192,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             className="flex items-center justify-center gap-4 my-1 text-[#C59B3F]"
           >
             <span className="text-sm">☙</span>
-            <span className="text-2xl" style={{ fontFamily: "'Wistania', serif" }}>&amp;</span>
+            <span className="text-2xl" style={{ fontFamily: "'PrimorStylish', serif" }}>&amp;</span>
             <span className="text-sm">❧</span>
           </motion.div>
 
@@ -202,7 +202,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 4.2, duration: 2.0, ease: [0.22, 1, 0.36, 1] }}
             className="text-[#5A2C16] font-normal leading-none tracking-[0.05em] text-[46px] sm:text-[58px] md:text-[68px] lg:text-[76px] relative select-none"
-            style={{ fontFamily: "'Wistania', serif" }}
+            style={{ fontFamily: "'PrimorStylish', serif" }}
           >
             <span className="relative block">
               <span className="relative z-10">{toPascalCase(data.brideName || "Anaya")}</span>
@@ -211,7 +211,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
                 transition={{ repeat: Infinity, duration: 6, ease: 'linear', delay: 1.2 }}
                 className="absolute inset-0 pointer-events-none z-20 block"
                 style={{
-                  fontFamily: "'Wistania', serif",
+                  fontFamily: "'PrimorStylish', serif",
                   fontSize: 'inherit',
                   lineHeight: 'inherit',
                   letterSpacing: 'inherit',
