@@ -412,21 +412,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             </p>
           </motion.div>
 
-          {/* Mini heart & RSVP text */}
-          <motion.div 
-            variants={fadeUp} 
-            transition={{ delay: 2.0 }}
-            className="flex flex-col items-center mt-2.5 text-center"
-          >
-            <span className="text-[8px] text-[#C59B3F] mb-1">♥</span>
-            <p className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] font-bold text-[#5A2C16]">
-              WE CAN'T WAIT TO CELEBRATE
-            </p>
-            <p className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] font-bold text-[#5A2C16]">
-              THIS SPECIAL DAY WITH YOU!
-            </p>
-             
-          </motion.div>
+
         </motion.div>
 
       </div>
