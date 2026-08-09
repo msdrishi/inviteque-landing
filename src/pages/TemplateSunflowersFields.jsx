@@ -9,8 +9,8 @@ import Events from '../components/Events.jsx'
 import Footer from '../components/Footer.jsx'
 
 // Background Assets (Directly from local public directory)
-const heroBgDesktop = "/backgrounds/Royal Palace/Hero_Desktop.png"
-const heroBgMobile = "/backgrounds/Royal Palace/Hero_Mobile.png"
+const heroBgDesktop = cMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/Hero_Desktop.png"
+const heroBgMobile = cMapping['hero-mobile.png'] || "/backgrounds/Royal Palace/Hero_Mobile.png"
 const photoBgDesktop = cMapping['photo-desktop.png'] || "/backgrounds/Royal Palace/photo-desktop.png"
 const photoBgMobile = cMapping['photo-mobile.png'] || "/backgrounds/Royal Palace/photo-mobile.png"
 const messageBgDesktop = cMapping['message-desktop.png'] || "/backgrounds/Royal Palace/message-desktop.png"
@@ -962,7 +962,7 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
 function RoyalPalaceVenue({ data, isDesktop }) {
   if (!data) return null
   const addressTextRaw = String(data.location || data.venueLine1 || '')
-  const bgImage = isDesktop ? "/backgrounds/Royal Palace/our-venue-desktop.png" : "/backgrounds/Royal Palace/our-venue-mobile.png"
+  const bgImage = isDesktop ? venueBgDesktop : venueBgMobile
   const viewport = { once: false, amount: 0.15 }
 
   return (
@@ -1197,7 +1197,7 @@ function FlyingBirds({ isDesktop }) {
 function RoyalPalaceCountdown({ data, isDesktop }) {
   const containerRef = useRef(null)
   const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' })
-  const bgImage = isDesktop ? "/backgrounds/Royal Palace/countdown-desktop.png" : "/backgrounds/Royal Palace/countdown-mobile.png"
+  const bgImage = isDesktop ? countdownBgDesktop : countdownBgMobile
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
