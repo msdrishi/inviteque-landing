@@ -679,7 +679,7 @@ function RoyalPalaceStory({ data, isDesktop }) {
 
       {/* 2. Grid of photo cards in the Middle */}
       <div className="relative z-20 w-full flex-1 flex items-center justify-center my-6">
-        <div className="relative w-full max-w-[960px] flex flex-col lg:flex-row justify-center items-center gap-0 lg:gap-8 px-2 mt-[-10px] lg:mt-[-40px]">
+        <div className="relative w-full max-w-[960px] flex flex-col xl:flex-row justify-center items-center gap-0 xl:gap-8 px-2 mt-[-10px] xl:mt-[-40px]">
           {/* Card 0 - Double gold border with Stamp style */}
           {activeItems[0] && (
             <motion.div
@@ -693,11 +693,11 @@ function RoyalPalaceStory({ data, isDesktop }) {
                 background: 'linear-gradient(#FFF9ED, #FFF9ED) no-repeat center/calc(100% - 12px) calc(100% - 12px), repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) top/100% 6px no-repeat, repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) bottom/100% 6px no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) left/6px 100% no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) right/6px 100% no-repeat',
                 padding: isDesktop ? '10px 10px 18px 10px' : '16px 16px 24px 16px',
               }}
-              className="relative w-[75%] lg:w-[42%] lg:max-w-[420px] mr-[18%] lg:mr-0 flex flex-col select-none pointer-events-none z-10"
+              className="relative w-[75%] md:w-[320px] xl:w-[42%] xl:max-w-[420px] mr-[18%] xl:mr-0 flex flex-col select-none pointer-events-none z-10"
             >
               {/* Double border details */}
-              <div className="absolute inset-[18px] lg:inset-[12px] border border-[#C59B3F]/60 pointer-events-none z-10" />
-              <div className="absolute inset-[24px] lg:inset-[16px] border border-[#735C2A]/20 pointer-events-none z-10" />
+              <div className="absolute inset-[18px] xl:inset-[12px] border border-[#C59B3F]/60 pointer-events-none z-10" />
+              <div className="absolute inset-[24px] xl:inset-[16px] border border-[#735C2A]/20 pointer-events-none z-10" />
               
               <div className="w-full h-full bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
                 <div className="absolute inset-0 border border-[#735C2A]/10 pointer-events-none z-10" />
@@ -726,10 +726,10 @@ function RoyalPalaceStory({ data, isDesktop }) {
                 background: 'linear-gradient(#FFF9ED, #FFF9ED) no-repeat center/calc(100% - 12px) calc(100% - 12px), repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) top/100% 6px no-repeat, repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) bottom/100% 6px no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) left/6px 100% no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) right/6px 100% no-repeat',
                 padding: isDesktop ? '10px 10px 18px 10px' : '16px 16px 24px 16px',
               }}
-              className="relative w-[80%] lg:w-[45%] lg:max-w-[440px] ml-[18%] lg:ml-0 mt-[-22%] lg:mt-[-16px] flex flex-col select-none pointer-events-none z-20"
+              className="relative w-[80%] md:w-[330px] xl:w-[45%] xl:max-w-[440px] ml-[18%] xl:ml-0 mt-[-22%] xl:mt-[-16px] flex flex-col select-none pointer-events-none z-20"
             >
               {/* Corner accents inside the card borders */}
-              <div className="absolute inset-[18px] lg:inset-[12px] border border-[#C59B3F]/35 pointer-events-none z-10" />
+              <div className="absolute inset-[18px] xl:inset-[12px] border border-[#C59B3F]/35 pointer-events-none z-10" />
               <CornerAccent top={isDesktop ? "14px" : "20px"} left={isDesktop ? "14px" : "20px"} color="#C59B3F" />
               <CornerAccent top={isDesktop ? "14px" : "20px"} right={isDesktop ? "14px" : "20px"} color="#C59B3F" />
               <CornerAccent bottom={isDesktop ? "14px" : "20px"} left={isDesktop ? "14px" : "20px"} color="#C59B3F" />
@@ -762,10 +762,10 @@ function RoyalPalaceStory({ data, isDesktop }) {
                 background: 'linear-gradient(#FFF9ED, #FFF9ED) no-repeat center/calc(100% - 12px) calc(100% - 12px), repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) top/100% 6px no-repeat, repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) bottom/100% 6px no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) left/6px 100% no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) right/6px 100% no-repeat',
                 padding: isDesktop ? '10px 10px 18px 10px' : '16px 16px 24px 16px',
               }}
-              className="relative w-[78%] lg:w-[41%] lg:max-w-[400px] mr-[20%] lg:mr-0 mt-[-22%] lg:mt-8 flex flex-col select-none pointer-events-none z-30"
+              className="relative w-[78%] md:w-[310px] xl:w-[41%] xl:max-w-[400px] mr-[20%] xl:mr-0 mt-[-22%] xl:mt-8 flex flex-col select-none pointer-events-none z-30"
             >
               {/* Dotted border details */}
-              <div className="absolute inset-[18px] lg:inset-[12px] border-2 border-dotted border-[#C59B3F]/55 pointer-events-none z-10" />
+              <div className="absolute inset-[18px] xl:inset-[12px] border-2 border-dotted border-[#C59B3F]/55 pointer-events-none z-10" />
 
               <div className="w-full h-full bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
                 <div className="absolute inset-0 border border-[#735C2A]/10 pointer-events-none z-10" />
