@@ -693,7 +693,7 @@ function RoyalPalaceStory({ data, isDesktop }) {
                 background: 'linear-gradient(#FFF9ED, #FFF9ED) no-repeat center/calc(100% - 12px) calc(100% - 12px), repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) top/100% 6px no-repeat, repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) bottom/100% 6px no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) left/6px 100% no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) right/6px 100% no-repeat',
                 padding: isDesktop ? '10px 10px 18px 10px' : '16px 16px 24px 16px',
               }}
-              className="relative w-[75%] md:w-[320px] xl:w-[42%] xl:max-w-[420px] mr-[18%] xl:mr-0 flex flex-col select-none pointer-events-none z-10"
+              className="relative w-[75%] md:w-[320px] xl:w-[42%] xl:max-w-[420px] mr-[18%] md:mr-[10%] xl:mr-0 flex flex-col select-none pointer-events-none z-10"
             >
               {/* Double border details */}
               <div className="absolute inset-[18px] xl:inset-[12px] border border-[#C59B3F]/60 pointer-events-none z-10" />
@@ -726,7 +726,7 @@ function RoyalPalaceStory({ data, isDesktop }) {
                 background: 'linear-gradient(#FFF9ED, #FFF9ED) no-repeat center/calc(100% - 12px) calc(100% - 12px), repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) top/100% 6px no-repeat, repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) bottom/100% 6px no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) left/6px 100% no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) right/6px 100% no-repeat',
                 padding: isDesktop ? '10px 10px 18px 10px' : '16px 16px 24px 16px',
               }}
-              className="relative w-[80%] md:w-[330px] xl:w-[45%] xl:max-w-[440px] ml-[18%] xl:ml-0 mt-[-22%] xl:mt-[-16px] flex flex-col select-none pointer-events-none z-20"
+              className="relative w-[80%] md:w-[330px] xl:w-[45%] xl:max-w-[440px] ml-[18%] md:ml-[10%] xl:ml-0 mt-[-22%] md:mt-[-50px] xl:mt-[-16px] flex flex-col select-none pointer-events-none z-20"
             >
               {/* Corner accents inside the card borders */}
               <div className="absolute inset-[18px] xl:inset-[12px] border border-[#C59B3F]/35 pointer-events-none z-10" />
@@ -762,7 +762,7 @@ function RoyalPalaceStory({ data, isDesktop }) {
                 background: 'linear-gradient(#FFF9ED, #FFF9ED) no-repeat center/calc(100% - 12px) calc(100% - 12px), repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) top/100% 6px no-repeat, repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) bottom/100% 6px no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) left/6px 100% no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) right/6px 100% no-repeat',
                 padding: isDesktop ? '10px 10px 18px 10px' : '16px 16px 24px 16px',
               }}
-              className="relative w-[78%] md:w-[310px] xl:w-[41%] xl:max-w-[400px] mr-[20%] xl:mr-0 mt-[-22%] xl:mt-8 flex flex-col select-none pointer-events-none z-30"
+              className="relative w-[78%] md:w-[310px] xl:w-[41%] xl:max-w-[400px] mr-[20%] md:mr-[8%] xl:mr-0 mt-[-22%] md:mt-[-40px] xl:mt-8 flex flex-col select-none pointer-events-none z-30"
             >
               {/* Dotted border details */}
               <div className="absolute inset-[18px] xl:inset-[12px] border-2 border-dotted border-[#C59B3F]/55 pointer-events-none z-10" />
