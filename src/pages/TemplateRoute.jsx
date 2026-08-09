@@ -5,7 +5,7 @@ import TemplateAuraOfElegance from './TemplateAuraOfElegance.jsx'
 import TemplateTwilightSerenade from './TemplateTwilightSerenade.jsx'
 import TemplateBlossomWhisper from './TemplateBlossomWhisper.jsx'
 import TemplateEverlastingVows from './TemplateEverlastingVows.jsx'
-import TemplateRoyalPalace from './TemplateRoyalPalace.jsx'
+import TemplateSunflowersFields from './TemplateSunflowersFields.jsx'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 
@@ -24,8 +24,9 @@ const TEMPLATE_MAP = {
   'template-2': TemplateTwilightSerenade,
   'twilight-serenade': TemplateTwilightSerenade,
   'template-1': TemplateRoyalWedding, // Fallback for old links
-  'template-3': TemplateRoyalPalace,
-  'royal-palace': TemplateRoyalPalace,
+  'template-3': TemplateSunflowersFields,
+  'royal-palace': TemplateSunflowersFields,
+  'sunflower-fields': TemplateSunflowersFields,
   'blossom-whisper': TemplateBlossomWhisper,
   'template-4': TemplateEverlastingVows,
   'everlasting-vows': TemplateEverlastingVows,
@@ -57,14 +58,9 @@ const TEMPLATE_ASSETS = {
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png",
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786194482/sbwivzirylzohych9vju.png"
   ],
-  'template-3': [
-    "/backgrounds/Royal Palace/Sunflowers_moving_in_wind_1080p_desktop.mp4",
-    "/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"
-  ],
-  'royal-palace': [
-    "/backgrounds/Royal Palace/Sunflowers_moving_in_wind_1080p_desktop.mp4",
-    "/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"
-  ],
+  'template-3': Object.values(royalPalaceMapping),
+  'royal-palace': Object.values(royalPalaceMapping),
+  'sunflower-fields': Object.values(royalPalaceMapping),
   'blossom-whisper': [
     template3HeroBg,
     template3MessageBg,

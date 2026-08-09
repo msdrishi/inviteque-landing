@@ -110,7 +110,7 @@ export default function InviteDetails() {
 
   const isTwilight = invite?.templateId === 'template-2' || invite?.templateId === 'twilight-serenade'
   const isEverlasting = invite?.templateId === 'template-4' || invite?.templateId === 'everlasting-vows' || invite?.templateId === 'everlastingvows'
-  const isRoyalPalace = invite?.templateId === 'template-3' || invite?.templateId === 'royal-palace'
+  const isRoyalPalace = invite?.templateId === 'template-3' || invite?.templateId === 'royal-palace' || invite?.templateId === 'sunflower-fields'
   const coverImage = isTwilight 
     ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
     : isEverlasting

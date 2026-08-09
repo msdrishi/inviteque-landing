@@ -19,7 +19,7 @@ function AnimatedTitle({ text, className, style }) {
   )
 }
 
-export default function Events({ data, isDesktop, theme, bgImage }) {
+export default function Events({ data, isDesktop, theme, bgImage, style, children }) {
   if (!data) return null
 
   const colors = theme === 'green' ? {
@@ -108,7 +108,8 @@ export default function Events({ data, isDesktop, theme, bgImage }) {
       id={data.id || 'events'} 
       className="w-full min-h-[100svh] md:min-h-screen px-6 py-28 relative flex flex-col items-center justify-center overflow-hidden"
       style={{ 
-        backgroundColor: colors.bg 
+        backgroundColor: colors.bg,
+        ...style
       }}
     >
       {/* Background Image as native img tag for consistent composting */}
@@ -291,6 +292,7 @@ export default function Events({ data, isDesktop, theme, bgImage }) {
           )
         })}
       </div>
+      {children}
     </section>
   )
 }

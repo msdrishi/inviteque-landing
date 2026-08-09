@@ -203,7 +203,7 @@ export default function FooterRoyalPalace({ data }) {
           <SocialIcon href="https://inviteque.com" label="Website" colors={colors}>
             <GlobeIcon />
           </SocialIcon>
-          <SocialIcon href="https://instagram.com/inviteque" label="Instagram" colors={colors}>
+          <SocialIcon href="https://www.instagram.com/invitequeofficial" label="Instagram" colors={colors}>
             <InstagramIcon />
           </SocialIcon>
           <SocialIcon href="https://facebook.com/inviteque" label="Facebook" colors={colors}>

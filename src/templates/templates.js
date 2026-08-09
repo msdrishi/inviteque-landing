@@ -1,6 +1,6 @@
 const t1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029514/enlgamenyitexgthsrho.png"
 const t2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029517/oyvug1zdtfqcowqhg1lc.png"
-const t3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029520/hu6rkuupsgksd1hpoxh5.png"
+const t3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786304158/sunflower-template-preview-1786304145513.png"
 const t4 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029524/irbjnckwzonwup31ghgk.png"
 const t5 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029527/qohln0n2037rsomimses.png"
 const t6 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029529/vojyj7iyb499khyzyifk.png"
@@ -33,13 +33,13 @@ export const templates = [
     available: true,
   },
   {
-    id: 'template-3',
-    name: 'Royal Palace',
-    description: 'A majestic, heritage-rich invitation featuring intricate traditional patterns, gold borders, and royal typography.',
+    id: 'sunflower-fields',
+    name: 'Sunflower Fields',
+    description: 'A warm sunflower-themed invitation blending vintage editorial typography with beautiful sun-drenched floral backgrounds.',
     priceLabel: '₹999',
     thumbnail: t3,
-    href: '/templates/template-3',
-    available: false,
+    href: '/templates/sunflower-fields',
+    available: true,
     popular: true,
   },
   {

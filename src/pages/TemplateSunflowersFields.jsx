@@ -5,6 +5,9 @@ import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import cMapping from '../royalPalaceCloudinaryMapping.json'
 
+import Events from '../components/Events.jsx'
+import Footer from '../components/Footer.jsx'
+
 // Background Assets (Directly from local public directory)
 const heroBgDesktop = "/backgrounds/Royal Palace/Hero_Desktop.png"
 const heroBgMobile = "/backgrounds/Royal Palace/Hero_Mobile.png"
@@ -17,9 +20,9 @@ const venueBgMobile = cMapping['venue-mobile.png'] || "/backgrounds/Royal Palace
 const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "/backgrounds/Royal Palace/countdown-deskotp.png"
 const countdownBgMobile = cMapping['countdown-mobile.png'] || "/backgrounds/Royal Palace/countdown-mobile.png"
 
-const fallbackPhoto1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1779029555/yrekh9qkgebpcds6dplq.png"
-const fallbackPhoto2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1779029557/lly3pbmivrtjn203eclo.png"
-const fallbackPhoto3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1779029558/enoivgqhs1oi2bxery8n.png"
+const fallbackPhoto1 = cMapping['sunflower-1.png'] || "/backgrounds/Royal Palace/sunflower-1.png"
+const fallbackPhoto2 = cMapping['sunflower-2.png'] || "/backgrounds/Royal Palace/sunflower-2.png"
+const fallbackPhoto3 = cMapping['sunflower-3.png'] || "/backgrounds/Royal Palace/sunflower-3.png"
 
 // Animation Variants
 const fadeUp = {
@@ -182,7 +185,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         {isDesktop ? (
           <video
-            src="/backgrounds/Royal Palace/Sunflowers_moving_in_wind_1080p_desktop.mp4"
+            src={cMapping['Sunflowers_moving_in_wind_1080p_desktop.mp4'] || "/backgrounds/Royal Palace/Sunflowers_moving_in_wind_1080p_desktop.mp4"}
             autoPlay
             loop
             muted
@@ -192,7 +195,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
           />
         ) : (
           <video
-            src="/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"
+            src={cMapping['Sunflowers_swaying_in_wind.mp4'] || "/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"}
             autoPlay
             loop
             muted
@@ -491,118 +494,463 @@ function RoyalPalaceHero({ data, isDesktop }) {
 /* ─────────────────────────────────────────
    2. PHOTO CARDS (Moments / Story)
    ───────────────────────────────────────── */
+// Elegant line-art Sunflower SVG watermark texture
+const SunflowerSVG = ({ className, style }) => (
+  <svg 
+    viewBox="0 0 100 100" 
+    className={className} 
+    style={style}
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="1.2"
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+  >
+    <circle cx="50" cy="50" r="14" strokeWidth="1.5" />
+    <path d="M43,43 L57,57 M43,57 L57,43" />
+    <path d="M38,50 L62,50 M50,38 L50,62" />
+    <path d="M41,46 A14,14 0 0,0 59,54" />
+    <path d="M46,41 A14,14 0 0,0 54,59" />
+    {Array.from({ length: 16 }).map((_, i) => {
+      const angle = (i * 360) / 16;
+      return (
+        <path 
+          key={`p1-${i}`}
+          d="M50,36 C47,20 53,20 50,36" 
+          transform={`rotate(${angle} 50 50)`} 
+        />
+      );
+    })}
+    {Array.from({ length: 16 }).map((_, i) => {
+      const angle = ((i * 360) / 16) + 11.25;
+      return (
+        <path 
+          key={`p2-${i}`}
+          d="M50,36 C48,25 52,25 50,36" 
+          transform={`rotate(${angle} 50 50)`} 
+          opacity="0.7"
+        />
+      );
+    })}
+    <path d="M22,78 C12,70 15,55 32,60 C38,62 30,76 22,78 Z" />
+    <path d="M22,78 L32,60" />
+    <path d="M78,78 C88,70 85,55 68,60 C62,62 70,76 78,78 Z" />
+    <path d="M78,78 L68,60" />
+  </svg>
+)
+
+// Shattered Gold & Sunflower Petals Background Overlay
+function RoyalPalaceBackgroundShatter() {
+  const scatteredPetals = [
+    { top: '8%', left: '12%', size: '32px', rotate: 25, delay: 0 },
+    { top: '15%', right: '10%', size: '24px', rotate: -40, delay: 1 },
+    { top: '45%', left: '6%', size: '28px', rotate: 85, delay: 1.5 },
+    { top: '55%', right: '8%', size: '36px', rotate: 120, delay: 0.5 },
+    { bottom: '12%', left: '15%', size: '22px', rotate: -15, delay: 2 },
+    { bottom: '10%', right: '14%', size: '30px', rotate: 60, delay: 1.2 },
+    { top: '30%', right: '25%', size: '26px', rotate: 45, delay: 0.8 },
+    { bottom: '25%', left: '28%', size: '34px', rotate: -70, delay: 1.8 }
+  ];
+  return (
+    <>
+      {/* Gold Shattered Lines & Polygons */}
+      <div className="absolute inset-0 select-none pointer-events-none opacity-[0.06] z-0">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="10%" x2="100%" y2="85%" stroke="#C59B3F" strokeWidth="1.5" />
+          <line x1="0" y1="75%" x2="100%" y2="25%" stroke="#C59B3F" strokeWidth="1.5" />
+          <line x1="25%" y1="0" x2="85%" y2="100%" stroke="#C59B3F" strokeWidth="1.5" />
+          <line x1="80%" y1="0" x2="15%" y2="100%" stroke="#C59B3F" strokeWidth="1.5" />
+          <line x1="0" y1="45%" x2="100%" y2="55%" stroke="#C59B3F" strokeWidth="1.5" />
+          
+          <polygon points="10,50 150,150 50,220" fill="none" stroke="#C59B3F" strokeWidth="1.2" />
+          <polygon points="90%,15% 95%,35% 85%,25%" fill="none" stroke="#C59B3F" strokeWidth="1.2" />
+          <polygon points="80%,75% 95%,90% 70%,95%" fill="none" stroke="#C59B3F" strokeWidth="1.2" />
+          <polygon points="5%,80% 20%,95% 3%,90%" fill="none" stroke="#C59B3F" strokeWidth="1.2" />
+        </svg>
+      </div>
+      {/* Floating Scattered Petals */}
+      {scatteredPetals.map((petal, i) => (
+        <motion.div
+          key={i}
+          className="absolute z-10 pointer-events-none select-none"
+          style={{
+            top: petal.top,
+            left: petal.left,
+            right: petal.right,
+            bottom: petal.bottom,
+            width: petal.size,
+            height: petal.size,
+          }}
+          animate={{
+            y: [0, -10, 0],
+            rotate: [petal.rotate, petal.rotate + 15, petal.rotate],
+          }}
+          transition={{
+            duration: 4 + Math.random() * 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: petal.delay,
+          }}
+        >
+          <svg viewBox="0 0 24 24" className="w-full h-full">
+            <path d="M12 2C11.5 6 8 9 5 12c4 1 7 4.5 7 8 0.5-4 4-7 7-10-4-1-7-4.5-7-8z" fill="#C59B3F" opacity="0.35" />
+            <path d="M12 3C11.5 6.5 8.5 9 5.5 11.5c3.5 1 6 4 6 7 0.5-3 3.5-6 6-8.5-3.5-1-6-4-6-7z" fill="#FBBF24" opacity="0.85" />
+          </svg>
+        </motion.div>
+      ))}
+    </>
+  );
+}
+
 function RoyalPalaceStory({ data, isDesktop }) {
   const items = data.items || []
   if (items.length === 0) return null
 
+  // Slice items to 3 max
+  const activeItems = items.slice(0, 3)
+  const viewport = { once: false, amount: 0.12 }
+
+  const wordContainer = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  }
+
+  const wordAnim = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  }
+
   return (
     <section 
       id="story"
-      className="relative w-full py-16 px-6 bg-[#FFFDF6] text-[#5A2C16] flex flex-col items-center overflow-hidden"
+      className="relative w-full overflow-hidden flex flex-col items-center justify-between text-center py-20 px-6 text-[#735C2A] min-h-[100svh]"
+      style={{
+        backgroundColor: '#FEF1D6',
+        backgroundImage: `
+          radial-gradient(circle at 20% 35%, rgba(255, 255, 255, 0.45) 0%, transparent 60%),
+          url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L40 80 M0 40 L80 40' stroke='rgba(90,44,22,0.024)' stroke-width='1.2'/%3E%3Ccircle cx='40' cy='40' r='3.5' fill='rgba(197,155,63,0.06)'/%3E%3C/svg%3E"),
+          url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235A2C16' fill-opacity='0.015'%3E%3Cpath d='M5 0h1L0 6V5zm1 5v1H5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+        `,
+        backgroundSize: '100% 100%, 80px 80px, 6px 6px',
+      }}
     >
-      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/15 pointer-events-none z-10" />
+      {/* Shattered Gold Geometric and Petals Background Layout */}
+      <RoyalPalaceBackgroundShatter />
 
-      {/* Section Title */}
-      <div className="text-center mb-10 relative z-20">
-        <span className="text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F]">OUR MOMENTS</span>
-        <h2 className="text-2xl font-light tracking-widest uppercase mt-1" style={{ fontFamily: "'Cinzel', serif" }}>
-          Captured Love
+      {/* Sunflower Background Texture SVG elements */}
+      <SunflowerSVG className="absolute -top-12 -left-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />
+      <SunflowerSVG className="absolute -bottom-12 -right-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />
+      <SunflowerSVG className="absolute top-[20%] -right-16 w-48 h-48 text-[#5A2C16] opacity-[0.04] select-none pointer-events-none" />
+      <SunflowerSVG className="absolute bottom-[20%] -left-16 w-48 h-48 text-[#5A2C16] opacity-[0.04] select-none pointer-events-none" />
+
+      {/* 1. Section Title & Header at the Top */}
+      <motion.div 
+        variants={wordContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={viewport}
+        className="text-center px-6 relative z-10 mt-2 w-full flex flex-col items-center"
+      >
+        <span className="text-[10px] uppercase tracking-[0.25em] font-bold text-[#D48825] block">
+          {"OUR MOMENTS".split(' ').map((word, wIdx) => (
+            <motion.span key={wIdx} variants={wordAnim} className="inline-block mr-2">
+              {word}
+            </motion.span>
+          ))}
+        </span>
+        <h2 
+          className="text-4xl sm:text-5xl tracking-wide mt-2 mb-3 text-[#735C2A] capitalize" 
+          style={{ fontFamily: "'Parisienne', cursive" }}
+        >
+          {"Captured Love".split(' ').map((word, wIdx) => (
+            <motion.span key={wIdx} variants={wordAnim} className="inline-block mr-3">
+              {word}
+            </motion.span>
+          ))}
         </h2>
-        <LeafDivider color="#C59B3F" />
+        <div className="w-full flex justify-center opacity-70 mt-1">
+          <LeafDivider color="#D48825" />
+        </div>
+      </motion.div>
+
+      {/* 2. Grid of photo cards in the Middle */}
+      <div className="relative z-20 w-full flex-1 flex items-center justify-center my-6">
+        <div className="relative w-full max-w-[960px] flex flex-col md:flex-row justify-center items-center gap-0 md:gap-8 px-2 mt-[-10px] md:mt-[-40px]">
+          {/* Card 0 - Double gold border with Stamp style */}
+          {activeItems[0] && (
+            <motion.div
+              initial={{ opacity: 0, x: -80, y: -40 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={viewport}
+              transition={{ duration: 1.0, ease: "easeOut", delay: 0.1 }}
+              style={{
+                rotate: -4,
+                filter: 'drop-shadow(0px 16px 36px rgba(0,0,0,0.18))',
+                background: 'linear-gradient(#FFF9ED, #FFF9ED) no-repeat center/calc(100% - 12px) calc(100% - 12px), repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) top/100% 6px no-repeat, repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) bottom/100% 6px no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) left/6px 100% no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) right/6px 100% no-repeat',
+                padding: isDesktop ? '10px 10px 18px 10px' : '16px 16px 24px 16px',
+              }}
+              className="relative w-[75%] md:w-[42%] md:max-w-[420px] mr-[18%] md:mr-0 flex flex-col select-none pointer-events-none z-10"
+            >
+              {/* Double border details */}
+              <div className="absolute inset-[18px] md:inset-[12px] border border-[#C59B3F]/60 pointer-events-none z-10" />
+              <div className="absolute inset-[24px] md:inset-[16px] border border-[#735C2A]/20 pointer-events-none z-10" />
+              
+              <div className="w-full h-full bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
+                <div className="absolute inset-0 border border-[#735C2A]/10 pointer-events-none z-10" />
+                <img 
+                  src={activeItems[0].image} 
+                  alt="Our moment 1" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="text-center mt-3 px-2 text-[10px] sm:text-xs text-[#735C2A] italic font-serif leading-relaxed z-20">
+                "In your arms, I have found my forever home."
+              </div>
+            </motion.div>
+          )}
+
+          {/* Card 1 - Corner accent border with Stamp style */}
+          {activeItems[1] && (
+            <motion.div
+              initial={{ opacity: 0, y: 120 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={viewport}
+              transition={{ duration: 1.0, ease: "easeOut", delay: 0.25 }}
+              style={{
+                rotate: isDesktop ? 4 : 5,
+                filter: 'drop-shadow(0px 16px 36px rgba(0,0,0,0.18))',
+                background: 'linear-gradient(#FFF9ED, #FFF9ED) no-repeat center/calc(100% - 12px) calc(100% - 12px), repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) top/100% 6px no-repeat, repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) bottom/100% 6px no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) left/6px 100% no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) right/6px 100% no-repeat',
+                padding: isDesktop ? '10px 10px 18px 10px' : '16px 16px 24px 16px',
+              }}
+              className="relative w-[80%] md:w-[45%] md:max-w-[440px] ml-[18%] md:ml-0 mt-[-22%] md:mt-[-16px] flex flex-col select-none pointer-events-none z-20"
+            >
+              {/* Corner accents inside the card borders */}
+              <div className="absolute inset-[18px] md:inset-[12px] border border-[#C59B3F]/35 pointer-events-none z-10" />
+              <CornerAccent top={isDesktop ? "14px" : "20px"} left={isDesktop ? "14px" : "20px"} color="#C59B3F" />
+              <CornerAccent top={isDesktop ? "14px" : "20px"} right={isDesktop ? "14px" : "20px"} color="#C59B3F" />
+              <CornerAccent bottom={isDesktop ? "14px" : "20px"} left={isDesktop ? "14px" : "20px"} color="#C59B3F" />
+              <CornerAccent bottom={isDesktop ? "14px" : "20px"} right={isDesktop ? "14px" : "20px"} color="#C59B3F" />
+
+              <div className="w-full h-full bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
+                <div className="absolute inset-0 border border-[#735C2A]/10 pointer-events-none z-10" />
+                <img 
+                  src={activeItems[1].image} 
+                  alt="Our moment 2" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="text-center mt-3 px-2 text-[10px] sm:text-xs text-[#735C2A] italic font-serif leading-relaxed z-20">
+                "Every love story is beautiful, but ours is my favorite."
+              </div>
+            </motion.div>
+          )}
+
+          {/* Card 2 - Dotted inset border with Stamp style */}
+          {activeItems[2] && (
+            <motion.div
+              initial={{ opacity: 0, x: 80, y: 40 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={viewport}
+              transition={{ duration: 1.0, ease: "easeOut", delay: 0.4 }}
+              style={{
+                rotate: -3,
+                filter: 'drop-shadow(0px 16px 36px rgba(0,0,0,0.18))',
+                background: 'linear-gradient(#FFF9ED, #FFF9ED) no-repeat center/calc(100% - 12px) calc(100% - 12px), repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) top/100% 6px no-repeat, repeating-linear-gradient(90deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) bottom/100% 6px no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) left/6px 100% no-repeat, repeating-linear-gradient(0deg, transparent, transparent 6px, #FFF9ED 6px, #FFF9ED 12px) right/6px 100% no-repeat',
+                padding: isDesktop ? '10px 10px 18px 10px' : '16px 16px 24px 16px',
+              }}
+              className="relative w-[78%] md:w-[41%] md:max-w-[400px] mr-[20%] md:mr-0 mt-[-22%] md:mt-8 flex flex-col select-none pointer-events-none z-30"
+            >
+              {/* Dotted border details */}
+              <div className="absolute inset-[18px] md:inset-[12px] border-2 border-dotted border-[#C59B3F]/55 pointer-events-none z-10" />
+
+              <div className="w-full h-full bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
+                <div className="absolute inset-0 border border-[#735C2A]/10 pointer-events-none z-10" />
+                <img 
+                  src={activeItems[2].image} 
+                  alt="Our moment 3" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="text-center mt-3 px-2 text-[10px] sm:text-xs text-[#735C2A] italic font-serif leading-relaxed z-20">
+                "Two hearts, one soul, a lifetime of beautiful moments."
+              </div>
+            </motion.div>
+          )}
+        </div>
       </div>
 
-      {/* Grid wrapper */}
-      <div className="w-full max-w-[1000px] z-20">
-        {isDesktop ? (
-          // Desktop: side-by-side row layout
-          <div className="flex justify-center items-stretch gap-6">
-            {items.slice(0, 3).map((item, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.0, delay: idx * 0.15 }}
-                className="flex-1 bg-white p-3.5 border border-[#C59B3F]/30 shadow-md relative"
-              >
-                <CornerAccent top="4px" left="4px" />
-                <CornerAccent top="4px" right="4px" />
-                <CornerAccent bottom="4px" left="4px" />
-                <CornerAccent bottom="4px" right="4px" />
-                
-                <div className="w-full aspect-[4/5] overflow-hidden border border-[#C59B3F]/15">
-                  <img src={item.image} alt="" className="w-full h-full object-cover hover:scale-105 transition duration-700" />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        ) : (
-          // Mobile: stacked layouts
-          <div className="flex flex-col gap-8 w-full max-w-[340px] mx-auto">
-            {items.slice(0, 3).map((item, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{ duration: 0.8 }}
-                className="bg-white p-3 border border-[#C59B3F]/25 shadow-sm relative"
-              >
-                <CornerAccent top="4px" left="4px" />
-                <CornerAccent top="4px" right="4px" />
-                <CornerAccent bottom="4px" left="4px" />
-                <CornerAccent bottom="4px" right="4px" />
-
-                <div className="w-full aspect-[4/5] overflow-hidden border border-[#C59B3F]/10">
-                  <img src={item.image} alt="" className="w-full h-full object-cover" />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </div>
+      {/* 3. Spacer to push middle content up cleanly */}
+      <div className="w-full h-8 pointer-events-none" />
     </section>
   )
 }
 
-/* ─────────────────────────────────────────
-   3. WELCOMING MESSAGE (Invitation)
-   ───────────────────────────────────────── */
+const petalColors = ["#FBBF24", "#F59E0B", "#D97706", "#C59B3F"]
+const flowerPetalConfig = Array.from({ length: 16 }).map((_, i) => {
+  const isLeft = i % 2 === 0;
+  const leftPos = isLeft ? Math.random() * 30 : 70 + Math.random() * 30; // sides
+  const duration = 6 + Math.random() * 7;
+  const delay = Math.random() * 4;
+  const size = 6 + Math.random() * 8; // 24px to 56px roughly
+  const x1 = Math.random() * 60 - 30;
+  const x2 = Math.random() * 60 - 30;
+  const color = petalColors[i % petalColors.length];
+  return { left: leftPos, duration, delay, size, x1, x2, color };
+});
+
+function FallingYellowFlowers() {
+  return (
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden" style={{ height: '100%' }}>
+      {flowerPetalConfig.map((p, i) => (
+        <motion.div
+          key={i}
+          className="absolute top-[-10%]"
+          style={{ 
+            left: `${p.left}%`, 
+            width: p.size, 
+            height: p.size * 1.5, 
+            opacity: 0.85,
+            filter: 'drop-shadow(0px 3px 5px rgba(0,0,0,0.15))'
+          }}
+          animate={{
+            y: ['0vh', '110vh'],
+            x: [0, p.x1, p.x2],
+            rotate: [0, 360],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: 'linear'
+          }}
+        >
+          <svg viewBox="0 0 40 40" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 20 0 C 35 10, 35 30, 20 40 C 5 30, 5 10, 20 0 Z" fill={p.color} />
+            <circle cx="20" cy="20" r="2.5" fill="#FFFDF6" opacity="0.8" />
+          </svg>
+        </motion.div>
+      ))}
+    </div>
+  )
+}
+
+const letterContainer = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.04 } }
+}
+const letterAnim = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+}
+
+function InvitationTitle({ text, className, style }) {
+  return (
+    <motion.p 
+      variants={letterContainer} 
+      initial="hidden" 
+      whileInView="show" 
+      viewport={{ once: false, amount: 0.1 }} 
+      className={className} 
+      style={style}
+    >
+      {text.split('').map((char, index) => (
+        <motion.span key={index} variants={letterAnim} style={{ display: 'inline-block' }}>
+          {char === ' ' ? '\u00A0' : char}
+        </motion.span>
+      ))}
+    </motion.p>
+  )
+}
+
 function RoyalPalaceInvitation({ data, isDesktop }) {
+  const containerRef = useRef(null)
   if (!data) return null
-  const defaultMsg = "We are excited to invite you to celebrate our wedding with us. This special day would not be complete without your presence."
-  const paragraphs = String(data.message || defaultMsg).split('\n').filter(Boolean)
+
+  // Track scroll progress
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  })
+
+  const bgY = useSpring(useTransform(scrollYProgress, [0, 1], ['0%', '-6%']), { stiffness: 45, damping: 15 })
+  const bgBlur = useTransform(scrollYProgress, [0.30, 0.50, 1.0], ['blur(0px)', 'blur(2.5px)', 'blur(2.5px)'])
+  
+  const rawBannerY = useTransform(scrollYProgress, [0.15, 0.50], ['50%', '15%'])
+  const bannerY = useSpring(rawBannerY, { stiffness: 35, damping: 15 })
+  const bannerScale = useTransform(scrollYProgress, [0.15, 0.50], [0.9, 1.15])
+  const bannerRotateX = useTransform(scrollYProgress, [0.15, 0.50], [12, 0])
+
+  const bgImage = isDesktop ? (cMapping['welcome-desktop.png'] || "/backgrounds/Royal Palace/welcome-desktop.png") : (cMapping['welcome-mobile.png'] || "/backgrounds/Royal Palace/welcome-mobile.png")
+  const dividerFlowersMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964586/divider-flowers-mobile.png"
 
   return (
-    <section className="relative w-full py-20 px-6 bg-[#FFFDF6] text-[#5A2C16] flex flex-col items-center overflow-hidden">
-      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/15 pointer-events-none z-10" />
-
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.98 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2 }}
-        className="w-full max-w-[550px] bg-white p-8 md:p-12 border border-[#C59B3F]/35 shadow-lg relative z-20 text-center flex flex-col items-center"
+    <section
+      ref={containerRef}
+      className="relative w-full min-h-[100svh] overflow-hidden flex flex-col justify-between items-center py-20 px-6"
+      style={{ perspective: 1000 }}
+    >
+      <motion.div
+        className="absolute inset-0 z-0 will-change-transform"
+        style={{ y: bgY, scale: 1.2, filter: bgBlur, transformOrigin: 'center' }}
       >
-        <CornerAccent top="8px" left="8px" />
-        <CornerAccent top="8px" right="8px" />
-        <CornerAccent bottom="8px" left="8px" />
-        <CornerAccent bottom="8px" right="8px" />
+        <img
+          src={bgImage}
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-cover"
+        />
+      </motion.div>
 
-        <span className="text-[9px] uppercase tracking-[0.25em] font-bold text-[#C59B3F] mb-1">THE INVITATION</span>
-        <h2 className="text-2xl md:text-3xl font-light tracking-widest uppercase mb-4" style={{ fontFamily: "'Cinzel', serif" }}>
-          Welcome Message
-        </h2>
-        
-        <LeafDivider color="#C59B3F" />
+      {/* Falling Yellow Flowers */}
+      <FallingYellowFlowers />
 
-        <div className="mt-4 flex flex-col gap-4 text-xs md:text-sm text-[#7D553E] leading-relaxed max-w-[420px] mx-auto">
-          {paragraphs.map((p, idx) => (
-            <p key={idx}>{p.trim()}</p>
-          ))}
+      {/* Content Wrapper */}
+      <div className="relative z-10 w-full max-w-[550px] flex flex-col items-center text-center mt-6">
+        <div className="mb-4">
+          <InvitationTitle 
+            text="Our story, our journey,"
+            style={{ 
+              fontFamily: "'Cinzel', serif", 
+              fontSize: 'clamp(16px, 4vw, 22px)', 
+              color: '#5A2C16', 
+              fontWeight: 'bold', 
+              margin: 0, 
+              letterSpacing: '0.12em',
+            }}
+          />
+          <InvitationTitle 
+            text="ours forever"
+            style={{ 
+              fontFamily: "'Cinzel', serif", 
+              fontSize: 'clamp(24px, 6vw, 32px)', 
+              color: '#5A2C16', 
+              fontWeight: 'bold', 
+              margin: 0, 
+              letterSpacing: '0.12em',
+            }}
+          />
         </div>
+      </div>
 
-        <span className="text-[#C59B3F] text-xs mt-6">♥</span>
+      {/* 3D Parallax Banner Image */}
+      <motion.div
+        className="absolute bottom-[45px] sm:bottom-0 inset-x-0 w-full z-20 will-change-transform pointer-events-none origin-bottom flex justify-center"
+        style={{ 
+          y: bannerY,
+          scale: bannerScale,
+          rotateX: bannerRotateX,
+        }}
+      >
+        <img
+          src={cMapping['welcome-banner.png'] || "/backgrounds/Royal Palace/welcome-banner.png"}
+          alt=""
+          aria-hidden="true"
+          className="w-[130%] sm:w-[120%] lg:w-[110%] h-auto object-contain object-bottom min-h-[350px] md:min-h-[420px] max-h-[680px]"
+        />
       </motion.div>
     </section>
   )
@@ -613,93 +961,135 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
    ───────────────────────────────────────── */
 function RoyalPalaceVenue({ data, isDesktop }) {
   if (!data) return null
-  const addressText = String(data.location || data.venueLine1 || '')
+  const addressTextRaw = String(data.location || data.venueLine1 || '')
+  const bgImage = isDesktop ? "/backgrounds/Royal Palace/our-venue-desktop.png" : "/backgrounds/Royal Palace/our-venue-mobile.png"
+  const viewport = { once: false, amount: 0.15 }
 
   return (
     <section 
-      id="venue"
-      className="relative w-full py-16 px-6 bg-[#FFFDF6] text-[#5A2C16] flex flex-col items-center justify-center overflow-hidden"
-      style={{ minHeight: '100svh' }}
+      id="venue" 
+      className="relative w-full overflow-hidden px-6 flex flex-col items-center justify-between text-center pt-20 pb-8"
+      style={{
+        minHeight: '100svh',
+      }}
     >
-      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/15 pointer-events-none z-10" />
+      {/* Background Image - 100% visible, no overlay */}
+      <img
+        src={bgImage}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover z-0 pointer-events-none"
+      />
 
-      {/* Section Title */}
-      <div className="text-center mb-10 relative z-20">
-        <span className="text-[9.5px] uppercase tracking-[0.25em] font-bold text-[#C59B3F]">OUR VENUE</span>
-        <h2 className="text-2xl font-light tracking-widest uppercase mt-1" style={{ fontFamily: "'Cinzel', serif" }}>
-          The Location
-        </h2>
-        <LeafDivider color="#C59B3F" />
-      </div>
+      <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/20 pointer-events-none z-10" />
 
-      {/* Layout wrapper */}
-      <div className="w-full max-w-[850px] z-20 flex flex-col md:flex-row items-center justify-center gap-10">
-        {/* Left Side: Address Details */}
-        <motion.div 
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.0 }}
-          className="flex-1 flex flex-col items-center md:items-start text-center md:text-left gap-4"
+      {/* Classic Corner Accents */}
+      <CornerAccent top="18px" left="18px" color="#C59B3F" />
+      <CornerAccent top="18px" right="18px" color="#C59B3F" />
+      <CornerAccent bottom="18px" left="18px" color="#C59B3F" />
+      <CornerAccent bottom="18px" right="18px" color="#C59B3F" />
+
+      {/* 1. Title & Address at the Top */}
+      <div className="relative z-20 w-full flex flex-col items-center gap-4 mt-2">
+        {/* Title & Accent Pin */}
+        <div className="flex flex-col items-center">
+          <InvitationTitle 
+            text="OUR VENUE"
+            style={{
+              fontFamily: "'Cinzel', serif",
+              fontSize: 'clamp(26px, 3.2vw, 36px)',
+              letterSpacing: '0.14em',
+              fontWeight: 600,
+              color: '#5A2C16',
+              margin: 0,
+            }}
+          />
+          
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={viewport}
+            variants={fadeUp}
+            className="flex items-center justify-center gap-3 mt-3 mb-2"
+          >
+            <span style={{ width: '56px', height: '1px', backgroundColor: '#C59B3F' }} />
+            <LocationIcon color="#C59B3F" />
+            <span style={{ width: '56px', height: '1px', backgroundColor: '#C59B3F' }} />
+          </motion.div>
+        </div>
+
+        {/* Address details */}
+        <motion.address
+          initial="hidden"
+          whileInView="show"
+          viewport={viewport}
+          variants={fadeUp}
+          className="flex flex-col items-center text-center not-italic gap-1 max-w-[480px] w-full"
         >
-          <div className="flex items-center gap-2 text-[#C59B3F]">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-            <span className="text-xs uppercase tracking-widest font-semibold" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-              Wedding Destination
-            </span>
-          </div>
-
-          <h3 className="text-lg md:text-xl font-bold uppercase tracking-[0.05em] text-[#5A2C16] max-w-[340px]">
+          <h3 className="font-semibold text-base sm:text-lg uppercase tracking-[0.08em] text-[#5A2C16]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             {data.venueName || "Sunshine Garden Resort"}
           </h3>
-
-          <div className="flex flex-col gap-1 text-xs md:text-sm text-[#7D553E] max-w-[320px] leading-relaxed">
+          
+          <div className="flex flex-col gap-1 text-xs sm:text-sm text-[#7D553E] leading-relaxed mt-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             {data.venueLine1 && <p>{data.venueLine1}</p>}
             {data.venueLine2 && <p>{data.venueLine2}</p>}
-            {!data.venueLine1 && !data.venueLine2 && <p>{addressText}</p>}
+            {!data.venueLine1 && !data.venueLine2 && <p>{addressTextRaw}</p>}
           </div>
+        </motion.address>
+      </div>
 
-          <HeartDivider color="#C59B3F" />
-        </motion.div>
-
-        {/* Right Side: QR Code Map Card */}
-        {data.mapUrl && (
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.0 }}
-            className="bg-white p-5 border border-[#C59B3F]/35 shadow-md flex flex-col items-center relative max-w-[280px]"
+      {/* 2. QR Code / Map Link at the Bottom */}
+      {data.mapUrl && (
+        <div className="relative z-20 w-full flex justify-center mt-4 mb-0">
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={viewport}
+            variants={fadeUp}
+            style={{
+              background: '#FFFDF6',
+              border: '1px solid rgba(197, 155, 63, 0.4)',
+              borderRadius: '16px',
+              boxShadow: '0 15px 35px rgba(138, 110, 30, 0.08)',
+              padding: isDesktop ? '8px 16px' : '6px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: isDesktop ? '12px' : '6px',
+              maxWidth: isDesktop ? '310px' : '114px',
+              width: '100%',
+            }}
+            className="flex flex-col sm:flex-row items-center justify-center animate-fade-in"
           >
-            <CornerAccent top="5px" left="5px" />
-            <CornerAccent top="5px" right="5px" />
-            <CornerAccent bottom="5px" left="5px" />
-            <CornerAccent bottom="5px" right="5px" />
-
             <img 
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(String(data.mapUrl))}&color=5a2c16&bgcolor=ffffff`}
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(String(data.mapUrl))}&color=5a2c16&bgcolor=ffffff`}
               alt="Google Maps QR Code"
-              width={130}
-              height={130}
-              className="border border-[#C59B3F]/15 p-1 bg-white mb-4"
+              width={isDesktop ? 90 : 100}
+              height={isDesktop ? 90 : 100}
+              className="border border-[#C59B3F]/15 p-1 bg-white shrink-0 rounded-lg"
               loading="lazy"
             />
 
-            <span className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-[#7D553E] mb-3">Scan to locate</span>
-
-            <a 
-              href={String(data.mapUrl)}
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 border border-[#C59B3F] bg-[#5A2C16] text-[9.5px] text-[#FFFDF6] font-bold uppercase tracking-[0.2em] transition hover:bg-white hover:text-[#5A2C16]"
-            >
-              📍 Open in Maps
-            </a>
+            <div className="flex flex-col items-center sm:items-start gap-1.5 w-full">
+              {isDesktop && (
+                <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] font-semibold text-[#7D553E]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  Scan to locate or
+                </span>
+              )}
+              <a 
+                href={String(data.mapUrl)}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`inline-flex items-center justify-center gap-1.5 rounded-full border border-[#C59B3F] bg-[#5A2C16] text-[#FFFDF6] font-bold uppercase transition hover:bg-white hover:text-[#5A2C16] shrink-0 ${
+                  isDesktop ? 'px-4 py-2 text-[9px] tracking-[0.2em]' : 'px-2 py-1 text-[7px] tracking-[0.1em] w-full text-center'
+                }`}
+                style={{ fontFamily: "'Montserrat', sans-serif" }}
+              >
+                📍 Open in Maps
+              </a>
+            </div>
           </motion.div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   )
 }
@@ -707,8 +1097,113 @@ function RoyalPalaceVenue({ data, isDesktop }) {
 /* ─────────────────────────────────────────
    5. COUNTDOWN SECTION
    ───────────────────────────────────────── */
-function RoyalPalaceCountdown({ data }) {
+function FlyingBirds({ isDesktop }) {
+  const flapWings = {
+    d: [
+      "M 0 0 Q 8 -12 18 -6 Q 10 -1 0 0 Q -10 -1 -18 -6 Q -8 -12 0 0 Z",
+      "M 0 0 Q 9 -6 19 0 Q 10 1 0 0 Q -10 1 -19 0 Q -9 -6 0 0 Z",
+      "M 0 0 Q 8 8 18 12 Q 10 2 0 0 Q -10 2 -18 12 Q -8 8 0 0 Z",
+      "M 0 0 Q 9 -6 19 0 Q 10 1 0 0 Q -10 1 -19 0 Q -9 -6 0 0 Z",
+      "M 0 0 Q 8 -12 18 -6 Q 10 -1 0 0 Q -10 -1 -18 -6 Q -8 -12 0 0 Z"
+    ]
+  };
+
+  const flock = [
+    // Group 1 (13 birds)
+    { delay: 0.0, scale: 0.42, yOffset: 12, xOffset: 0, speed: 1.3 },
+    { delay: 0.2, scale: 0.35, yOffset: 2, xOffset: 25, speed: 1.4 },
+    { delay: 0.1, scale: 0.32, yOffset: 22, xOffset: -20, speed: 1.2 },
+    { delay: 0.4, scale: 0.30, yOffset: -5, xOffset: 45, speed: 1.5 },
+    { delay: 0.3, scale: 0.38, yOffset: 28, xOffset: -40, speed: 1.3 },
+    { delay: 0.5, scale: 0.28, yOffset: 8, xOffset: 65, speed: 1.6 },
+    { delay: 0.25, scale: 0.34, yOffset: -12, xOffset: -60, speed: 1.4 },
+    { delay: 0.6, scale: 0.25, yOffset: 18, xOffset: 85, speed: 1.5 },
+    { delay: 0.15, scale: 0.36, yOffset: -22, xOffset: -80, speed: 1.3 },
+    { delay: 0.7, scale: 0.24, yOffset: 32, xOffset: 105, speed: 1.7 },
+    { delay: 0.35, scale: 0.40, yOffset: -30, xOffset: -105, speed: 1.2 },
+    { delay: 0.8, scale: 0.22, yOffset: -2, xOffset: 125, speed: 1.6 },
+    { delay: 0.45, scale: 0.31, yOffset: 40, xOffset: -125, speed: 1.4 },
+
+    // Group 2 (13 birds - offset horizontally by -300px to -550px)
+    { delay: 0.8, scale: 0.40, yOffset: 10, xOffset: -300, speed: 1.3 },
+    { delay: 1.0, scale: 0.34, yOffset: -2, xOffset: -275, speed: 1.45 },
+    { delay: 0.9, scale: 0.31, yOffset: 20, xOffset: -320, speed: 1.25 },
+    { delay: 1.2, scale: 0.29, yOffset: -8, xOffset: -255, speed: 1.55 },
+    { delay: 1.1, scale: 0.36, yOffset: 26, xOffset: -340, speed: 1.35 },
+    { delay: 1.3, scale: 0.27, yOffset: 5, xOffset: -235, speed: 1.65 },
+    { delay: 1.05, scale: 0.32, yOffset: -15, xOffset: -360, speed: 1.4 },
+    { delay: 1.4, scale: 0.24, yOffset: 15, xOffset: -215, speed: 1.5 },
+    { delay: 0.95, scale: 0.35, yOffset: -25, xOffset: -380, speed: 1.3 },
+    { delay: 1.5, scale: 0.23, yOffset: 30, xOffset: -195, speed: 1.7 },
+    { delay: 1.15, scale: 0.38, yOffset: -32, xOffset: -405, speed: 1.2 },
+    { delay: 1.6, scale: 0.21, yOffset: -5, xOffset: -175, speed: 1.6 },
+    { delay: 1.25, scale: 0.30, yOffset: 38, xOffset: -425, speed: 1.4 },
+  ];
+
+  return (
+    <div className="absolute top-[8%] left-0 right-0 h-[80px] overflow-hidden pointer-events-none z-10">
+      <motion.div
+        className="absolute w-full h-full flex items-center"
+        initial={{ x: "-35%" }}
+        animate={{ x: "115%" }}
+        transition={{
+          duration: isDesktop ? 30 : 22,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      >
+        <div className="relative w-full h-full">
+          {flock.map((bird, idx) => (
+            <motion.div
+              key={idx}
+              className="absolute left-1/2"
+              style={{
+                top: `calc(40% + ${bird.yOffset}px)`,
+                marginLeft: `${bird.xOffset}px`,
+              }}
+              animate={{
+                y: [0, -4, 0],
+              }}
+              transition={{
+                duration: 3.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: bird.delay * 2,
+              }}
+            >
+              <svg 
+                viewBox="-25 -25 50 50" 
+                className="w-10 h-10 fill-black opacity-80"
+                style={{ transform: `scale(${bird.scale})` }}
+              >
+                <motion.path
+                  animate={flapWings}
+                  transition={{
+                    duration: bird.speed,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: bird.delay,
+                  }}
+                />
+              </svg>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+function RoyalPalaceCountdown({ data, isDesktop }) {
+  const containerRef = useRef(null)
   const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' })
+  const bgImage = isDesktop ? "/backgrounds/Royal Palace/countdown-desktop.png" : "/backgrounds/Royal Palace/countdown-mobile.png"
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  })
+  const bgY = useSpring(useTransform(scrollYProgress, [0, 1], ['-5%', '0%']), { stiffness: 45, damping: 15 })
 
   useEffect(() => {
     if (!data.targetDateTimeISO) return
@@ -739,48 +1234,101 @@ function RoyalPalaceCountdown({ data }) {
   }, [data.targetDateTimeISO])
 
   return (
-    <section className="relative w-full py-20 px-6 bg-[#FFFDF6] text-[#5A2C16] flex flex-col items-center overflow-hidden">
+    <section 
+      ref={containerRef}
+      className="relative w-full overflow-hidden px-6 flex flex-col items-center justify-start text-center pt-40 md:pt-36 pb-20"
+      style={{
+        minHeight: '100svh',
+      }}
+    >
+      {/* Background Image - with parallax scroll to reveal bottom */}
+      <motion.div
+        className="absolute inset-0 z-0 will-change-transform"
+        style={{ y: bgY, scale: 1.15, transformOrigin: 'bottom center' }}
+      >
+        <img
+          src={bgImage}
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-cover object-bottom"
+        />
+      </motion.div>
+
+      <FlyingBirds isDesktop={isDesktop} />
+
       <div className="absolute inset-[14px] md:inset-[22px] border border-[#C59B3F]/15 pointer-events-none z-10" />
 
-      {/* Title */}
-      <div className="text-center mb-8 relative z-20">
-        <span className="text-[9px] uppercase tracking-[0.25em] font-bold text-[#C59B3F]">COUNTDOWN</span>
-        <h2 className="text-xl font-light tracking-widest uppercase mt-0.5" style={{ fontFamily: "'Cinzel', serif" }}>
-          Days Remaining
-        </h2>
-        <LeafDivider color="#C59B3F" />
-      </div>
-
-      {/* Grid */}
-      <div className="grid grid-cols-4 gap-3 max-w-[340px] w-full z-20">
-        {[
-          { label: 'Days', val: timeLeft.days },
-          { label: 'Hours', val: timeLeft.hours },
-          { label: 'Mins', val: timeLeft.minutes },
-          { label: 'Secs', val: timeLeft.seconds }
-        ].map((unit, index) => (
-          <motion.div 
-            key={index}
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
-            className="flex flex-col items-center bg-white p-3.5 border border-[#C59B3F]/25 shadow-sm relative"
+      {/* Centered Group container */}
+      <div className="relative z-20 flex flex-col items-center gap-4 md:gap-6 mt-4">
+        {/* 1. Title directly above the counters */}
+        <div 
+          className="text-center mb-1"
+          style={{
+            opacity: 0.95,
+          }}
+        >
+          <span 
+            className="text-[14px] md:text-[18px] font-bold uppercase tracking-[0.26em] md:tracking-[0.84em] text-[#5A2C16] block"
+            style={{ fontFamily: "'Cinzel', serif" }}
           >
-            <CornerAccent top="3px" left="3px" />
-            <CornerAccent top="3px" right="3px" />
-            <CornerAccent bottom="3px" left="3px" />
-            <CornerAccent bottom="3px" right="3px" />
+            COUNT DOWN
+          </span>
+        </div>
 
-            <span className="text-xl sm:text-2xl font-bold tracking-[0.02em] font-sans leading-none text-[#5A2C16]">
-              {unit.val}
-            </span>
-            <span className="text-[7.5px] uppercase tracking-[0.15em] text-[#7D553E] mt-2 font-semibold">
-              {unit.label}
-            </span>
-          </motion.div>
-        ))}
+        {/* 2. Twilight-style Counters Row */}
+        <div className="flex justify-center items-center gap-0">
+          {[
+            { label: 'Days', val: timeLeft.days },
+            { label: 'Hours', val: timeLeft.hours },
+            { label: 'Mins', val: timeLeft.minutes },
+            { label: 'Secs', val: timeLeft.seconds }
+          ].map((unit, index) => (
+            <div key={unit.label} className="flex items-center">
+              <motion.div 
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.12 }}
+                transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
+                className="flex flex-col items-center px-1.5 sm:px-3 py-1 text-center"
+              >
+                <span 
+                  className={`font-semibold leading-none ${isDesktop ? '' : 'text-[36px] md:text-[44px]'} text-[#5A2C16]`}
+                  style={isDesktop ? { 
+                    fontFamily: "'Cinzel', serif", 
+                    fontWeight: 650,
+                    fontSize: 'clamp(36px, 4.8vw, 76px)'
+                  } : { fontFamily: "'Cinzel', serif", fontWeight: 650 }}
+                >
+                  {unit.val}
+                </span>
+                <span 
+                  className={`mt-2 font-semibold uppercase tracking-[0.2em] text-[#7D553E] ${isDesktop ? '' : 'text-[12px]'}`}
+                  style={isDesktop ? { 
+                    fontFamily: "'Cinzel', serif",
+                    fontSize: 'clamp(10px, 1.1vw, 18px)'
+                  } : { fontFamily: "'Cinzel', serif" }}
+                >
+                  {unit.label}
+                </span>
+              </motion.div>
+              {index < 3 && (
+                <div 
+                  className="self-center bg-[#C59B3F]/35"
+                  style={{
+                    width: '1.5px',
+                    height: isDesktop ? 'clamp(16px, 2.5vw, 36px)' : '24px',
+                    marginLeft: isDesktop ? 'clamp(3px, 0.5vw, 8px)' : '6px',
+                    marginRight: isDesktop ? 'clamp(3px, 0.5vw, 8px)' : '6px',
+                  }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
+
+      {/* Spacer to push middle content up cleanly */}
+      <div className="w-full h-8 pointer-events-none" />
     </section>
   )
 }
@@ -829,12 +1377,28 @@ function RoyalPalaceFooter({ data }) {
 /* ─────────────────────────────────────────
    MAIN PAGE EXPORT
    ───────────────────────────────────────── */
-export default function TemplateRoyalPalace({ savedData }) {
+export default function TemplateSunflowersFields({ savedData }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData } = useDraft()
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
+
+  const warmGoldBgStyle = {
+    backgroundColor: '#FEF1D6',
+    backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L40 80 M0 40 L80 40' stroke='rgba(90,44,22,0.018)' stroke-width='1'/%3E%3Ccircle cx='40' cy='40' r='2' fill='rgba(197,155,63,0.04)'/%3E%3C/svg%3E")`,
+    backgroundSize: '80px 80px',
+  }
+
+  const eventsWatermarks = (
+    <>
+      <RoyalPalaceBackgroundShatter />
+      <SunflowerSVG className="absolute -top-12 -left-12 w-64 h-64 text-[#735C2A] opacity-[0.05] select-none pointer-events-none z-0" />
+      <SunflowerSVG className="absolute -bottom-12 -right-12 w-64 h-64 text-[#735C2A] opacity-[0.05] select-none pointer-events-none z-0" />
+      <SunflowerSVG className="absolute top-[20%] -right-16 w-48 h-48 text-[#735C2A] opacity-[0.03] select-none pointer-events-none z-0" />
+      <SunflowerSVG className="absolute bottom-[20%] -left-16 w-48 h-48 text-[#735C2A] opacity-[0.03] select-none pointer-events-none z-0" />
+    </>
+  )
 
   // Watermark logic
   const isPaid = savedData && (
@@ -982,6 +1546,21 @@ export default function TemplateRoyalPalace({ savedData }) {
       groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
       brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
       message: savedData ? savedData.invitationData?.message : draftData.message,
+    },
+    events: {
+      ...staticData.events,
+      items: (() => {
+        const scheduleItems = savedData
+          ? (savedData.scheduleData?.items || [])
+          : (Array.isArray(draftData.scheduleItems) ? draftData.scheduleItems : [])
+        const icons = ['✦', '◎', '✿', '◆', '♪']
+        return scheduleItems.map((item, index) => ({
+          icon: icons[index % icons.length],
+          time: item.time,
+          name: item.title,
+          date: item.date,
+        }))
+      })(),
     }
   } : {
     ...staticData,
@@ -992,10 +1571,19 @@ export default function TemplateRoyalPalace({ savedData }) {
         { image: fallbackPhoto2 },
         { image: fallbackPhoto3 }
       ]
+    },
+    events: {
+      ...staticData.events,
+      items: [
+        { time: "11:00 AM", name: "Haldi Ceremony", icon: "✦", date: "" },
+        { time: "04:00 PM", name: "Wedding Vows", icon: "◎", date: "" },
+        { time: "07:00 PM", name: "Grand Reception", icon: "✿", date: "" }
+      ]
     }
   }
 
   const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
+  const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
 
   return (
     <div className="relative min-h-screen bg-[#FFFDF6] text-[#5A2C16]">
@@ -1038,13 +1626,18 @@ export default function TemplateRoyalPalace({ savedData }) {
             </div>
           )}
 
-          {/* Render the 6 Sections in Order */}
+          {/* Render the Sections in Order */}
           <RoyalPalaceHero data={data.hero} isDesktop={false} />
           {showGallery && <RoyalPalaceStory data={data.story} isDesktop={false} />}
           <RoyalPalaceInvitation data={data.invitation} isDesktop={false} />
           <RoyalPalaceVenue data={data.venue} isDesktop={false} />
-          <RoyalPalaceCountdown data={data.countdown} />
-          <RoyalPalaceFooter data={data.footer} />
+          {showSchedule && (
+            <Events data={data.events} isDesktop={false} theme="gold" style={warmGoldBgStyle}>
+              {eventsWatermarks}
+            </Events>
+          )}
+          <RoyalPalaceCountdown data={data.countdown} isDesktop={false} />
+          <Footer data={data.footer} theme="gold" />
         </div>
       </div>
 
@@ -1081,7 +1674,7 @@ export default function TemplateRoyalPalace({ savedData }) {
           </div>
         )}
 
-        {/* Render the 6 Sections in Order */}
+        {/* Render the Sections in Order */}
         <div className="w-full">
           <RoyalPalaceHero data={data.hero} isDesktop={true} />
         </div>
@@ -1096,11 +1689,18 @@ export default function TemplateRoyalPalace({ savedData }) {
         <div className="w-full">
           <RoyalPalaceVenue data={data.venue} isDesktop={true} />
         </div>
+        {showSchedule && (
+          <div className="w-full">
+            <Events data={data.events} isDesktop={true} theme="gold" style={warmGoldBgStyle}>
+              {eventsWatermarks}
+            </Events>
+          </div>
+        )}
         <div className="w-full">
-          <RoyalPalaceCountdown data={data.countdown} />
+          <RoyalPalaceCountdown data={data.countdown} isDesktop={true} />
         </div>
         <div className="w-full">
-          <RoyalPalaceFooter data={data.footer} />
+          <Footer data={data.footer} theme="gold" />
         </div>
       </div>
     </div>

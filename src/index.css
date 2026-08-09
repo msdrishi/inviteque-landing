@@ -75,6 +75,15 @@
 }
 
 
+@font-face {
+  font-family: 'Kunstraub';
+  src: url('./assets/fonts/kunstraub.regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 @layer base {
   html {
     scroll-behavior: smooth;

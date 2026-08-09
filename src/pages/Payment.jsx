@@ -27,7 +27,7 @@ export default function Payment() {
 
   const isTwilight = templateId === 'template-2' || templateId === 'twilight-serenade'
   const isEverlasting = templateId === 'template-4' || templateId === 'everlasting-vows' || templateId === 'everlastingvows'
-  const isRoyalPalace = templateId === 'template-3' || templateId === 'royal-palace'
+  const isRoyalPalace = templateId === 'template-3' || templateId === 'royal-palace' || templateId === 'sunflower-fields'
   const coverImage = isTwilight 
     ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
     : isEverlasting
