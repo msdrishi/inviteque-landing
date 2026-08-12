@@ -169,8 +169,8 @@ export default function TemplateModernHearth({ savedData }) {
         
         {/* Hero Section */}
         <section className="relative w-full h-[100svh] overflow-hidden flex flex-col items-center">
-          <img src={heroMobileBg} alt="House Warming Mobile Background" className="absolute inset-0 w-full h-full object-cover lg:hidden select-none pointer-events-none" />
-          <img src={bgDesktop} alt="House Warming Desktop Background" className="absolute inset-0 w-full h-full object-cover hidden lg:block select-none pointer-events-none" />
+          <img src={heroMobileBg} alt="House Warming Mobile Background" className="absolute inset-0 w-full h-full object-cover lg:hidden select-none pointer-events-none" style={{ transform: 'scale(1.15)', transformOrigin: 'top center' }} />
+          <img src={bgDesktop} alt="House Warming Desktop Background" className="absolute inset-0 w-full h-full object-cover hidden lg:block select-none pointer-events-none" style={{ transform: 'scale(1.1)', transformOrigin: 'top center' }} />
 
           {/* MOBILE LAYOUT FLOW */}
           <motion.div 
@@ -178,37 +178,37 @@ export default function TemplateModernHearth({ savedData }) {
             initial="hidden"
             whileInView={isRibbonCut ? "show" : "hidden"}
             viewport={{ once: false, amount: 0.15 }}
-            className="lg:hidden relative z-10 w-full flex flex-col items-center text-center px-6 pt-[175px] sm:pt-[190px] space-y-1"
+            className="lg:hidden relative z-10 w-full flex flex-col items-center text-center px-5 pt-[34%] space-y-2"
           >
-            <motion.p variants={itemVariants} className="text-[11px] sm:text-[12px] font-semibold tracking-widest text-[#456B2B] uppercase mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <motion.p variants={itemVariants} className="text-[10px] sm:text-[12px] font-semibold tracking-widest text-[#456B2B] uppercase mb-0.5" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               You are warmly invited to our
             </motion.p>
-            <motion.h1 variants={itemVariants} className="text-[#6B351D] select-none leading-none w-[90%] mb-1 text-5xl sm:text-6xl font-bold font-heading" style={{ fontFamily: "'Great Vibes', cursive" }}>
+            <motion.h1 variants={itemVariants} className="text-[#6B351D] select-none leading-[1.1] w-[85%] mb-0.5 text-[38px] sm:text-6xl font-bold font-heading" style={{ fontFamily: "'Great Vibes', cursive" }}>
               House Warming
             </motion.h1>
-            <motion.p variants={itemVariants} className="text-[22px] sm:text-[44px] text-[#B77A16] font-bold select-none leading-none my-2 font-heading" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            <motion.p variants={itemVariants} className="text-[18px] sm:text-[28px] text-[#B77A16] font-bold select-none leading-none my-1 font-heading" style={{ fontFamily: "'Poppins', sans-serif" }}>
               {data.hero.houseName || 'Karthik Nest'}
             </motion.p>
-            <motion.p variants={itemVariants} className="text-[13px] sm:text-[14px] leading-relaxed max-w-[315px] text-[#776653] font-medium px-2 mb-2" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            <motion.p variants={itemVariants} className="text-[11px] sm:text-[13px] leading-relaxed max-w-[280px] text-[#776653] font-medium px-2 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
               Please join us in celebrating our new home with love and blessings.
             </motion.p>
             
             {/* Date + Time section with SVG icons */}
-            <motion.div variants={itemVariants} className="w-full max-w-[310px] text-[#6B351D] mt-1 py-2.5 border-t border-b border-[#D3A34A]/30 flex items-center justify-between text-[11px] sm:text-xs" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600 }}>
-              <div className="w-[45%] flex items-center justify-center gap-1.5 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-[#B77A16] flex-shrink-0"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <motion.div variants={itemVariants} className="w-full max-w-[290px] text-[#6B351D] mt-0.5 py-2 border-t border-b border-[#D3A34A]/30 flex items-center justify-between text-[10px] sm:text-xs" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600 }}>
+              <div className="w-[45%] flex items-center justify-center gap-1 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#B77A16] flex-shrink-0"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 <span>{data.hero.dateLine}</span>
               </div>
-              <div className="w-[1px] h-6 bg-[#D3A34A]/30" />
-              <div className="w-[45%] flex items-center justify-center gap-1.5 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-[#B77A16] flex-shrink-0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <div className="w-[1px] h-5 bg-[#D3A34A]/30" />
+              <div className="w-[45%] flex items-center justify-center gap-1 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#B77A16] flex-shrink-0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 <span>{data.hero.weddingTime}</span>
               </div>
             </motion.div>
             
             {/* Address directly inside mobile hero flow with SVG location icon */}
-            <motion.div variants={itemVariants} className="text-[12px] sm:text-[13px] font-semibold text-[#6B351D]/90 mt-2 max-w-[290px] leading-relaxed flex items-center justify-center gap-1.5" style={{ fontFamily: "'Poppins', sans-serif" }}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-[#B77A16] flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <motion.div variants={itemVariants} className="text-[10px] sm:text-[12px] font-semibold text-[#6B351D]/90 mt-1 max-w-[270px] leading-relaxed flex items-center justify-center gap-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-[#B77A16] flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               <span>{data.hero.fullAddress}</span>
             </motion.div>
           </motion.div>
@@ -454,40 +454,26 @@ function RibbonOverlay({ onCutComplete }) {
         </p>
       </div>
 
-      {/* Ribbon Track */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[120px] w-full flex items-center justify-center pointer-events-none z-30">
-        {/* Ribbon Left Side PNG Half (Un-stretched Mask) */}
+      {/* Ribbon Track - Single stretched ribbon, split via clip-path */}
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[400px] w-full pointer-events-none z-30">
+        {/* Left Half - full-width image clipped to left 50% */}
         <motion.div 
           initial={{ x: 0 }}
           animate={isCut ? { x: '-110%', y: '120vh', rotate: -35, transition: { duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94] } } : {}}
-          className="absolute left-0 right-1/2 h-[80px] overflow-hidden origin-right"
-          style={{
-            filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))'
-          }}
+          className="absolute inset-0"
+          style={{ clipPath: 'inset(0 50% 0 0)', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))' }}
         >
-          <img 
-            src={ribbonPng} 
-            alt="" 
-            className="absolute top-0 right-0 w-[100vw] h-full object-cover max-w-none" 
-            style={{ objectPosition: 'left center' }}
-          />
+          <img src={ribbonPng} alt="" className="w-full h-full" style={{ objectFit: 'fill' }} />
         </motion.div>
 
-        {/* Ribbon Right Side PNG Half (Un-stretched Mask) */}
+        {/* Right Half - full-width image clipped to right 50% */}
         <motion.div 
           initial={{ x: 0 }}
           animate={isCut ? { x: '110%', y: '120vh', rotate: 35, transition: { duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94] } } : {}}
-          className="absolute left-1/2 right-0 h-[80px] overflow-hidden origin-left"
-          style={{
-            filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))'
-          }}
+          className="absolute inset-0"
+          style={{ clipPath: 'inset(0 0 0 50%)', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))' }}
         >
-          <img 
-            src={ribbonPng} 
-            alt="" 
-            className="absolute top-0 left-0 w-[100vw] h-full object-cover max-w-none" 
-            style={{ objectPosition: 'right center' }}
-          />
+          <img src={ribbonPng} alt="" className="w-full h-full" style={{ objectFit: 'fill' }} />
         </motion.div>
       </div>
 
