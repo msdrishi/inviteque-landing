@@ -275,3 +275,11 @@ body::before {
     transform-origin: 50px 50px;
     animation: flutter-bottom 150ms alternate infinite ease-in-out;
 }
+
+/* Hide iOS Safari native video play overlay button */
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0;
+}

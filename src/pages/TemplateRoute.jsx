@@ -95,11 +95,12 @@ const preloadAssets = (urls) => {
   return Promise.all(
     urls.map(url => {
       return new Promise((resolve) => {
+        if (typeof url !== 'string') return resolve();
         if (url.endsWith('.mp4')) {
           const video = document.createElement('video');
           video.src = url;
           video.preload = 'auto';
-          video.onloadedmetadata = resolve;
+          video.onloadeddata = resolve;
           video.onerror = resolve;
         } else {
           const img = new Image()
@@ -136,15 +137,29 @@ export default function TemplateRoute() {
           }
         }
 
+        const isDesktop = window.innerWidth >= 768;
         const staticAssets = TEMPLATE_ASSETS[templateId] || [];
         const dynamicAssets = extractImageUrls(fetchedData);
-        const allAssets = [...staticAssets, ...dynamicAssets];
+        let allAssets = [...staticAssets, ...dynamicAssets];
+
+        // Preload only the active video for the current device width to save bandwidth
+        if (templateId === 'sunflower-fields' || templateId === 'royal-palace' || templateId === 'template-3') {
+          if (isDesktop) {
+            allAssets = allAssets.filter(url => typeof url === 'string' && !url.includes('sunflower-swaying-mobile'));
+          } else {
+            allAssets = allAssets.filter(url => typeof url === 'string' && !url.includes('sunflower-wind-desktop'));
+          }
+        }
 
         const assetsPromise = preloadAssets(allAssets);
         const fontsPromise = document.fonts.ready;
         const delayPromise = new Promise(resolve => setTimeout(resolve, 1500));
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 6000)); // 6 seconds max wait
 
-        await Promise.all([assetsPromise, fontsPromise, delayPromise]);
+        await Promise.race([
+          Promise.all([assetsPromise, fontsPromise, delayPromise]),
+          timeoutPromise
+        ]);
         
         if (active) {
           setLoading(false);
