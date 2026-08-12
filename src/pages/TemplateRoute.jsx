@@ -142,12 +142,12 @@ export default function TemplateRoute() {
         const dynamicAssets = extractImageUrls(fetchedData);
         let allAssets = [...staticAssets, ...dynamicAssets];
 
-        // Preload only the first frame of the image sequence for the active device width to save initial bandwidth
+        // Preload only the first frame and video matching the active device width to save bandwidth
         if (templateId === 'sunflower-fields' || templateId === 'royal-palace' || templateId === 'template-3') {
           if (isDesktop) {
-            allAssets = allAssets.filter(url => typeof url === 'string' && !url.includes('first-frame-mobile'));
+            allAssets = allAssets.filter(url => typeof url === 'string' && !url.includes('mobile') && !url.includes('swaying'));
           } else {
-            allAssets = allAssets.filter(url => typeof url === 'string' && !url.includes('first-frame-desktop'));
+            allAssets = allAssets.filter(url => typeof url === 'string' && !url.includes('desktop') && !url.includes('wind') && !url.includes('moving'));
           }
         }
 

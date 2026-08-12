@@ -9,6 +9,8 @@ import Events from '../components/Events.jsx'
 import Footer from '../components/Footer.jsx'
 
 // Background Assets (Directly from local public directory)
+const firstFrameDesktop = cMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/frame_001.jpg"
+const firstFrameMobile = cMapping['hero-first-frame-mobile.jpg'] || "/backgrounds/Sunflower-template/frames/mobile/frame_001.jpg"
 const venueBgDesktop = cMapping['venue-desktop.png'] || "/backgrounds/Royal Palace/venue-desktop.png"
 const venueBgMobile = cMapping['venue-mobile.png'] || "/backgrounds/Royal Palace/venue-mobile.png"
 const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "/backgrounds/Royal Palace/countdown-deskotp.png"
@@ -152,61 +154,11 @@ const letterAnimVariants = {
   }
 }
 
-// Frame-based cinematic background player
-function FrameBackground({ isDesktop }) {
-  const [frameIndex, setFrameIndex] = useState(1)
-  const [preloaded, setPreloaded] = useState(false)
-  const totalFrames = 80
-  const folder = isDesktop ? 'desktop' : 'mobile'
-  const pad = (num) => String(num).padStart(3, '0')
-
-  // Background preloading of remaining frames
-  useEffect(() => {
-    let active = true
-    const promises = Array.from({ length: totalFrames }).map((_, i) => {
-      if (i === 0) return Promise.resolve() // Skip first frame (already loaded)
-      return new Promise((resolve) => {
-        const img = new Image()
-        img.src = `/backgrounds/Sunflower-template/frames/${folder}/frame_${pad(i + 1)}.jpg`
-        img.onload = resolve
-        img.onerror = resolve
-      })
-    })
-
-    Promise.all(promises).then(() => {
-      if (active) setPreloaded(true)
-    })
-
-    return () => {
-      active = false
-    }
-  }, [isDesktop])
-
-  // Sequentially animate the frames at 10fps
-  useEffect(() => {
-    if (!preloaded) return
-    const interval = setInterval(() => {
-      setFrameIndex(prev => (prev >= totalFrames ? 1 : prev + 1))
-    }, 100)
-    return () => clearInterval(interval)
-  }, [preloaded, isDesktop])
-
-  const src = `/backgrounds/Sunflower-template/frames/${folder}/frame_${pad(frameIndex)}.jpg`
-
-  return (
-    <img
-      src={src}
-      alt=""
-      className="w-full h-full object-cover object-center select-none pointer-events-none"
-      style={{ filter: 'contrast(100%) blur(0.6px)', transform: 'scale(1.01)' }}
-    />
-  )
-}
-
 /* ─────────────────────────────────────────
    1. HERO SECTION
    ───────────────────────────────────────── */
 function RoyalPalaceHero({ data, isDesktop }) {
+  const [videoPlaying, setVideoPlaying] = useState(false)
   const dateParts = useMemo(() => {
     const parts = String(data.dateLine || '').trim().split(/\s+/)
     if (parts.length >= 3) {
@@ -227,8 +179,41 @@ function RoyalPalaceHero({ data, isDesktop }) {
       className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-start overflow-hidden bg-[#FFFDF6] text-[#5A2C16]"
     >
       {/* Background Container */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <FrameBackground isDesktop={isDesktop} />
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#FFFDF6]">
+        {/* Static First Frame Backdrop (Visible immediately) */}
+        <img
+          src={isDesktop ? firstFrameDesktop : firstFrameMobile}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover object-center"
+          style={{ filter: 'contrast(100%) blur(0.6px)', transform: 'scale(1.01)' }}
+        />
+
+        {/* Video Element (Smoothly fades in once it actually starts playing) */}
+        {isDesktop ? (
+          <video
+            src={cMapping['Sunflowers_moving_in_wind_1080p_desktop.mp4'] || "/backgrounds/Royal Palace/Sunflowers_moving_in_wind_1080p_desktop.mp4"}
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls={false}
+            onPlaying={() => setVideoPlaying(true)}
+            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out ${videoPlaying ? 'opacity-100' : 'opacity-0'}`}
+            style={{ filter: 'contrast(100%) blur(0.6px)', transform: 'scale(1.01)' }}
+          />
+        ) : (
+          <video
+            src={cMapping['Sunflowers_swaying_in_wind.mp4'] || "/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"}
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls={false}
+            onPlaying={() => setVideoPlaying(true)}
+            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out ${videoPlaying ? 'opacity-100' : 'opacity-0'}`}
+            style={{ filter: 'contrast(100%) blur(0.6px)', transform: 'scale(1.01)' }}
+          />
+        )}
         {/* Soft overlay to blend top portion with text */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF6]/45 via-transparent to-[#FFFDF6]/15" />
       </div>
