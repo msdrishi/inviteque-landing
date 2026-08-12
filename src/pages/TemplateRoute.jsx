@@ -6,6 +6,7 @@ import TemplateTwilightSerenade from './TemplateTwilightSerenade.jsx'
 import TemplateBlossomWhisper from './TemplateBlossomWhisper.jsx'
 import TemplateEverlastingVows from './TemplateEverlastingVows.jsx'
 import TemplateSunflowersFields from './TemplateSunflowersFields.jsx'
+import TemplateModernHearth from './TemplateModernHearth.jsx'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 
@@ -31,9 +32,15 @@ const TEMPLATE_MAP = {
   'template-4': TemplateEverlastingVows,
   'everlasting-vows': TemplateEverlastingVows,
   'everlastingvows': TemplateEverlastingVows,
+  'house-warming-1': TemplateModernHearth,
+  'modern-hearth': TemplateModernHearth,
 }
 
 const TEMPLATE_ASSETS = {
+  'modern-hearth': [
+    '/backgrounds/House%20Warming/HW-1/hero-desktop%20(2).png',
+    '/backgrounds/House%20Warming/HW-1/hero-mobile%20(2).png'
+  ],
   'twilight-serenade': [
     "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png",
     "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964627/smartphone.png",

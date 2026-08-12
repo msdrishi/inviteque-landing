@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, memo } from 'react'
 import { motion, useTime, useTransform, useInView } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
-import { templates } from '../templates/templates.js'
+import { templates, houseWarmingTemplates } from '../templates/templates.js'
 import { fadeUp, staggerChildren, viewportOnce } from '../motionVariants.js'
 import { useAuth } from '../context/AuthContext'
 import { useDraft } from '../context/DraftContext'
@@ -856,6 +856,104 @@ export default function Landing() {
               </button>
             </motion.div>
           ) : null}
+        </div>
+      </section>
+
+      {/* House Warming templates section */}
+      <section id="house-warming-templates" className="border-t border-iqBorder bg-white">
+        <div className="mx-auto w-full max-w-7xl px-5 py-20 md:py-28">
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            className="mx-auto max-w-3xl text-center"
+          >
+            <motion.div variants={fadeUp}>
+              <SectionLabel>House Warming</SectionLabel>
+            </motion.div>
+            <motion.h2 variants={fadeUp} className="mt-6 text-3xl font-bold md:text-4xl">
+              House Warming Invites
+            </motion.h2>
+            <motion.p variants={fadeUp} className="mt-4 text-sm text-iqText/70 md:text-base">
+              Celebrate your new home with elegant, premium digital house warming invitations.
+            </motion.p>
+          </motion.div>
+
+          <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-14">
+            {houseWarmingTemplates.map((t, index) => (
+              <motion.article
+                key={t.id}
+                variants={templateCardPop}
+                custom={index}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.3 }}
+                className="overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury"
+              >
+                <div className="relative">
+                  <Link to={t.available ? t.href : '#house-warming-templates'} className="block">
+                    <LazyImage
+                      src={t.thumbnail}
+                      alt={t.name}
+                      className="aspect-[3/4] w-full object-cover"
+                    />
+                  </Link>
+                  <div className="absolute left-4 top-4 flex items-center gap-2">
+                    <PricePill label={t.priceLabel} />
+                    {t.popular ? (
+                      <span className="inline-flex items-center rounded-full bg-iqText px-3 py-1 text-xs font-semibold text-iqCard">
+                        Popular
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="p-6 md:p-8">
+                  <h3 className="text-sm font-bold md:text-base">{t.name}</h3>
+                  <p className="mt-1 text-xs text-iqText/70 line-clamp-2">{t.description}</p>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    {t.available ? null : <ComingSoonPill />}
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    <a
+                      href={t.available ? t.href : '#house-warming-templates'}
+                      target={t.available ? '_blank' : undefined}
+                      rel={t.available ? 'noopener noreferrer' : undefined}
+                      className={[
+                        'inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition',
+                        t.available
+                          ? 'bg-black text-white hover:scale-105 hover:bg-black/90 active:scale-95 shadow-xl'
+                          : 'cursor-not-allowed bg-black/50 text-white/50 pointer-events-none'
+                      ].join(' ')}
+                    >
+                      Preview
+                    </a>
+                    <button
+                      onClick={() => {
+                        if (!t.available) return
+                        resetDraft()
+                        if (user) navigate(`/builder/${t.id}`)
+                        else navigate('/login')
+                      }}
+                      disabled={!t.available}
+                      className={[
+                        'inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition',
+                        t.available
+                          ? 'border-iqBorder bg-iqCard text-iqText hover:bg-iqText/5'
+                          : 'cursor-not-allowed border-iqBorder bg-iqCard text-iqText/40',
+                      ].join(' ')}
+                      aria-disabled={!t.available}
+                    >
+                      Use Template
+                    </button>
+                  </div>
+                </div>
+              </motion.article>
+            ))}
+          </div>
         </div>
       </section>
 

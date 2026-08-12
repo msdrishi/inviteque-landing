@@ -124,3 +124,34 @@ export const templates = [
     available: false,
   },
 ]
+
+export const houseWarmingTemplates = [
+  {
+    id: 'modern-hearth',
+    name: 'Modern Hearth',
+    description: 'A stylish and contemporary design celebrating new beginnings in your perfect new home.',
+    priceLabel: '₹999',
+    thumbnail: '/backgrounds/House Warming/template-1.png',
+    href: '/templates/modern-hearth',
+    available: true,
+    popular: true,
+  },
+  {
+    id: 'house-warming-2',
+    name: 'Rustic Hearth',
+    description: 'Warm earth tones and cozy layouts that invite your loved ones to share in your joy.',
+    priceLabel: '₹999',
+    thumbnail: '/backgrounds/House Warming/template-2.png',
+    href: '/templates/house-warming-2',
+    available: false,
+  },
+  {
+    id: 'house-warming-3',
+    name: 'Golden Threshold',
+    description: 'Sleek typography and gold accent details for a sophisticated house warming celebration.',
+    priceLabel: '₹999',
+    thumbnail: '/backgrounds/House Warming/template-3.png',
+    href: '/templates/house-warming-3',
+    available: false,
+  }
+]
