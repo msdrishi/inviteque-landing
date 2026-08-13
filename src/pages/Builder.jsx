@@ -3,7 +3,7 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
 import { useDraft } from '../context/DraftContext'
-import { templates } from '../templates/templates'
+import { templates, houseWarmingTemplates } from '../templates/templates'
 import { uploadToCloudinary } from '../utils/cloudinary'
 import { API_URL } from '../config'
 import { useAuth } from '../context/AuthContext'
@@ -318,8 +318,9 @@ export default function Builder() {
   const [errors, setErrors] = useState({})
   const [uploadingPhotos, setUploadingPhotos] = useState({ 0: false, 1: false, 2: false })
 
-  // Get template details
-  const template = templates.find(t => t.id === templateId)
+  // Get template details — search both wedding and house warming templates
+  const isHouseWarming = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
+  const template = templates.find(t => t.id === templateId) || houseWarmingTemplates.find(t => t.id === templateId)
 
   if (loading || authLoading) {
     return (
@@ -334,13 +335,13 @@ export default function Builder() {
   const validateStep1 = () => {
     const newErrors = {}
 
-    if (!formData.groomName?.trim()) newErrors.groomName = 'Groom\'s name is required'
-    if (!formData.brideName?.trim()) newErrors.brideName = 'Bride\'s name is required'
+    if (!formData.groomName?.trim()) newErrors.groomName = isHouseWarming ? 'Host name is required' : 'Groom\'s name is required'
+    if (!isHouseWarming && !formData.brideName?.trim()) newErrors.brideName = 'Bride\'s name is required'
     if (!formData.weddingDate?.trim()) newErrors.weddingDate = 'Day is required'
     if (!formData.weddingMonth?.trim()) newErrors.weddingMonth = 'Month is required'
     if (!formData.weddingYear?.trim()) newErrors.weddingYear = 'Year is required'
-    if (!formData.weddingTime?.trim()) newErrors.weddingTime = 'Time of marriage is required'
-    if (!formData.mahalName?.trim()) newErrors.mahalName = 'Location of wedding is required'
+    if (!formData.weddingTime?.trim()) newErrors.weddingTime = isHouseWarming ? 'Ceremony time is required' : 'Time of marriage is required'
+    if (!formData.mahalName?.trim()) newErrors.mahalName = isHouseWarming ? 'House name is required' : 'Location of wedding is required'
     if (!formData.venueAddress?.trim()) newErrors.venueAddress = 'Venue address is required'
     if (!formData.venueCity?.trim()) newErrors.venueCity = 'City is required'
     if (!formData.state?.trim()) newErrors.state = 'State is required'
@@ -521,43 +522,78 @@ export default function Builder() {
               >
                 <div className="space-y-2">
                   <span className="text-xs font-bold uppercase tracking-widest text-gold">Step 01</span>
-                  <h2 className="text-2xl md:text-3xl font-bold">Essential Details</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold">{isHouseWarming ? 'House Warming Details' : 'Essential Details'}</h2>
                   <p className="text-sm md:text-base text-iqText/60">These details are mandatory for your {template?.name || 'invitation'}.</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">Groom's Name <span className="text-red-500">*</span></label>
-                    <input
-                      name="groomName"
-                      value={formData.groomName}
-                      onChange={handleChange}
-                      placeholder="Enter groom's name"
-                      className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.groomName
-                        ? 'border-red-500 bg-red-50 focus:border-red-500'
-                        : 'border-iqBorder bg-white focus:border-iqText'
-                        }`}
-                    />
-                    {errors.groomName && <p className="text-xs text-red-500">{errors.groomName}</p>}
+                {isHouseWarming ? (
+                  /* House Warming: Host Name (full width) + House Name */
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider opacity-50">Host Name <span className="text-red-500">*</span></label>
+                      <input
+                        name="groomName"
+                        value={formData.groomName}
+                        onChange={handleChange}
+                        placeholder="e.g. The Sharma Family"
+                        className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.groomName
+                          ? 'border-red-500 bg-red-50 focus:border-red-500'
+                          : 'border-iqBorder bg-white focus:border-iqText'
+                          }`}
+                      />
+                      {errors.groomName && <p className="text-xs text-red-500">{errors.groomName}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider opacity-50">House Name <span className="text-red-500">*</span></label>
+                      <input
+                        name="mahalName"
+                        value={formData.mahalName}
+                        onChange={handleChange}
+                        placeholder="e.g. Karthik Nest"
+                        className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.mahalName
+                          ? 'border-red-500 bg-red-50 focus:border-red-500'
+                          : 'border-iqBorder bg-white focus:border-iqText'
+                          }`}
+                      />
+                      {errors.mahalName && <p className="text-xs text-red-500">{errors.mahalName}</p>}
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">Bride's Name <span className="text-red-500">*</span></label>
-                    <input
-                      name="brideName"
-                      value={formData.brideName}
-                      onChange={handleChange}
-                      placeholder="Enter bride's name"
-                      className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.brideName
-                        ? 'border-red-500 bg-red-50 focus:border-red-500'
-                        : 'border-iqBorder bg-white focus:border-iqText'
-                        }`}
-                    />
-                    {errors.brideName && <p className="text-xs text-red-500">{errors.brideName}</p>}
+                ) : (
+                  /* Wedding: Groom + Bride names side by side */
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider opacity-50">Groom's Name <span className="text-red-500">*</span></label>
+                      <input
+                        name="groomName"
+                        value={formData.groomName}
+                        onChange={handleChange}
+                        placeholder="Enter groom's name"
+                        className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.groomName
+                          ? 'border-red-500 bg-red-50 focus:border-red-500'
+                          : 'border-iqBorder bg-white focus:border-iqText'
+                          }`}
+                      />
+                      {errors.groomName && <p className="text-xs text-red-500">{errors.groomName}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider opacity-50">Bride's Name <span className="text-red-500">*</span></label>
+                      <input
+                        name="brideName"
+                        value={formData.brideName}
+                        onChange={handleChange}
+                        placeholder="Enter bride's name"
+                        className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.brideName
+                          ? 'border-red-500 bg-red-50 focus:border-red-500'
+                          : 'border-iqBorder bg-white focus:border-iqText'
+                          }`}
+                      />
+                      {errors.brideName && <p className="text-xs text-red-500">{errors.brideName}</p>}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider opacity-50">Wedding Date <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold uppercase tracking-wider opacity-50">{isHouseWarming ? 'Ceremony Date' : 'Wedding Date'} <span className="text-red-500">*</span></label>
                   <input
                     type="date"
                     name="weddingDateInput"
@@ -573,13 +609,13 @@ export default function Builder() {
                     <p className="text-xs text-red-500">
                       {errors.weddingDate && errors.weddingDate !== 'Day is required'
                         ? errors.weddingDate
-                        : 'Please select a valid wedding date'}
+                        : isHouseWarming ? 'Please select a valid ceremony date' : 'Please select a valid wedding date'}
                     </p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-wider opacity-50">Time of Marriage <span className="text-red-500">*</span></label>
+                  <label className="text-xs font-bold uppercase tracking-wider opacity-50">{isHouseWarming ? 'Ceremony Time' : 'Time of Marriage'} <span className="text-red-500">*</span></label>
                   <div className="flex items-center gap-4 flex-wrap">
                     {/* Start Time */}
                     <div className="flex items-center gap-1.5">
@@ -667,20 +703,23 @@ export default function Builder() {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider opacity-50">Location of Wedding <span className="text-red-500">*</span></label>
-                    <input
-                      name="mahalName"
-                      value={formData.mahalName}
-                      onChange={handleChange}
-                      placeholder="Enter location of wedding"
-                      className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.mahalName
-                        ? 'border-red-500 bg-red-50 focus:border-red-500'
-                        : 'border-iqBorder bg-white focus:border-iqText'
-                        }`}
-                    />
-                    {errors.mahalName && <p className="text-xs text-red-500">{errors.mahalName}</p>}
-                  </div>
+                  {/* For house warming, mahalName (house name) is already collected above */}
+                  {!isHouseWarming && (
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider opacity-50">Location of Wedding <span className="text-red-500">*</span></label>
+                      <input
+                        name="mahalName"
+                        value={formData.mahalName}
+                        onChange={handleChange}
+                        placeholder="Enter location of wedding"
+                        className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.mahalName
+                          ? 'border-red-500 bg-red-50 focus:border-red-500'
+                          : 'border-iqBorder bg-white focus:border-iqText'
+                          }`}
+                      />
+                      {errors.mahalName && <p className="text-xs text-red-500">{errors.mahalName}</p>}
+                    </div>
+                  )}
 
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-wider opacity-50">Venue Address (Street / Area) <span className="text-red-500">*</span></label>
@@ -799,75 +838,77 @@ export default function Builder() {
               >
                 <div className="space-y-2">
                   <span className="text-xs font-bold uppercase tracking-widest text-gold">Step 02</span>
-                  <h2 className="text-2xl md:text-3xl font-bold">Add Magic</h2>
-                  <p className="text-sm md:text-base text-iqText/60">Choose your optional sections and fill their details.</p>
+                  <h2 className="text-2xl md:text-3xl font-bold">{isHouseWarming ? 'Ceremony Schedule' : 'Add Magic'}</h2>
+                  <p className="text-sm md:text-base text-iqText/60">{isHouseWarming ? 'Customize the event timings for your house warming ceremony.' : 'Choose your optional sections and fill their details.'}</p>
                 </div>
 
                 <div className="space-y-6">
-                  {/* Photo Gallery Option */}
-                  <div className="space-y-4">
-                    <label className="flex items-center gap-4 cursor-pointer rounded-2xl border border-iqBorder bg-white p-4 md:p-5 transition-all hover:shadow-md">
-                      <input
-                        type="checkbox"
-                        name="showGallery"
-                        checked={formData.showGallery}
-                        onChange={handleChange}
-                        className="h-5 w-5 rounded accent-black flex-shrink-0"
-                      />
-                      <div className="min-w-0">
-                        <p className="font-bold text-base md:text-lg">Photo Gallery</p>
-                        <p className="text-xs text-iqText/50">Showcase your pre-wedding shoot.</p>
-                      </div>
-                    </label>
-
-                    {formData.showGallery && (
-                      <div className="ml-0 md:ml-9 space-y-4 rounded-2xl border border-dashed border-iqBorder p-4 md:p-6 bg-iqBg/30">
-                        <p className="text-xs font-bold uppercase tracking-wider opacity-50">Upload Photos (Optional)</p>
-                        <div className="grid grid-cols-3 gap-3 md:gap-4">
-                          {[0, 1, 2].map(i => (
-                            <div key={i} className="group relative aspect-square">
-                              <label className="cursor-pointer overflow-hidden rounded-xl border border-iqBorder bg-white transition-all hover:border-iqText h-full w-full flex">
-                                {uploadingPhotos[i] ? (
-                                  <div className="flex h-full w-full flex-col items-center justify-center bg-iqBg text-iqText/40">
-                                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-iqText/25 border-t-iqText"></div>
-                                    <span className="text-[10px] mt-2 font-bold tracking-tight">Uploading...</span>
-                                  </div>
-                                ) : formData.photos?.[i] ? (
-                                  <img src={formData.photos[i]} alt={`photo-${i}`} className="h-full w-full object-cover" />
-                                ) : (
-                                  <div className="flex h-full w-full items-center justify-center text-iqText/20 transition-colors group-hover:text-iqText">
-                                    <span className="text-2xl md:text-3xl">+</span>
-                                  </div>
-                                )}
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={(e) => handleFileChange(i, e)}
-                                />
-                              </label>
-                              {formData.photos?.[i] && (
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.preventDefault()
-                                    e.stopPropagation()
-                                    handleRemovePhoto(i)
-                                  }}
-                                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-100 transition-opacity shadow-md hover:bg-red-600 z-50"
-                                >
-                                  <span className="text-xs font-bold">✕</span>
-                                </button>
-                              )}
-                            </div>
-                          ))}
+                  {/* Photo Gallery Option — Hidden for house warming */}
+                  {!isHouseWarming && (
+                    <div className="space-y-4">
+                      <label className="flex items-center gap-4 cursor-pointer rounded-2xl border border-iqBorder bg-white p-4 md:p-5 transition-all hover:shadow-md">
+                        <input
+                          type="checkbox"
+                          name="showGallery"
+                          checked={formData.showGallery}
+                          onChange={handleChange}
+                          className="h-5 w-5 rounded accent-black flex-shrink-0"
+                        />
+                        <div className="min-w-0">
+                          <p className="font-bold text-base md:text-lg">Photo Gallery</p>
+                          <p className="text-xs text-iqText/50">Showcase your pre-wedding shoot.</p>
                         </div>
-                        <p className="text-[10px] text-iqText/40 italic">* These photos will be displayed in a cinematic grid. If no photos are uploaded, default images will be shown.</p>
-                      </div>
-                    )}
-                  </div>
+                      </label>
 
-                  {/* Wedding Schedule Option */}
+                      {formData.showGallery && (
+                        <div className="ml-0 md:ml-9 space-y-4 rounded-2xl border border-dashed border-iqBorder p-4 md:p-6 bg-iqBg/30">
+                          <p className="text-xs font-bold uppercase tracking-wider opacity-50">Upload Photos (Optional)</p>
+                          <div className="grid grid-cols-3 gap-3 md:gap-4">
+                            {[0, 1, 2].map(i => (
+                              <div key={i} className="group relative aspect-square">
+                                <label className="cursor-pointer overflow-hidden rounded-xl border border-iqBorder bg-white transition-all hover:border-iqText h-full w-full flex">
+                                  {uploadingPhotos[i] ? (
+                                    <div className="flex h-full w-full flex-col items-center justify-center bg-iqBg text-iqText/40">
+                                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-iqText/25 border-t-iqText"></div>
+                                      <span className="text-[10px] mt-2 font-bold tracking-tight">Uploading...</span>
+                                    </div>
+                                  ) : formData.photos?.[i] ? (
+                                    <img src={formData.photos[i]} alt={`photo-${i}`} className="h-full w-full object-cover" />
+                                  ) : (
+                                    <div className="flex h-full w-full items-center justify-center text-iqText/20 transition-colors group-hover:text-iqText">
+                                      <span className="text-2xl md:text-3xl">+</span>
+                                    </div>
+                                  )}
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={(e) => handleFileChange(i, e)}
+                                  />
+                                </label>
+                                {formData.photos?.[i] && (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                      handleRemovePhoto(i)
+                                    }}
+                                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-100 transition-opacity shadow-md hover:bg-red-600 z-50"
+                                  >
+                                    <span className="text-xs font-bold">✕</span>
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                          <p className="text-[10px] text-iqText/40 italic">* These photos will be displayed in a cinematic grid. If no photos are uploaded, default images will be shown.</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Schedule Option */}
                   <div className="space-y-4">
                     <label className="flex items-center gap-4 cursor-pointer rounded-2xl border border-iqBorder bg-white p-4 md:p-5 transition-all hover:shadow-md">
                       <input
@@ -878,8 +919,8 @@ export default function Builder() {
                         className="h-5 w-5 rounded accent-black flex-shrink-0"
                       />
                       <div className="min-w-0">
-                        <p className="font-bold text-base md:text-lg">Wedding Schedule</p>
-                        <p className="text-xs text-iqText/50">List your ceremony timelines.</p>
+                        <p className="font-bold text-base md:text-lg">{isHouseWarming ? 'Event Schedule' : 'Wedding Schedule'}</p>
+                        <p className="text-xs text-iqText/50">{isHouseWarming ? 'List your house warming event timings.' : 'List your ceremony timelines.'}</p>
                       </div>
                     </label>
                     {formData.showSchedule && (
@@ -1040,7 +1081,7 @@ export default function Builder() {
                     onClick={handleNextStep2}
                     className="flex-[2] rounded-full bg-black py-3 md:py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90"
                   >
-                    Review My Invitation
+                    {isHouseWarming ? 'Review My Invite' : 'Review My Invitation'}
                   </button>
                 </div>
               </motion.div>
@@ -1063,9 +1104,15 @@ export default function Builder() {
                     <span className="font-bold">{template?.name || templateId}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="opacity-50">Couple</span>
-                    <span className="font-bold">{formData.groomName} & {formData.brideName}</span>
+                    <span className="opacity-50">{isHouseWarming ? 'Host' : 'Couple'}</span>
+                    <span className="font-bold">{isHouseWarming ? formData.groomName : `${formData.groomName} & ${formData.brideName}`}</span>
                   </div>
+                  {isHouseWarming && (
+                    <div className="flex justify-between text-sm">
+                      <span className="opacity-50">House Name</span>
+                      <span className="font-bold">{formData.mahalName}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm">
                     <span className="opacity-50">Date</span>
                     <span className="font-bold">{formData.weddingDate} {formData.weddingMonth} {formData.weddingYear}</span>

@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { API_URL } from '../config'
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
 import { fadeUp } from '../motionVariants'
-import { templates } from '../templates/templates'
+import { templates, houseWarmingTemplates } from '../templates/templates'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 const themeImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029551/j3pvwk2eiuvbrxt0m39d.png"
@@ -22,26 +22,31 @@ export default function Payment() {
     }
   }, [user, authLoading, navigate])
 
-  // Get template details
-  const template = templates.find(t => t.id === templateId)
+  // Get template details — search both wedding and house warming
+  const template = templates.find(t => t.id === templateId) || houseWarmingTemplates.find(t => t.id === templateId)
 
   const isTwilight = templateId === 'template-2' || templateId === 'twilight-serenade'
   const isEverlasting = templateId === 'template-4' || templateId === 'everlasting-vows' || templateId === 'everlastingvows'
   const isRoyalPalace = templateId === 'template-3' || templateId === 'royal-palace' || templateId === 'sunflower-fields'
+  const isModernHearth = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
   const coverImage = isTwilight 
     ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
     : isEverlasting
       ? (everlastingVowsMapping['hero_desktop.png'] || "/backgrounds/Everlasting%20Vows/hero_desktop.png")
       : isRoyalPalace
         ? (royalPalaceMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/hero-desktop.png")
-        : themeImg
+        : isModernHearth
+          ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png"
+          : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
     : isEverlasting
       ? "from-[#705915] via-[#8A6E1E] to-[#705915]"
       : isRoyalPalace
         ? "from-[#5C0A14] via-[#8A6E1E] to-[#5C0A14]"
-        : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
+        : isModernHearth
+          ? "from-[#4A2A0E] via-[#6B351D] to-[#4A2A0E]"
+          : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
 
   const TEMPLATE_PRICE = 999 // Price in INR
 

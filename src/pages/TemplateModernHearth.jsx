@@ -5,23 +5,23 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Footer from '../components/Footer.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 
-// Backgrounds
-const bgDesktop = "/backgrounds/House%20Warming/HW-1/hero-desktop%20(2).png"
-const heroMobileBg = "/backgrounds/House%20Warming/HW-1/hero-mobile%20(2).png"
+// Backgrounds (Cloudinary CDN with auto-format WebP)
+const bgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png"
+const heroMobileBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600529/house-warming-hw1/hw1-hero-mobile.png"
 
-const welcomeBgMobile = "/backgrounds/House%20Warming/HW-1/welcome-house-warming.png"
-const welcomeBgDesktop = "/backgrounds/House%20Warming/HW-1/welcome-desktop%20(2).png"
+const welcomeBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600536/house-warming-hw1/hw1-welcome-house-warming.png"
+const welcomeBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600532/house-warming-hw1/hw1-welcome-desktop.png"
 
-const locationBgMobile = "/backgrounds/House%20Warming/HW-1/location-mobile.png"
-const locationBgDesktop = "/backgrounds/House%20Warming/HW-1/location-desktop.png"
+const locationBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600544/house-warming-hw1/hw1-location-mobile.png"
+const locationBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600540/house-warming-hw1/hw1-location-desktop.png"
 
-const scheduleBgMobile = "/backgrounds/House%20Warming/HW-1/schedule.png"
-const scheduleBgDesktop = "/backgrounds/House%20Warming/HW-1/schedule-desktop.png"
+const scheduleBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600556/house-warming-hw1/hw1-schedule.png"
+const scheduleBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600550/house-warming-hw1/hw1-schedule-desktop.png"
 
-const countdownBgMobile = "/backgrounds/House%20Warming/HW-1/countdown.png"
-const countdownBgDesktop = "/backgrounds/House%20Warming/HW-1/count-desktop.png"
-const scissorPng = "/backgrounds/House%20Warming/HW-1/scissor.png"
-const ribbonPng = "/backgrounds/House%20Warming/HW-1/ribbon.png"
+const countdownBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600570/house-warming-hw1/hw1-countdown.png"
+const countdownBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600563/house-warming-hw1/hw1-count-desktop.png"
+const scissorPng = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600573/house-warming-hw1/hw1-scissor.png"
+const ribbonPng = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600576/house-warming-hw1/hw1-ribbon.png"
 
 // Slow staggered animation variants
 const containerVariants = {
@@ -73,6 +73,8 @@ const scrollItemVariants = {
 
 export default function TemplateModernHearth({ savedData }) {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { templateId } = useParams()
   const { draftData } = useDraft()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
 
@@ -294,6 +296,41 @@ export default function TemplateModernHearth({ savedData }) {
         {/* Footer */}
         <Footer data={data.footer} showWatermark={showWatermark} />
       </motion.div>
+
+      {/* Fixed Watermark Overlay for Unpaid Previews */}
+      {showWatermark && (
+        <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.3] select-none">
+          <span className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-bold tracking-[0.25em] text-[#B77A16] font-sans">
+            PREVIEW-INVITEQUE
+          </span>
+          <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18px] font-bold tracking-[0.25em] text-[#B77A16] font-sans">
+            PREVIEW-INVITEQUE
+          </span>
+          <span className="absolute bottom-[8%] left-1/2 -translate-x-1/2 text-[18px] font-bold tracking-[0.25em] text-[#B77A16] font-sans">
+            PREVIEW-INVITEQUE
+          </span>
+        </div>
+      )}
+
+      {/* Preview Action Buttons */}
+      {isPreview && (
+        <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#D3A34A]/35 bg-[#6B351D] py-3.5 text-xs font-bold text-[#FBF3DE] shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
+            >
+              ← Back
+            </button>
+            <button
+              onClick={() => navigate('/payment', { state: { draftData, templateId: templateId || 'modernhearth' } })}
+              className="flex-1 flex items-center justify-center gap-2 rounded-full bg-[#D3A34A] py-3.5 text-xs font-bold text-[#3D2208] shadow-[0_20px_50px_rgba(211,163,74,0.4)] transition hover:scale-105 active:scale-95"
+            >
+              Proceed →
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

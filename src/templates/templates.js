@@ -127,14 +127,15 @@ export const templates = [
 
 export const houseWarmingTemplates = [
   {
-    id: 'modern-hearth',
+    id: 'modernhearth',
     name: 'Modern Hearth',
     description: 'A stylish and contemporary design celebrating new beginnings in your perfect new home.',
     priceLabel: '₹999',
     thumbnail: '/backgrounds/House Warming/template-1.png',
-    href: '/templates/modern-hearth',
+    href: '/templates/modernhearth',
     available: true,
     popular: true,
+    category: 'housewarming',
   },
   {
     id: 'house-warming-2',

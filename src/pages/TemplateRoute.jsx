@@ -32,15 +32,18 @@ const TEMPLATE_MAP = {
   'template-4': TemplateEverlastingVows,
   'everlasting-vows': TemplateEverlastingVows,
   'everlastingvows': TemplateEverlastingVows,
+  'modernhearth': TemplateModernHearth,
   'house-warming-1': TemplateModernHearth,
   'modern-hearth': TemplateModernHearth,
 }
 
 const TEMPLATE_ASSETS = {
-  'modern-hearth': [
-    '/backgrounds/House%20Warming/HW-1/hero-desktop%20(2).png',
-    '/backgrounds/House%20Warming/HW-1/hero-mobile%20(2).png'
+  'modernhearth': [
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600529/house-warming-hw1/hw1-hero-mobile.png"
   ],
+  'modern-hearth': [],
+  'house-warming-1': [],
   'twilight-serenade': [
     "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png",
     "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964627/smartphone.png",
