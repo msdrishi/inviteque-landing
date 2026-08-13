@@ -218,8 +218,8 @@ export default function TemplateModernHearth({ savedData }) {
         
         {/* Hero Section */}
         <section className="relative w-full h-[100svh] overflow-hidden flex flex-col items-center">
-          <img src={heroMobileBg} alt="House Warming Mobile Background" className="absolute inset-0 w-full h-full object-cover xl:hidden select-none pointer-events-none" style={{ transform: 'scale(1.15)', transformOrigin: 'top center' }} />
-          <img src={bgDesktop} alt="House Warming Desktop Background" className="absolute inset-0 w-full h-full object-cover hidden xl:block select-none pointer-events-none" style={{ transform: 'scale(1.1)', transformOrigin: 'top center' }} />
+          <img src={heroMobileBg} alt="House Warming Mobile Background" className="absolute inset-0 w-full h-full object-cover xl:hidden select-none pointer-events-none" style={{ transform: isRibbonCut ? 'scale(1.24)' : 'scale(1.15)', transformOrigin: 'top center', transition: 'transform 4.5s cubic-bezier(0.16, 1, 0.3, 1)' }} />
+          <img src={bgDesktop} alt="House Warming Desktop Background" className="absolute inset-0 w-full h-full object-cover hidden xl:block select-none pointer-events-none" style={{ transform: isRibbonCut ? 'scale(1.18)' : 'scale(1.1)', transformOrigin: 'top center', transition: 'transform 4.5s cubic-bezier(0.16, 1, 0.3, 1)' }} />
 
           {/* MOBILE LAYOUT FLOW */}
           <motion.div 
@@ -227,7 +227,7 @@ export default function TemplateModernHearth({ savedData }) {
             initial="hidden"
             whileInView={isRibbonCut ? "show" : "hidden"}
             viewport={{ once: false, amount: 0.15 }}
-            className="xl:hidden relative z-10 w-full flex flex-col items-center text-center px-5 pt-[34%] space-y-2"
+            className="xl:hidden relative z-10 w-full flex flex-col items-center text-center px-5 pt-[32%] space-y-1"
           >
             <motion.p variants={itemVariants} className="text-[10px] sm:text-[12px] font-semibold tracking-widest text-[#456B2B] uppercase mb-0.5" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               You are warmly invited to our
