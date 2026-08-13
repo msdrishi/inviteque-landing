@@ -105,6 +105,11 @@ export default function TemplateModernHearth({ savedData }) {
       ? (savedData.heroData?.weddingTime || '9:00 AM')
       : (draftData.weddingTime || '9:00 AM')
 
+    // For house warming: groomName = function title (e.g. "House Warming")
+    const functionTitle = savedData
+      ? (savedData.coupleData?.groomName || 'House Warming')
+      : (draftData.groomName || 'House Warming')
+
     const hostName = savedData
       ? (savedData.coupleData?.groomName && savedData.coupleData?.brideName 
           ? `${savedData.coupleData.groomName} & ${savedData.coupleData.brideName}`
@@ -127,9 +132,38 @@ export default function TemplateModernHearth({ savedData }) {
           draftData.state
         ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
 
+    // Build schedule/events items from saved or draft data
+    const scheduleItems = savedData
+      ? (savedData.scheduleData?.items || savedData.scheduleItems || [])
+      : (draftData.scheduleItems || [])
+
+    const eventsData = scheduleItems.length > 0
+      ? {
+          id: 'schedule',
+          title: 'Ceremony Schedule',
+          items: scheduleItems.map((s, index) => ({
+            icon: ['✦', '◎', '✿', '◆', '♪'][index % 5],
+            time: s.time,
+            name: s.title || s.name,
+            date: s.date,
+          }))
+        }
+      : staticData.events
+
+    // Build countdown from actual ceremony date
+    const targetDate = savedData
+      ? `${savedData.heroData?.weddingMonth || 'June'} ${savedData.heroData?.weddingDate || '1'}, ${savedData.heroData?.weddingYear || '2026'}`
+      : `${draftData.weddingMonth || 'June'} ${draftData.weddingDate || '1'}, ${draftData.weddingYear || '2026'}`
+
+    const countdownData = {
+      ...staticData.countdown,
+      targetDateTimeISO: new Date(targetDate).toISOString(),
+    }
+
     return {
       ...staticData,
       hero: {
+        functionTitle,
         hostName,
         houseName,
         dateLine: dateStr,
@@ -137,6 +171,8 @@ export default function TemplateModernHearth({ savedData }) {
         fullAddress: fullAddress || 'Karthik Nest, Sunflower Layout, Bengaluru, KA',
         mapUrl: savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData.mapLink,
       },
+      events: eventsData,
+      countdown: countdownData,
       venue: {
         ...staticData.venue,
         venueName: houseName || 'Our New Home',
@@ -186,7 +222,7 @@ export default function TemplateModernHearth({ savedData }) {
               You are warmly invited to our
             </motion.p>
             <motion.h1 variants={itemVariants} className="text-[#6B351D] select-none leading-[1.1] w-[85%] mb-0.5 text-[38px] sm:text-6xl font-bold font-heading" style={{ fontFamily: "'Great Vibes', cursive" }}>
-              House Warming
+              {data.hero.functionTitle || 'House Warming'}
             </motion.h1>
             <motion.p variants={itemVariants} className="text-[18px] sm:text-[28px] text-[#B77A16] font-bold select-none leading-none my-1 font-heading" style={{ fontFamily: "'Poppins', sans-serif" }}>
               {data.hero.houseName || 'Karthik Nest'}
@@ -227,7 +263,7 @@ export default function TemplateModernHearth({ savedData }) {
               You are warmly invited to our
             </motion.p>
             <motion.h1 variants={itemVariants} className="text-[5vw] xl:text-[4.5vw] text-[#6B351D] font-bold my-1 drop-shadow-sm select-none leading-none font-heading" style={{ fontFamily: "'Great Vibes', cursive" }}>
-              House Warming
+              {data.hero.functionTitle || 'House Warming'}
             </motion.h1>
             <motion.p variants={itemVariants} className="text-[3.5vw] xl:text-[3vw] text-[#B77A16] font-bold mt-1 mb-2 drop-shadow-sm select-none leading-none font-heading" style={{ fontFamily: "'Poppins', sans-serif" }}>
               {data.hero.houseName || 'Karthik Nest'}

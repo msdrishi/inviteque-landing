@@ -123,8 +123,10 @@ export default function Builder() {
     }
   }, [user, authLoading, navigate])
 
+  const isHouseWarmingDefault = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
+
   const defaultFormData = {
-    groomName: '',
+    groomName: isHouseWarmingDefault ? 'House Warming' : '',
     brideName: '',
     weddingDate: '',
     weddingMonth: '',
@@ -135,14 +137,20 @@ export default function Builder() {
     venueCity: '',
     state: '',
     mapLink: '',
-    showGallery: true,
+    showGallery: !isHouseWarmingDefault,
     showSchedule: true,
     photos: [null, null, null],
-    scheduleItems: [
-      { time: '11:00 AM', title: 'Haldi Ceremony' },
-      { time: '04:00 PM', title: 'Wedding Vows' },
-      { time: '07:00 PM', title: 'Grand Reception' }
-    ],
+    scheduleItems: isHouseWarmingDefault
+      ? [
+          { time: '09:00 AM', title: 'Pooja & Homam' },
+          { time: '11:00 AM', title: 'House Warming Ceremony' },
+          { time: '01:00 PM', title: 'Lunch' }
+        ]
+      : [
+          { time: '11:00 AM', title: 'Haldi Ceremony' },
+          { time: '04:00 PM', title: 'Wedding Vows' },
+          { time: '07:00 PM', title: 'Grand Reception' }
+        ],
     code: null,
     status: 'DRAFT',
     amountPaid: 0
@@ -335,7 +343,7 @@ export default function Builder() {
   const validateStep1 = () => {
     const newErrors = {}
 
-    if (!formData.groomName?.trim()) newErrors.groomName = isHouseWarming ? 'Host name is required' : 'Groom\'s name is required'
+    if (!formData.groomName?.trim()) newErrors.groomName = isHouseWarming ? 'Function title is required' : 'Groom\'s name is required'
     if (!isHouseWarming && !formData.brideName?.trim()) newErrors.brideName = 'Bride\'s name is required'
     if (!formData.weddingDate?.trim()) newErrors.weddingDate = 'Day is required'
     if (!formData.weddingMonth?.trim()) newErrors.weddingMonth = 'Month is required'
@@ -527,15 +535,15 @@ export default function Builder() {
                 </div>
 
                 {isHouseWarming ? (
-                  /* House Warming: Host Name (full width) + House Name */
+                  /* House Warming: Function Title (full width) + House Name */
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-wider opacity-50">Host Name <span className="text-red-500">*</span></label>
+                      <label className="text-xs font-bold uppercase tracking-wider opacity-50">Function Title <span className="text-red-500">*</span></label>
                       <input
                         name="groomName"
                         value={formData.groomName}
                         onChange={handleChange}
-                        placeholder="e.g. The Sharma Family"
+                        placeholder="e.g. House Warming"
                         className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition-colors ${errors.groomName
                           ? 'border-red-500 bg-red-50 focus:border-red-500'
                           : 'border-iqBorder bg-white focus:border-iqText'
@@ -1104,7 +1112,7 @@ export default function Builder() {
                     <span className="font-bold">{template?.name || templateId}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="opacity-50">{isHouseWarming ? 'Host' : 'Couple'}</span>
+                    <span className="opacity-50">{isHouseWarming ? 'Function Title' : 'Couple'}</span>
                     <span className="font-bold">{isHouseWarming ? formData.groomName : `${formData.groomName} & ${formData.brideName}`}</span>
                   </div>
                   {isHouseWarming && (
