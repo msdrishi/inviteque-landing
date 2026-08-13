@@ -196,6 +196,32 @@ export default function TemplateModernHearth({ savedData }) {
   return (
     <div className="relative min-h-screen w-full bg-[#FBF3DE] font-saas text-[#6B351D] overflow-x-hidden">
       
+      {/* Shared Root Background Images (Seamless Blur & Zoom) */}
+      <div className="absolute inset-0 z-0 pointer-events-none w-full h-[100svh] overflow-hidden">
+        <img 
+          src={heroMobileBg} 
+          alt="" 
+          className="xl:hidden w-full h-full object-cover" 
+          style={{ 
+            filter: isRibbonCut ? 'blur(0px)' : 'blur(8px)', 
+            transform: isRibbonCut ? 'scale(1.24)' : 'scale(1.15)', 
+            transformOrigin: 'top center', 
+            transition: 'filter 3.5s ease-out, transform 4.5s cubic-bezier(0.16, 1, 0.3, 1)' 
+          }} 
+        />
+        <img 
+          src={bgDesktop} 
+          alt="" 
+          className="hidden xl:block w-full h-full object-cover" 
+          style={{ 
+            filter: isRibbonCut ? 'blur(0px)' : 'blur(8px)', 
+            transform: isRibbonCut ? 'scale(1.18)' : 'scale(1.1)', 
+            transformOrigin: 'top center', 
+            transition: 'filter 3.5s ease-out, transform 4.5s cubic-bezier(0.16, 1, 0.3, 1)' 
+          }} 
+        />
+      </div>
+
       {/* Ribbon Cutting Welcome Overlay */}
       <AnimatePresence>
         {showRibbonOverlay && (
@@ -213,13 +239,11 @@ export default function TemplateModernHearth({ savedData }) {
         initial={{ opacity: 0 }}
         animate={isRibbonCut ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1] }}
-        className={isRibbonCut ? '' : 'h-screen overflow-hidden'}
+        className={isRibbonCut ? 'relative z-10' : 'relative z-10 h-screen overflow-hidden'}
       >
         
         {/* Hero Section */}
         <section className="relative w-full h-[100svh] overflow-hidden flex flex-col items-center">
-          <img src={heroMobileBg} alt="House Warming Mobile Background" className="absolute inset-0 w-full h-full object-cover xl:hidden select-none pointer-events-none" style={{ transform: isRibbonCut ? 'scale(1.24)' : 'scale(1.15)', transformOrigin: 'top center', transition: 'transform 4.5s cubic-bezier(0.16, 1, 0.3, 1)' }} />
-          <img src={bgDesktop} alt="House Warming Desktop Background" className="absolute inset-0 w-full h-full object-cover hidden xl:block select-none pointer-events-none" style={{ transform: isRibbonCut ? 'scale(1.18)' : 'scale(1.1)', transformOrigin: 'top center', transition: 'transform 4.5s cubic-bezier(0.16, 1, 0.3, 1)' }} />
 
           {/* MOBILE LAYOUT FLOW */}
           <motion.div 
@@ -509,20 +533,27 @@ function RibbonOverlay({ onCutComplete }) {
     >
       <canvas ref={canvasRef} className="absolute inset-0 z-40 pointer-events-none w-full h-full" />
 
-      {/* Blurred Hero Background Images */}
-      <div className="absolute inset-0 z-0 pointer-events-none w-full h-full overflow-hidden">
-        <img 
-          src={heroMobileBg} 
-          alt="" 
-          className="xl:hidden w-full h-full object-cover" 
-          style={{ filter: isCut ? 'blur(0px)' : 'blur(8px)', transition: 'filter 2.5s ease-in-out' }} 
-        />
-        <img 
-          src={bgDesktop} 
-          alt="" 
-          className="hidden xl:block w-full h-full object-cover" 
-          style={{ filter: isCut ? 'blur(0px)' : 'blur(8px)', transition: 'filter 2.5s ease-in-out' }} 
-        />
+      {/* Ribbon Track - Single stretched ribbon, split via clip-path */}
+      <div className="absolute inset-y-1/2 top-1/2 -translate-y-1/2 h-[600px] w-[150%] -left-[24%] xl:w-full xl:left-0 pointer-events-none z-30">
+        {/* Left Half - full-width image clipped to left 50% */}
+        <motion.div 
+          initial={{ x: 0 }}
+          animate={isCut ? { x: '-110%', y: '120vh', rotate: -35, transition: { duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94] } } : {}}
+          className="absolute inset-0"
+          style={{ clipPath: 'inset(0 50% 0 0)', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))' }}
+        >
+          <img src={ribbonPng} alt="" className="w-full h-full" style={{ objectFit: 'fill' }} />
+        </motion.div>
+
+        {/* Right Half - full-width image clipped to right 50% */}
+        <motion.div 
+          initial={{ x: 0 }}
+          animate={isCut ? { x: '110%', y: '120vh', rotate: 35, transition: { duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94] } } : {}}
+          className="absolute inset-0"
+          style={{ clipPath: 'inset(0 0 0 50%)', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))' }}
+        >
+          <img src={ribbonPng} alt="" className="w-full h-full" style={{ objectFit: 'fill' }} />
+        </motion.div>
       </div>
 
       {/* Top Welcome Title */}
