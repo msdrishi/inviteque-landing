@@ -111,20 +111,25 @@ export default function InviteDetails() {
   const isTwilight = invite?.templateId === 'template-2' || invite?.templateId === 'twilight-serenade'
   const isEverlasting = invite?.templateId === 'template-4' || invite?.templateId === 'everlasting-vows' || invite?.templateId === 'everlastingvows'
   const isRoyalPalace = invite?.templateId === 'template-3' || invite?.templateId === 'royal-palace' || invite?.templateId === 'sunflower-fields'
+  const isModernHearth = invite?.templateId === 'template-modernhearth' || invite?.templateId === 'modernhearth' || invite?.templateId === 'modern-hearth'
   const coverImage = isTwilight 
     ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
     : isEverlasting
       ? (everlastingVowsMapping['hero_desktop.png'] || "/backgrounds/Everlasting%20Vows/hero_desktop.png")
       : isRoyalPalace
         ? (royalPalaceMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/hero-desktop.png")
-        : themeImg
+        : isModernHearth
+          ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png"
+          : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
     : isEverlasting
       ? "from-[#705915] via-[#8A6E1E] to-[#705915]"
       : isRoyalPalace
         ? "from-[#5C0A14] via-[#8A6E1E] to-[#5C0A14]"
-        : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
+        : isModernHearth
+          ? "from-[#456B2B] via-[#6B351D] to-[#456B2B]"
+          : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
 
   return (
     <div className="min-h-screen flex flex-col bg-iqBg font-saas">
