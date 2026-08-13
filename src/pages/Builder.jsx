@@ -164,9 +164,29 @@ export default function Builder() {
     if (shouldStartFresh) {
       return defaultFormData
     }
+    
+    // Check if the current schedule items are the default wedding ones and template is house warming
+    const currentSchedule = draftData.scheduleItems || [];
+    const isDefaultWeddingSchedule = currentSchedule.length === 3 &&
+      currentSchedule[0].title === 'Haldi Ceremony' &&
+      currentSchedule[1].title === 'Wedding Vows' &&
+      currentSchedule[2].title === 'Grand Reception';
+
+    const initialSchedule = (isHouseWarmingDefault && (isDefaultWeddingSchedule || currentSchedule.length === 0))
+      ? [
+          { time: '09:00 AM', title: 'Pooja & Homam' },
+          { time: '11:00 AM', title: 'House Warming Ceremony' },
+          { time: '01:00 PM', title: 'Lunch' }
+        ]
+      : (draftData.scheduleItems || [
+          { time: '11:00 AM', title: 'Haldi Ceremony' },
+          { time: '04:00 PM', title: 'Wedding Vows' },
+          { time: '07:00 PM', title: 'Grand Reception' }
+        ]);
+
     return {
       ...draftData,
-      groomName: draftData.groomName || '',
+      groomName: draftData.groomName || (isHouseWarmingDefault ? 'House Warming' : ''),
       brideName: draftData.brideName || '',
       weddingDate: draftData.weddingDate || '',
       weddingMonth: draftData.weddingMonth || '',
@@ -177,14 +197,10 @@ export default function Builder() {
       venueCity: draftData.venueCity || '',
       state: draftData.state || '',
       mapLink: draftData.mapLink || '',
-      showGallery: draftData.showGallery !== undefined ? draftData.showGallery : true,
+      showGallery: draftData.showGallery !== undefined ? draftData.showGallery : !isHouseWarmingDefault,
       showSchedule: draftData.showSchedule !== undefined ? draftData.showSchedule : true,
       photos: draftData.photos || [null, null, null],
-      scheduleItems: draftData.scheduleItems || [
-        { time: '11:00 AM', title: 'Haldi Ceremony' },
-        { time: '04:00 PM', title: 'Wedding Vows' },
-        { time: '07:00 PM', title: 'Grand Reception' }
-      ],
+      scheduleItems: initialSchedule,
       code: editCode || draftData.code || null,
       status: draftData.status || 'DRAFT',
       amountPaid: draftData.amountPaid || 0
@@ -301,11 +317,17 @@ export default function Builder() {
               showGallery: data.scheduleData?.showGallery !== undefined ? data.scheduleData?.showGallery : true,
               showSchedule: data.scheduleData?.showSchedule !== undefined ? data.scheduleData?.showSchedule : true,
               photos: data.storyData?.photos || [null, null, null],
-              scheduleItems: data.scheduleData?.items || [
-                { time: '11:00 AM', title: 'Haldi Ceremony' },
-                { time: '04:00 PM', title: 'Wedding Vows' },
-                { time: '07:00 PM', title: 'Grand Reception' }
-              ],
+              scheduleItems: data.scheduleData?.items || (isHouseWarmingDefault
+                ? [
+                    { time: '09:00 AM', title: 'Pooja & Homam' },
+                    { time: '11:00 AM', title: 'House Warming Ceremony' },
+                    { time: '01:00 PM', title: 'Lunch' }
+                  ]
+                : [
+                    { time: '11:00 AM', title: 'Haldi Ceremony' },
+                    { time: '04:00 PM', title: 'Wedding Vows' },
+                    { time: '07:00 PM', title: 'Grand Reception' }
+                  ]),
               code: data.code,
               status: data.status,
               amountPaid: data.amountPaid || 0

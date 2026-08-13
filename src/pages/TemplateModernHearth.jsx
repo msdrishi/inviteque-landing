@@ -141,12 +141,23 @@ export default function TemplateModernHearth({ savedData }) {
       ? {
           id: 'schedule',
           title: 'Ceremony Schedule',
-          items: scheduleItems.map((s, index) => ({
-            icon: ['✦', '◎', '✿', '◆', '♪'][index % 5],
-            time: s.time,
-            name: s.title || s.name,
-            date: s.date,
-          }))
+          items: scheduleItems.map((s, index) => {
+            const titleText = String(s.title || s.name || '').toLowerCase();
+            let icon = '✦';
+            if (titleText.includes('house') || titleText.includes('pooja') || titleText.includes('homam') || titleText.includes('ceremony') || titleText.includes('nest') || titleText.includes('warming')) {
+              icon = '🏡';
+            } else if (titleText.includes('food') || titleText.includes('lunch') || titleText.includes('dinner') || titleText.includes('feast') || titleText.includes('reception') || titleText.includes('vows') || titleText.includes('meal')) {
+              icon = '🍛';
+            } else {
+              icon = ['🏡', '🍛', '✦', '◎', '✿', '◆', '♪'][index % 7];
+            }
+            return {
+              icon,
+              time: s.time,
+              name: s.title || s.name,
+              date: s.date,
+            };
+          })
         }
       : staticData.events
 
@@ -207,8 +218,8 @@ export default function TemplateModernHearth({ savedData }) {
         
         {/* Hero Section */}
         <section className="relative w-full h-[100svh] overflow-hidden flex flex-col items-center">
-          <img src={heroMobileBg} alt="House Warming Mobile Background" className="absolute inset-0 w-full h-full object-cover lg:hidden select-none pointer-events-none" style={{ transform: 'scale(1.15)', transformOrigin: 'top center' }} />
-          <img src={bgDesktop} alt="House Warming Desktop Background" className="absolute inset-0 w-full h-full object-cover hidden lg:block select-none pointer-events-none" style={{ transform: 'scale(1.1)', transformOrigin: 'top center' }} />
+          <img src={heroMobileBg} alt="House Warming Mobile Background" className="absolute inset-0 w-full h-full object-cover xl:hidden select-none pointer-events-none" style={{ transform: 'scale(1.15)', transformOrigin: 'top center' }} />
+          <img src={bgDesktop} alt="House Warming Desktop Background" className="absolute inset-0 w-full h-full object-cover hidden xl:block select-none pointer-events-none" style={{ transform: 'scale(1.1)', transformOrigin: 'top center' }} />
 
           {/* MOBILE LAYOUT FLOW */}
           <motion.div 
@@ -216,18 +227,18 @@ export default function TemplateModernHearth({ savedData }) {
             initial="hidden"
             whileInView={isRibbonCut ? "show" : "hidden"}
             viewport={{ once: false, amount: 0.15 }}
-            className="lg:hidden relative z-10 w-full flex flex-col items-center text-center px-5 pt-[34%] space-y-2"
+            className="xl:hidden relative z-10 w-full flex flex-col items-center text-center px-5 pt-[34%] space-y-2"
           >
             <motion.p variants={itemVariants} className="text-[10px] sm:text-[12px] font-semibold tracking-widest text-[#456B2B] uppercase mb-0.5" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               You are warmly invited to our
             </motion.p>
-            <motion.h1 variants={itemVariants} className="text-[#6B351D] select-none leading-[1.1] w-[85%] mb-0.5 text-[38px] sm:text-6xl font-bold font-heading" style={{ fontFamily: "'Great Vibes', cursive" }}>
+            <motion.h1 variants={itemVariants} className="text-[#6B351D] select-none leading-[1.1] w-[85%] mb-0.5 text-[38px] sm:text-6xl font-bold font-heading" style={{ fontFamily: "'Priestacy', serif" }}>
               {data.hero.functionTitle || 'House Warming'}
             </motion.h1>
-            <motion.p variants={itemVariants} className="text-[18px] sm:text-[28px] text-[#B77A16] font-bold select-none leading-none my-1 font-heading" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            <motion.p variants={itemVariants} className="text-[18px] sm:text-[28px] text-[#B77A16] font-bold select-none leading-none mb-1 font-heading" style={{ fontFamily: "'PrimorStylish', serif", marginTop: '32px' }}>
               {data.hero.houseName || 'Karthik Nest'}
             </motion.p>
-            <motion.p variants={itemVariants} className="text-[11px] sm:text-[13px] leading-relaxed max-w-[280px] text-[#776653] font-medium px-2 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            <motion.p variants={itemVariants} className="text-[11px] sm:text-[13px] leading-relaxed max-w-[280px] text-[#776653] font-medium px-2 mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               Please join us in celebrating our new home with love and blessings.
             </motion.p>
             
@@ -245,7 +256,7 @@ export default function TemplateModernHearth({ savedData }) {
             </motion.div>
             
             {/* Address directly inside mobile hero flow with SVG location icon */}
-            <motion.div variants={itemVariants} className="text-[10px] sm:text-[12px] font-semibold text-[#6B351D]/90 mt-1 max-w-[270px] leading-relaxed flex items-center justify-center gap-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            <motion.div variants={itemVariants} className="text-[10px] sm:text-[12px] font-semibold text-[#6B351D]/90 mt-1 max-w-[270px] leading-relaxed flex items-center justify-center gap-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-[#B77A16] flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               <span>{data.hero.fullAddress}</span>
             </motion.div>
@@ -257,18 +268,18 @@ export default function TemplateModernHearth({ savedData }) {
             initial="hidden"
             whileInView={isRibbonCut ? "show" : "hidden"}
             viewport={{ once: false, amount: 0.15 }}
-            className="hidden lg:flex absolute top-[55%] -translate-y-1/2 left-[18%] w-[min(44vw,520px)] flex-col items-center text-center z-10 space-y-6"
+            className="hidden xl:flex absolute top-[55%] -translate-y-1/2 left-[18%] w-[min(44vw,520px)] flex-col items-center text-center z-10 space-y-6"
           >
             <motion.p variants={itemVariants} className="text-[0.8vw] xl:text-[0.7vw] font-semibold tracking-widest text-[#456B2B] uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               You are warmly invited to our
             </motion.p>
-            <motion.h1 variants={itemVariants} className="text-[5vw] xl:text-[4.5vw] text-[#6B351D] font-bold my-1 drop-shadow-sm select-none leading-none font-heading" style={{ fontFamily: "'Great Vibes', cursive" }}>
+            <motion.h1 variants={itemVariants} className="text-[3.8vw] xl:text-[3.2vw] text-[#6B351D] font-bold my-1 drop-shadow-sm select-none leading-none font-heading" style={{ fontFamily: "'Priestacy', serif" }}>
               {data.hero.functionTitle || 'House Warming'}
             </motion.h1>
-            <motion.p variants={itemVariants} className="text-[3.5vw] xl:text-[3vw] text-[#B77A16] font-bold mt-1 mb-2 drop-shadow-sm select-none leading-none font-heading" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            <motion.p variants={itemVariants} className="text-[2.6vw] xl:text-[2.2vw] text-[#B77A16] font-bold mb-2 drop-shadow-sm select-none leading-none font-heading" style={{ fontFamily: "'PrimorStylish', serif", marginTop: '64px' }}>
               {data.hero.houseName || 'Karthik Nest'}
             </motion.p>
-            <motion.p variants={itemVariants} className="text-[1.1vw] xl:text-[0.95vw] leading-relaxed max-w-[420px] text-[#776653] font-medium mt-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            <motion.p variants={itemVariants} className="text-[0.9vw] xl:text-[0.8vw] leading-relaxed max-w-[420px] text-[#776653] font-medium mt-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               Please join us in celebrating our new home with love and blessings.
             </motion.p>
             
@@ -286,7 +297,7 @@ export default function TemplateModernHearth({ savedData }) {
             </motion.div>
             
             {/* Address with SVG location icon */}
-            <motion.div variants={itemVariants} className="flex flex-col items-center gap-2 mt-4 pt-3 w-full" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            <motion.div variants={itemVariants} className="flex flex-col items-center gap-2 mt-4 pt-3 w-full" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               <span className="text-[1vw] xl:text-[0.9vw] font-semibold tracking-wide text-[#6B351D] text-center leading-relaxed max-w-[420px] flex items-center justify-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[1.3vw] h-[1.3vw] text-[#B77A16] flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 {data.hero.fullAddress}
@@ -296,36 +307,36 @@ export default function TemplateModernHearth({ savedData }) {
         </section>
 
         {/* Welcome Section (Clean Backgrounds with color reveal & falling flowers) */}
-        <section className="lg:hidden relative overflow-hidden min-h-[100svh]">
+        <section className="xl:hidden relative overflow-hidden min-h-[100svh]">
           <img src={welcomeBgMobile} alt="Welcome Mobile" className="absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none" />
           <FallingFlowers />
         </section>
-        <section className="hidden lg:block relative overflow-hidden min-h-[100svh]">
+        <section className="hidden xl:block relative overflow-hidden min-h-[100svh]">
           <img src={welcomeBgDesktop} alt="Welcome Desktop" className="absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none" />
           <FallingFlowers />
         </section>
 
         {/* Timing Section */}
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <HW1Events data={data.events} bgImage={scheduleBgMobile} noOverlay={true} />
         </div>
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <HW1Events data={data.events} bgImage={scheduleBgDesktop} noOverlay={true} isDesktop={true} />
         </div>
 
         {/* Location Section */}
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <HW1Venue data={data.venue} bgImage={locationBgMobile} />
         </div>
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <HW1Venue data={data.venue} bgImage={locationBgDesktop} isDesktop={true} />
         </div>
 
         {/* Countdown Section */}
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <HW1Countdown data={data.countdown} bgImage={countdownBgMobile} style={{ minHeight: '100svh' }} />
         </div>
-        <div className="hidden lg:block w-full">
+        <div className="hidden xl:block w-full">
           <HW1Countdown data={data.countdown} isDesktop={true} bgImage={countdownBgDesktop} style={{ minHeight: '100svh', aspectRatio: 'auto' }} />
         </div>
 
@@ -503,13 +514,13 @@ function RibbonOverlay({ onCutComplete }) {
         <img 
           src={heroMobileBg} 
           alt="" 
-          className="lg:hidden w-full h-full object-cover" 
+          className="xl:hidden w-full h-full object-cover" 
           style={{ filter: isCut ? 'blur(0px)' : 'blur(8px)', transition: 'filter 2.5s ease-in-out' }} 
         />
         <img 
           src={bgDesktop} 
           alt="" 
-          className="hidden lg:block w-full h-full object-cover" 
+          className="hidden xl:block w-full h-full object-cover" 
           style={{ filter: isCut ? 'blur(0px)' : 'blur(8px)', transition: 'filter 2.5s ease-in-out' }} 
         />
       </div>
@@ -519,16 +530,16 @@ function RibbonOverlay({ onCutComplete }) {
         <p className="text-[11px] sm:text-xs font-semibold tracking-widest text-[#456B2B] uppercase font-montserrat mb-1">
           Welcome to our celebration
         </p>
-        <h2 className="font-heading text-[32px] sm:text-[38px] font-bold text-[#6B351D]" style={{ fontFamily: "'Great Vibes', cursive" }}>
+        <h2 className="font-heading text-[32px] sm:text-[38px] font-bold text-[#6B351D]" style={{ fontFamily: "'Priestacy', serif" }}>
           Sweet Home
         </h2>
-        <p className="text-xs text-[#776653] font-medium mt-3 max-w-[280px] mx-auto leading-relaxed" style={{ fontFamily: "'Poppins', sans-serif" }}>
+        <p className="text-xs text-[#776653] font-medium mt-3 max-w-[280px] mx-auto leading-relaxed" style={{ fontFamily: "'Montserrat', sans-serif" }}>
           Drag the scissor from the bottom to the red bow in the center to cut the ribbon and enter
         </p>
       </div>
 
       {/* Ribbon Track - Single stretched ribbon, split via clip-path */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[400px] w-full pointer-events-none z-30">
+      <div className="absolute inset-y-1/2 top-1/2 -translate-y-1/2 h-[600px] w-[150%] -left-[24%] xl:w-full xl:left-0 pointer-events-none z-30">
         {/* Left Half - full-width image clipped to left 50% */}
         <motion.div 
           initial={{ x: 0 }}
@@ -592,11 +603,13 @@ function RibbonOverlay({ onCutComplete }) {
 
 // 1. HW1Events (Schedule)
 function HW1Events({ data, isDesktop, bgImage, noOverlay }) {
-  const items = [
-    { name: "Housewarming Ceremony", time: "09:00 AM – 10:30 AM", icon: "🏡" },
-    { name: "Food / Lunch / Dinner", time: "12:00 PM onwards", icon: "🍛" }
-  ]
-  const title = 'Housewarming Timings'
+  const items = data && data.items && data.items.length > 0
+    ? data.items
+    : [
+        { name: "Housewarming Ceremony", time: "09:00 AM – 10:30 AM", icon: "🏡" },
+        { name: "Food / Lunch / Dinner", time: "12:00 PM onwards", icon: "🍛" }
+      ]
+  const title = data && data.title ? data.title : 'Housewarming Timings'
 
   return (
     <section 
@@ -672,7 +685,7 @@ function HW1Venue({ data, bgImage, isDesktop }) {
 
   return (
     <section 
-      className="relative w-full min-h-[100svh] px-6 pt-28 lg:pt-0 pb-20 flex flex-col items-center justify-start lg:justify-center text-center overflow-hidden"
+      className="relative w-full min-h-[100svh] px-6 pt-28 xl:pt-0 pb-20 flex flex-col items-center justify-start xl:justify-center text-center overflow-hidden"
       style={{ backgroundColor: '#FBF3DE' }}
     >
       {bgImage && (
@@ -689,12 +702,12 @@ function HW1Venue({ data, bgImage, isDesktop }) {
         initial="hidden"
         whileInView="show"
         viewport={{ once: false, amount: 0.15 }}
-        className="relative z-10 w-full max-w-4xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-20"
+        className="relative z-10 w-full max-w-4xl mx-auto flex flex-col xl:flex-row items-center justify-center gap-8 xl:gap-20"
       >
         {/* Left Side: Title and Address details */}
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-[360px] gap-5">
+        <div className="flex flex-col items-center xl:items-start text-center xl:text-left max-w-[360px] gap-5">
           {/* Title */}
-          <motion.div variants={scrollItemVariants} className="flex flex-col items-center lg:items-start">
+          <motion.div variants={scrollItemVariants} className="flex flex-col items-center xl:items-start">
             <p className="text-[11px] sm:text-xs font-semibold tracking-widest text-[#456B2B] uppercase font-montserrat mb-1">
               Our Location
             </p>
@@ -708,7 +721,7 @@ function HW1Venue({ data, bgImage, isDesktop }) {
           {/* Address */}
           <motion.address 
             variants={scrollItemVariants} 
-            className="not-italic text-sm sm:text-base leading-relaxed text-[#6B351D] font-bold px-2 lg:px-0 font-montserrat tracking-wide"
+            className="not-italic text-sm sm:text-base leading-relaxed text-[#6B351D] font-bold px-2 xl:px-0 font-montserrat tracking-wide"
           >
             {addressTextPretty}
           </motion.address>
@@ -717,7 +730,7 @@ function HW1Venue({ data, bgImage, isDesktop }) {
         {/* Right Side: QR Code and Map Link */}
         <motion.div
           variants={scrollItemVariants}
-          className="flex flex-col items-center justify-center gap-3 bg-[#FFFDF5] border border-[#D3A34A]/25 shadow-[0_6px_20px_rgba(80,50,20,0.06)] p-4 rounded-2xl max-w-[180px] w-full mt-2 lg:mt-0"
+          className="flex flex-col items-center justify-center gap-3 bg-[#FFFDF5] border border-[#D3A34A]/25 shadow-[0_6px_20px_rgba(80,50,20,0.06)] p-4 rounded-2xl max-w-[180px] w-full mt-2 xl:mt-0"
         >
           <img
             src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(String(targetMapLink))}&color=6B351D&bgcolor=FFFDF5`}
