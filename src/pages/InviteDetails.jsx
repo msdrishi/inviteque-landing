@@ -62,10 +62,11 @@ export default function InviteDetails() {
   const handleShareWhatsApp = () => {
     const url = `${window.location.origin}/templates/${invite.templateId}/${invite.code}`
     
-    const groom = invite.groomName || invite.coupleData?.groomName || 'Groom'
-    const bride = invite.brideName || invite.coupleData?.brideName || 'Bride'
+    const groom = invite.groomName || invite.coupleData?.groomName || ''
+    const bride = invite.brideName || invite.coupleData?.brideName || ''
+    const isModernHearth = invite?.templateId === 'template-modernhearth' || invite?.templateId === 'modernhearth' || invite?.templateId === 'modern-hearth'
     
-    let date = 'our wedding day'
+    let date = isModernHearth ? 'our celebration day' : 'our wedding day'
     if (invite.weddingDate) {
       const d = invite.weddingDate.day || ''
       const m = invite.weddingDate.month || ''
@@ -82,16 +83,33 @@ export default function InviteDetails() {
     const city = (invite.venueCity || invite.venueData?.venueCity || '').trim()
     const cityStr = city ? `, ${city}` : ''
 
-    const text = `✨ *𝒲𝑒𝒹𝒹𝒾𝓃𝑔 𝐼𝓃𝓋𝒾𝓉𝒶𝓉𝒾𝑜𝓃* ✨\n\n` +
-                 `Dear Loved Ones,\n\n` +
-                 `We are joyful to invite you to celebrate the wedding ceremony of\n` +
-                 `💍 *${groom} & ${bride}* 💍\n\n` +
-                 (date ? `📅 Date: *${date.trim()}*\n` : '') +
-                 (timeStr ? `⏰ Time: *${timeStr}*\n` : '') +
-                 `📍 Venue: *${(venue + cityStr).trim()}*\n\n` +
-                 `We look forward to your presence and blessings on our special day! ❤️\n\n` +
-                 `Please find the wedding details via our digital invitation link here:\n` +
-                 `👉 ${url}`
+    let text = ''
+    if (isModernHearth) {
+      const host = (groom && bride) ? `${groom} & ${bride}` : (groom || 'The Family')
+      text = `✨ *𝐻𝑜𝓊𝓈𝑒𝓌𝒶𝓇𝓂𝒾𝓃𝑔 𝐼𝓃𝓋𝒾𝓉𝒶𝓉𝒾𝑜𝓃* ✨\n\n` +
+             `Dear Loved Ones,\n\n` +
+             `We are delighted to invite you to join us in celebrating the housewarming ceremony of our new home:\n` +
+             `🏡 *${host}* 🏡\n\n` +
+             (date ? `📅 Date: *${date.trim()}*\n` : '') +
+             (timeStr ? `⏰ Time: *${timeStr}*\n` : '') +
+             `📍 Venue: *${(venue + cityStr).trim()}*\n\n` +
+             `Please join us to share our joy and bless our new hearth! ❤️\n\n` +
+             `Please find the details via our digital invitation link here:\n` +
+             `👉 ${url}`
+    } else {
+      const gName = groom || 'Groom'
+      const bName = bride || 'Bride'
+      text = `✨ *𝒲𝑒𝒹𝒹𝒾𝓃𝑔 𝐼𝓃𝓋𝒾𝓉𝒶𝓉𝒾𝑜𝓃* ✨\n\n` +
+             `Dear Loved Ones,\n\n` +
+             `We are joyful to invite you to celebrate the wedding ceremony of\n` +
+             `💍 *${gName} & ${bName}* 💍\n\n` +
+             (date ? `📅 Date: *${date.trim()}*\n` : '') +
+             (timeStr ? `⏰ Time: *${timeStr}*\n` : '') +
+             `📍 Venue: *${(venue + cityStr).trim()}*\n\n` +
+             `We look forward to your presence and blessings on our special day! ❤️\n\n` +
+             `Please find the wedding details via our digital invitation link here:\n` +
+             `👉 ${url}`
+    }
 
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
   }
