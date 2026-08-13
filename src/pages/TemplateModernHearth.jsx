@@ -251,37 +251,37 @@ export default function TemplateModernHearth({ savedData }) {
             initial="hidden"
             whileInView={isRibbonCut ? "show" : "hidden"}
             viewport={{ once: false, amount: 0.15 }}
-            className="xl:hidden relative z-10 w-full flex flex-col items-center text-center px-5 pt-[32%] space-y-1"
+            className="xl:hidden relative z-10 w-full flex flex-col items-center text-center px-5 pt-[32%] md:pt-[22%] space-y-1 md:space-y-2"
           >
-            <motion.p variants={itemVariants} className="text-[10px] sm:text-[12px] font-semibold tracking-widest text-[#456B2B] uppercase mb-0.5" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <motion.p variants={itemVariants} className="text-[10px] sm:text-[12px] md:text-[16px] md:tracking-[0.15em] font-semibold tracking-widest text-[#456B2B] uppercase mb-0.5" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               You are warmly invited to our
             </motion.p>
-            <motion.h1 variants={itemVariants} className="text-[#6B351D] select-none leading-[1.1] w-[85%] mb-0.5 text-[38px] sm:text-6xl font-bold font-heading" style={{ fontFamily: "'Priestacy', serif" }}>
+            <motion.h1 variants={itemVariants} className="text-[#6B351D] select-none leading-[1.1] w-[85%] mb-0.5 text-[38px] sm:text-6xl md:text-[72px] font-bold font-heading" style={{ fontFamily: "'Priestacy', serif" }}>
               {data.hero.functionTitle || 'House Warming'}
             </motion.h1>
-            <motion.p variants={itemVariants} className="text-[18px] sm:text-[28px] text-[#B77A16] font-bold select-none leading-none mb-1 font-heading" style={{ fontFamily: "'PrimorStylish', serif", marginTop: '32px' }}>
+            <motion.p variants={itemVariants} className="text-[18px] sm:text-[28px] md:text-[40px] text-[#B77A16] font-bold select-none leading-none mb-1 font-heading !mt-8 md:!mt-14" style={{ fontFamily: "'PrimorStylish', serif" }}>
               {data.hero.houseName || 'Karthik Nest'}
             </motion.p>
-            <motion.p variants={itemVariants} className="text-[11px] sm:text-[13px] leading-relaxed max-w-[280px] text-[#776653] font-medium px-2 mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <motion.p variants={itemVariants} className="text-[11px] sm:text-[13px] md:text-[18px] leading-relaxed max-w-[280px] md:max-w-[480px] text-[#776653] font-medium px-2 mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               Please join us in celebrating our new home with love and blessings.
             </motion.p>
             
             {/* Date + Time section with SVG icons */}
-            <motion.div variants={itemVariants} className="w-full max-w-[290px] text-[#6B351D] mt-0.5 py-2 border-t border-b border-[#D3A34A]/30 flex items-center justify-between text-[10px] sm:text-xs" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600 }}>
-              <div className="w-[45%] flex items-center justify-center gap-1 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#B77A16] flex-shrink-0"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <motion.div variants={itemVariants} className="w-full max-w-[290px] md:max-w-[460px] text-[#6B351D] mt-0.5 py-2 md:py-3 border-t border-b border-[#D3A34A]/30 flex items-center justify-between text-[10px] sm:text-xs md:text-[16px] !mt-4 md:!mt-8" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600 }}>
+              <div className="w-[45%] flex items-center justify-center gap-1 md:gap-2 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-[#B77A16] flex-shrink-0"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 <span>{data.hero.dateLine}</span>
               </div>
-              <div className="w-[1px] h-5 bg-[#D3A34A]/30" />
-              <div className="w-[45%] flex items-center justify-center gap-1 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#B77A16] flex-shrink-0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <div className="w-[1px] h-5 md:h-6 bg-[#D3A34A]/30" />
+              <div className="w-[45%] flex items-center justify-center gap-1 md:gap-2 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-[#B77A16] flex-shrink-0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 <span>{data.hero.weddingTime}</span>
               </div>
             </motion.div>
             
             {/* Address directly inside mobile hero flow with SVG location icon */}
-            <motion.div variants={itemVariants} className="text-[10px] sm:text-[12px] font-semibold text-[#6B351D]/90 mt-1 max-w-[270px] leading-relaxed flex items-center justify-center gap-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-[#B77A16] flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <motion.div variants={itemVariants} className="text-[10px] sm:text-[12px] md:text-[16px] font-semibold text-[#6B351D]/90 max-w-[270px] md:max-w-[480px] leading-relaxed flex items-center justify-center gap-1 !mt-2 md:!mt-6" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#B77A16] flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               <span>{data.hero.fullAddress}</span>
             </motion.div>
           </motion.div>
