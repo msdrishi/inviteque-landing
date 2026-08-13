@@ -557,17 +557,19 @@ function RibbonOverlay({ onCutComplete }) {
       </div>
 
       {/* Top Welcome Title */}
-      <div className="text-center mt-10 z-10">
-        <p className="text-[11px] sm:text-xs font-semibold tracking-widest text-[#456B2B] uppercase font-montserrat mb-1">
-          Welcome to our celebration
-        </p>
-        <h2 className="font-heading text-[32px] sm:text-[38px] font-bold text-[#6B351D]" style={{ fontFamily: "'Priestacy', serif" }}>
-          Sweet Home
-        </h2>
-        <p className="text-xs text-[#776653] font-medium mt-3 max-w-[280px] mx-auto leading-relaxed" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-          Drag the scissor from the bottom to the red bow in the center to cut the ribbon and enter
-        </p>
-      </div>
+      {!isCut && (
+        <div className="text-center mt-10 z-10">
+          <p className="text-[11px] sm:text-xs font-semibold tracking-widest text-[#456B2B] uppercase font-montserrat mb-1">
+            Welcome to our celebration
+          </p>
+          <h2 className="font-heading text-[32px] sm:text-[38px] font-bold text-[#6B351D]" style={{ fontFamily: "'Priestacy', serif" }}>
+            Sweet Home
+          </h2>
+          <p className="text-xs text-[#776653] font-medium mt-3 max-w-[280px] mx-auto leading-relaxed" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            Drag the scissor from the bottom to the red bow in the center to cut the ribbon and enter
+          </p>
+        </div>
+      )}
 
       {/* Ribbon Track - Single stretched ribbon, split via clip-path */}
       <div className="absolute inset-y-1/2 top-1/2 -translate-y-1/2 h-[600px] w-[150%] -left-[24%] xl:w-full xl:left-0 pointer-events-none z-30">
