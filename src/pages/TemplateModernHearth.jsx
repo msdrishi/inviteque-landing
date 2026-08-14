@@ -534,7 +534,7 @@ function RibbonOverlay({ onCutComplete }) {
       <canvas ref={canvasRef} className="absolute inset-0 z-40 pointer-events-none w-full h-full" />
 
       {/* Ribbon Track - Single stretched ribbon, split via clip-path */}
-      <div className="absolute inset-y-1/2 top-1/2 -translate-y-1/2 h-[600px] w-[150%] -left-[24%] xl:w-full xl:left-0 pointer-events-none z-30">
+      <div className="absolute inset-y-1/2 top-1/2 -translate-y-1/2 h-[600px] xl:h-[800px] w-[150%] -left-[24%] xl:w-full xl:left-0 pointer-events-none z-30">
         {/* Left Half - full-width image clipped to left 50% */}
         <motion.div 
           initial={{ x: 0 }}
