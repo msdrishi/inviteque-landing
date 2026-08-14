@@ -192,7 +192,11 @@ export default function Payment() {
         storyData: {
           photos: draftData.photos
         },
-        invitationData: {}, // Placeholder
+        invitationData: {
+          showFamilySection: draftData.showFamilySection,
+          familyMessage: draftData.familyMessage,
+          familyPhoto: draftData.familyPhoto
+        },
         rsvpData: {}, // Placeholder
         status: isAlreadyPaid ? 'PAID' : 'DRAFT', // Leave as draft until payment succeeds
         couponCode: appliedCoupon ? appliedCoupon.code : null

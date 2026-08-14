@@ -153,7 +153,9 @@ export default function Builder() {
         ],
     code: null,
     status: 'DRAFT',
-    amountPaid: 0
+    amountPaid: 0,
+    showFamilySection: false,
+    familyMessage: '',
   }
 
   // If entering a creation flow (no editCode) but context has a PAID invitation, we must reset
@@ -203,7 +205,10 @@ export default function Builder() {
       scheduleItems: initialSchedule,
       code: editCode || draftData.code || null,
       status: draftData.status || 'DRAFT',
-      amountPaid: draftData.amountPaid || 0
+      amountPaid: draftData.amountPaid || 0,
+      showFamilySection: draftData.showFamilySection !== undefined ? draftData.showFamilySection : false,
+      familyMessage: draftData.familyMessage || '',
+      familyPhoto: draftData.familyPhoto || null
     }
   })
 
@@ -330,7 +335,10 @@ export default function Builder() {
                   ]),
               code: data.code,
               status: data.status,
-              amountPaid: data.amountPaid || 0
+              amountPaid: data.amountPaid || 0,
+              showFamilySection: data.invitationData?.showFamilySection !== undefined ? data.invitationData.showFamilySection : false,
+              familyMessage: data.invitationData?.familyMessage || '',
+              familyPhoto: data.invitationData?.familyPhoto || null
             }
             setFormData(mappedData)
             updateDraft(mappedData)
@@ -347,6 +355,7 @@ export default function Builder() {
 
   const [errors, setErrors] = useState({})
   const [uploadingPhotos, setUploadingPhotos] = useState({ 0: false, 1: false, 2: false })
+  const [uploadingFamilyPhoto, setUploadingFamilyPhoto] = useState(false)
 
   // Get template details — search both wedding and house warming templates
   const isHouseWarming = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
@@ -502,6 +511,41 @@ export default function Builder() {
     const newPhotos = [...(formData.photos || [])]
     newPhotos[index] = null
     setFormData(prev => ({ ...prev, photos: newPhotos }))
+  }
+
+  const handleFamilyPhotoUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File size must be less than 10MB')
+      return
+    }
+
+    setUploadingFamilyPhoto(true)
+
+    try {
+      const result = await uploadToCloudinary(file)
+      if (result && result.url) {
+        setFormData(prev => ({ ...prev, familyPhoto: result.url }))
+      }
+    } catch (err) {
+      console.error('Error uploading family photo:', err)
+      alert('Failed to upload image. Please try again.')
+    } finally {
+      setUploadingFamilyPhoto(false)
+    }
+  }
+
+  const handleFamilyMessageChange = (e) => {
+    const text = e.target.value
+    const words = text.trim().split(/\s+/).filter(Boolean)
+    if (words.length <= 60) {
+      setFormData(prev => ({ ...prev, familyMessage: text }))
+    } else {
+      const limitedText = text.split(/\s+/).slice(0, 60).join(" ")
+      setFormData(prev => ({ ...prev, familyMessage: limitedText }))
+    }
   }
 
   const nextStep = () => {
@@ -1096,6 +1140,79 @@ export default function Builder() {
                       </div>
                     )}
                   </div>
+
+                  {/* Family Message / Picture Section (Housewarming Specific) */}
+                  {isHouseWarming && (
+                    <div className="space-y-4">
+                      <label className="flex items-center gap-4 cursor-pointer rounded-2xl border border-iqBorder bg-white p-4 md:p-5 transition-all hover:shadow-md">
+                        <input
+                          type="checkbox"
+                          name="showFamilySection"
+                          checked={formData.showFamilySection}
+                          onChange={handleChange}
+                          className="h-5 w-5 rounded accent-black flex-shrink-0"
+                        />
+                        <div className="min-w-0">
+                          <p className="font-bold text-base md:text-lg">Family Welcome Section</p>
+                          <p className="text-xs text-iqText/50">Showcase a family picture and a custom message.</p>
+                        </div>
+                      </label>
+
+                      {formData.showFamilySection && (
+                        <div className="ml-0 md:ml-9 space-y-4 rounded-2xl border border-dashed border-iqBorder p-4 md:p-6 bg-iqBg/30">
+                          {/* Welcome Message Textarea */}
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center">
+                              <label className="text-xs font-bold uppercase tracking-wider opacity-50">Welcome Message</label>
+                              <span className="text-[10px] font-bold text-iqText/40 uppercase">
+                                {formData.familyMessage ? formData.familyMessage.trim().split(/\s+/).filter(Boolean).length : 0} / 60 Words
+                              </span>
+                            </div>
+                            <textarea
+                              rows={4}
+                              placeholder="Add a welcoming family message for the guests (max 60 words)..."
+                              value={formData.familyMessage}
+                              onChange={handleFamilyMessageChange}
+                              className="w-full rounded-xl border border-iqBorder bg-white px-4 py-3 text-sm outline-none focus:border-iqText transition-colors resize-none leading-relaxed"
+                            />
+                          </div>
+
+                          {/* Family Picture Upload */}
+                          <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase tracking-wider opacity-50 block">Family Picture</label>
+                            <div className="flex items-center gap-4">
+                              <div className="relative h-28 w-28 rounded-xl border border-iqBorder bg-white overflow-hidden flex items-center justify-center flex-shrink-0">
+                                {uploadingFamilyPhoto ? (
+                                  <div className="flex flex-col items-center justify-center text-iqText/40">
+                                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-iqText/25 border-t-iqText"></div>
+                                    <span className="text-[9px] mt-1 font-bold">Uploading...</span>
+                                  </div>
+                                ) : formData.familyPhoto ? (
+                                  <img src={formData.familyPhoto} alt="Family" className="h-full w-full object-cover" />
+                                ) : (
+                                  <div className="text-[10px] text-center text-iqText/30 px-2 font-medium">No Image Uploaded</div>
+                                )}
+                              </div>
+                              <div className="space-y-2">
+                                <label className="inline-block rounded-xl bg-iqText text-white px-4 py-2 text-xs font-bold tracking-wide hover:bg-iqText/80 transition-colors cursor-pointer">
+                                  Upload Picture
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleFamilyPhotoUpload}
+                                  />
+                                </label>
+                                <p className="text-[10px] text-iqText/40 italic max-w-[280px]">
+                                  * Upload a landscape/square photo of your family. If left empty, a default graphic will be used.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-6 flex gap-4">

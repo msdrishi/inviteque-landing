@@ -4,6 +4,7 @@ import { useDraft } from '../context/DraftContext.jsx'
 import { motion, AnimatePresence } from 'framer-motion'
 import Footer from '../components/Footer.jsx'
 import { weddingData as staticData } from '../weddingData.js'
+import WaterRevealImage from '../components/WaterRevealImage.jsx'
 
 // Backgrounds (Cloudinary CDN with auto-format WebP)
 const bgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png"
@@ -23,49 +24,49 @@ const countdownBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_
 const scissorPng = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600573/house-warming-hw1/hw1-scissor.png"
 const ribbonPng = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600576/house-warming-hw1/hw1-ribbon.png"
 
-// Slow staggered animation variants
+// Slow staggered animation variants (hero section)
 const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.5, // Slow staggered entry line by line
-      delayChildren: 0.3,
+      staggerChildren: 0.7, // Very slow staggered entry line by line
+      delayChildren: 0.4,
     }
   }
 }
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
+  hidden: { opacity: 0, y: 20 },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 1.2,
+      duration: 1.8,
       ease: [0.16, 1, 0.3, 1]
     }
   }
 }
 
-// Line by line scroll trigger animation variants
+// Line by line scroll trigger animation variants (all sections)
 const scrollContainerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.25,
-      delayChildren: 0.05
+      staggerChildren: 0.45,
+      delayChildren: 0.3
     }
   }
 }
 
 const scrollItemVariants = {
-  hidden: { opacity: 0, y: 15 },
+  hidden: { opacity: 0, y: 22 },
   show: { 
     opacity: 1, 
     y: 0, 
     transition: { 
-      duration: 1.0, 
+      duration: 1.6, 
       ease: [0.16, 1, 0.3, 1] 
     } 
   }
@@ -92,6 +93,16 @@ export default function TemplateModernHearth({ savedData }) {
 
   // Active data selection
   const activeData = savedData || (isPreview ? draftData : null)
+
+  const showFamilySection = activeData 
+    ? (activeData.showFamilySection !== undefined ? activeData.showFamilySection : activeData.invitationData?.showFamilySection)
+    : true // Default to true for static template preview URL
+  const familyMessage = activeData 
+    ? (activeData.familyMessage || activeData.invitationData?.familyMessage)
+    : ''
+  const familyPhoto = activeData 
+    ? (activeData.familyPhoto || activeData.invitationData?.familyPhoto)
+    : null
 
   const data = useMemo(() => {
     if (!activeData) return staticData
@@ -250,7 +261,7 @@ export default function TemplateModernHearth({ savedData }) {
             variants={containerVariants}
             initial="hidden"
             whileInView={isRibbonCut ? "show" : "hidden"}
-            viewport={{ once: false, amount: 0.15 }}
+            viewport={{ once: false, amount: 0.35 }}
             className="xl:hidden relative z-10 w-full flex flex-col items-center text-center px-5 pt-[32%] md:pt-[22%] space-y-1 md:space-y-2"
           >
             <motion.p variants={itemVariants} className="text-[10px] sm:text-[12px] md:text-[16px] md:tracking-[0.15em] font-semibold tracking-widest text-[#456B2B] uppercase mb-0.5" style={{ fontFamily: "'Montserrat', sans-serif" }}>
@@ -291,7 +302,7 @@ export default function TemplateModernHearth({ savedData }) {
             variants={containerVariants}
             initial="hidden"
             whileInView={isRibbonCut ? "show" : "hidden"}
-            viewport={{ once: false, amount: 0.15 }}
+            viewport={{ once: false, amount: 0.35 }}
             className="hidden xl:flex absolute top-[55%] -translate-y-1/2 left-[18%] w-[min(44vw,520px)] flex-col items-center text-center z-10 space-y-6"
           >
             <motion.p variants={itemVariants} className="text-[0.8vw] xl:text-[0.7vw] font-semibold tracking-widest text-[#456B2B] uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>
@@ -329,6 +340,18 @@ export default function TemplateModernHearth({ savedData }) {
             </motion.div>
           </motion.div>
         </section>
+
+        {/* Family Section */}
+        {showFamilySection && (
+          <>
+            <div className="xl:hidden">
+              <HW1FamilySection message={familyMessage} photo={familyPhoto} bgImage={scheduleBgMobile} />
+            </div>
+            <div className="hidden xl:block">
+              <HW1FamilySection message={familyMessage} photo={familyPhoto} bgImage={scheduleBgDesktop} isDesktop={true} />
+            </div>
+          </>
+        )}
 
         {/* Welcome Section (Clean Backgrounds with color reveal & falling flowers) */}
         <section className="xl:hidden relative overflow-hidden min-h-[100svh]">
@@ -537,20 +560,34 @@ function RibbonOverlay({ onCutComplete }) {
       <div className="absolute inset-y-1/2 top-1/2 -translate-y-1/2 h-[600px] xl:h-[800px] w-[150%] -left-[24%] xl:w-full xl:left-0 pointer-events-none z-30">
         {/* Left Half - full-width image clipped to left 50% */}
         <motion.div 
-          initial={{ x: 0 }}
-          animate={isCut ? { x: '-110%', y: '120vh', rotate: -35, transition: { duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94] } } : {}}
+          initial={{ x: 0, y: 0, rotate: 0, skewY: 0, scaleX: 1 }}
+          animate={isCut ? { 
+            x: [0, '-15%', '-50%', '-85%', '-110%'],
+            y: [0, '20vh', '55vh', '85vh', '110vh'],
+            rotate: [0, 30, 60, 75, 85],
+            skewY: [0, 22, -15, 8, 0],
+            scaleX: [1, 0.94, 0.87, 0.91, 0.82],
+            transition: { duration: 3.8, times: [0, 0.25, 0.5, 0.75, 1], ease: [0.25, 1, 0.5, 1] }
+          } : {}}
           className="absolute inset-0"
-          style={{ clipPath: 'inset(0 50% 0 0)', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))' }}
+          style={{ clipPath: 'inset(0 50% 0 0)', transformOrigin: 'left center', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))' }}
         >
           <img src={ribbonPng} alt="" className="w-full h-full" style={{ objectFit: 'fill' }} />
         </motion.div>
 
         {/* Right Half - full-width image clipped to right 50% */}
         <motion.div 
-          initial={{ x: 0 }}
-          animate={isCut ? { x: '110%', y: '120vh', rotate: 35, transition: { duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94] } } : {}}
+          initial={{ x: 0, y: 0, rotate: 0, skewY: 0, scaleX: 1 }}
+          animate={isCut ? { 
+            x: [0, '15%', '50%', '85%', '110%'],
+            y: [0, '20vh', '55vh', '85vh', '110vh'],
+            rotate: [0, -30, -60, -75, -85],
+            skewY: [0, -22, 15, -8, 0],
+            scaleX: [1, 0.94, 0.87, 0.91, 0.82],
+            transition: { duration: 3.8, times: [0, 0.25, 0.5, 0.75, 1], ease: [0.25, 1, 0.5, 1] }
+          } : {}}
           className="absolute inset-0"
-          style={{ clipPath: 'inset(0 0 0 50%)', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))' }}
+          style={{ clipPath: 'inset(0 0 0 50%)', transformOrigin: 'right center', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))' }}
         >
           <img src={ribbonPng} alt="" className="w-full h-full" style={{ objectFit: 'fill' }} />
         </motion.div>
@@ -571,28 +608,6 @@ function RibbonOverlay({ onCutComplete }) {
         </div>
       )}
 
-      {/* Ribbon Track - Single stretched ribbon, split via clip-path */}
-      <div className="absolute inset-y-1/2 top-1/2 -translate-y-1/2 h-[600px] w-[150%] -left-[24%] xl:w-full xl:left-0 pointer-events-none z-30">
-        {/* Left Half - full-width image clipped to left 50% */}
-        <motion.div 
-          initial={{ x: 0 }}
-          animate={isCut ? { x: '-110%', y: '120vh', rotate: -35, transition: { duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94] } } : {}}
-          className="absolute inset-0"
-          style={{ clipPath: 'inset(0 50% 0 0)', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))' }}
-        >
-          <img src={ribbonPng} alt="" className="w-full h-full" style={{ objectFit: 'fill' }} />
-        </motion.div>
-
-        {/* Right Half - full-width image clipped to right 50% */}
-        <motion.div 
-          initial={{ x: 0 }}
-          animate={isCut ? { x: '110%', y: '120vh', rotate: 35, transition: { duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94] } } : {}}
-          className="absolute inset-0"
-          style={{ clipPath: 'inset(0 0 0 50%)', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.18))' }}
-        >
-          <img src={ribbonPng} alt="" className="w-full h-full" style={{ objectFit: 'fill' }} />
-        </motion.div>
-      </div>
 
       {/* Draggable Scissor Element (Repositioned to the bottom area) */}
       {!isCut && (
@@ -665,7 +680,7 @@ function HW1Events({ data, isDesktop, bgImage, noOverlay }) {
         variants={scrollContainerVariants}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: false, amount: 0.15 }}
+        viewport={{ once: false, amount: 0.35 }}
         className="flex flex-col items-center text-center z-10 mb-12"
       >
         <motion.p variants={scrollItemVariants} className="text-[11px] sm:text-xs font-semibold tracking-widest text-[#456B2B] uppercase font-montserrat mb-1">
@@ -685,7 +700,7 @@ function HW1Events({ data, isDesktop, bgImage, noOverlay }) {
         variants={scrollContainerVariants}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: false, amount: 0.15 }}
+        viewport={{ once: false, amount: 0.35 }}
         className="relative w-full max-w-[480px] mx-auto z-10 flex flex-col gap-6 px-2"
       >
         {items.map((item, idx) => (
@@ -708,7 +723,79 @@ function HW1Events({ data, isDesktop, bgImage, noOverlay }) {
   )
 }
 
-// 2. HW1Venue (Location)
+// 2. HW1FamilySection (Optional Welcoming Section with Water Reveal Animation)
+function HW1FamilySection({ message, photo, isDesktop, bgImage }) {
+  const defaultPhoto = "/backgrounds/House Warming/family picture.png"
+  const photoUrl = photo || defaultPhoto
+  const displayMessage = message && message.trim() 
+    ? message 
+    : "We are starting a new chapter of our lives in our dream home. We warmly welcome you to celebrate this auspicious occasion with us and shower us with your blessings as we step into our sweet new home."
+
+  // Limit characters / words for display
+  const words = displayMessage.split(/\s+/);
+  const truncatedMessage = words.length > 70 
+    ? words.slice(0, 70).join(" ") + "..."
+    : displayMessage;
+
+  return (
+    <section 
+      className="w-full min-h-[100svh] px-6 py-20 relative flex flex-col items-center justify-center overflow-hidden"
+      style={{ backgroundColor: '#FBF3DE' }}
+    >
+      {/* Background (Same plaster texture as schedule) */}
+      {bgImage && (
+        <img
+          src={bgImage}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover z-0 pointer-events-none"
+        />
+      )}
+
+      <motion.div
+        variants={scrollContainerVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: false, amount: 0.35 }}
+        className="relative z-10 w-full max-w-5xl mx-auto grid grid-cols-1 xl:grid-cols-2 gap-8 xl:gap-16 items-center"
+      >
+        {/* Left Side: Content */}
+        <div className="flex flex-col items-center xl:items-start text-center xl:text-left space-y-6">
+          <motion.div variants={scrollItemVariants} className="flex flex-col items-center xl:items-start">
+            <span className="text-[11px] sm:text-xs font-semibold tracking-widest text-[#456B2B] uppercase font-montserrat mb-1">
+              Welcome Message
+            </span>
+            <h2 className="text-[28px] sm:text-[36px] font-bold text-[#6B351D] leading-tight font-heading" style={{ fontFamily: "'Priestacy', serif" }}>
+              Our Sweet Home
+            </h2>
+            <div className="w-12 h-[1.5px] bg-[#B77A16]/30 mt-3" />
+          </motion.div>
+
+          <motion.p 
+            variants={scrollItemVariants}
+            className="text-sm sm:text-base md:text-lg leading-relaxed text-[#776653] font-medium max-w-[460px] font-montserrat"
+          >
+            {truncatedMessage}
+          </motion.p>
+        </div>
+
+        {/* Right Side: Photo with Water Reveal Animation */}
+        <div className="flex justify-center items-center relative py-6 xl:justify-end xl:pr-12">
+          <WaterRevealImage
+            src={photoUrl}
+            alt="Family"
+            className="w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[420px] md:h-[420px] rounded-2xl"
+            duration={2.0}
+            triggerOnce={false}
+            threshold={0.25}
+          />
+        </div>
+      </motion.div>
+    </section>
+  )
+}
+
+// 3. HW1Venue (Location)
 function HW1Venue({ data, bgImage, isDesktop }) {
   if (!data) return null
 
@@ -734,7 +821,7 @@ function HW1Venue({ data, bgImage, isDesktop }) {
         variants={scrollContainerVariants}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: false, amount: 0.15 }}
+        viewport={{ once: false, amount: 0.35 }}
         className="relative z-10 w-full max-w-4xl mx-auto flex flex-col xl:flex-row items-center justify-center gap-8 xl:gap-20"
       >
         {/* Left Side: Title and Address details */}
@@ -845,7 +932,7 @@ function HW1Countdown({ data, bgImage, isDesktop, style }) {
         variants={scrollContainerVariants}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: false, amount: 0.15 }}
+        viewport={{ once: false, amount: 0.35 }}
         className="relative z-10 w-full max-w-[420px] mx-auto text-center flex flex-col items-center"
       >
         {/* Title */}
