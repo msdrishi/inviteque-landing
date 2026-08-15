@@ -30,33 +30,31 @@ export default function WaterRevealImage({
   /* ──── organic clip-path generator ────
      Creates a polygon with 72 points arranged in a distorted circle.
      Multi-octave sine noise produces subtle watercolor-like edge irregularity.
-     We keep the paint splatter outline at the end by not expanding past the container's visual circle. */
+     Noise attenuates as progress increases so the final shape covers the full container. */
   const buildPath = useCallback((progress, offset = 0, points = 72) => {
     if (progress <= 0.005) return 'polygon(50% 50%, 50% 50%, 50% 50%)'
 
-    // We cap the maximum radius so it retains its organic splash shape within the container
-    // A radius of ~45% keeps the organic outline fully visible within the square box.
-    const R = 45 
-    const atten = 1.0 // Keep the paint splatter irregularity fully active at the end!
+    const R = 90 // max radius (% from center) — large enough to cover all corners
+    const atten = 1 - progress * 0.4 // noise fades as reveal grows (organic → smooth)
 
     const pts = []
     for (let i = 0; i < points; i++) {
       const a = (i / points) * Math.PI * 2
 
-      // Multi-octave edge noise (watercolor/paint splatter irregularity)
+      // Multi-octave edge noise (watercolor irregularity)
       const noise = (
-        0.10  * Math.sin(a * 2  + 1.2) +
-        0.07  * Math.sin(a * 3  + 0.8) +
-        0.05  * Math.sin(a * 5  + 2.1) +
-        0.04  * Math.sin(a * 7  + 0.5) +
+        0.08  * Math.sin(a * 2  + 1.2) +
+        0.06  * Math.sin(a * 3  + 0.8) +
+        0.04  * Math.sin(a * 5  + 2.1) +
+        0.03  * Math.sin(a * 7  + 0.5) +
         0.02  * Math.sin(a * 11 + 1.7) +
         0.012 * Math.sin(a * 13 + 3.2)
       ) * atten
 
-      // Directional expansion variation
+      // Directional expansion variation — some parts spread slightly faster
       const bias = (
-        0.06 * Math.sin(a * 2   + 0.3) +
-        0.04 * Math.sin(a * 3.5 + 1.9)
+        0.08 * Math.sin(a * 2   + 0.3) +
+        0.05 * Math.sin(a * 3.5 + 1.9)
       ) * atten
 
       const p = Math.min(1, progress + progress * bias)
@@ -108,17 +106,16 @@ export default function WaterRevealImage({
         const raw = Math.min(1, (now - t0) / ms)
         const p = easeOutCubic(raw)
 
-        // Image reveal mask - keep the final organic shape
-        setClip(clipRef, buildPath(p))
+        // Image reveal mask
+        setClip(clipRef, p >= 0.995 ? 'none' : buildPath(p))
 
-        // Organic outline ring — visible during mid-expansion and stays at the end
+        // Organic outline ring — visible during mid-expansion, fades at end
         if (outlineRef.current) {
-          if (p > 0.06) {
-            const fadeIn = Math.min(1, (p - 0.06) / 0.20)
-            // Settle on a subtle final paint outline opacity (e.g. 0.25)
-            const finalOpacity = p > 0.78 ? 0.25 + (1 - (p - 0.78) / 0.22) * 0.25 : 0.50
-            outlineRef.current.style.opacity = String((fadeIn * finalOpacity).toFixed(3))
-            setClip(outlineRef, buildPath(p, 2.0))
+          if (p > 0.06 && p < 0.96) {
+            const fadeIn  = Math.min(1, (p - 0.06) / 0.20)
+            const fadeOut = p > 0.78 ? Math.max(0, 1 - (p - 0.78) / 0.18) : 1
+            outlineRef.current.style.opacity = String((fadeIn * fadeOut * 0.50).toFixed(3))
+            setClip(outlineRef, buildPath(p, 3.0))
           } else {
             outlineRef.current.style.opacity = '0'
           }
@@ -126,6 +123,10 @@ export default function WaterRevealImage({
 
         if (raw < 1) {
           rafRef.current = requestAnimationFrame(step)
+        } else {
+          // Fully revealed — clean up
+          setClip(clipRef, 'none')
+          if (outlineRef.current) outlineRef.current.style.opacity = '0'
         }
       }
 
