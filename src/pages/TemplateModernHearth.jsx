@@ -98,7 +98,11 @@ export default function TemplateModernHearth({ savedData }) {
     ? (activeData.showFamilySection !== undefined ? activeData.showFamilySection : activeData.invitationData?.showFamilySection)
     : true // Default to true for static template preview URL
   const showSchedule = activeData
-    ? (activeData.showSchedule !== undefined ? activeData.showSchedule : activeData.invitationData?.showSchedule)
+    ? (activeData.showSchedule !== undefined 
+        ? activeData.showSchedule 
+        : (activeData.scheduleData?.showSchedule !== undefined 
+            ? activeData.scheduleData.showSchedule 
+            : activeData.invitationData?.showSchedule))
     : true // Default to true for static template preview URL
   const familyMessage = activeData 
     ? (activeData.familyMessage || activeData.invitationData?.familyMessage)
