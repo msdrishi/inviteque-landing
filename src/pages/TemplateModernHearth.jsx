@@ -97,6 +97,9 @@ export default function TemplateModernHearth({ savedData }) {
   const showFamilySection = activeData 
     ? (activeData.showFamilySection !== undefined ? activeData.showFamilySection : activeData.invitationData?.showFamilySection)
     : true // Default to true for static template preview URL
+  const showSchedule = activeData
+    ? (activeData.showSchedule !== undefined ? activeData.showSchedule : activeData.invitationData?.showSchedule)
+    : true // Default to true for static template preview URL
   const familyMessage = activeData 
     ? (activeData.familyMessage || activeData.invitationData?.familyMessage)
     : ''
@@ -364,12 +367,16 @@ export default function TemplateModernHearth({ savedData }) {
         </section>
 
         {/* Timing Section */}
-        <div className="xl:hidden">
-          <HW1Events data={data.events} bgImage={scheduleBgMobile} noOverlay={true} />
-        </div>
-        <div className="hidden xl:block">
-          <HW1Events data={data.events} bgImage={scheduleBgDesktop} noOverlay={true} isDesktop={true} />
-        </div>
+        {showSchedule && (
+          <>
+            <div className="xl:hidden">
+              <HW1Events data={data.events} bgImage={scheduleBgMobile} noOverlay={true} />
+            </div>
+            <div className="hidden xl:block">
+              <HW1Events data={data.events} bgImage={scheduleBgDesktop} noOverlay={true} isDesktop={true} />
+            </div>
+          </>
+        )}
 
         {/* Location Section */}
         <div className="xl:hidden">
