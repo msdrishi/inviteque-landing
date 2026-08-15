@@ -129,6 +129,26 @@ export default function Footer({ data, theme }) {
     bg: '#FFFDF2',
     bgSvg: `rgba(138,110,30,0.06)`,
     bgSvgSecondary: `rgba(138,110,30,0.04)`
+  } : theme === 'navy' ? {
+    primary: '#C5A880',
+    primaryDark: '#FFFFFF',
+    primaryLight: 'rgba(197, 168, 128, 0.65)',
+    border: 'rgba(197, 168, 128, 0.25)',
+    borderHover: 'rgba(197, 168, 128, 0.5)',
+    bgHover: 'rgba(197, 168, 128, 0.05)',
+    bg: '#0A1128',
+    bgSvg: `rgba(197, 168, 128, 0.06)`,
+    bgSvgSecondary: `rgba(197, 168, 128, 0.04)`
+  } : theme === 'traditional' ? {
+    primary: '#2B3B25',
+    primaryDark: '#1E2B18',
+    primaryLight: 'rgba(43, 59, 37, 0.65)',
+    border: 'rgba(197, 168, 128, 0.25)',
+    borderHover: 'rgba(197, 168, 128, 0.5)',
+    bgHover: 'rgba(197, 168, 128, 0.05)',
+    bg: '#FDFBF7',
+    bgSvg: `rgba(43, 59, 37, 0.04)`,
+    bgSvgSecondary: `rgba(43, 59, 37, 0.02)`
   } : {
     primary: '#7B1E2B',
     primaryDark: '#7B1E2B',

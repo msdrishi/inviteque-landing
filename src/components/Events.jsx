@@ -9,6 +9,29 @@ const letterAnim = {
   show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } }
 }
 
+const lineAnim = {
+  hidden: { opacity: 0, y: 10 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 2.2, ease: [0.22, 1, 0.36, 1] },
+  },
+}
+
+function LotusDivider({ color = '#B09060' }) {
+  return (
+    <div aria-hidden="true" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, marginTop: 4 }}>
+      <div style={{ width: 26, height: 0.7, background: color, opacity: 0.55 }} />
+      <svg viewBox="0 0 32 18" width={32} height={18} fill="none">
+        <path d="M16 16C16 16 8 9 5 4C8 6 12 8 16 8C20 8 24 6 27 4C24 9 16 16 16 16Z" fill={color} opacity="0.65" />
+        <path d="M16 16C16 16 11 10 10 6C12.5 8 14.5 9 16 9C17.5 9 19.5 8 22 6C21 10 16 16 16 16Z" fill={color} opacity="0.4" />
+        <circle cx="16" cy="6" r="1.8" fill={color} opacity="0.55" />
+      </svg>
+      <div style={{ width: 26, height: 0.7, background: color, opacity: 0.55 }} />
+    </div>
+  )
+}
+
 function AnimatedTitle({ text, className, style }) {
   return (
     <motion.h2 variants={letterContainer} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} className={className} style={style}>
@@ -26,7 +49,7 @@ export default function Events({ data, isDesktop, theme, bgImage, style, childre
     primary: '#3D5236',
     primaryDark: '#2B3B25',
     accentBg: '#EAF0E8',
-    border: '#A7BCA3',
+    border: 'rgba(61,82,54,0.15)',
     textAccent: '#5F7C56',
     bg: '#FFFFFF',
     gold: '#D4AF37',
@@ -34,15 +57,31 @@ export default function Events({ data, isDesktop, theme, bgImage, style, childre
     primary: '#8A6E1E',
     primaryDark: '#705915',
     accentBg: '#FFFDF2',
-    border: 'rgba(138, 110, 30, 0.4)',
+    border: 'rgba(138, 110, 30, 0.15)',
     textAccent: '#B0923E',
     bg: '#FFFDF2',
     gold: '#D4AF37',
+  } : theme === 'navy' ? {
+    primary: '#C5A880',
+    primaryDark: '#FFFFFF',
+    accentBg: '#131B35',
+    border: 'rgba(197, 168, 128, 0.2)',
+    textAccent: '#C5A880',
+    bg: '#0A1128',
+    gold: '#D4AF37',
+  } : theme === 'traditional' ? {
+    primary: '#C09D5C',
+    primaryDark: '#2B3B25',
+    accentBg: '#F5EFE6',
+    border: 'rgba(197, 168, 128, 0.25)',
+    textAccent: '#4E6540',
+    bg: '#FDFBF7',
+    gold: '#C09D5C',
   } : {
     primary: '#8B1E2D',
     primaryDark: '#5C0A14',
     accentBg: '#fff0ec',
-    border: '#d5b28c',
+    border: 'rgba(213, 178, 140, 0.2)',
     textAccent: '#a07870',
     bg: '#FFFFFF',
     gold: '#D4AF37',
@@ -121,19 +160,57 @@ export default function Events({ data, isDesktop, theme, bgImage, style, childre
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover z-0 pointer-events-none"
           />
-          {/* Overlay to replicate CSS linear-gradient overlay */}
-          <div className="absolute inset-0 bg-white/85 z-[1] pointer-events-none" />
+          {/* Overlay to replicate CSS linear-gradient overlay — keep visible but do not cover with white screen on traditional */}
+          <div className={`absolute inset-0 z-[1] pointer-events-none ${theme === 'traditional' ? 'bg-transparent' : (theme === 'navy' ? 'bg-[#0A1128]/85' : 'bg-white/85')}`} />
         </>
       )}
       {/* ── Title Section ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: false, amount: 0.15 }}
+        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.35 } } }}
         className="flex flex-col items-center text-center z-10 mb-16"
       >
-        {(theme === 'green' || theme === 'gold') ? (
+        {(theme === 'traditional') ? (
+          <>
+            {/* Calligraphy Subtitle — Modernline */}
+            <motion.p
+              variants={lineAnim}
+              style={{
+                fontFamily: "'Modernline', sans-serif",
+                fontSize: isDesktop ? 'clamp(18px, 1.8vw, 24px)' : 'clamp(20px, 4.2vw, 24px)',
+                color: '#4A3E20',
+                margin: '0 0 6px 0',
+                lineHeight: 1,
+                textTransform: 'none',
+              }}
+            >
+              Celebrating the Moments
+            </motion.p>
+
+            <motion.div variants={lineAnim} style={{ marginBottom: 12 }}>
+              <LotusDivider />
+            </motion.div>
+
+            {/* Main Header — Religath */}
+            <motion.h2
+              variants={lineAnim}
+              style={{
+                fontFamily: "'Religath', serif",
+                color: '#7A6840',
+                fontSize: 'clamp(22px, 5vw, 32px)',
+                fontWeight: 'normal',
+                letterSpacing: '0.08em',
+                margin: 0,
+                textTransform: 'uppercase',
+                lineHeight: 1.1,
+              }}
+            >
+              Wedding Schedule
+            </motion.h2>
+          </>
+        ) : (theme === 'green' || theme === 'gold' || theme === 'navy') ? (
           <>
             <p
               style={{
@@ -216,7 +293,7 @@ export default function Events({ data, isDesktop, theme, bgImage, style, childre
                 <div 
                   className="p-4 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-3.5 w-full text-left max-w-[290px] md:max-w-[320px] shadow-[0_6px_25px_rgba(61,82,54,0.03)] hover:shadow-[0_10px_30px_rgba(61,82,54,0.06)]"
                   style={{
-                    borderColor: 'rgba(61, 82, 54, 0.1)',
+                    borderColor: colors.border,
                     background: colors.accentBg,
                     borderBottom: `3px solid ${colors.primary}`,
                   }}
@@ -236,8 +313,8 @@ export default function Events({ data, isDesktop, theme, bgImage, style, childre
                       <span 
                         className="text-[8.5px] font-bold tracking-[0.16em] uppercase px-2.5 py-0.5 rounded-full"
                         style={{
-                          backgroundColor: '#FFFFFF',
-                          color: colors.primaryDark,
+                          backgroundColor: theme === 'traditional' ? '#2B3B25' : (theme === 'navy' ? colors.primary : '#FFFFFF'),
+                          color: theme === 'traditional' ? '#FFFFFF' : (theme === 'navy' ? '#0A1128' : colors.primaryDark),
                           fontFamily: "'Montserrat', sans-serif"
                         }}
                       >

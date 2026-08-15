@@ -21,21 +21,14 @@ function AnimatedTitle({ text, className, style }) {
   )
 }
 
-const C = {
-  primary: '#b95462', // Pinkish red from reference
-  text:    '#4a3a3a',
-  tape:    'rgba(235, 226, 212, 0.95)',
-  imageOverlay: 'rgba(255, 182, 193, 0.45)'
-}
-
 // Reusable Tape Component
-function Tape({ top, bottom, left, right, rotate, width = 70, height = 26 }) {
+function Tape({ top, bottom, left, right, rotate, width = 70, height = 26, color }) {
   return (
     <div style={{
       position: 'absolute',
       top, bottom, left, right,
       width, height,
-      background: C.tape,
+      background: color || 'rgba(235, 226, 212, 0.95)',
       transform: `rotate(${rotate}deg)`,
       boxShadow: '0 2px 5px rgba(0,0,0,0.06)',
       zIndex: 10,
@@ -44,7 +37,33 @@ function Tape({ top, bottom, left, right, rotate, width = 70, height = 26 }) {
 }
 
 /* ─── Main Gallery Section ──────────────── */
-export default function Story({ data, isDesktop, bgImage }) {
+export default function Story({ data, isDesktop, bgImage, theme }) {
+  const colors = theme === 'navy' ? {
+    primary: '#C5A880',
+    text: '#FFFFFF',
+    title: '#C5A880',
+    imageOverlay: 'rgba(197, 168, 128, 0.22)',
+    heartBg: '#C5A880',
+    heartShadow: 'rgba(197, 168, 128, 0.3)',
+    tape: 'rgba(19, 27, 53, 0.9)',
+  } : theme === 'traditional' ? {
+    primary: '#2B3B25',
+    text: '#4a3a3a',
+    title: '#2B3B25',
+    imageOverlay: 'rgba(43, 59, 37, 0.08)',
+    heartBg: '#962828',
+    heartShadow: 'rgba(150, 40, 40, 0.3)',
+    tape: 'rgba(197, 168, 128, 0.85)',
+  } : {
+    primary: '#b95462',
+    text: '#4a3a3a',
+    title: '#7B1E2B',
+    imageOverlay: 'rgba(255, 182, 193, 0.45)',
+    heartBg: '#d45b68',
+    heartShadow: 'rgba(212, 91, 104, 0.4)',
+    tape: 'rgba(235, 226, 212, 0.95)',
+  }
+
   const containerRef = useRef(null)
   
   const { scrollYProgress } = useScroll({
@@ -92,7 +111,7 @@ export default function Story({ data, isDesktop, bgImage }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        backgroundImage: `url(${bgImage || texturePink})`,
+        backgroundImage: `url(${bgImage || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png"})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'repeat',
         backgroundAttachment: 'scroll',
@@ -114,7 +133,7 @@ export default function Story({ data, isDesktop, bgImage }) {
             fontSize: 'clamp(24px, 5.2vw, 34px)',
             letterSpacing: '0.14em',
             fontWeight: 600,
-            color: '#7B1E2B',
+            color: colors.title,
             margin: '0 0 12px 0',
             textShadow: '0 14px 28px rgba(123, 30, 43, 0.16)',
             textTransform: 'uppercase'
@@ -130,13 +149,13 @@ export default function Story({ data, isDesktop, bgImage }) {
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '25px' }}
         >
           <svg viewBox="0 0 100 20" width="50" height="10" fill="none">
-            <path d="M10 10 Q30 0 50 10 Q70 20 90 10" stroke={C.primary} strokeWidth="1" opacity="0.4"/>
+            <path d="M10 10 Q30 0 50 10 Q70 20 90 10" stroke={colors.primary} strokeWidth="1" opacity="0.4"/>
           </svg>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill={C.primary}>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill={colors.primary}>
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
           <svg viewBox="0 0 100 20" width="50" height="10" fill="none">
-            <path d="M10 10 Q30 0 50 10 Q70 20 90 10" stroke={C.primary} strokeWidth="1" opacity="0.4"/>
+            <path d="M10 10 Q30 0 50 10 Q70 20 90 10" stroke={colors.primary} strokeWidth="1" opacity="0.4"/>
           </svg>
         </motion.div>
 
@@ -148,7 +167,7 @@ export default function Story({ data, isDesktop, bgImage }) {
           style={{
             fontFamily: "'Montserrat', sans-serif",
             fontSize: 'clamp(12px, 3.5vw, 15px)',
-            color: C.text,
+            color: colors.text,
             lineHeight: 1.6,
             maxWidth: '320px',
             margin: '0 auto',
@@ -166,7 +185,7 @@ export default function Story({ data, isDesktop, bgImage }) {
            transition={slowTextTransition(0.8)}
            style={{ marginTop: 14 }}
         >
-           <svg viewBox="0 0 24 24" width="10" height="10" fill={C.primary} opacity="0.8">
+           <svg viewBox="0 0 24 24" width="10" height="10" fill={colors.primary} opacity="0.8">
              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
            </svg>
         </motion.div>
@@ -208,11 +227,11 @@ export default function Story({ data, isDesktop, bgImage }) {
               zIndex: 1,
             }}
           >
-            <Tape top={-12} left={30} rotate={-6} />
-            <Tape bottom={-12} right={40} rotate={-3} width={85} />
+            <Tape top={-12} left={30} rotate={-6} color={colors.tape} />
+            <Tape bottom={-12} right={40} rotate={-3} width={85} color={colors.tape} />
             <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden', position: 'relative', borderRadius: 12 }}>
               <img src={items[0].image} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="Memory 1" />
-              <div aria-hidden style={{ position: 'absolute', inset: 0, background: C.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
+              <div aria-hidden style={{ position: 'absolute', inset: 0, background: colors.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
               {/* Mat Finish Texture */}
               <div aria-hidden style={{ 
                 position: 'absolute', 
@@ -254,12 +273,12 @@ export default function Story({ data, isDesktop, bgImage }) {
               right: -24, 
               width: 48, 
               height: 48, 
-              background: '#d45b68', 
+              background: colors.heartBg, 
               borderRadius: '50%', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
-              boxShadow: '0 6px 15px rgba(212, 91, 104, 0.4)', 
+              boxShadow: `0 6px 15px ${colors.heartShadow}`, 
               zIndex: 10 
             }}>
               <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff">
@@ -268,7 +287,7 @@ export default function Story({ data, isDesktop, bgImage }) {
             </div>
             <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden', position: 'relative', borderRadius: 12 }}>
               <img src={items[1].image} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="Memory 2" />
-              <div aria-hidden style={{ position: 'absolute', inset: 0, background: C.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
+              <div aria-hidden style={{ position: 'absolute', inset: 0, background: colors.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
               {/* Mat Finish Texture */}
               <div aria-hidden style={{ 
                 position: 'absolute', 
@@ -303,10 +322,10 @@ export default function Story({ data, isDesktop, bgImage }) {
               zIndex: 3,
             }}
           >
-            <Tape bottom={-12} left={40} rotate={4} width={75} />
+            <Tape bottom={-12} left={40} rotate={4} width={75} color={colors.tape} />
             <div style={{ width: '100%', aspectRatio: '1/1', background: '#f4f4f4', overflow: 'hidden', position: 'relative', borderRadius: 12 }}>
               <img src={items[2].image} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="Memory 3" />
-              <div aria-hidden style={{ position: 'absolute', inset: 0, background: C.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
+              <div aria-hidden style={{ position: 'absolute', inset: 0, background: colors.imageOverlay, mixBlendMode: 'multiply', borderRadius: 12 }} />
               {/* Mat Finish Texture */}
               <div aria-hidden style={{ 
                 position: 'absolute', 

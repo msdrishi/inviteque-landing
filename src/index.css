@@ -91,6 +91,21 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Modernline';
+  src: url('./assets/fonts/modernline-personal-use.regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Religath';
+  src: url('./assets/fonts/religath.demo.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 @layer base {
   html {

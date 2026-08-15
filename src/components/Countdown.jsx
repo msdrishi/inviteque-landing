@@ -31,7 +31,7 @@ const leafConfig = Array.from({ length: 14 }).map((_, i) => {
 });
 
 function FallingLeaves({ theme }) {
-  const isGold = theme === 'gold'
+  const isGold = theme === 'gold' || theme === 'navy'
   const fillCol = isGold ? 'rgba(212,175,55,0.85)' : '#404D29'
   const strokeCol = isGold ? 'rgba(170,130,10,0.6)' : '#2B351B'
 
@@ -84,7 +84,7 @@ function FallingLeaves({ theme }) {
 
 const zeroParts = { days: 0, hours: 0, minutes: 0, seconds: 0 }
 
-export default function Countdown({ data, isDesktop, bgImage, theme, centerText }) {
+export default function Countdown({ data, isDesktop, bgImage, theme, centerText, position }) {
   const targetDateTimeISO = data?.targetDateTimeISO
 
   const targetDate = useMemo(() => {
@@ -119,9 +119,11 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText 
   const headerTop = String(data.headerTop || 'COUNTING DOWN TO')
   const isGreen = theme === 'green'
   const isGold = theme === 'gold'
-  const textColor = isGreen ? '#3D5236' : isGold ? '#8A6E1E' : '#7B0F1A'
-  const labelColor = isGreen ? '#5F7C56' : isGold ? '#B0923E' : '#9C5E67'
-  const bevelColor = isGreen ? '#2B3B25' : isGold ? '#705915' : '#5C0A14'
+  const isNavy = theme === 'navy'
+  const isTraditional = theme === 'traditional'
+  const textColor = isGreen ? '#3D5236' : isGold ? '#8A6E1E' : isNavy ? '#C5A880' : isTraditional ? '#2B3B25' : '#7B0F1A'
+  const labelColor = isGreen ? '#5F7C56' : isGold ? '#B0923E' : isNavy ? '#E5C158' : isTraditional ? '#4E6540' : '#9C5E67'
+  const bevelColor = isGreen ? '#2B3B25' : isGold ? '#705915' : isNavy ? '#131B35' : isTraditional ? '#F5EFE6' : '#5C0A14'
 
   return (
     <section
@@ -137,8 +139,8 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText 
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      {/* Falling Leaves Effect for Green / Gold Theme */}
-      {(isGreen || isGold) && <FallingLeaves theme={theme} />}
+      {/* Falling Leaves Effect for Green / Gold / Navy / Traditional Theme */}
+      {(isGreen || isGold || isNavy || isTraditional) && <FallingLeaves theme={theme} />}
 
       {/* Overlayed content */}
       <div className="absolute inset-0 z-10">
@@ -146,9 +148,11 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText 
           {/* Counter numbers (aligned a little down from the top of the section) */}
           <div
             className={`absolute inset-x-0 flex justify-center px-4 md:px-10 ${
-              centerText 
-                ? 'top-1/2 -translate-y-1/2 md:top-[40%]' 
-                : (isDesktop ? 'top-[34%]' : 'top-[30%]')
+              position === 'bottom'
+                ? (isDesktop ? 'top-[58%]' : 'top-[55%]')
+                : centerText 
+                  ? 'top-1/2 -translate-y-1/2 md:top-[40%]' 
+                  : (isDesktop ? 'top-[34%]' : 'top-[30%]')
             }`}
           >
             <motion.div

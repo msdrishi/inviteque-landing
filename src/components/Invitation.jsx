@@ -44,8 +44,28 @@ function ScatterText({ text }) {
   )
 }
 
-export default function Invitation({ data, bgImage }) {
+export default function Invitation({ data, bgImage, theme }) {
   if (!data) return null
+
+  const colors = theme === 'navy' ? {
+    title: '#C5A880',
+    primary: '#C5A880',
+    textDark: '#0A1128',
+    border: 'rgba(197, 168, 128, 0.4)',
+    bg: '#0A1128',
+  } : theme === 'traditional' ? {
+    title: '#2B3B25',
+    primary: '#2B3B25',
+    textDark: '#1E2B18',
+    border: 'rgba(197, 168, 128, 0.4)',
+    bg: '#FDFBF7',
+  } : {
+    title: '#8B1E2D',
+    primary: '#8B1E2D',
+    textDark: '#5C0A14',
+    border: 'rgba(139, 30, 45, 0.25)',
+    bg: '#fff6f2',
+  }
 
   // Fallback text if data.message is empty
   const defaultMessage = "We are excited to invite you to celebrate our wedding with us. This special day would not be complete without your presence."
@@ -60,7 +80,7 @@ export default function Invitation({ data, bgImage }) {
       id={data.id}
       className="relative w-full overflow-hidden flex flex-col justify-center items-center invitation-section"
       style={{
-        backgroundColor: bgImage ? 'transparent' : '#fff6f2',
+        backgroundColor: bgImage ? 'transparent' : colors.bg,
         backgroundImage: bgImage ? `url(${bgImage})` : `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c-2.5-5-10-5-10 0 0 5 7.5 5 10 10 2.5-5 10-5 10 0 0-5-7.5-5-10-10z' fill='%238B1E2D' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E")`,
         backgroundSize: bgImage ? 'cover' : 'auto',
         backgroundPosition: bgImage ? 'center' : 'left top',
@@ -79,11 +99,11 @@ export default function Invitation({ data, bgImage }) {
       >
         <AnimatedTitle 
           text="Our story, our journey,"
-          style={{ fontFamily: "'Parisienne', cursive", fontSize: 'clamp(28px, 8vw, 36px)', color: '#8B1E2D', margin: 0, lineHeight: 1.1 }}
+          style={{ fontFamily: "'Parisienne', cursive", fontSize: 'clamp(28px, 8vw, 36px)', color: colors.title, margin: 0, lineHeight: 1.1 }}
         />
         <AnimatedTitle 
           text="ours forever"
-          style={{ fontFamily: "'Parisienne', cursive", fontSize: 'clamp(42px, 12vw, 54px)', color: '#8B1E2D', margin: 0, lineHeight: 1.1 }}
+          style={{ fontFamily: "'Parisienne', cursive", fontSize: 'clamp(42px, 12vw, 54px)', color: colors.title, margin: 0, lineHeight: 1.1 }}
         />
       </motion.div>
 
@@ -126,7 +146,7 @@ export default function Invitation({ data, bgImage }) {
             <h2
               style={{
                 fontFamily: "'Cinzel', serif",
-                color: '#8B1E2D',
+                color: colors.primary,
                 fontSize: 'clamp(10px, 3.2vw, 16px)',
                 fontWeight: 600,
                 letterSpacing: '0.12em',
@@ -140,15 +160,15 @@ export default function Invitation({ data, bgImage }) {
 
             {/* Divider Heart */}
             <div className="flex items-center justify-center gap-2 my-[6px] mx-auto w-full max-w-[100px]">
-              <div className="h-[1px] flex-1" style={{ background: 'rgba(139, 30, 45, 0.25)' }} />
-              <span style={{ color: '#8B1E2D', fontSize: '8px', opacity: 0.9 }}>♥</span>
-              <div className="h-[1px] flex-1" style={{ background: 'rgba(139, 30, 45, 0.25)' }} />
+              <div className="h-[1px] flex-1" style={{ background: colors.border }} />
+              <span style={{ color: colors.primary, fontSize: '8px', opacity: 0.9 }}>♥</span>
+              <div className="h-[1px] flex-1" style={{ background: colors.border }} />
             </div>
 
             <div
               style={{
                 fontFamily: "'Montserrat', sans-serif",
-                color: '#5C0A14',
+                color: colors.textDark,
                 fontSize: 'clamp(8px, 2vw, 11px)',
                 lineHeight: 1.5,
                 marginTop: '0px',

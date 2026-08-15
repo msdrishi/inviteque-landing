@@ -7,6 +7,7 @@ import TemplateBlossomWhisper from './TemplateBlossomWhisper.jsx'
 import TemplateEverlastingVows from './TemplateEverlastingVows.jsx'
 import TemplateSunflowersFields from './TemplateSunflowersFields.jsx'
 import TemplateModernHearth from './TemplateModernHearth.jsx'
+import TemplateMidnightWaltz from './TemplateMidnightWaltz.jsx'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 
@@ -35,9 +36,22 @@ const TEMPLATE_MAP = {
   'modernhearth': TemplateModernHearth,
   'house-warming-1': TemplateModernHearth,
   'modern-hearth': TemplateModernHearth,
+  'midnight-waltz': TemplateMidnightWaltz,
 }
 
 const TEMPLATE_ASSETS = {
+  'midnight-waltz': [
+    "/backgrounds/Midnight Waltz/hero-dekstop.png",
+    "/backgrounds/Midnight Waltz/hero-mobile.png",
+    "/backgrounds/Midnight Waltz/bg-texture-desktop.png",
+    "/backgrounds/Midnight Waltz/bg-texture-mobile.png",
+    "/backgrounds/Midnight Waltz/welcome-desktop.png",
+    "/backgrounds/Midnight Waltz/welcome-mobile.png",
+    "/backgrounds/Midnight Waltz/venue-desktop.png",
+    "/backgrounds/Midnight Waltz/venue-mobile.png",
+    "/backgrounds/Midnight Waltz/countdown-desktop.png",
+    "/backgrounds/Midnight Waltz/countdown-mobile.png"
+  ],
   'modernhearth': [
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png",
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600529/house-warming-hw1/hw1-hero-mobile.png"

@@ -82,6 +82,32 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
     btnBg: 'rgba(138, 110, 30, 0.08)',
     btnBorder: 'rgba(138, 110, 30, 0.2)',
     btnHover: 'rgba(138, 110, 30, 0.12)'
+  } : theme === 'navy' ? {
+    primary: '#C5A880',
+    primaryDark: '#FFFFFF',
+    primaryLight: '#E5C158',
+    border: 'rgba(197, 168, 128, 0.3)',
+    borderSolid: 'rgba(197, 168, 128, 0.4)',
+    bg: '#0A1128',
+    accent: '#C5A880',
+    qrColor: '0A1128',
+    qrBg: 'FFFFFF',
+    btnBg: 'rgba(197, 168, 128, 0.08)',
+    btnBorder: 'rgba(197, 168, 128, 0.2)',
+    btnHover: 'rgba(197, 168, 128, 0.12)'
+  } : theme === 'traditional' ? {
+    primary: '#2B3B25',
+    primaryDark: '#1E2B18',
+    primaryLight: '#4E6540',
+    border: 'rgba(197, 168, 128, 0.4)',
+    borderSolid: 'rgba(197, 168, 128, 0.6)',
+    bg: '#FDFBF7',
+    accent: '#C09D5C',
+    qrColor: '2B3B25',
+    qrBg: 'FDFBF7',
+    btnBg: 'rgba(43, 59, 37, 0.06)',
+    btnBorder: 'rgba(43, 59, 37, 0.15)',
+    btnHover: 'rgba(43, 59, 37, 0.1)'
   } : {
     primary: '#7B1E2B',
     primaryDark: '#8A2D3B',
