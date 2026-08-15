@@ -785,7 +785,7 @@ function HW1FamilySection({ message, photo, isDesktop, bgImage }) {
             src={photoUrl}
             alt="Family"
             className="w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[420px] md:h-[420px] rounded-2xl"
-            duration={2.0}
+            duration={4.5}
             triggerOnce={false}
             threshold={0.25}
           />
