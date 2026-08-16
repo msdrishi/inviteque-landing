@@ -1597,6 +1597,16 @@ export default function TemplateSunflowersFields({ savedData }) {
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
+  const sunflowerStoryBgStyle = {
+    backgroundColor: '#FEF1D6',
+    backgroundImage: `
+      radial-gradient(circle at 20% 35%, rgba(255, 255, 255, 0.45) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L40 80 M0 40 L80 40' stroke='rgba(90,44,22,0.024)' stroke-width='1.2'/%3E%3Ccircle cx='40' cy='40' r='3.5' fill='rgba(197,155,63,0.06)'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235A2C16' fill-opacity='0.015'%3E%3Cpath d='M5 0h1L0 6V5zm1 5v1H5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+    `,
+    backgroundSize: '100% 100%, 80px 80px, 6px 6px',
+  }
+
   return (
     <div className="relative min-h-screen bg-[#FFFDF6] text-[#5A2C16]">
       {/* MOBILE VIEW */}
@@ -1640,7 +1650,11 @@ export default function TemplateSunflowersFields({ savedData }) {
 
           {/* Render the Sections in Order */}
           <RoyalPalaceHero data={data.hero} isDesktop={false} />
-          <CustomSection photoBgDesktop={venueBgDesktop} photoBgMobile={venueBgMobile} data={customSectionData} />
+          <CustomSection bgStyle={sunflowerStoryBgStyle} data={customSectionData}>
+            <RoyalPalaceBackgroundShatter />
+            <SunflowerSVG className="absolute -top-12 -left-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />
+            <SunflowerSVG className="absolute -bottom-12 -right-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />
+          </CustomSection>
           {showGallery && <RoyalPalaceStory data={data.story} isDesktop={false} />}
           <RoyalPalaceInvitation data={data.invitation} isDesktop={false} />
           <RoyalPalaceVenue data={data.venue} isDesktop={false} />
@@ -1692,7 +1706,11 @@ export default function TemplateSunflowersFields({ savedData }) {
           <RoyalPalaceHero data={data.hero} isDesktop={true} />
         </div>
         <div className="w-full">
-          <CustomSection photoBgDesktop={venueBgDesktop} photoBgMobile={venueBgMobile} data={customSectionData} />
+          <CustomSection bgStyle={sunflowerStoryBgStyle} data={customSectionData}>
+            <RoyalPalaceBackgroundShatter />
+            <SunflowerSVG className="absolute -top-12 -left-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />
+            <SunflowerSVG className="absolute -bottom-12 -right-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />
+          </CustomSection>
         </div>
         {showGallery && (
           <div className="w-full">

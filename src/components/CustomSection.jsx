@@ -19,7 +19,9 @@ export default function CustomSection({
   data = {},
   titleFontClass = '',
   bodyFontClass = '',
-  accentColorClass = 'text-[#D4AF37]'
+  accentColorClass = 'text-[#D4AF37]',
+  bgStyle = null,
+  children = null
 }) {
   const showSection = data.showCustomSection !== undefined
     ? Boolean(data.showCustomSection)
@@ -113,9 +115,9 @@ export default function CustomSection({
   const contentLines = content ? content.split('\n').filter(line => line.trim() !== '') : []
 
   return (
-    <section className="relative w-full min-h-screen min-h-[100svh] flex overflow-hidden z-20">
+    <section className="relative w-full min-h-screen min-h-[100svh] flex overflow-hidden z-20" style={bgStyle || {}}>
       {/* Pure Background Image without any overlay */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 bg-[#FFFDF6]">
         {photoBgMobile && (
           <img
             src={photoBgMobile}
@@ -132,6 +134,7 @@ export default function CustomSection({
             loading="lazy"
           />
         )}
+        {children}
       </div>
 
       {/* Dynamic Content Container */}
