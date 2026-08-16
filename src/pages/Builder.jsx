@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
 import { useDraft } from '../context/DraftContext'
@@ -109,10 +109,22 @@ function formatTimeRange(sh, sm, sa, eh, em, ea) {
 export default function Builder() {
   const { templateId } = useParams()
   const [searchParams] = useSearchParams()
+  const location = useLocation()
   const editCode = searchParams.get('code')
   const navigate = useNavigate()
   const { draftData, updateDraft, resetDraft } = useDraft()
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(() => {
+    const stepParam = searchParams.get('step')
+    if (stepParam) {
+      const parsed = parseInt(stepParam, 10)
+      if (!isNaN(parsed) && parsed >= 1 && parsed <= 4) return parsed
+    }
+    if (location.state?.step) {
+      const parsed = parseInt(location.state.step, 10)
+      if (!isNaN(parsed) && parsed >= 1 && parsed <= 4) return parsed
+    }
+    return 1
+  })
   const [showMapTooltip, setShowMapTooltip] = useState(false)
   const { user, loading: authLoading } = useAuth()
   const [loading, setLoading] = useState(!!editCode && !draftData.code)
@@ -156,6 +168,13 @@ export default function Builder() {
     amountPaid: 0,
     showFamilySection: false,
     familyMessage: '',
+    showCustomSection: false,
+    customSectionTitle: '',
+    customSectionSubtitle: '',
+    customSectionDate: '',
+    customSectionLocation: '',
+    customSectionContent: '',
+    customSectionPosition: 'top-center',
   }
 
   // If entering a creation flow (no editCode) but context has a PAID invitation, we must reset
@@ -208,7 +227,14 @@ export default function Builder() {
       amountPaid: draftData.amountPaid || 0,
       showFamilySection: draftData.showFamilySection !== undefined ? draftData.showFamilySection : false,
       familyMessage: draftData.familyMessage || '',
-      familyPhoto: draftData.familyPhoto || null
+      familyPhoto: draftData.familyPhoto || null,
+      showCustomSection: draftData.showCustomSection !== undefined ? draftData.showCustomSection : false,
+      customSectionTitle: draftData.customSectionTitle || '',
+      customSectionSubtitle: draftData.customSectionSubtitle || '',
+      customSectionDate: draftData.customSectionDate || '',
+      customSectionLocation: draftData.customSectionLocation || '',
+      customSectionContent: draftData.customSectionContent || '',
+      customSectionPosition: draftData.customSectionPosition || 'top-center'
     }
   })
 
@@ -338,7 +364,14 @@ export default function Builder() {
               amountPaid: data.amountPaid || 0,
               showFamilySection: data.invitationData?.showFamilySection !== undefined ? data.invitationData.showFamilySection : false,
               familyMessage: data.invitationData?.familyMessage || '',
-              familyPhoto: data.invitationData?.familyPhoto || null
+              familyPhoto: data.invitationData?.familyPhoto || null,
+              showCustomSection: data.invitationData?.showCustomSection !== undefined ? data.invitationData.showCustomSection : false,
+              customSectionTitle: data.invitationData?.customSectionTitle || '',
+              customSectionSubtitle: data.invitationData?.customSectionSubtitle || '',
+              customSectionDate: data.invitationData?.customSectionDate || '',
+              customSectionLocation: data.invitationData?.customSectionLocation || '',
+              customSectionContent: data.invitationData?.customSectionContent || '',
+              customSectionPosition: data.invitationData?.customSectionPosition || 'top-center'
             }
             setFormData(mappedData)
             updateDraft(mappedData)
@@ -578,7 +611,9 @@ export default function Builder() {
             <div className="h-px w-2 md:w-4 bg-iqText/20 flex-shrink-0" />
             <span className={step >= 2 ? 'text-iqText' : 'text-iqText/30'}>Personalize</span>
             <div className="h-px w-2 md:w-4 bg-iqText/20 flex-shrink-0" />
-            <span className={step >= 3 ? 'text-iqText' : 'text-iqText/30'}>Review</span>
+            <span className={step >= 3 ? 'text-iqText' : 'text-iqText/30'}>Customize</span>
+            <div className="h-px w-2 md:w-4 bg-iqText/20 flex-shrink-0" />
+            <span className={step >= 4 ? 'text-iqText' : 'text-iqText/30'}>Review</span>
           </div>
         </div>
       </header>
@@ -896,7 +931,7 @@ export default function Builder() {
                     onClick={handleNextStep}
                     className="flex-[2] rounded-full bg-black py-3 md:py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90"
                   >
-                    Continue to Personalize
+                    Continue
                   </button>
                 </div>
               </motion.div>
@@ -1228,7 +1263,7 @@ export default function Builder() {
                     onClick={handleNextStep2}
                     className="flex-[2] rounded-full bg-black py-3 md:py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90"
                   >
-                    {isHouseWarming ? 'Review My Invite' : 'Review My Invitation'}
+                    Continue
                   </button>
                 </div>
               </motion.div>
@@ -1242,8 +1277,133 @@ export default function Builder() {
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-8"
               >
-                <h2 className="text-2xl md:text-3xl font-bold">Ready for Preview?</h2>
-                <p className="text-sm md:text-base text-iqText/60">You've successfully customized your {template?.name || 'invitation'}. Click below to see how it looks!</p>
+                <div className="space-y-2">
+                  <span className="text-xs font-bold uppercase tracking-widest text-gold">Step 03</span>
+                  <h2 className="text-2xl md:text-3xl font-bold">Customize Section</h2>
+                  <p className="text-sm md:text-base text-iqText/60">
+                    Add custom information to your template (e.g. engagement date, special message, or invitation details).
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Enable Switch */}
+                  <label className="flex items-center gap-4 cursor-pointer rounded-2xl border border-iqBorder bg-white p-4 md:p-5 transition-all hover:shadow-md">
+                    <input
+                      type="checkbox"
+                      name="showCustomSection"
+                      checked={formData.showCustomSection}
+                      onChange={handleChange}
+                      className="h-5 w-5 rounded accent-black flex-shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <p className="font-bold text-base md:text-lg">Add Custom Section</p>
+                      <p className="text-xs text-iqText/50">Display a full-screen custom section below the Hero section.</p>
+                    </div>
+                  </label>
+
+                  {formData.showCustomSection && (
+                    <div className="space-y-6 rounded-2xl border border-dashed border-iqBorder p-4 md:p-6 bg-iqBg/30">
+                      {/* Section Title */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-wider opacity-50">Section Title</label>
+                        <input
+                          name="customSectionTitle"
+                          value={formData.customSectionTitle || ''}
+                          onChange={handleChange}
+                          placeholder="e.g. Engagement Ceremony / Special Announcement"
+                          className="w-full rounded-xl border border-iqBorder bg-white px-4 py-3 text-sm outline-none focus:border-iqText transition-colors"
+                        />
+                      </div>
+
+                      {/* Subtitle / Tagline */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-wider opacity-50">Subtitle / Sub-heading (Optional)</label>
+                        <input
+                          name="customSectionSubtitle"
+                          value={formData.customSectionSubtitle || ''}
+                          onChange={handleChange}
+                          placeholder="e.g. Joined Hands in Celebration"
+                          className="w-full rounded-xl border border-iqBorder bg-white px-4 py-3 text-sm outline-none focus:border-iqText transition-colors"
+                        />
+                      </div>
+
+                      {/* Date / Highlight Tag */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-wider opacity-50">Engagement / Special Date (Optional)</label>
+                        <input
+                          name="customSectionDate"
+                          value={formData.customSectionDate || ''}
+                          onChange={handleChange}
+                          placeholder="e.g. Dec 12, 2025"
+                          className="w-full rounded-xl border border-iqBorder bg-white px-4 py-3 text-sm outline-none focus:border-iqText transition-colors"
+                        />
+                      </div>
+
+                      {/* Location / Venue Details */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-wider opacity-50">Location / Venue Details (Optional)</label>
+                        <input
+                          name="customSectionLocation"
+                          value={formData.customSectionLocation || ''}
+                          onChange={handleChange}
+                          placeholder="e.g. Grand Ballroom, The Leela Palace, Bangalore"
+                          className="w-full rounded-xl border border-iqBorder bg-white px-4 py-3 text-sm outline-none focus:border-iqText transition-colors"
+                        />
+                      </div>
+
+                      {/* Main Text Content */}
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <label className="text-xs font-bold uppercase tracking-wider opacity-50">Custom Text Content</label>
+                          <span className="text-[10px] font-bold text-iqText/40 uppercase">
+                            {formData.customSectionContent ? formData.customSectionContent.trim().split(/\s+/).filter(Boolean).length : 0} Words
+                          </span>
+                        </div>
+                        <textarea
+                          name="customSectionContent"
+                          rows={5}
+                          value={formData.customSectionContent || ''}
+                          onChange={handleChange}
+                          placeholder="Write your custom invitation message, engagement notes, or special details here..."
+                          className="w-full rounded-xl border border-iqBorder bg-white px-4 py-3 text-sm outline-none focus:border-iqText transition-colors resize-none leading-relaxed"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="pt-6 flex gap-4">
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    className="flex-1 rounded-full border border-iqBorder py-3 md:py-4 text-sm font-bold transition hover:bg-iqText/5"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    className="flex-[2] rounded-full bg-black py-3 md:py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {step === 4 && (
+              <motion.div
+                key="step4"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="space-y-8"
+              >
+                <div className="space-y-2">
+                  <span className="text-xs font-bold uppercase tracking-widest text-gold">Step 04</span>
+                  <h2 className="text-2xl md:text-3xl font-bold">Ready for Preview?</h2>
+                  <p className="text-sm md:text-base text-iqText/60">You've successfully customized your {template?.name || 'invitation'}. Click below to see how it looks!</p>
+                </div>
 
                 <div className="rounded-2xl border border-iqBorder bg-white p-4 md:p-6 space-y-4">
                   <div className="flex justify-between text-sm">
@@ -1264,6 +1424,12 @@ export default function Builder() {
                     <span className="opacity-50">Date</span>
                     <span className="font-bold">{formData.weddingDate} {formData.weddingMonth} {formData.weddingYear}</span>
                   </div>
+                  {formData.showCustomSection && (
+                    <div className="flex justify-between text-sm">
+                      <span className="opacity-50">Custom Section</span>
+                      <span className="font-bold text-green-600">Enabled ({formData.customSectionTitle || 'Custom Info'})</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-6 flex gap-4">

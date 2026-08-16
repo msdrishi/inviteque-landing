@@ -7,6 +7,7 @@ import Footer from '../components/Footer.jsx'
 import PhotoCardsMidnightWaltz from '../components/PhotoCardsMidnightWaltz.jsx'
 import WelcomeMidnightWaltz from '../components/WelcomeMidnightWaltz.jsx'
 import VenueMidnightWaltz from '../components/VenueMidnightWaltz.jsx'
+import CustomSection from '../components/CustomSection.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -850,6 +851,7 @@ export default function TemplateMidnightWaltz({ savedData }) {
   const bridePhoto  = (savedData ? (savedData.coupleData?.bridePhoto || null) : (draftData?.bridePhoto || null)) || "/backgrounds/Midnight Waltz/bride.png"
   const showGallery  = savedData ? savedData.scheduleData?.showGallery  : draftData?.showGallery
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData?.showSchedule
+  const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
   // ── Watermark ─────────────────────────────────────────────────
   const WatermarkMobile = () => showWatermark ? (
@@ -880,7 +882,7 @@ export default function TemplateMidnightWaltz({ savedData }) {
   const PreviewNavMobile = () => isPreview ? (
     <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
       <div className="flex gap-3">
-        <button onClick={() => navigate(-1)} className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#4A3E20]/20 bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#4A3E20] shadow-xl hover:scale-105 active:scale-95">
+        <button onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })} className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#4A3E20]/20 bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#4A3E20] shadow-xl hover:scale-105 active:scale-95">
           Back
         </button>
         <button onClick={() => navigate('/payment', { state: { draftData, templateId } })} className="flex-1 flex items-center justify-center gap-3 rounded-full bg-[#4A3E20] py-4 text-sm font-bold text-[#FDFBF7] shadow-xl hover:scale-105 active:scale-95">
@@ -892,7 +894,7 @@ export default function TemplateMidnightWaltz({ savedData }) {
 
   const PreviewNavDesktop = () => isPreview ? (
     <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
-      <button onClick={() => navigate(-1)} className="px-8 py-4 rounded-full border border-[#4A3E20]/25 bg-white/95 backdrop-blur-md text-sm font-bold text-[#4A3E20] shadow-xl hover:scale-105 active:scale-95">
+      <button onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })} className="px-8 py-4 rounded-full border border-[#4A3E20]/25 bg-white/95 backdrop-blur-md text-sm font-bold text-[#4A3E20] shadow-xl hover:scale-105 active:scale-95">
         ← Back to Edit
       </button>
       <button onClick={() => navigate('/payment', { state: { draftData, templateId } })} className="px-10 py-4 rounded-full bg-[#4A3E20] text-sm font-bold text-[#FDFBF7] shadow-xl hover:scale-105 active:scale-95">
@@ -912,6 +914,7 @@ export default function TemplateMidnightWaltz({ savedData }) {
           <PreviewNavMobile />
 
           <MidnightWaltzHero data={data.hero} isDesktop={false} />
+          <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
 
           {showGallery && (
             <PhotoCardsMidnightWaltz
@@ -967,6 +970,9 @@ export default function TemplateMidnightWaltz({ savedData }) {
 
         <div className="w-full">
           <MidnightWaltzHero data={data.hero} isDesktop={true} />
+        </div>
+        <div className="w-full">
+          <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
         </div>
 
         {showGallery && (

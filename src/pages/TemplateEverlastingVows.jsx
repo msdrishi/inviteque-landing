@@ -7,6 +7,7 @@ import Footer from '../components/Footer.jsx'
 import Invitation from '../components/InvitationEverlastingVows.jsx'
 import Story from '../components/StoryEverlastingVows.jsx'
 import Venue from '../components/Venue.jsx'
+import CustomSection from '../components/CustomSection.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -646,6 +647,7 @@ export default function TemplateEverlastingVows({ savedData }) {
 
   const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
   return (
     <div className="relative min-h-screen bg-[#FFFDF2] text-[#8A6E1E]">
@@ -672,7 +674,7 @@ export default function TemplateEverlastingVows({ savedData }) {
             <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
               <div className="flex gap-3">
                 <button
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
                   className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#8A6E1E]/20 bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#8A6E1E] shadow-xl hover:scale-105 active:scale-95"
                 >
                   Back
@@ -688,6 +690,7 @@ export default function TemplateEverlastingVows({ savedData }) {
           )}
 
           <EverlastingVowsHero data={data.hero} isDesktop={false} />
+          <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
           {showGallery && <Story data={data.story} bgImage={photoBgMobile} isDesktop={false} />}
           <Invitation data={data.invitation} isDesktop={false} bgImage={messageBgMobile} />
           <Venue data={data.venue} bgImage={locationBgMobile} theme="gold" isDesktop={false} />
@@ -713,7 +716,7 @@ export default function TemplateEverlastingVows({ savedData }) {
         {isPreview && (
           <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
               className="px-8 py-4 rounded-full border border-[#8A6E1E]/25 bg-white/95 backdrop-blur-md text-sm font-bold text-[#8A6E1E] shadow-xl hover:scale-105 active:scale-95"
             >
               ← Back to Edit
@@ -729,6 +732,9 @@ export default function TemplateEverlastingVows({ savedData }) {
 
         <div className="w-full">
           <EverlastingVowsHero data={data.hero} isDesktop={true} />
+        </div>
+        <div className="w-full">
+          <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
         </div>
         {showGallery && (
           <div className="w-full">

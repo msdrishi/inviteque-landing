@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Footer from '../components/Footer.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import WaterRevealImage from '../components/WaterRevealImage.jsx'
+import CustomSection from '../components/CustomSection.jsx'
 
 // Backgrounds (Cloudinary CDN with auto-format WebP)
 const bgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png"
@@ -96,20 +97,21 @@ export default function TemplateModernHearth({ savedData }) {
 
   const showFamilySection = activeData 
     ? (activeData.showFamilySection !== undefined ? activeData.showFamilySection : activeData.invitationData?.showFamilySection)
-    : true // Default to true for static template preview URL
+    : true
   const showSchedule = activeData
     ? (activeData.showSchedule !== undefined 
         ? activeData.showSchedule 
         : (activeData.scheduleData?.showSchedule !== undefined 
             ? activeData.scheduleData.showSchedule 
             : activeData.invitationData?.showSchedule))
-    : true // Default to true for static template preview URL
+    : true
   const familyMessage = activeData 
-    ? (activeData.familyMessage || activeData.invitationData?.familyMessage)
+    ? (activeData.familyMessage || activeData.invitationData?.familyMessage || '')
     : ''
   const familyPhoto = activeData 
     ? (activeData.familyPhoto || activeData.invitationData?.familyPhoto)
     : null
+  const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
   const data = useMemo(() => {
     if (!activeData) return staticData
@@ -348,6 +350,9 @@ export default function TemplateModernHearth({ savedData }) {
           </motion.div>
         </section>
 
+        {/* Custom Section */}
+        <CustomSection photoBgDesktop={scheduleBgDesktop} photoBgMobile={scheduleBgMobile} data={customSectionData} />
+
         {/* Family Section */}
         {showFamilySection && (
           <>
@@ -422,7 +427,7 @@ export default function TemplateModernHearth({ savedData }) {
         <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
           <div className="flex gap-3">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(`/builder/${templateId || 'modernhearth'}?step=4`, { state: { step: 4 } })}
               className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#D3A34A]/35 bg-[#6B351D] py-3.5 text-xs font-bold text-[#FBF3DE] shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
             >
               ← Back

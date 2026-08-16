@@ -8,6 +8,7 @@ import Hero from '../components/Hero.jsx'
 import Invitation from '../components/Invitation.jsx'
 import Story from '../components/Story.jsx'
 import Venue from '../components/Venue.jsx'
+import CustomSection from '../components/CustomSection.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 
 export default function TemplateRoyalWedding({ savedData }) {
@@ -173,6 +174,7 @@ export default function TemplateRoyalWedding({ savedData }) {
 
   const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
   return (
     <div className="flex justify-center items-start min-h-screen bg-[#1a1a1a]">
@@ -210,7 +212,7 @@ export default function TemplateRoyalWedding({ savedData }) {
           <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
             <div className="flex gap-3">
               <button
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
                 className="flex-1 flex items-center justify-center gap-2 rounded-full border border-iqBorder bg-white py-4 text-sm font-bold text-iqText shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition hover:scale-105 active:scale-95"
               >
                 <span>←</span>
@@ -228,6 +230,7 @@ export default function TemplateRoyalWedding({ savedData }) {
         )}
 
         <Hero data={data.hero} />
+        <CustomSection photoBgDesktop="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" photoBgMobile="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" data={customSectionData} />
 
         {/* Photo Gallery is optional (Mapped to Story component) */}
         {showGallery && <Story data={data.story} />}

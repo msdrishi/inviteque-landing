@@ -198,7 +198,14 @@ export default function Payment() {
         invitationData: {
           showFamilySection: draftData.showFamilySection,
           familyMessage: draftData.familyMessage,
-          familyPhoto: draftData.familyPhoto
+          familyPhoto: draftData.familyPhoto,
+          showCustomSection: draftData.showCustomSection,
+          customSectionTitle: draftData.customSectionTitle,
+          customSectionSubtitle: draftData.customSectionSubtitle,
+          customSectionDate: draftData.customSectionDate,
+          customSectionLocation: draftData.customSectionLocation,
+          customSectionContent: draftData.customSectionContent,
+          customSectionPosition: draftData.customSectionPosition
         },
         rsvpData: {}, // Placeholder
         status: isAlreadyPaid ? 'PAID' : 'DRAFT', // Leave as draft until payment succeeds

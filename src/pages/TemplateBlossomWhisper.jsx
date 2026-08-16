@@ -4,6 +4,7 @@ import { useDraft } from '../context/DraftContext.jsx'
 import Countdown from '../components/Countdown.jsx'
 import Events from '../components/Events.jsx'
 import Footer from '../components/Footer.jsx'
+import CustomSection from '../components/CustomSection.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -128,6 +129,7 @@ export default function TemplateBlossomWhisper({ savedData }) {
 
   const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
   return (
     <div 
@@ -156,7 +158,7 @@ export default function TemplateBlossomWhisper({ savedData }) {
           <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
             <div className="flex gap-3">
               <button
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
                 className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#D4AF37]/35 bg-[#3A0007] py-3.5 text-xs font-bold text-[#EAD8B1] shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition hover:scale-105 active:scale-95"
               >
                 ← Back
@@ -173,6 +175,9 @@ export default function TemplateBlossomWhisper({ savedData }) {
 
         {/* ── SECTION 1: HERO ── */}
         <BlossomWhisperHero data={data.hero} />
+
+        {/* ── CUSTOM SECTION ── */}
+        <CustomSection photoBgDesktop={desktopBg} photoBgMobile={messageBg} data={customSectionData} />
 
         {/* ── SECTION 2: PHOTO STORY (Diagonal slide out) ── */}
         {showGallery && <BlossomWhisperStory data={data.story} />}

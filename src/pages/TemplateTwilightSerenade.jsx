@@ -7,6 +7,7 @@ import Footer from '../components/Footer.jsx'
 import Invitation from '../components/InvitationTwilightSerenade.jsx'
 import Story from '../components/StoryTwilightSerenade.jsx'
 import Venue from '../components/Venue.jsx'
+import CustomSection from '../components/CustomSection.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -608,6 +609,7 @@ export default function TemplateTwilightSerenade({ savedData }) {
 
   const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
   return (
     <div className="relative min-h-screen bg-[#FBF7F0] text-[#3D5236]">
@@ -634,7 +636,7 @@ export default function TemplateTwilightSerenade({ savedData }) {
             <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
               <div className="flex gap-3">
                 <button
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
                   className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#3D5236]/20 bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#3D5236] shadow-xl hover:scale-105 active:scale-95"
                 >
                   Back
@@ -650,6 +652,7 @@ export default function TemplateTwilightSerenade({ savedData }) {
           )}
 
           <TwilightSerenadeHero data={data.hero} isDesktop={false} />
+          <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
           {showGallery && <Story data={data.story} bgImage={photoBgMobile} />}
           <Invitation data={data.invitation} bgImage={messageBgMobile} />
           <Venue data={data.venue} bgImage={locationBgMobile} theme="green" />
@@ -675,7 +678,7 @@ export default function TemplateTwilightSerenade({ savedData }) {
         {isPreview && (
           <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
               className="px-8 py-4 rounded-full border border-[#3D5236]/25 bg-white/95 backdrop-blur-md text-sm font-bold text-[#3D5236] shadow-xl hover:scale-105 active:scale-95"
             >
               ← Back to Edit
@@ -691,6 +694,9 @@ export default function TemplateTwilightSerenade({ savedData }) {
 
         <div className="w-full">
           <TwilightSerenadeHero data={data.hero} isDesktop={true} />
+        </div>
+        <div className="w-full">
+          <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
         </div>
         {showGallery && (
           <div className="w-full">

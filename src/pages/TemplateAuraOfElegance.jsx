@@ -8,6 +8,7 @@ import Hero from '../components/Hero.jsx'
 import Invitation from '../components/Invitation.jsx'
 import Story from '../components/Story.jsx'
 import Venue from '../components/Venue.jsx'
+import CustomSection from '../components/CustomSection.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 
 export default function TemplateAuraOfElegance({ savedData }) {
@@ -176,6 +177,7 @@ export default function TemplateAuraOfElegance({ savedData }) {
 
   const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
   return (
     <div className="relative min-h-screen bg-[#FFF0EC] text-primary">
@@ -202,7 +204,7 @@ export default function TemplateAuraOfElegance({ savedData }) {
             <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
               <div className="flex gap-3">
                 <button
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
                   className="flex-1 flex items-center justify-center gap-2 rounded-full border border-iqBorder bg-white py-4 text-sm font-bold text-iqText shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition hover:scale-105 active:scale-95"
                 >
                   <span>←</span>
@@ -220,6 +222,7 @@ export default function TemplateAuraOfElegance({ savedData }) {
           )}
 
           <Hero data={data.hero} />
+          <CustomSection photoBgDesktop="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" photoBgMobile="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" data={customSectionData} />
           {showGallery && <Story data={data.story} />}
           <Invitation data={data.invitation} />
           <Venue data={data.venue} />
@@ -247,7 +250,7 @@ export default function TemplateAuraOfElegance({ savedData }) {
         {isPreview && (
           <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
               className="px-8 py-4 rounded-full border border-iqBorder bg-white text-sm font-bold text-iqText shadow-[0_10px_30px_rgba(0,0,0,0.15)] transition hover:scale-105 active:scale-95"
             >
               ← Back to Edit
@@ -264,6 +267,9 @@ export default function TemplateAuraOfElegance({ savedData }) {
         {/* 1) Hero Section - Full width Palace / Cherry Blossom BG */}
         <div className="w-full">
           <Hero data={data.hero} isDesktop={true} />
+        </div>
+        <div className="w-full">
+          <CustomSection photoBgDesktop="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" photoBgMobile="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" data={customSectionData} />
         </div>
 
         {/* 2) Our Moments Section (Photo 1, Photo 2, Photo 3 side-by-side) */}

@@ -7,6 +7,7 @@ import cMapping from '../royalPalaceCloudinaryMapping.json'
 
 import Events from '../components/Events.jsx'
 import Footer from '../components/Footer.jsx'
+import CustomSection from '../components/CustomSection.jsx'
 
 // Background Assets (Directly from local public directory)
 const firstFrameDesktop = cMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/frame_001.jpg"
@@ -1594,6 +1595,7 @@ export default function TemplateSunflowersFields({ savedData }) {
 
   const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
   return (
     <div className="relative min-h-screen bg-[#FFFDF6] text-[#5A2C16]">
@@ -1621,7 +1623,7 @@ export default function TemplateSunflowersFields({ savedData }) {
             <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
               <div className="flex gap-3">
                 <button
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
                   className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#C59B3F]/30 bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#5A2C16] shadow-xl hover:scale-105 active:scale-95"
                 >
                   ← Back
@@ -1638,6 +1640,7 @@ export default function TemplateSunflowersFields({ savedData }) {
 
           {/* Render the Sections in Order */}
           <RoyalPalaceHero data={data.hero} isDesktop={false} />
+          <CustomSection photoBgDesktop={venueBgDesktop} photoBgMobile={venueBgMobile} data={customSectionData} />
           {showGallery && <RoyalPalaceStory data={data.story} isDesktop={false} />}
           <RoyalPalaceInvitation data={data.invitation} isDesktop={false} />
           <RoyalPalaceVenue data={data.venue} isDesktop={false} />
@@ -1670,7 +1673,7 @@ export default function TemplateSunflowersFields({ savedData }) {
         {isPreview && (
           <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
               className="px-8 py-4 rounded-full border border-[#C59B3F]/45 bg-white/95 backdrop-blur-md text-sm font-bold text-[#5A2C16] shadow-xl hover:scale-105 active:scale-95"
             >
               ← Back to Edit
@@ -1687,6 +1690,9 @@ export default function TemplateSunflowersFields({ savedData }) {
         {/* Render the Sections in Order */}
         <div className="w-full">
           <RoyalPalaceHero data={data.hero} isDesktop={true} />
+        </div>
+        <div className="w-full">
+          <CustomSection photoBgDesktop={venueBgDesktop} photoBgMobile={venueBgMobile} data={customSectionData} />
         </div>
         {showGallery && (
           <div className="w-full">
