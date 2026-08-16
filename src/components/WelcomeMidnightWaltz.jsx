@@ -74,7 +74,7 @@ export default function WelcomeMidnightWaltz({
         }}
       />
 
-      {/* Typography layer — left-middle of the parchment area */}
+      {/* Typography layer — center aligned on desktop, left-aligned on mobile/tablet */}
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -83,13 +83,16 @@ export default function WelcomeMidnightWaltz({
         style={{
           position: 'relative',
           zIndex: 2,
-          // Left-middle positioning: stays in the empty parchment area
-          marginLeft: isDesktop ? 'clamp(40px, 8%, 120px)' : (isTablet ? '8%' : '6%'),
-          width: isDesktop ? 'clamp(280px, 42%, 560px)' : (isTablet ? '50%' : '72%'),
-          maxWidth: isDesktop ? 520 : (isTablet ? 450 : 320),
+          // Center on desktop, left-middle on mobile/tablet
+          marginInline: isDesktop ? 'auto' : 'none',
+          marginLeft: isDesktop ? 'auto' : (isTablet ? '8%' : '6%'),
+          marginRight: isDesktop ? 'auto' : 'none',
+          width: isDesktop ? 'clamp(280px, 60%, 800px)' : (isTablet ? '50%' : '72%'),
+          maxWidth: isDesktop ? 680 : (isTablet ? 450 : 320),
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'flex-start',
+          alignItems: isDesktop ? 'center' : 'flex-start',
+          textAlign: isDesktop ? 'center' : 'left',
           paddingTop: isDesktop ? '0' : '15svh',
           paddingBottom: isDesktop ? '0' : '10svh',
         }}
@@ -144,7 +147,14 @@ export default function WelcomeMidnightWaltz({
         {/* Thin gold rule */}
         <motion.div
           variants={lineAnim}
-          style={{ width: 44, height: 0.75, background: '#B09060', opacity: 0.55, marginBottom: 12 }}
+          style={{ 
+            width: 44, 
+            height: 0.75, 
+            background: '#B09060', 
+            opacity: 0.55, 
+            marginBottom: 12,
+            marginInline: isDesktop ? 'auto' : '0'
+          }}
         />
 
         {/* Body paragraph — Cormorant Garamond with reduced line height spacing */}

@@ -178,7 +178,12 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText,
                         delay: idx * 0.08,
                       }}
                       className="inline-block text-[14px] md:text-[18px] font-bold uppercase tracking-[0.26em] md:tracking-[0.34em]"
-                      style={{ fontFamily: "'Cinzel', serif", color: textColor, opacity: 0.8 }}
+                      style={{ 
+                        fontFamily: isTraditional ? "'Religath', serif" : "'Cinzel', serif", 
+                        color: textColor, 
+                        opacity: 0.8,
+                        fontWeight: isTraditional ? 'normal' : 'bold'
+                      }}
                     >
                       {letter === ' ' ? '\u00A0' : letter}
                     </motion.span>
@@ -200,21 +205,28 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText,
                       <div
                         className={`font-semibold leading-none ${isDesktop ? '' : 'text-[24px] md:text-[30px]'}`}
                         style={isDesktop ? { 
-                          fontFamily: "'Cinzel', serif", 
-                          fontWeight: 650,
+                          fontFamily: isTraditional ? "'Religath', serif" : "'Cinzel', serif", 
+                          fontWeight: isTraditional ? 'normal' : 650,
                           fontSize: 'clamp(24px, 3.6vw, 56px)',
                           color: textColor
-                        } : { fontFamily: "'Cinzel', serif", fontWeight: 650, color: textColor }}
+                        } : { 
+                          fontFamily: isTraditional ? "'Religath', serif" : "'Cinzel', serif", 
+                          fontWeight: isTraditional ? 'normal' : 650, 
+                          color: textColor 
+                        }}
                       >
                         {box.key === 'days' ? String(box.value) : String(box.value).padStart(2, '0')}
                       </div>
                       <div
                         className={`mt-2 font-semibold uppercase tracking-[0.2em] ${isDesktop ? '' : 'text-[10px]'}`}
                         style={isDesktop ? { 
-                          fontFamily: "'Cinzel', serif",
+                          fontFamily: isTraditional ? "'Religath', serif" : "'Cinzel', serif",
                           fontSize: 'clamp(7.5px, 0.85vw, 13px)',
                           color: labelColor
-                        } : { fontFamily: "'Cinzel', serif", color: labelColor }}
+                        } : { 
+                          fontFamily: isTraditional ? "'Religath', serif" : "'Cinzel', serif", 
+                          color: labelColor 
+                        }}
                       >
                         {String(box.label || '').toUpperCase()}
                       </div>

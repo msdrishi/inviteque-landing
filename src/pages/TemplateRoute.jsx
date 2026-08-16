@@ -41,16 +41,16 @@ const TEMPLATE_MAP = {
 
 const TEMPLATE_ASSETS = {
   'midnight-waltz': [
-    "/backgrounds/Midnight Waltz/hero-dekstop.png",
-    "/backgrounds/Midnight Waltz/hero-mobile.png",
-    "/backgrounds/Midnight Waltz/bg-texture-desktop.png",
-    "/backgrounds/Midnight Waltz/bg-texture-mobile.png",
-    "/backgrounds/Midnight Waltz/welcome-desktop.png",
-    "/backgrounds/Midnight Waltz/welcome-mobile.png",
-    "/backgrounds/Midnight Waltz/venue-desktop.png",
-    "/backgrounds/Midnight Waltz/venue-mobile.png",
-    "/backgrounds/Midnight Waltz/countdown-desktop.png",
-    "/backgrounds/Midnight Waltz/countdown-mobile.png"
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831796/midnight-waltz-hero-dekstop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831798/midnight-waltz-hero-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831788/midnight-waltz-bg-texture-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831790/midnight-waltz-bg-texture-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831815/midnight-waltz-welcome-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831816/midnight-waltz-welcome-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786884307/midnight-waltz-venue-desktop-1786884299844.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786884313/midnight-waltz-venue-mobile-1786884299844.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831792/midnight-waltz-countdown-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831794/midnight-waltz-countdown-mobile.png"
   ],
   'modernhearth': [
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png",

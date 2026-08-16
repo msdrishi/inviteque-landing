@@ -29,6 +29,7 @@ export default function Payment() {
   const isEverlasting = templateId === 'template-4' || templateId === 'everlasting-vows' || templateId === 'everlastingvows'
   const isRoyalPalace = templateId === 'template-3' || templateId === 'royal-palace' || templateId === 'sunflower-fields'
   const isModernHearth = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
+  const isMidnightWaltz = templateId === 'midnight-waltz'
   const coverImage = isTwilight 
     ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
     : isEverlasting
@@ -37,7 +38,9 @@ export default function Payment() {
         ? (royalPalaceMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/hero-desktop.png")
         : isModernHearth
           ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png"
-          : themeImg
+          : isMidnightWaltz
+            ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831796/midnight-waltz-hero-dekstop.png"
+            : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
     : isEverlasting
