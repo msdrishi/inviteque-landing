@@ -126,22 +126,25 @@ export default function InviteDetails() {
 
   const inviteUrl = `${window.location.origin}/templates/${invite.templateId}/${invite.code}`
 
+  const isSunflower = invite?.templateId === 'sunflower-fields'
   const isTwilight = invite?.templateId === 'template-2' || invite?.templateId === 'twilight-serenade'
   const isEverlasting = invite?.templateId === 'template-4' || invite?.templateId === 'everlasting-vows' || invite?.templateId === 'everlastingvows'
-  const isRoyalPalace = invite?.templateId === 'template-3' || invite?.templateId === 'royal-palace' || invite?.templateId === 'sunflower-fields'
+  const isRoyalPalace = invite?.templateId === 'template-3' || invite?.templateId === 'royal-palace'
   const isModernHearth = invite?.templateId === 'template-modernhearth' || invite?.templateId === 'modernhearth' || invite?.templateId === 'modern-hearth'
   const isMidnightWaltz = invite?.templateId === 'midnight-waltz'
-  const coverImage = isTwilight 
-    ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
-    : isEverlasting
-      ? (everlastingVowsMapping['hero_desktop.png'] || "/backgrounds/Everlasting%20Vows/hero_desktop.png")
-      : isRoyalPalace
-        ? (royalPalaceMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/hero-desktop.png")
-        : isModernHearth
-          ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png"
-          : isMidnightWaltz
-            ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831796/midnight-waltz-hero-dekstop.png"
-            : themeImg
+  const coverImage = isSunflower
+    ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.png")
+    : isTwilight 
+      ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png" 
+      : isEverlasting
+        ? (everlastingVowsMapping['hero_desktop.png'] || "/backgrounds/Everlasting%20Vows/hero_desktop.png")
+        : isRoyalPalace
+          ? (royalPalaceMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/hero-desktop.png")
+          : isModernHearth
+            ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png"
+            : isMidnightWaltz
+              ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831796/midnight-waltz-hero-dekstop.png"
+              : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
     : isEverlasting

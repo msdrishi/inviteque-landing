@@ -10,12 +10,12 @@ import Footer from '../components/Footer.jsx'
 import CustomSection from '../components/CustomSection.jsx'
 
 // Background Assets (Directly from local public directory)
-const firstFrameDesktop = cMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/frame_001.jpg"
-const firstFrameMobile = cMapping['hero-first-frame-mobile.jpg'] || "/backgrounds/Sunflower-template/frames/mobile/frame_001.jpg"
+const firstFrameDesktop = cMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.png"
+const firstFrameMobile = cMapping['hero-first-frame-mobile.jpg'] || "/backgrounds/Sunflower-template/frames/mobile/mobile-view.png"
 const venueBgDesktop = cMapping['venue-desktop.png'] || "/backgrounds/Royal Palace/venue-desktop.png"
 const venueBgMobile = cMapping['venue-mobile.png'] || "/backgrounds/Royal Palace/venue-mobile.png"
-const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "/backgrounds/Royal Palace/countdown-deskotp.png"
-const countdownBgMobile = cMapping['countdown-mobile.png'] || "/backgrounds/Royal Palace/countdown-mobile.png"
+const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "/backgrounds/Sunflower-template/frames/desktop/countdown-desktop.png"
+const countdownBgMobile = cMapping['countdown-mobile.png'] || "/backgrounds/Sunflower-template/frames/mobile/countdown-mobile.png"
 
 const fallbackPhoto1 = cMapping['sunflower-1.png'] || "/backgrounds/Royal Palace/sunflower-1.png"
 const fallbackPhoto2 = cMapping['sunflower-2.png'] || "/backgrounds/Royal Palace/sunflower-2.png"
@@ -100,7 +100,7 @@ const LocationIcon = ({ color = '#C59B3F' }) => (
 )
 
 const CornerAccent = ({ top, left, right, bottom, color = '#C59B3F' }) => (
-  <div 
+  <div
     className="absolute w-4 h-4 pointer-events-none"
     style={{
       top, left, right, bottom,
@@ -176,7 +176,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
   const brideNameText = toPascalCase(data.brideName || "Anaya")
 
   return (
-    <section 
+    <section
       className="relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-start overflow-hidden bg-[#FFFDF6] text-[#5A2C16]"
     >
       {/* Background Container */}
@@ -186,7 +186,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
           src={isDesktop ? firstFrameDesktop : firstFrameMobile}
           alt=""
           className="absolute inset-0 w-full h-full object-cover object-center"
-          style={{ filter: 'contrast(100%) blur(0.6px)', transform: 'scale(1.01)' }}
+          style={{ transform: 'scale(1.01)' }}
         />
 
         {/* Video Element (Smoothly fades in once it actually starts playing) */}
@@ -200,7 +200,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             controls={false}
             onPlaying={() => setVideoPlaying(true)}
             className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out ${videoPlaying ? 'opacity-100' : 'opacity-0'}`}
-            style={{ filter: 'contrast(100%) blur(0.6px)', transform: 'scale(1.01)' }}
+            style={{ transform: 'scale(1.01)' }}
           />
         ) : (
           <video
@@ -212,7 +212,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
             controls={false}
             onPlaying={() => setVideoPlaying(true)}
             className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out ${videoPlaying ? 'opacity-100' : 'opacity-0'}`}
-            style={{ filter: 'contrast(100%) blur(0.6px)', transform: 'scale(1.01)' }}
+            style={{ transform: 'scale(1.01)' }}
           />
         )}
         {/* Soft overlay to blend top portion with text */}
@@ -223,40 +223,40 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
       {/* Hero content wrapper (Restricted to top 50% of viewport) */}
       <div className="relative z-20 flex flex-col items-center justify-start w-[92%] sm:w-[85%] max-w-[700px] text-center mt-[2svh] max-h-[48svh] gap-1 md:gap-1.5">
-        
+
         {/* Header Block (Intro Text + Leaf + Heart) */}
         <div className="flex flex-col items-center w-full">
           {/* Top decorative branch */}
-          <motion.div 
-            initial={{ opacity: 0, y: 12 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             <LeafDivider color="#C59B3F" />
           </motion.div>
 
           {/* Staggered Intro lines */}
-          <motion.p 
-            initial={{ opacity: 0, y: 12 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.25em] font-semibold text-[#5A2C16] opacity-90 text-center"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             TOGETHER WITH THEIR FAMILIES
           </motion.p>
-          <motion.p 
-            initial={{ opacity: 0, y: 12 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-0.5"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             WE INVITE YOU TO CELEBRATE
           </motion.p>
-          <motion.p 
-            initial={{ opacity: 0, y: 12 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="text-[8px] sm:text-[8.5px] uppercase tracking-[0.2em] text-[#7D553E] text-center mt-0.5"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
@@ -264,9 +264,9 @@ function RoyalPalaceHero({ data, isDesktop }) {
             THE WEDDING OF
           </motion.p>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 12 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             <HeartDivider color="#C59B3F" />
@@ -276,7 +276,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
         {/* Center Block: couple names animated last with glare shine */}
         <div className="flex flex-col items-center w-full mt-0">
           {/* Groom Name (Rohan) */}
-          <motion.h1 
+          <motion.h1
             initial="hidden"
             animate="show"
             variants={groomContainerVariants}
@@ -323,7 +323,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
           </motion.h1>
 
           {/* Ampersand */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1.8, duration: 1.0, ease: "easeOut" }}
@@ -333,7 +333,7 @@ function RoyalPalaceHero({ data, isDesktop }) {
           </motion.div>
 
           {/* Bride Name (Anaya) */}
-          <motion.h1 
+          <motion.h1
             initial="hidden"
             animate="show"
             variants={brideContainerVariants}
@@ -383,29 +383,29 @@ function RoyalPalaceHero({ data, isDesktop }) {
         {/* Date, Time, and Venue block */}
         <div className="flex flex-col items-center w-full mt-0">
           {/* Marriage Subtitle */}
-          <motion.p 
-            initial={{ opacity: 0, y: 12 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.0, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="text-[8.5px] sm:text-[9px] uppercase tracking-[0.25em] font-bold text-[#C59B3F] text-center mb-1"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             ARE GETTING MARRIED
           </motion.p>
- 
+
           <div className="flex flex-col items-center gap-1 w-full">
-            <motion.span 
-              initial={{ opacity: 0, y: 12 }} 
-              animate={{ opacity: 1, y: 0 }} 
+            <motion.span
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 3.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] font-semibold text-[#7D553E] mb-0"
             >
               {(data.dayOfWeek || "SUNDAY").toUpperCase()}
             </motion.span>
- 
-            <motion.div 
-              initial={{ opacity: 0, y: 12 }} 
-              animate={{ opacity: 1, y: 0 }} 
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 3.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center justify-center gap-2.5"
             >
@@ -414,23 +414,23 @@ function RoyalPalaceHero({ data, isDesktop }) {
                   {(dateParts.month || "MAY").toUpperCase().slice(0, 3)}
                 </span>
               </div>
- 
+
               <div className="border-l border-r border-[#C59B3F]/50 px-4">
                 <span className="text-[32px] font-bold leading-none text-[#C59B3F]" style={{ fontFamily: "'Cinzel', serif", fontWeight: 700 }}>
                   {dateParts.day || "25"}
                 </span>
               </div>
- 
+
               <div className="border-t border-b border-[#C59B3F]/40 py-0.5 px-2">
                 <span className="text-[11px] tracking-[0.2em] font-bold text-[#5A2C16]">
                   {dateParts.year || "2025"}
                 </span>
               </div>
             </motion.div>
- 
-            <motion.span 
-              initial={{ opacity: 0, y: 12 }} 
-              animate={{ opacity: 1, y: 0 }} 
+
+            <motion.span
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 3.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.2em] text-[#7D553E] mt-0.5"
             >
@@ -441,33 +441,33 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
         {/* Location & Resort Address Details */}
         <div className="flex flex-col items-center text-center w-full mt-0">
-          <motion.div 
-            initial={{ opacity: 0, y: 12 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.8, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             <LeafDivider color="#C59B3F" />
           </motion.div>
- 
+
           <div className="flex flex-col items-center text-center mt-0">
-            <motion.div 
-              initial={{ opacity: 0, y: 12 }} 
-              animate={{ opacity: 1, y: 0 }} 
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 4.0, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               <LocationIcon color="#C59B3F" />
             </motion.div>
-            <motion.h3 
-              initial={{ opacity: 0, y: 12 }} 
-              animate={{ opacity: 1, y: 0 }} 
+            <motion.h3
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 4.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="text-[9.5px] sm:text-[10px] font-bold tracking-[0.1em] text-[#5A2C16] uppercase max-w-[280px] mt-0.5"
             >
               {data.venueName || "SUNSHINE GARDEN RESORT"}
             </motion.h3>
-            <motion.p 
-              initial={{ opacity: 0, y: 12 }} 
-              animate={{ opacity: 1, y: 0 }} 
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 4.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="text-[7px] tracking-[0.12em] text-[#7D553E] uppercase mt-0 max-w-[260px] leading-relaxed"
             >
@@ -507,14 +507,14 @@ function RoyalPalaceHero({ data, isDesktop }) {
    ───────────────────────────────────────── */
 // Elegant line-art Sunflower SVG watermark texture
 const SunflowerSVG = ({ className, style }) => (
-  <svg 
-    viewBox="0 0 100 100" 
-    className={className} 
+  <svg
+    viewBox="0 0 100 100"
+    className={className}
     style={style}
-    fill="none" 
-    stroke="currentColor" 
+    fill="none"
+    stroke="currentColor"
     strokeWidth="1.2"
-    strokeLinecap="round" 
+    strokeLinecap="round"
     strokeLinejoin="round"
   >
     <circle cx="50" cy="50" r="14" strokeWidth="1.5" />
@@ -525,20 +525,20 @@ const SunflowerSVG = ({ className, style }) => (
     {Array.from({ length: 16 }).map((_, i) => {
       const angle = (i * 360) / 16;
       return (
-        <path 
+        <path
           key={`p1-${i}`}
-          d="M50,36 C47,20 53,20 50,36" 
-          transform={`rotate(${angle} 50 50)`} 
+          d="M50,36 C47,20 53,20 50,36"
+          transform={`rotate(${angle} 50 50)`}
         />
       );
     })}
     {Array.from({ length: 16 }).map((_, i) => {
       const angle = ((i * 360) / 16) + 11.25;
       return (
-        <path 
+        <path
           key={`p2-${i}`}
-          d="M50,36 C48,25 52,25 50,36" 
-          transform={`rotate(${angle} 50 50)`} 
+          d="M50,36 C48,25 52,25 50,36"
+          transform={`rotate(${angle} 50 50)`}
           opacity="0.7"
         />
       );
@@ -572,7 +572,7 @@ function RoyalPalaceBackgroundShatter() {
           <line x1="25%" y1="0" x2="85%" y2="100%" stroke="#C59B3F" strokeWidth="1.5" />
           <line x1="80%" y1="0" x2="15%" y2="100%" stroke="#C59B3F" strokeWidth="1.5" />
           <line x1="0" y1="45%" x2="100%" y2="55%" stroke="#C59B3F" strokeWidth="1.5" />
-          
+
           <polygon points="10,50 150,150 50,220" fill="none" stroke="#C59B3F" strokeWidth="1.2" />
           <polygon points="90%,15% 95%,35% 85%,25%" fill="none" stroke="#C59B3F" strokeWidth="1.2" />
           <polygon points="80%,75% 95%,90% 70%,95%" fill="none" stroke="#C59B3F" strokeWidth="1.2" />
@@ -636,7 +636,7 @@ function RoyalPalaceStory({ data, isDesktop }) {
   }
 
   return (
-    <section 
+    <section
       id="story"
       className="relative w-full overflow-hidden flex flex-col items-center justify-between text-center py-20 px-6 text-[#735C2A] min-h-[100svh]"
       style={{
@@ -659,7 +659,7 @@ function RoyalPalaceStory({ data, isDesktop }) {
       <SunflowerSVG className="absolute bottom-[20%] -left-16 w-48 h-48 text-[#5A2C16] opacity-[0.04] select-none pointer-events-none" />
 
       {/* 1. Section Title & Header at the Top */}
-      <motion.div 
+      <motion.div
         variants={wordContainer}
         initial="hidden"
         whileInView="show"
@@ -673,8 +673,8 @@ function RoyalPalaceStory({ data, isDesktop }) {
             </motion.span>
           ))}
         </span>
-        <h2 
-          className="text-4xl sm:text-5xl tracking-wide mt-2 mb-3 text-[#735C2A] capitalize" 
+        <h2
+          className="text-4xl sm:text-5xl tracking-wide mt-2 mb-3 text-[#735C2A] capitalize"
           style={{ fontFamily: "'Parisienne', cursive" }}
         >
           {"Captured Love".split(' ').map((word, wIdx) => (
@@ -709,12 +709,12 @@ function RoyalPalaceStory({ data, isDesktop }) {
               {/* Double border details */}
               <div className="absolute inset-[18px] xl:inset-[12px] border border-[#C59B3F]/60 pointer-events-none z-10" />
               <div className="absolute inset-[24px] xl:inset-[16px] border border-[#735C2A]/20 pointer-events-none z-10" />
-              
-              <div className="w-full h-full bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
+
+              <div className="w-full aspect-[4/3] bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
                 <div className="absolute inset-0 border border-[#735C2A]/10 pointer-events-none z-10" />
-                <img 
-                  src={activeItems[0].image} 
-                  alt="Our moment 1" 
+                <img
+                  src={activeItems[0].image}
+                  alt="Our moment 1"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -746,11 +746,11 @@ function RoyalPalaceStory({ data, isDesktop }) {
               <CornerAccent bottom={isDesktop ? "14px" : "20px"} left={isDesktop ? "14px" : "20px"} color="#C59B3F" />
               <CornerAccent bottom={isDesktop ? "14px" : "20px"} right={isDesktop ? "14px" : "20px"} color="#C59B3F" />
 
-              <div className="w-full h-full bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
+              <div className="w-full aspect-[4/3] bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
                 <div className="absolute inset-0 border border-[#735C2A]/10 pointer-events-none z-10" />
-                <img 
-                  src={activeItems[1].image} 
-                  alt="Our moment 2" 
+                <img
+                  src={activeItems[1].image}
+                  alt="Our moment 2"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -778,11 +778,11 @@ function RoyalPalaceStory({ data, isDesktop }) {
               {/* Dotted border details */}
               <div className="absolute inset-[18px] xl:inset-[12px] border-2 border-dotted border-[#C59B3F]/55 pointer-events-none z-10" />
 
-              <div className="w-full h-full bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
+              <div className="w-full aspect-[4/3] bg-[#FFF9ED] overflow-hidden rounded-none border border-[#C59B3F]/15 relative">
                 <div className="absolute inset-0 border border-[#735C2A]/10 pointer-events-none z-10" />
-                <img 
-                  src={activeItems[2].image} 
-                  alt="Our moment 3" 
+                <img
+                  src={activeItems[2].image}
+                  alt="Our moment 3"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -820,10 +820,10 @@ function FallingYellowFlowers() {
         <motion.div
           key={i}
           className="absolute top-[-10%]"
-          style={{ 
-            left: `${p.left}%`, 
-            width: p.size, 
-            height: p.size * 1.5, 
+          style={{
+            left: `${p.left}%`,
+            width: p.size,
+            height: p.size * 1.5,
             opacity: 0.85,
             filter: 'drop-shadow(0px 3px 5px rgba(0,0,0,0.15))'
           }}
@@ -860,12 +860,12 @@ const letterAnim = {
 
 function InvitationTitle({ text, className, style }) {
   return (
-    <motion.p 
-      variants={letterContainer} 
-      initial="hidden" 
-      whileInView="show" 
-      viewport={{ once: false, amount: 0.1 }} 
-      className={className} 
+    <motion.p
+      variants={letterContainer}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: false, amount: 0.1 }}
+      className={className}
       style={style}
     >
       {text.split('').map((char, index) => (
@@ -888,14 +888,13 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
   })
 
   const bgY = useSpring(useTransform(scrollYProgress, [0, 1], ['0%', '-6%']), { stiffness: 45, damping: 15 })
-  const bgBlur = useTransform(scrollYProgress, [0.30, 0.50, 1.0], ['blur(0px)', 'blur(2.5px)', 'blur(2.5px)'])
-  
+
   const rawBannerY = useTransform(scrollYProgress, [0.15, 0.50], ['50%', '15%'])
   const bannerY = useSpring(rawBannerY, { stiffness: 35, damping: 15 })
   const bannerScale = useTransform(scrollYProgress, [0.15, 0.50], [0.9, 1.15])
   const bannerRotateX = useTransform(scrollYProgress, [0.15, 0.50], [12, 0])
 
-  const bgImage = isDesktop ? (cMapping['welcome-desktop.png'] || "/backgrounds/Royal Palace/welcome-desktop.png") : (cMapping['welcome-mobile.png'] || "/backgrounds/Royal Palace/welcome-mobile.png")
+  const bgImage = isDesktop ? (cMapping['welcome-desktop.png'] || "/backgrounds/Sunflower-template/frames/desktop/welcome-desktop.png") : (cMapping['welcome-mobile.png'] || "/backgrounds/Sunflower-template/frames/mobile/welcome-mobile.png")
   const dividerFlowersMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964586/divider-flowers-mobile.png"
 
   return (
@@ -906,13 +905,21 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
     >
       <motion.div
         className="absolute inset-0 z-0 will-change-transform"
-        style={{ y: bgY, scale: 1.2, filter: bgBlur, transformOrigin: 'center' }}
+        style={{ y: bgY, scale: 1.2, transformOrigin: 'center' }}
       >
         <img
           src={bgImage}
           alt=""
           aria-hidden="true"
           className="h-full w-full object-cover"
+        />
+        {/* Soft blur overlay: top & middle blurred, bottom fades out blur */}
+        <div 
+          className="absolute inset-0 pointer-events-none z-10 backdrop-blur-[3px]"
+          style={{
+            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%)',
+            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%)'
+          }}
         />
       </motion.div>
 
@@ -922,25 +929,25 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
       {/* Content Wrapper */}
       <div className="relative z-10 w-full max-w-[550px] flex flex-col items-center text-center mt-6">
         <div className="mb-4">
-          <InvitationTitle 
+          <InvitationTitle
             text="Our story, our journey,"
-            style={{ 
-              fontFamily: "'Cinzel', serif", 
-              fontSize: 'clamp(16px, 4vw, 22px)', 
-              color: '#5A2C16', 
-              fontWeight: 'bold', 
-              margin: 0, 
+            style={{
+              fontFamily: "'Cinzel', serif",
+              fontSize: 'clamp(16px, 4vw, 22px)',
+              color: '#5A2C16',
+              fontWeight: 'bold',
+              margin: 0,
               letterSpacing: '0.12em',
             }}
           />
-          <InvitationTitle 
+          <InvitationTitle
             text="ours forever"
-            style={{ 
-              fontFamily: "'Cinzel', serif", 
-              fontSize: 'clamp(24px, 6vw, 32px)', 
-              color: '#5A2C16', 
-              fontWeight: 'bold', 
-              margin: 0, 
+            style={{
+              fontFamily: "'Cinzel', serif",
+              fontSize: 'clamp(24px, 6vw, 32px)',
+              color: '#5A2C16',
+              fontWeight: 'bold',
+              margin: 0,
               letterSpacing: '0.12em',
             }}
           />
@@ -949,8 +956,8 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
 
       {/* 3D Parallax Banner Image */}
       <motion.div
-        className="absolute bottom-[45px] sm:bottom-0 inset-x-0 w-full z-20 will-change-transform pointer-events-none origin-bottom flex justify-center"
-        style={{ 
+        className="absolute bottom-4 sm:bottom-0 inset-x-0 w-full z-20 will-change-transform pointer-events-none origin-bottom flex justify-center"
+        style={{
           y: bannerY,
           scale: bannerScale,
           rotateX: bannerRotateX,
@@ -977,8 +984,8 @@ function RoyalPalaceVenue({ data, isDesktop }) {
   const viewport = { once: false, amount: 0.15 }
 
   return (
-    <section 
-      id="venue" 
+    <section
+      id="venue"
       className="relative w-full overflow-hidden px-6 flex flex-col items-center justify-between text-center pt-20 pb-8"
       style={{
         minHeight: '100svh',
@@ -1004,7 +1011,7 @@ function RoyalPalaceVenue({ data, isDesktop }) {
       <div className="relative z-20 w-full flex flex-col items-center gap-4 mt-2">
         {/* Title & Accent Pin */}
         <div className="flex flex-col items-center">
-          <InvitationTitle 
+          <InvitationTitle
             text="OUR VENUE"
             style={{
               fontFamily: "'Cinzel', serif",
@@ -1015,7 +1022,7 @@ function RoyalPalaceVenue({ data, isDesktop }) {
               margin: 0,
             }}
           />
-          
+
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -1040,7 +1047,7 @@ function RoyalPalaceVenue({ data, isDesktop }) {
           <h3 className="font-semibold text-base sm:text-lg uppercase tracking-[0.08em] text-[#5A2C16]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             {data.venueName || "Sunshine Garden Resort"}
           </h3>
-          
+
           <div className="flex flex-col gap-1 text-xs sm:text-sm text-[#7D553E] leading-relaxed mt-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             {data.venueLine1 && <p>{data.venueLine1}</p>}
             {data.venueLine2 && <p>{data.venueLine2}</p>}
@@ -1071,7 +1078,7 @@ function RoyalPalaceVenue({ data, isDesktop }) {
             }}
             className="flex flex-col sm:flex-row items-center justify-center animate-fade-in"
           >
-            <img 
+            <img
               src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(String(data.mapUrl))}&color=5a2c16&bgcolor=ffffff`}
               alt="Google Maps QR Code"
               width={isDesktop ? 90 : 100}
@@ -1086,13 +1093,12 @@ function RoyalPalaceVenue({ data, isDesktop }) {
                   Scan to locate or
                 </span>
               )}
-              <a 
+              <a
                 href={String(data.mapUrl)}
-                target="_blank" 
+                target="_blank"
                 rel="noopener noreferrer"
-                className={`inline-flex items-center justify-center gap-1.5 rounded-full border border-[#C59B3F] bg-[#5A2C16] text-[#FFFDF6] font-bold uppercase transition hover:bg-white hover:text-[#5A2C16] shrink-0 ${
-                  isDesktop ? 'px-4 py-2 text-[9px] tracking-[0.2em]' : 'px-2 py-1 text-[7px] tracking-[0.1em] w-full text-center'
-                }`}
+                className={`inline-flex items-center justify-center gap-1.5 rounded-full border border-[#C59B3F] bg-[#5A2C16] text-[#FFFDF6] font-bold uppercase transition hover:bg-white hover:text-[#5A2C16] shrink-0 ${isDesktop ? 'px-4 py-2 text-[9px] tracking-[0.2em]' : 'px-2 py-1 text-[7px] tracking-[0.1em] w-full text-center'
+                  }`}
                 style={{ fontFamily: "'Montserrat', sans-serif" }}
               >
                 📍 Open in Maps
@@ -1109,6 +1115,8 @@ function RoyalPalaceVenue({ data, isDesktop }) {
    5. COUNTDOWN SECTION
    ───────────────────────────────────────── */
 function FlyingBirds({ isDesktop }) {
+  if (isDesktop) return null
+
   const flapWings = {
     d: [
       "M 0 0 Q 8 -12 18 -6 Q 10 -1 0 0 Q -10 -1 -18 -6 Q -8 -12 0 0 Z",
@@ -1182,8 +1190,8 @@ function FlyingBirds({ isDesktop }) {
                 delay: bird.delay * 2,
               }}
             >
-              <svg 
-                viewBox="-25 -25 50 50" 
+              <svg
+                viewBox="-25 -25 50 50"
                 className="w-10 h-10 fill-black opacity-80"
                 style={{ transform: `scale(${bird.scale})` }}
               >
@@ -1245,25 +1253,22 @@ function RoyalPalaceCountdown({ data, isDesktop }) {
   }, [data.targetDateTimeISO])
 
   return (
-    <section 
+    <section
       ref={containerRef}
       className="relative w-full overflow-hidden px-6 flex flex-col items-center justify-start text-center pt-28 md:pt-24 pb-20"
       style={{
         minHeight: '100svh',
       }}
     >
-      {/* Background Image - with parallax scroll to reveal bottom */}
-      <motion.div
-        className="absolute inset-0 z-0 will-change-transform"
-        style={{ y: bgY, scale: 1.15, transformOrigin: 'bottom center' }}
-      >
+      {/* Background Image - full cover image without zoom-in effect */}
+      <div className="absolute inset-0 z-0">
         <img
           src={bgImage}
           alt=""
           aria-hidden="true"
-          className="h-full w-full object-cover object-bottom"
+          className="h-full w-full object-cover object-center"
         />
-      </motion.div>
+      </div>
 
       <FlyingBirds isDesktop={isDesktop} />
 
@@ -1272,13 +1277,13 @@ function RoyalPalaceCountdown({ data, isDesktop }) {
       {/* Centered Group container */}
       <div className="relative z-20 flex flex-col items-center gap-4 md:gap-6 mt-4">
         {/* 1. Title directly above the counters */}
-        <div 
+        <div
           className="text-center mb-1"
           style={{
             opacity: 0.95,
           }}
         >
-          <span 
+          <span
             className="text-[14px] md:text-[18px] font-bold uppercase tracking-[0.26em] md:tracking-[0.84em] text-[#5A2C16] block"
             style={{ fontFamily: "'Cinzel', serif" }}
           >
@@ -1295,26 +1300,26 @@ function RoyalPalaceCountdown({ data, isDesktop }) {
             { label: 'Secs', val: timeLeft.seconds }
           ].map((unit, index) => (
             <div key={unit.label} className="flex items-center">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.12 }}
                 transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
                 className="flex flex-col items-center px-1.5 sm:px-3 py-1 text-center"
               >
-                <span 
+                <span
                   className={`font-semibold leading-none ${isDesktop ? '' : 'text-[28px] md:text-[34px]'} text-[#5A2C16]`}
-                  style={isDesktop ? { 
-                    fontFamily: "'Cinzel', serif", 
+                  style={isDesktop ? {
+                    fontFamily: "'Cinzel', serif",
                     fontWeight: 650,
                     fontSize: 'clamp(30px, 4vw, 60px)'
                   } : { fontFamily: "'Cinzel', serif", fontWeight: 650 }}
                 >
                   {unit.val}
                 </span>
-                <span 
+                <span
                   className={`mt-2 font-semibold uppercase tracking-[0.2em] text-[#7D553E] ${isDesktop ? '' : 'text-[10px]'}`}
-                  style={isDesktop ? { 
+                  style={isDesktop ? {
                     fontFamily: "'Cinzel', serif",
                     fontSize: 'clamp(9px, 0.9vw, 14px)'
                   } : { fontFamily: "'Cinzel', serif" }}
@@ -1323,7 +1328,7 @@ function RoyalPalaceCountdown({ data, isDesktop }) {
                 </span>
               </motion.div>
               {index < 3 && (
-                <div 
+                <div
                   className="self-center bg-[#C59B3F]/35"
                   style={{
                     width: '1.5px',
@@ -1444,30 +1449,30 @@ export default function TemplateSunflowersFields({ savedData }) {
       ) || '',
       addressParts: savedData
         ? [
-            savedData.venueData?.mahalName || savedData.mahalName,
-            savedData.venueData?.venueAddress || savedData.venueName,
-            savedData.venueData?.venueCity || savedData.venueCity,
-            savedData.venueData?.state || savedData.state
-          ].map(s => String(s || '').trim()).filter(Boolean)
+          savedData.venueData?.mahalName || savedData.mahalName,
+          savedData.venueData?.venueAddress || savedData.venueName,
+          savedData.venueData?.venueCity || savedData.venueCity,
+          savedData.venueData?.state || savedData.state
+        ].map(s => String(s || '').trim()).filter(Boolean)
         : [
-            draftData.mahalName,
-            draftData.venueAddress,
-            draftData.venueCity,
-            draftData.state
-          ].map(s => String(s || '').trim()).filter(Boolean),
+          draftData.mahalName,
+          draftData.venueAddress,
+          draftData.venueCity,
+          draftData.state
+        ].map(s => String(s || '').trim()).filter(Boolean),
       fullAddress: savedData
         ? [
-            savedData.venueData?.mahalName || savedData.mahalName,
-            savedData.venueData?.venueAddress || savedData.venueName,
-            savedData.venueData?.venueCity || savedData.venueCity,
-            savedData.venueData?.state || savedData.state
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+          savedData.venueData?.mahalName || savedData.mahalName,
+          savedData.venueData?.venueAddress || savedData.venueName,
+          savedData.venueData?.venueCity || savedData.venueCity,
+          savedData.venueData?.state || savedData.state
+        ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
         : [
-            draftData.mahalName,
-            draftData.venueAddress,
-            draftData.venueCity,
-            draftData.state
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
+          draftData.mahalName,
+          draftData.venueAddress,
+          draftData.venueCity,
+          draftData.state
+        ].map(s => String(s || '').trim()).filter(Boolean).join(', '),
       hashtag: (() => {
         const groom = savedData ? savedData.coupleData.groomName : draftData.groomName
         const bride = savedData ? savedData.coupleData.brideName : draftData.brideName
@@ -1488,37 +1493,37 @@ export default function TemplateSunflowersFields({ savedData }) {
       venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || staticData.venue.venueName,
       venueLine1: (savedData
         ? [
-            savedData.venueData?.mahalName || savedData.mahalName,
-            savedData.venueData?.venueAddress || savedData.venueName
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+          savedData.venueData?.mahalName || savedData.mahalName,
+          savedData.venueData?.venueAddress || savedData.venueName
+        ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
         : [
-            draftData.mahalName,
-            draftData.venueAddress
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+          draftData.mahalName,
+          draftData.venueAddress
+        ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
       ) || staticData.venue.venueLine1,
       venueLine2: (savedData
         ? [
-            savedData.venueData?.venueCity || savedData.venueCity,
-            savedData.venueData?.state || savedData.state
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+          savedData.venueData?.venueCity || savedData.venueCity,
+          savedData.venueData?.state || savedData.state
+        ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
         : [
-            draftData.venueCity,
-            draftData.state
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+          draftData.venueCity,
+          draftData.state
+        ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
       ) || staticData.venue.venueLine2,
       location: (savedData
         ? [
-            savedData.venueData?.mahalName || savedData.mahalName,
-            savedData.venueData?.venueAddress || savedData.venueName,
-            savedData.venueData?.venueCity || savedData.venueCity,
-            savedData.venueData?.state || savedData.state
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+          savedData.venueData?.mahalName || savedData.mahalName,
+          savedData.venueData?.venueAddress || savedData.venueName,
+          savedData.venueData?.venueCity || savedData.venueCity,
+          savedData.venueData?.state || savedData.state
+        ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
         : [
-            draftData.mahalName,
-            draftData.venueAddress,
-            draftData.venueCity,
-            draftData.state
-          ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
+          draftData.mahalName,
+          draftData.venueAddress,
+          draftData.venueCity,
+          draftData.state
+        ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
       ) || staticData.venue.location,
       mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData.mapLink) || staticData.venue.mapUrl,
     },
@@ -1546,10 +1551,10 @@ export default function TemplateSunflowersFields({ savedData }) {
         return activePhotos.length > 0
           ? activePhotos.map(p => ({ image: p }))
           : [
-              { image: fallbackPhoto1 },
-              { image: fallbackPhoto2 },
-              { image: fallbackPhoto3 }
-            ]
+            { image: fallbackPhoto1 },
+            { image: fallbackPhoto2 },
+            { image: fallbackPhoto3 }
+          ]
       })(),
     },
     invitation: {
@@ -1612,7 +1617,7 @@ export default function TemplateSunflowersFields({ savedData }) {
       {/* MOBILE VIEW */}
       <div className="md:hidden flex justify-center items-start min-h-screen bg-[#1a1a1a]">
         <div className="relative w-full max-w-[430px] min-h-[100svh] bg-[#FFFDF6] text-[#5A2C16] shadow-[0_0_80px_rgba(0,0,0,0.5)]">
-          
+
           {/* Fixed Watermark Overlay */}
           {showWatermark && (
             <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.28] select-none text-[#C59B3F]">
@@ -1650,7 +1655,14 @@ export default function TemplateSunflowersFields({ savedData }) {
 
           {/* Render the Sections in Order */}
           <RoyalPalaceHero data={data.hero} isDesktop={false} />
-          <CustomSection bgStyle={sunflowerStoryBgStyle} data={customSectionData}>
+          <CustomSection
+            bgStyle={sunflowerStoryBgStyle}
+            titleStyle={{ fontFamily: "'PrimorStylish', serif", color: '#5A2C16' }}
+            subtitleStyle={{ fontFamily: "'Montserrat', sans-serif", color: '#C59B3F', letterSpacing: '0.15em' }}
+            bodyStyle={{ fontFamily: "'Montserrat', sans-serif", color: '#5A2C16' }}
+            dividerColor="#C59B3F"
+            data={customSectionData}
+          >
             <RoyalPalaceBackgroundShatter />
             <SunflowerSVG className="absolute -top-12 -left-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />
             <SunflowerSVG className="absolute -bottom-12 -right-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />
@@ -1670,7 +1682,7 @@ export default function TemplateSunflowersFields({ savedData }) {
 
       {/* DESKTOP VIEW */}
       <div className="hidden md:block w-full min-h-screen bg-[#FFFDF6] relative">
-        
+
         {/* Fixed Watermark Overlay */}
         {showWatermark && (
           <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.22] select-none flex flex-col justify-around items-center text-[#C59B3F]">
@@ -1706,7 +1718,14 @@ export default function TemplateSunflowersFields({ savedData }) {
           <RoyalPalaceHero data={data.hero} isDesktop={true} />
         </div>
         <div className="w-full">
-          <CustomSection bgStyle={sunflowerStoryBgStyle} data={customSectionData}>
+          <CustomSection
+            bgStyle={sunflowerStoryBgStyle}
+            titleStyle={{ fontFamily: "'PrimorStylish', serif", color: '#5A2C16' }}
+            subtitleStyle={{ fontFamily: "'Montserrat', sans-serif", color: '#C59B3F', letterSpacing: '0.15em' }}
+            bodyStyle={{ fontFamily: "'Montserrat', sans-serif", color: '#5A2C16' }}
+            dividerColor="#C59B3F"
+            data={customSectionData}
+          >
             <RoyalPalaceBackgroundShatter />
             <SunflowerSVG className="absolute -top-12 -left-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />
             <SunflowerSVG className="absolute -bottom-12 -right-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />

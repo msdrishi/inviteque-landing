@@ -21,6 +21,10 @@ export default function CustomSection({
   bodyFontClass = '',
   accentColorClass = 'text-[#D4AF37]',
   bgStyle = null,
+  titleStyle = null,
+  subtitleStyle = null,
+  bodyStyle = null,
+  dividerColor = '#D4AF37',
   children = null
 }) {
   const showSection = data.showCustomSection !== undefined
@@ -116,8 +120,8 @@ export default function CustomSection({
 
   return (
     <section className="relative w-full min-h-screen min-h-[100svh] flex overflow-hidden z-20" style={bgStyle || {}}>
-      {/* Pure Background Image without any overlay */}
-      <div className="absolute inset-0 z-0 bg-[#FFFDF6]">
+      {/* Pure Background Image / Style without any solid overlay */}
+      <div className="absolute inset-0 z-0 bg-transparent">
         {photoBgMobile && (
           <img
             src={photoBgMobile}
@@ -161,7 +165,8 @@ export default function CustomSection({
           {title && (
             <motion.h2
               variants={lineVariants}
-              className={`text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-gray-900 drop-shadow-[0_2px_8px_rgba(255,255,255,0.7)] leading-tight mb-2 ${titleFontClass}`}
+              className={`text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-gray-900 leading-tight mb-2 ${titleFontClass}`}
+              style={titleStyle || {}}
             >
               {title}
             </motion.h2>
@@ -171,7 +176,8 @@ export default function CustomSection({
           {subtitle && (
             <motion.p
               variants={lineVariants}
-              className={`text-sm sm:text-base md:text-lg font-bold tracking-wider ${accentColorClass} drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)] mb-4 uppercase`}
+              className={`text-sm sm:text-base md:text-lg font-bold tracking-wider ${accentColorClass} mb-4 uppercase`}
+              style={subtitleStyle || {}}
             >
               {subtitle}
             </motion.p>
@@ -181,9 +187,10 @@ export default function CustomSection({
           {locationTag && (
             <motion.div
               variants={lineVariants}
-              className="flex items-center gap-1.5 text-xs sm:text-sm md:text-base font-semibold tracking-wider text-gray-900 drop-shadow-[0_1px_4px_rgba(255,255,255,0.7)] mb-4 uppercase"
+              className="flex items-center gap-1.5 text-xs sm:text-sm md:text-base font-semibold tracking-wider text-gray-900 mb-4 uppercase"
+              style={subtitleStyle || {}}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-[#D4AF37] flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-[#D4AF37] flex-shrink-0" style={{ color: dividerColor }}>
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
@@ -195,7 +202,8 @@ export default function CustomSection({
           {(title || subtitle) && content && (
             <motion.div
               variants={lineVariants}
-              className="w-20 h-0.5 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent my-4 opacity-90 shadow-sm"
+              className="w-20 h-0.5 my-4 opacity-90 shadow-sm"
+              style={{ background: `linear-gradient(to right, transparent, ${dividerColor}, transparent)` }}
             />
           )}
 
@@ -206,7 +214,8 @@ export default function CustomSection({
                 <motion.p
                   key={idx}
                   variants={lineVariants}
-                  className="text-base sm:text-lg md:text-xl text-gray-900 drop-shadow-[0_1px_6px_rgba(255,255,255,0.8)] leading-relaxed font-medium"
+                  className="text-base sm:text-lg md:text-xl text-gray-900 leading-relaxed font-medium"
+                  style={bodyStyle || {}}
                 >
                   {line}
                 </motion.p>
