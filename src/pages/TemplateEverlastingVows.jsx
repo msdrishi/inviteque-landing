@@ -576,7 +576,7 @@ export default function TemplateEverlastingVows({ savedData }) {
       ...staticData.story,
       items: (() => {
         const photos = savedData
-          ? (savedData.storyData?.photos || [])
+          ? (savedData.storyData?.photos || savedData.photos || [])
           : (draftData.photos || [])
         const activePhotos = photos.filter(Boolean)
         return activePhotos.length > 0

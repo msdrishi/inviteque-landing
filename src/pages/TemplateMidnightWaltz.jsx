@@ -238,8 +238,8 @@ function MidnightWaltzHero({ data, isDesktop }) {
         flexDirection: 'column',
         alignItems: 'center',
         textAlign: 'center',
-        // Tablets have content starting a bit lower to frame nicely under the illustration
-        paddingTop: isDesktop ? '54vh' : (isTablet ? '46svh' : '38svh'),
+        // Frame content under illustration cleanly across devices
+        paddingTop: isDesktop ? '54vh' : (isTablet ? '38svh' : '38svh'),
         paddingBottom: isDesktop ? '28px' : '20px',
         paddingLeft: isTablet ? 36 : 24,
         paddingRight: isTablet ? 36 : 24,
@@ -253,8 +253,8 @@ function MidnightWaltzHero({ data, isDesktop }) {
           position: 'absolute',
           inset: 0,
           zIndex: 0,
-          // Slightly zoomed in scale limits to eliminate gap borders during parallax scroll:
-          scale: isDesktop ? 1.20 : (isTablet ? 1.08 : 1.12),
+          // 1.04 on tablet eliminates heavy over-zoom while avoiding white border gaps during -4% scroll
+          scale: isDesktop ? 1.20 : (isTablet ? 1.04 : 1.12),
           transformOrigin: 'center',
           y: bgY,
         }}
@@ -284,13 +284,13 @@ function MidnightWaltzHero({ data, isDesktop }) {
           flexDirection: 'column',
           alignItems: 'center',
           width: '100%',
-          maxWidth: isDesktop ? 520 : (isTablet ? 480 : 360),
+          maxWidth: isDesktop ? 520 : (isTablet ? 640 : 360),
         }}
       >
 
         {/* 1. Top ornament */}
-        <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 8 : 5 }}>
-          <TopOrnament color={C.gold} size={isDesktop ? 28 : 22} />
+        <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 8 : (isTablet ? 8 : 5) }}>
+          <TopOrnament color={C.gold} size={isDesktop ? 28 : (isTablet ? 30 : 22)} />
         </motion.div>
 
         {/* 2. SAVE THE DATE — Modernline (Not capitalized) */}
@@ -298,7 +298,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
           variants={lineAnim}
           style={{
             fontFamily: "'Modernline', sans-serif",
-            fontSize: isDesktop ? 'clamp(14px, 1.3vw, 18px)' : (isTablet ? 'clamp(20px, 2.6vw, 26px)' : 'clamp(15px, 2.2vw, 22px)'),
+            fontSize: isDesktop ? 'clamp(14px, 1.3vw, 18px)' : (isTablet ? 'clamp(26px, 3.0vw, 32px)' : 'clamp(15px, 2.2vw, 22px)'),
             color: C.primary,
             margin: `0 0 ${isDesktop ? '8px' : '5px'} 0`,
             lineHeight: 1,
@@ -316,7 +316,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
             fontFamily: "'Religath', serif",
             fontSize: isDesktop
               ? 'clamp(2.5rem, 4.2vw, 3.6rem)'
-              : (isTablet ? 'clamp(3.3rem, 5.0vw, 4.0rem)' : 'clamp(2.5rem, 4.5vw, 4.0rem)'),
+              : (isTablet ? 'clamp(4.2rem, 6.5vw, 5.2rem)' : 'clamp(2.5rem, 4.5vw, 4.0rem)'),
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
             color: C.primary,
@@ -363,7 +363,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
             fontFamily: "'Modernline', sans-serif",
             fontSize: isDesktop
               ? 'clamp(1.4rem, 2.4vw, 2.0rem)'
-              : (isTablet ? 'clamp(1.8rem, 3.5vw, 2.3rem)' : 'clamp(1.3rem, 3.0vw, 2.2rem)'),
+              : (isTablet ? 'clamp(2.4rem, 4.0vw, 3.0rem)' : 'clamp(1.3rem, 3.0vw, 2.2rem)'),
             color: C.primary,
             margin: `${isDesktop ? '-2px' : '-2px'} 0`,
             lineHeight: 1.0,
@@ -381,7 +381,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
             fontFamily: "'Religath', serif",
             fontSize: isDesktop
               ? 'clamp(2.5rem, 4.2vw, 3.6rem)'
-              : (isTablet ? 'clamp(3.3rem, 5.0vw, 4.0rem)' : 'clamp(2.5rem, 4.5vw, 4.0rem)'),
+              : (isTablet ? 'clamp(4.2rem, 6.5vw, 5.2rem)' : 'clamp(2.5rem, 4.5vw, 4.0rem)'),
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
             color: C.primary,
@@ -427,7 +427,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontWeight: 400,
-            fontSize: isDesktop ? 'clamp(9px, 0.9vw, 11px)' : (isTablet ? 'clamp(15px, 2.2vw, 18px)' : 'clamp(8px, 2.2svw, 10px)'),
+            fontSize: isDesktop ? 'clamp(9px, 0.9vw, 11px)' : (isTablet ? 'clamp(18px, 2.8vw, 24px)' : 'clamp(8px, 2.2svw, 10px)'),
             letterSpacing: '0.30em',
             textTransform: 'uppercase',
             color: C.secondary,
@@ -443,7 +443,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
           variants={lineAnim}
           style={{ marginBottom: isDesktop ? 8 : 6 }}
         >
-          <ThinDivider color={C.secondary} width={isDesktop ? 120 : 100} />
+          <ThinDivider color={C.secondary} width={isDesktop ? 120 : (isTablet ? 180 : 100)} />
         </motion.div>
 
         {/* 8. DATE ROW: DECEMBER | 18 | 2026 (Month - Date - Year format, Religath font, Date is bigger) */}
@@ -464,7 +464,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
               fontFamily: "'Religath', serif",
               fontSize: isDesktop
                 ? 'clamp(1.1rem, 1.8vw, 1.5rem)'
-                : (isTablet ? 'clamp(1.4rem, 2.2vw, 1.7rem)' : 'clamp(1.15rem, 2.4vw, 1.6rem)'),
+                : (isTablet ? 'clamp(1.8rem, 2.8vw, 2.4rem)' : 'clamp(1.15rem, 2.4vw, 1.6rem)'),
               color: C.primary,
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
@@ -474,7 +474,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
           </span>
 
           {/* Separator */}
-          <span style={{ color: C.secondary, fontSize: isDesktop ? '1.2rem' : (isTablet ? '1.4rem' : '1.1rem'), opacity: 0.6, fontFamily: 'serif' }}>|</span>
+          <span style={{ color: C.secondary, fontSize: isDesktop ? '1.2rem' : (isTablet ? '2.2rem' : '1.1rem'), opacity: 0.6, fontFamily: 'serif' }}>|</span>
 
           {/* Day (Date) — larger */}
           <span
@@ -482,7 +482,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
               fontFamily: "'Religath', serif",
               fontSize: isDesktop
                 ? 'clamp(2.2rem, 3.8vw, 3.2rem)'
-                : (isTablet ? 'clamp(2.6rem, 4.0vw, 3.2rem)' : 'clamp(2.0rem, 5.0vw, 2.8rem)'),
+                : (isTablet ? 'clamp(3.6rem, 5.5vw, 4.6rem)' : 'clamp(2.0rem, 5.0vw, 2.8rem)'),
               color: C.primary,
               letterSpacing: '0.04em',
               fontWeight: 'normal',
@@ -492,7 +492,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
           </span>
 
           {/* Separator */}
-          <span style={{ color: C.secondary, fontSize: isDesktop ? '1.2rem' : (isTablet ? '1.4rem' : '1.1rem'), opacity: 0.6, fontFamily: 'serif' }}>|</span>
+          <span style={{ color: C.secondary, fontSize: isDesktop ? '1.2rem' : (isTablet ? '2.2rem' : '1.1rem'), opacity: 0.6, fontFamily: 'serif' }}>|</span>
 
           {/* Year */}
           <span
@@ -500,7 +500,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
               fontFamily: "'Religath', serif",
               fontSize: isDesktop
                 ? 'clamp(1.1rem, 1.8vw, 1.5rem)'
-                : (isTablet ? 'clamp(1.4rem, 2.2vw, 1.7rem)' : 'clamp(1.15rem, 2.4vw, 1.6rem)'),
+                : (isTablet ? 'clamp(1.8rem, 2.8vw, 2.4rem)' : 'clamp(1.15rem, 2.4vw, 1.6rem)'),
               color: C.primary,
               letterSpacing: '0.04em',
             }}
@@ -514,7 +514,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
           variants={lineAnim}
           style={{
             fontFamily: "'Religath', serif",
-            fontSize: isDesktop ? 'clamp(13px, 1.2vw, 16px)' : (isTablet ? 'clamp(16px, 2.2vw, 20px)' : 'clamp(14px, 2.0vw, 18px)'),
+            fontSize: isDesktop ? 'clamp(13px, 1.2vw, 16px)' : (isTablet ? 'clamp(22px, 3.0vw, 28px)' : 'clamp(14px, 2.0vw, 18px)'),
             letterSpacing: '0.14em',
             textTransform: 'uppercase',
             color: C.primary,
@@ -529,7 +529,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
           variants={lineAnim}
           style={{
             fontFamily: "'Religath', serif",
-            fontSize: isDesktop ? 'clamp(12px, 1.1vw, 15px)' : (isTablet ? 'clamp(14px, 2.0vw, 18px)' : 'clamp(13px, 1.8vw, 16px)'),
+            fontSize: isDesktop ? 'clamp(12px, 1.1vw, 15px)' : (isTablet ? 'clamp(18px, 2.5vw, 24px)' : 'clamp(13px, 1.8vw, 16px)'),
             letterSpacing: '0.10em',
             color: C.primary,
             margin: `1px 0 ${isDesktop ? '10px' : '8px'} 0`,
@@ -542,8 +542,8 @@ function MidnightWaltzHero({ data, isDesktop }) {
         <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 6 : (isTablet ? 8 : 5) }}>
           <svg
             viewBox="0 0 24 24"
-            width={isDesktop ? 16 : (isTablet ? 18 : 14)}
-            height={isDesktop ? 16 : (isTablet ? 18 : 14)}
+            width={isDesktop ? 16 : (isTablet ? 22 : 14)}
+            height={isDesktop ? 16 : (isTablet ? 22 : 14)}
             fill={C.secondary}
             aria-hidden="true"
             style={{ opacity: 0.8 }}
@@ -580,7 +580,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
                       fontWeight: 600,
-                      fontSize: isDesktop ? 'clamp(11px, 1.2vw, 14px)' : (isTablet ? 'clamp(14px, 1.8vw, 17px)' : 'clamp(12px, 1.8vw, 15px)'),
+                      fontSize: isDesktop ? 'clamp(11px, 1.2vw, 14px)' : (isTablet ? 'clamp(18px, 2.4vw, 23px)' : 'clamp(12px, 1.8vw, 15px)'),
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
                       color: C.primary,
@@ -600,7 +600,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
                 <p style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 600,
-                  fontSize: isDesktop ? '13px' : (isTablet ? '18px' : '13px'),
+                  fontSize: isDesktop ? '13px' : (isTablet ? '22px' : '13px'),
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
                   color: C.primary,
@@ -612,7 +612,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
                 <p style={{
                   fontFamily: "'Cormorant Garamond', serif",
                   fontWeight: 600,
-                  fontSize: isDesktop ? '11px' : (isTablet ? '14px' : '11px'),
+                  fontSize: isDesktop ? '11px' : (isTablet ? '18px' : '11px'),
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
                   color: C.primary,
@@ -853,6 +853,10 @@ export default function TemplateMidnightWaltz({ savedData }) {
   const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData?.showSchedule
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
+  const userPhotos = savedData
+    ? (savedData.storyData?.photos || savedData.photos || [])
+    : (draftData?.photos || [])
+
   // ── Watermark ─────────────────────────────────────────────────
   const WatermarkMobile = () => showWatermark ? (
     <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.30] select-none">
@@ -922,6 +926,7 @@ export default function TemplateMidnightWaltz({ savedData }) {
               brideName={data.hero.brideName}
               groomPhoto={groomPhoto}
               bridePhoto={bridePhoto}
+              photos={userPhotos}
               bgImageDesktop={photoBgDesktop}
               bgImageMobile={photoBgMobile}
               isDesktop={false}
@@ -982,6 +987,7 @@ export default function TemplateMidnightWaltz({ savedData }) {
               brideName={data.hero.brideName}
               groomPhoto={groomPhoto}
               bridePhoto={bridePhoto}
+              photos={userPhotos}
               bgImageDesktop={photoBgDesktop}
               bgImageMobile={photoBgMobile}
               isDesktop={true}

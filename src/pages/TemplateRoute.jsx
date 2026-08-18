@@ -112,6 +112,10 @@ const extractImageUrls = (data) => {
     data.galleryData.photos.forEach(p => { if (p) urls.push(p); });
   }
 
+  if (data.photos && Array.isArray(data.photos)) {
+    data.photos.forEach(p => { if (p) urls.push(p); });
+  }
+
   return urls.filter(Boolean);
 };
 

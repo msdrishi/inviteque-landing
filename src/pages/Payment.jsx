@@ -154,7 +154,9 @@ export default function Payment() {
         templateId,
         coupleData: {
           groomName: draftData.groomName,
-          brideName: draftData.brideName
+          brideName: draftData.brideName,
+          groomPhoto: draftData.groomPhoto,
+          bridePhoto: draftData.bridePhoto
         },
         heroData: {
           groomName: draftData.groomName,

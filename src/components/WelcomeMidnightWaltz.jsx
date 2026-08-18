@@ -175,7 +175,7 @@ export default function WelcomeMidnightWaltz({
         </motion.p>
 
         {/* Lotus divider */}
-        <motion.div variants={lineAnim} style={{ alignSelf: 'flex-start' }}>
+        <motion.div variants={lineAnim} style={{ alignSelf: isDesktop ? 'center' : 'flex-start' }}>
           <LotusDivider />
         </motion.div>
       </motion.div>

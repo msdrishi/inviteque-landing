@@ -29,6 +29,7 @@ function LotusDivider({ color = '#B09060' }) {
 export default function PhotoCardsMidnightWaltz({
   groomName,
   brideName,
+  photos = [],
   bgImageDesktop,
   bgImageMobile,
   isDesktop,
@@ -62,20 +63,26 @@ export default function PhotoCardsMidnightWaltz({
   })
 
   // Photo Cards stack setup
-  const items = [
-    {
-      image: "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831801/midnight-waltz-image-1.png",
-      quote: "In your arms, I have found my forever home."
-    },
-    {
-      image: "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831803/midnight-waltz-image-2.png",
-      quote: "Every love story is beautiful, but ours is my favorite."
-    },
-    {
-      image: "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831805/midnight-waltz-image-3.png",
-      quote: "Two hearts, one soul, a lifetime of beautiful moments."
-    }
+  const defaultImages = [
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831801/midnight-waltz-image-1.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831803/midnight-waltz-image-2.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831805/midnight-waltz-image-3.png"
   ]
+
+  const defaultQuotes = [
+    "In your arms, I have found my forever home.",
+    "Every love story is beautiful, but ours is my favorite.",
+    "Two hearts, one soul, a lifetime of beautiful moments."
+  ]
+
+  const items = [0, 1, 2].map(i => {
+    const rawPhoto = photos && photos[i]
+    const photoUrl = typeof rawPhoto === 'string' ? rawPhoto : (rawPhoto?.image || null)
+    return {
+      image: (photoUrl && photoUrl.trim() !== '') ? photoUrl : defaultImages[i],
+      quote: defaultQuotes[i]
+    }
+  })
 
   // Card 0: Slides up as the section enters the viewport, and reaches 0vh when fully in view
   const card0Y = useTransform(smoothEntryProgress, [0.2, 1.0], ['60vh', '0vh'])
