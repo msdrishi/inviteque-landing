@@ -299,10 +299,14 @@ body::before {
     animation: flutter-bottom 150ms alternate infinite ease-in-out;
 }
 
-/* Hide iOS Safari native video play overlay button */
+/* Hide iOS Safari native video play overlay button and controls */
 video::-webkit-media-controls-start-playback-button,
-video::-webkit-media-controls-play-button {
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls {
   display: none !important;
-  -webkit-appearance: none;
-  opacity: 0;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }

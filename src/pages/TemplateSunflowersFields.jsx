@@ -9,17 +9,17 @@ import Events from '../components/Events.jsx'
 import Footer from '../components/Footer.jsx'
 import CustomSection from '../components/CustomSection.jsx'
 
-// Background Assets (Directly from local public directory)
-const firstFrameDesktop = cMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.png"
-const firstFrameMobile = cMapping['hero-first-frame-mobile.jpg'] || "/backgrounds/Sunflower-template/frames/mobile/mobile-view.png"
-const venueBgDesktop = cMapping['venue-desktop.png'] || "/backgrounds/Royal Palace/venue-desktop.png"
-const venueBgMobile = cMapping['venue-mobile.png'] || "/backgrounds/Royal Palace/venue-mobile.png"
-const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "/backgrounds/Sunflower-template/frames/desktop/countdown-desktop.png"
-const countdownBgMobile = cMapping['countdown-mobile.png'] || "/backgrounds/Sunflower-template/frames/mobile/countdown-mobile.png"
+// Background Assets (Served exclusively via Cloudinary)
+const firstFrameDesktop = cMapping['hero-first-frame-desktop.jpg'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081254/ri2nmgysb6h1jhpa8h70.png"
+const firstFrameMobile = cMapping['hero-first-frame-mobile.jpg'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081256/dngashc5t91odh16rpho.png"
+const venueBgDesktop = cMapping['venue-desktop.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786305381/sunflower-venue-desktop-1786305372189.png"
+const venueBgMobile = cMapping['venue-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786305382/sunflower-venue-mobile-1786305372189.png"
+const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081263/b85gcp3bu3axm47tklqj.png"
+const countdownBgMobile = cMapping['countdown-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081265/gboahybckqj0m781fkkp.png"
 
-const fallbackPhoto1 = cMapping['sunflower-1.png'] || "/backgrounds/Royal Palace/sunflower-1.png"
-const fallbackPhoto2 = cMapping['sunflower-2.png'] || "/backgrounds/Royal Palace/sunflower-2.png"
-const fallbackPhoto3 = cMapping['sunflower-3.png'] || "/backgrounds/Royal Palace/sunflower-3.png"
+const fallbackPhoto1 = cMapping['sunflower-1.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786304159/sunflower-gallery-1-1786304145513.png"
+const fallbackPhoto2 = cMapping['sunflower-2.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786304161/sunflower-gallery-2-1786304145513.png"
+const fallbackPhoto3 = cMapping['sunflower-3.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786304163/sunflower-gallery-3-1786304145513.png"
 
 // Animation Variants
 const fadeUp = {
@@ -160,6 +160,64 @@ const letterAnimVariants = {
    ───────────────────────────────────────── */
 function RoyalPalaceHero({ data, isDesktop }) {
   const [videoPlaying, setVideoPlaying] = useState(false)
+  const videoRef = useRef(null)
+
+  const videoSrc = isDesktop
+    ? (cMapping['Sunflowers_moving_in_wind_1080p_desktop.mp4'] || "https://res.cloudinary.com/djbxuk2xr/video/upload/v1786304410/sunflower-wind-desktop-1786304384411.mp4")
+    : (cMapping['Sunflowers_swaying_in_wind.mp4'] || "https://res.cloudinary.com/djbxuk2xr/video/upload/v1786304414/sunflower-swaying-mobile-1786304384411.mp4")
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    // Enforce DOM attributes required by WebKit / iOS Safari for autoplay
+    video.muted = true
+    video.defaultMuted = true
+    video.playsInline = true
+    video.setAttribute('playsinline', 'true')
+    video.setAttribute('webkit-playsinline', 'true')
+
+    let isSubscribed = true
+
+    const markPlaying = () => {
+      if (isSubscribed) setVideoPlaying(true)
+    }
+
+    video.addEventListener('playing', markPlaying)
+    video.addEventListener('canplay', () => {
+      if (video.paused) {
+        video.play().then(markPlaying).catch(() => {})
+      }
+    })
+
+    // Attempt play programmatically
+    const playPromise = video.play()
+    if (playPromise !== undefined) {
+      playPromise.then(markPlaying).catch(() => {
+        // Autoplay blocked by iOS low power mode or user policy -> trigger on first touch/scroll/click
+        const handleInteraction = () => {
+          if (video && video.paused) {
+            video.play().then(markPlaying).catch(() => {})
+          }
+          window.removeEventListener('touchstart', handleInteraction)
+          window.removeEventListener('click', handleInteraction)
+          window.removeEventListener('scroll', handleInteraction)
+        }
+
+        window.addEventListener('touchstart', handleInteraction, { passive: true, once: true })
+        window.addEventListener('click', handleInteraction, { passive: true, once: true })
+        window.addEventListener('scroll', handleInteraction, { passive: true, once: true })
+      })
+    }
+
+    return () => {
+      isSubscribed = false
+      if (video) {
+        video.removeEventListener('playing', markPlaying)
+      }
+    }
+  }, [videoSrc])
+
   const dateParts = useMemo(() => {
     const parts = String(data.dateLine || '').trim().split(/\s+/)
     if (parts.length >= 3) {
@@ -190,31 +248,23 @@ function RoyalPalaceHero({ data, isDesktop }) {
         />
 
         {/* Video Element (Smoothly fades in once it actually starts playing) */}
-        {isDesktop ? (
-          <video
-            src={cMapping['Sunflowers_moving_in_wind_1080p_desktop.mp4'] || "/backgrounds/Royal Palace/Sunflowers_moving_in_wind_1080p_desktop.mp4"}
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls={false}
-            onPlaying={() => setVideoPlaying(true)}
-            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out ${videoPlaying ? 'opacity-100' : 'opacity-0'}`}
-            style={{ transform: 'scale(1.01)' }}
-          />
-        ) : (
-          <video
-            src={cMapping['Sunflowers_swaying_in_wind.mp4'] || "/backgrounds/Royal Palace/Sunflowers_swaying_in_wind.mp4"}
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls={false}
-            onPlaying={() => setVideoPlaying(true)}
-            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out ${videoPlaying ? 'opacity-100' : 'opacity-0'}`}
-            style={{ transform: 'scale(1.01)' }}
-          />
-        )}
+        <video
+          ref={videoRef}
+          key={videoSrc}
+          src={videoSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+          webkit-playsinline="true"
+          controls={false}
+          preload="auto"
+          disablePictureInPicture
+          disableRemotePlayback
+          onPlaying={() => setVideoPlaying(true)}
+          className={`absolute inset-0 w-full h-full object-cover object-center pointer-events-none transition-opacity duration-1000 ease-in-out ${videoPlaying ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transform: 'scale(1.01)' }}
+        />
         {/* Soft overlay to blend top portion with text */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#FFFDF6]/45 via-transparent to-[#FFFDF6]/15" />
       </div>
@@ -894,7 +944,7 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
   const bannerScale = useTransform(scrollYProgress, [0.15, 0.50], [0.9, 1.15])
   const bannerRotateX = useTransform(scrollYProgress, [0.15, 0.50], [12, 0])
 
-  const bgImage = isDesktop ? (cMapping['welcome-desktop.png'] || "/backgrounds/Sunflower-template/frames/desktop/welcome-desktop.png") : (cMapping['welcome-mobile.png'] || "/backgrounds/Sunflower-template/frames/mobile/welcome-mobile.png")
+  const bgImage = isDesktop ? (cMapping['welcome-desktop.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081259/w0jjcqo8t9alalmp51dr.png") : (cMapping['welcome-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081261/gt9aq4niaubtfvsm4mvc.png")
   const dividerFlowersMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964586/divider-flowers-mobile.png"
 
   return (
@@ -964,7 +1014,7 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
         }}
       >
         <img
-          src={cMapping['welcome-banner.png'] || "/backgrounds/Royal Palace/welcome-banner.png"}
+          src={cMapping['welcome-banner.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786304156/sunflower-welcome-banner-1786304145513.png"}
           alt=""
           aria-hidden="true"
           className="w-[130%] sm:w-[120%] lg:w-[110%] h-auto object-contain object-bottom min-h-[350px] md:min-h-[420px] max-h-[680px]"
