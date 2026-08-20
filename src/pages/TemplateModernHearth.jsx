@@ -197,7 +197,14 @@ export default function TemplateModernHearth({ savedData }) {
       const savedY = savedData?.heroData?.weddingYear
       if (savedM && savedD && savedY) {
         const d = new Date(`${savedM} ${savedD}, ${savedY}`)
-        if (!isNaN(d.getTime())) return d.toISOString()
+        if (!isNaN(d.getTime())) {
+          if (isPreview && d.getTime() <= Date.now()) {
+            const f = new Date()
+            f.setDate(f.getDate() + 90)
+            return f.toISOString()
+          }
+          return d.toISOString()
+        }
       }
 
       const draftM = draftData?.weddingMonth
@@ -205,7 +212,14 @@ export default function TemplateModernHearth({ savedData }) {
       const draftY = draftData?.weddingYear
       if (draftM && draftD && draftY) {
         const d = new Date(`${draftM} ${draftD}, ${draftY}`)
-        if (!isNaN(d.getTime())) return d.toISOString()
+        if (!isNaN(d.getTime())) {
+          if (isPreview && d.getTime() <= Date.now()) {
+            const f = new Date()
+            f.setDate(f.getDate() + 90)
+            return f.toISOString()
+          }
+          return d.toISOString()
+        }
       }
 
       // Default future date for preview mode (90 days from now)
@@ -999,33 +1013,33 @@ function HW1Countdown({ data, bgImage, isDesktop, style }) {
           Welcoming you to share our joy as we step into our new home.
         </motion.p>
         
-        {isZero ? (
-          <motion.div 
-            variants={scrollItemVariants}
-            className="w-full mt-4 bg-[#FFFDF5]/90 border border-[#D3A34A]/25 p-6 rounded-2xl shadow-[0_6px_20px_rgba(80,50,20,0.05)]"
-          >
-            <h3 className="font-heading text-2xl font-bold text-[#6B351D]">Welcome to our new home!</h3>
-          </motion.div>
-        ) : (
-          <motion.div 
-            variants={scrollItemVariants}
-            className="flex gap-4 items-center justify-center w-full mt-4 bg-[#FFFDF5]/90 border border-[#D3A34A]/25 p-5 rounded-2xl shadow-[0_6px_20px_rgba(80,50,20,0.05)]"
-          >
-            {boxes.map((box, idx) => (
-              <div key={idx} className="flex items-center">
-                <div className="flex flex-col items-center">
-                  <span className="text-[28px] sm:text-[34px] font-bold text-[#6B351D] font-heading leading-none">
-                    {idx === 0 ? box.val : String(box.val).padStart(2, '0')}
-                  </span>
-                  <span className="text-[10px] uppercase font-semibold text-[#776653] tracking-widest mt-1">
-                    {box.label}
-                  </span>
-                </div>
-                {idx < boxes.length - 1 && (
-                  <div className="w-[1.5px] h-8 bg-[#D3A34A]/25 ml-4 sm:ml-4" />
-                )}
+        <motion.div 
+          variants={scrollItemVariants}
+          className="flex gap-3 sm:gap-4 items-center justify-center w-full mt-4 bg-[#FFFDF5]/90 border border-[#D3A34A]/25 p-5 rounded-2xl shadow-[0_6px_20px_rgba(80,50,20,0.05)]"
+        >
+          {boxes.map((box, idx) => (
+            <div key={idx} className="flex items-center">
+              <div className="flex flex-col items-center min-w-[55px] sm:min-w-[65px]">
+                <span className="text-[28px] sm:text-[34px] font-bold text-[#6B351D] font-heading leading-none">
+                  {idx === 0 ? box.val : String(box.val).padStart(2, '0')}
+                </span>
+                <span className="text-[10px] uppercase font-semibold text-[#776653] tracking-widest mt-1">
+                  {box.label}
+                </span>
               </div>
-            ))}
+              {idx < boxes.length - 1 && (
+                <div className="w-[1.5px] h-8 bg-[#D3A34A]/25 ml-2 sm:ml-3" />
+              )}
+            </div>
+          ))}
+        </motion.div>
+
+        {isZero && (
+          <motion.div 
+            variants={scrollItemVariants}
+            className="w-full mt-4 bg-[#FFFDF5]/90 border border-[#D3A34A]/25 p-4 rounded-2xl shadow-[0_6px_20px_rgba(80,50,20,0.05)]"
+          >
+            <h3 className="font-heading text-lg font-bold text-[#6B351D]">Welcome to our new home!</h3>
           </motion.div>
         )}
       </motion.div>
