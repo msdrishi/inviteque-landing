@@ -105,6 +105,15 @@ export default function TemplateModernHearth({ savedData }) {
             ? activeData.scheduleData.showSchedule 
             : activeData.invitationData?.showSchedule))
     : true
+  const showCountdown = activeData
+    ? (activeData.showCountdown !== undefined 
+        ? activeData.showCountdown 
+        : (activeData.countdownData?.showCountdown !== undefined 
+            ? activeData.countdownData.showCountdown 
+            : (activeData.invitationData?.showCountdown !== undefined
+                ? activeData.invitationData.showCountdown
+                : true)))
+    : true
   const familyMessage = activeData 
     ? (activeData.familyMessage || activeData.invitationData?.familyMessage || '')
     : ''
@@ -181,14 +190,33 @@ export default function TemplateModernHearth({ savedData }) {
         }
       : staticData.events
 
-    // Build countdown from actual ceremony date
-    const targetDate = savedData
-      ? `${savedData.heroData?.weddingMonth || 'June'} ${savedData.heroData?.weddingDate || '1'}, ${savedData.heroData?.weddingYear || '2026'}`
-      : `${draftData.weddingMonth || 'June'} ${draftData.weddingDate || '1'}, ${draftData.weddingYear || '2026'}`
+    // Build countdown safely from ceremony date
+    const countdownTargetISO = (() => {
+      const savedM = savedData?.heroData?.weddingMonth
+      const savedD = savedData?.heroData?.weddingDate
+      const savedY = savedData?.heroData?.weddingYear
+      if (savedM && savedD && savedY) {
+        const d = new Date(`${savedM} ${savedD}, ${savedY}`)
+        if (!isNaN(d.getTime())) return d.toISOString()
+      }
+
+      const draftM = draftData?.weddingMonth
+      const draftD = draftData?.weddingDate
+      const draftY = draftData?.weddingYear
+      if (draftM && draftD && draftY) {
+        const d = new Date(`${draftM} ${draftD}, ${draftY}`)
+        if (!isNaN(d.getTime())) return d.toISOString()
+      }
+
+      // Default future date for preview mode (90 days from now)
+      const futureDate = new Date()
+      futureDate.setDate(futureDate.getDate() + 90)
+      return futureDate.toISOString()
+    })()
 
     const countdownData = {
       ...staticData.countdown,
-      targetDateTimeISO: new Date(targetDate).toISOString(),
+      targetDateTimeISO: countdownTargetISO,
     }
 
     return {
@@ -396,12 +424,16 @@ export default function TemplateModernHearth({ savedData }) {
         </div>
 
         {/* Countdown Section */}
-        <div className="xl:hidden">
-          <HW1Countdown data={data.countdown} bgImage={countdownBgMobile} style={{ minHeight: '100svh' }} />
-        </div>
-        <div className="hidden xl:block w-full">
-          <HW1Countdown data={data.countdown} isDesktop={true} bgImage={countdownBgDesktop} style={{ minHeight: '100svh', aspectRatio: 'auto' }} />
-        </div>
+        {showCountdown && (
+          <>
+            <div className="xl:hidden">
+              <HW1Countdown data={data.countdown} bgImage={countdownBgMobile} style={{ minHeight: '100svh' }} />
+            </div>
+            <div className="hidden xl:block w-full">
+              <HW1Countdown data={data.countdown} isDesktop={true} bgImage={countdownBgDesktop} style={{ minHeight: '100svh', aspectRatio: 'auto' }} />
+            </div>
+          </>
+        )}
 
         {/* Footer */}
         <Footer data={data.footer} showWatermark={showWatermark} />
@@ -911,6 +943,7 @@ function HW1Countdown({ data, bgImage, isDesktop, style }) {
         setParts({ days: 0, hours: 0, minutes: 0, seconds: 0 })
         return
       }
+      setIsZero(false)
       const totalSeconds = Math.floor(ms / 1000)
       const days = Math.floor(totalSeconds / (60 * 60 * 24))
       const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60))
