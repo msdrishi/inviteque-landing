@@ -582,6 +582,9 @@ export default function Landing() {
             <a href="#templates" className="text-sm font-semibold text-iqText/70 hover:text-iqText transition-colors">
               Templates
             </a>
+            <a href="#custom-template" className="text-sm font-semibold text-iqText/70 hover:text-iqText transition-colors">
+              Customisation
+            </a>
             <a href="#pricing" className="text-sm font-semibold text-iqText/70 hover:text-iqText transition-colors">
               Pricing
             </a>
@@ -954,6 +957,185 @@ export default function Landing() {
               </motion.article>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* 3b) Open for Customisation Template Section */}
+      <section id="custom-template" className="relative border-t border-iqBorder bg-gradient-to-b from-[#FFFDF9] via-[#FAF3EC] to-[#FFFDF9] py-20 md:py-28 overflow-hidden">
+        {/* Luxury background ambient radial glow */}
+        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[900px] bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.15)_0%,rgba(197,160,89,0.06)_50%,transparent_80%)] blur-[90px]" />
+
+        <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-6">
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            className="mx-auto max-w-3xl text-center"
+          >
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/50 bg-[#FFFDF2] px-4 py-1.5 shadow-sm text-[11px] font-extrabold uppercase tracking-[0.18em] text-[#8A6E1E]">
+              <span>✨</span> Bespoke & Custom Designs
+            </motion.div>
+
+            <motion.h2 variants={fadeUp} className="mt-5 text-3xl font-extrabold tracking-tight text-iqText md:text-5xl">
+              Open for <span className="bg-gradient-to-r from-[#8A6E1E] via-[#B8860B] to-[#5A2C16] bg-clip-text text-transparent">Customisation</span>
+            </motion.h2>
+
+            <motion.p variants={fadeUp} className="mt-4 text-base md:text-lg text-iqText/75 leading-relaxed max-w-2xl mx-auto">
+              Dreaming of a unique theme, illustrated couple portraits, personalized color palettes, or bespoke section layouts? We fully support customized templates built tailored to your wedding.
+            </motion.p>
+          </motion.div>
+
+          {/* 4 Feature Highlights Grid */}
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {/* Card 1: 100% Custom Visuals */}
+            <motion.article
+              variants={fadeUp}
+              className="group relative rounded-[2rem] border border-[#D4AF37]/30 bg-white/80 backdrop-blur-sm p-7 shadow-luxury transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:border-[#D4AF37]/60 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFF8E7] text-[#8A6E1E] border border-[#D4AF37]/30 mb-5 shadow-sm group-hover:scale-110 transition-transform">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+                    <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+                    <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+                    <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-iqText">Bespoke Themes</h3>
+                <p className="mt-2 text-sm text-iqText/70 leading-relaxed">
+                  Tailored color schemes, custom palace backgrounds, royal crest monograms, and font choices to match your wedding decor.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-[#D4AF37]/20 flex items-center gap-1.5 text-xs font-semibold text-[#8A6E1E]">
+                <span>✦ 100% Unique Design</span>
+              </div>
+            </motion.article>
+
+            {/* Card 2: Illustrated Couple Art */}
+            <motion.article
+              variants={fadeUp}
+              className="group relative rounded-[2rem] border border-[#D4AF37]/30 bg-white/80 backdrop-blur-sm p-7 shadow-luxury transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:border-[#D4AF37]/60 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFF8E7] text-[#8A6E1E] border border-[#D4AF37]/30 mb-5 shadow-sm group-hover:scale-110 transition-transform">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-iqText">Illustrated Couple Art</h3>
+                <p className="mt-2 text-sm text-iqText/70 leading-relaxed">
+                  Transform your couple photos into charming digital illustrations, stylized portraits, and artistic caricatures embedded in your website.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-[#D4AF37]/20 flex items-center gap-1.5 text-xs font-semibold text-[#8A6E1E]">
+                <span>✦ Digital Couple Art</span>
+              </div>
+            </motion.article>
+
+            {/* Card 3: Multi-Event Itineraries */}
+            <motion.article
+              variants={fadeUp}
+              className="group relative rounded-[2rem] border border-[#D4AF37]/30 bg-white/80 backdrop-blur-sm p-7 shadow-luxury transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:border-[#D4AF37]/60 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFF8E7] text-[#8A6E1E] border border-[#D4AF37]/30 mb-5 shadow-sm group-hover:scale-110 transition-transform">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-iqText">Multi-Event Schedules</h3>
+                <p className="mt-2 text-sm text-iqText/70 leading-relaxed">
+                  Haldi, Mehendi, Sangeet, Muhurtham, and Reception with individual Google Map venue navigation and dress codes.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-[#D4AF37]/20 flex items-center gap-1.5 text-xs font-semibold text-[#8A6E1E]">
+                <span>✦ Custom Timelines & Maps</span>
+              </div>
+            </motion.article>
+
+            {/* Card 4: 1-on-1 Designer Support */}
+            <motion.article
+              variants={fadeUp}
+              className="group relative rounded-[2rem] border border-[#D4AF37]/30 bg-white/80 backdrop-blur-sm p-7 shadow-luxury transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:border-[#D4AF37]/60 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFF8E7] text-[#8A6E1E] border border-[#D4AF37]/30 mb-5 shadow-sm group-hover:scale-110 transition-transform">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-iqText">1-on-1 Designer Support</h3>
+                <p className="mt-2 text-sm text-iqText/70 leading-relaxed">
+                  Work directly with our experienced creative designers. Quick turnaround and iterative revisions until it is 100% perfection.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-[#D4AF37]/20 flex items-center gap-1.5 text-xs font-semibold text-[#8A6E1E]">
+                <span>✦ Fast 48h Turnaround</span>
+              </div>
+            </motion.article>
+          </motion.div>
+
+          {/* Instagram & Support CTA Card */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            className="mt-12 rounded-[2.5rem] border border-[#D4AF37]/40 bg-gradient-to-br from-white via-[#FFFDF8] to-[#FBF4E8] p-8 md:p-12 shadow-[0_20px_50px_rgba(138,110,30,0.08)] flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left"
+          >
+            <div className="max-w-xl">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#8A6E1E] bg-[#FFF8E7] px-3.5 py-1 rounded-full border border-[#D4AF37]/30">
+                <span className="h-2 w-2 rounded-full bg-[#8A6E1E] animate-pulse" />
+                Custom Orders Open
+              </div>
+              <h3 className="mt-3 text-2xl md:text-4xl font-extrabold text-iqText tracking-tight">
+                Let’s Bring Your Vision to Life
+              </h3>
+              <p className="mt-2 text-sm md:text-base text-iqText/70 leading-relaxed">
+                Have a reference design, invitation card, or dream theme in mind? Send us a DM on Instagram or reach out to our support email to discuss your requirements.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto justify-center">
+              <a
+                href="https://www.instagram.com/invitequeofficial"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] px-8 py-4 text-base font-bold text-white shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-2xl"
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" />
+                  <circle cx="12" cy="12" r="4.5" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                </svg>
+                <span>DM Us on Instagram</span>
+              </a>
+
+              <a
+                href="mailto:inviteque.support@gmail.com"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full border border-iqBorder bg-white px-7 py-4 text-sm font-bold text-iqText shadow-sm transition hover:bg-iqText hover:text-white"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
+                <span>Email Support</span>
+              </a>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -1362,19 +1544,21 @@ export default function Landing() {
               >
                 {[
                   {
-                    id: 'ig', label: 'Instagram', icon: (
+                    id: 'ig', label: 'Instagram', href: 'https://www.instagram.com/invitequeofficial', icon: (
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4.5" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg>
                     )
                   },
                   {
-                    id: 'wa', label: 'WhatsApp', icon: (
+                    id: 'wa', label: 'WhatsApp', href: 'https://www.instagram.com/invitequeofficial', icon: (
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.22-1.632A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 01-5.042-1.378l-.361-.214-3.742.981.999-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.53 6.53 2.106 12 2.106c5.471 0 9.894 4.424 9.894 9.894 0 5.471-4.423 9.894-9.894 9.894z" /></svg>
                     )
                   },
                 ].map((social) => (
                   <a
                     key={social.id}
-                    href="#"
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-[#FFF6F0]/80 transition-all hover:bg-white/10 hover:text-white"
                     aria-label={social.label}
                   >
@@ -1388,6 +1572,7 @@ export default function Landing() {
               >
                 <a href="#about" className="hover:text-white transition-colors">How it Works</a>
                 <a href="#templates" className="hover:text-white transition-colors">Templates</a>
+                <a href="#custom-template" className="hover:text-white transition-colors">Customisation</a>
                 <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
                 <a href="#faq" className="hover:text-white transition-colors">FAQs</a>
               </motion.div>

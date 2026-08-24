@@ -108,6 +108,13 @@ export default function MobileNav() {
                         How it Works
                       </a>
                       <a
+                        href="#custom-template"
+                        onClick={() => setIsOpen(false)}
+                        className="block text-base font-semibold text-iqText/80 hover:text-iqText transition-colors"
+                      >
+                        Customisation
+                      </a>
+                      <a
                         href="#pricing"
                         onClick={() => setIsOpen(false)}
                         className="block text-base font-semibold text-iqText/80 hover:text-iqText transition-colors"

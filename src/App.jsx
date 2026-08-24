@@ -41,12 +41,22 @@ function AnalyticsTracker() {
         if (pathParts[1] === 'templates' && pathParts[2]) {
           templateId = pathParts[2]
           if (pathParts[3]) {
-            inviteCode = pathParts[3]
+            inviteCode = pathParts[3].toUpperCase()
           }
         }
         // Parse /builder/:templateId
         if (pathParts[1] === 'builder' && pathParts[2]) {
           templateId = pathParts[2]
+        }
+
+        // Increment persistent local counter for invite views
+        if (inviteCode) {
+          try {
+            const currentViews = parseInt(localStorage.getItem(`iq_views_${inviteCode}`) || '0', 10)
+            localStorage.setItem(`iq_views_${inviteCode}`, String(currentViews + 1))
+          } catch (e) {
+            // Ignore localStorage errors in private browsing
+          }
         }
         
         await fetch(`${API_URL}/api/public/analytics/visit`, {
