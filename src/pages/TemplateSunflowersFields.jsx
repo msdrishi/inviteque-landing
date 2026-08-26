@@ -10,16 +10,16 @@ import Footer from '../components/Footer.jsx'
 import CustomSection from '../components/CustomSection.jsx'
 
 // Background Assets (Served exclusively via Cloudinary)
-const firstFrameDesktop = cMapping['hero-first-frame-desktop.jpg'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081254/ri2nmgysb6h1jhpa8h70.png"
-const firstFrameMobile = cMapping['hero-first-frame-mobile.jpg'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081256/dngashc5t91odh16rpho.png"
-const venueBgDesktop = cMapping['venue-desktop.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786305381/sunflower-venue-desktop-1786305372189.png"
-const venueBgMobile = cMapping['venue-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786305382/sunflower-venue-mobile-1786305372189.png"
-const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081263/b85gcp3bu3axm47tklqj.png"
-const countdownBgMobile = cMapping['countdown-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081265/gboahybckqj0m781fkkp.png"
+const firstFrameDesktop = cMapping['hero-first-frame-desktop.jpg'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1787081254/ri2nmgysb6h1jhpa8h70.png"
+const firstFrameMobile = cMapping['hero-first-frame-mobile.jpg'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1787081256/dngashc5t91odh16rpho.png"
+const venueBgDesktop = cMapping['venue-desktop.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786305381/sunflower-venue-desktop-1786305372189.png"
+const venueBgMobile = cMapping['venue-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786305382/sunflower-venue-mobile-1786305372189.png"
+const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1787081263/b85gcp3bu3axm47tklqj.png"
+const countdownBgMobile = cMapping['countdown-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1787081265/gboahybckqj0m781fkkp.png"
 
-const fallbackPhoto1 = cMapping['sunflower-1.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786304159/sunflower-gallery-1-1786304145513.png"
-const fallbackPhoto2 = cMapping['sunflower-2.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786304161/sunflower-gallery-2-1786304145513.png"
-const fallbackPhoto3 = cMapping['sunflower-3.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786304163/sunflower-gallery-3-1786304145513.png"
+const fallbackPhoto1 = cMapping['sunflower-1.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786304159/sunflower-gallery-1-1786304145513.png"
+const fallbackPhoto2 = cMapping['sunflower-2.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786304161/sunflower-gallery-2-1786304145513.png"
+const fallbackPhoto3 = cMapping['sunflower-3.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786304163/sunflower-gallery-3-1786304145513.png"
 
 // Animation Variants
 const fadeUp = {
@@ -944,8 +944,8 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
   const bannerScale = useTransform(scrollYProgress, [0.15, 0.50], [0.9, 1.15])
   const bannerRotateX = useTransform(scrollYProgress, [0.15, 0.50], [12, 0])
 
-  const bgImage = isDesktop ? (cMapping['welcome-desktop.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081259/w0jjcqo8t9alalmp51dr.png") : (cMapping['welcome-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1787081261/gt9aq4niaubtfvsm4mvc.png")
-  const dividerFlowersMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964586/divider-flowers-mobile.png"
+  const bgImage = isDesktop ? (cMapping['welcome-desktop.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1787081259/w0jjcqo8t9alalmp51dr.png") : (cMapping['welcome-mobile.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1787081261/gt9aq4niaubtfvsm4mvc.png")
+  const dividerFlowersMobile = "/assets/decorations/divider-flowers-mobile.png"
 
   return (
     <section
@@ -1014,7 +1014,7 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
         }}
       >
         <img
-          src={cMapping['welcome-banner.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786304156/sunflower-welcome-banner-1786304145513.png"}
+          src={cMapping['welcome-banner.png'] || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1200/v1786304156/sunflower-welcome-banner-1786304145513.png"}
           alt=""
           aria-hidden="true"
           className="w-[130%] sm:w-[120%] lg:w-[110%] h-auto object-contain object-bottom min-h-[350px] md:min-h-[420px] max-h-[680px]"

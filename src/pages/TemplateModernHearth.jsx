@@ -22,8 +22,8 @@ const scheduleBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_a
 
 const countdownBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600570/house-warming-hw1/hw1-countdown.png"
 const countdownBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600563/house-warming-hw1/hw1-count-desktop.png"
-const scissorPng = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600573/house-warming-hw1/hw1-scissor.png"
-const ribbonPng = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600576/house-warming-hw1/hw1-ribbon.png"
+const scissorPng = "/assets/decorations/hw1-scissor.png"
+const ribbonPng = "/assets/decorations/hw1-ribbon.png"
 
 // Slow staggered animation variants (hero section)
 const containerVariants = {

@@ -56,11 +56,48 @@ export function getOptimizedImageUrl(publicId, options = {}) {
     width = 800,
     height = 600,
     quality = 'auto',
-    format = 'webp',
+    format = 'auto',
     crop = 'fill',
   } = options
 
   return `https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloudName}/image/upload/w_${width},h_${height},c_${crop},q_${quality},f_${format}/${publicId}`
+}
+
+/**
+ * Optimize an existing full Cloudinary URL with f_auto, q_auto and optional width
+ * Avoids duplicate transformations if already present
+ */
+export function optimizeCloudinaryUrl(url, options = {}) {
+  if (!url || typeof url !== 'string') return url
+  if (!url.includes('res.cloudinary.com')) return url
+  // Do not transform video URLs or non-image assets
+  if (url.includes('/video/upload/')) return url
+
+  const { width, quality = 'auto', format = 'auto' } = options
+  const transforms = []
+  if (format) transforms.push(`f_${format}`)
+  if (quality) transforms.push(`q_${quality}`)
+  if (width) transforms.push(`w_${width}`)
+
+  const transformStr = transforms.join(',')
+
+  // If already has transformation parameters right after /upload/
+  if (url.includes('/image/upload/f_auto') || url.includes('/image/upload/q_auto') || url.includes('/image/upload/w_')) {
+    return url
+  }
+
+  return url.replace('/image/upload/', `/image/upload/${transformStr}/`)
+}
+
+/**
+ * Get device-optimized background URL from Cloudinary (w_1440 for desktop, w_768 for mobile)
+ */
+export function getOptimizedBgUrl(url, isDesktop = true) {
+  return optimizeCloudinaryUrl(url, {
+    width: isDesktop ? 1440 : 768,
+    quality: 'auto',
+    format: 'auto',
+  })
 }
 
 /**

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, memo } from 'react'
 import { motion, useTime, useTransform, useInView } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
-const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029564/g49iwmxbue23d5o6v73o.png"
+const logo = "/assets/logo/inviteq-watermark.png"
 import { templates, houseWarmingTemplates } from '../templates/templates.js'
 import { fadeUp, staggerChildren, viewportOnce } from '../motionVariants.js'
 import { useAuth } from '../context/AuthContext'
@@ -9,7 +9,7 @@ import { useDraft } from '../context/DraftContext'
 import MobileNav from '../components/MobileNav'
 import { LazyImage } from '../components/LazyImage'
 import { API_URL } from '../config'
-const tailorRomanceBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036339/m2xlgvmlglao8ulz60dd.jpg"
+const tailorRomanceBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1782036339/m2xlgvmlglao8ulz60dd.jpg"
 
 const templateCardPop = {
   hidden: { opacity: 0, y: 18, scale: 0.96 },

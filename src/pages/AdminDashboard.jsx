@@ -5,7 +5,7 @@ import { API_URL } from '../config'
 import { motion, AnimatePresence } from 'framer-motion'
 import { templates, houseWarmingTemplates } from '../templates/templates'
 
-const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
+const logo = "/assets/logo/inviteq-logo.png"
 
 const CANONICAL_TEMPLATE_ID = (id) => {
   if (!id) return null

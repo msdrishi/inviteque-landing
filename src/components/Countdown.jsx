@@ -133,7 +133,7 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText,
     >
       {/* Background image (no overlay/filter) */}
       <img
-        src={bgImage || (isDesktop ? "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782033909/gmefgowakcfmgpx49vmi.png" : countdownBg)}
+        src={bgImage || (isDesktop ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1782033909/gmefgowakcfmgpx49vmi.png" : countdownBg)}
         alt=""
         aria-hidden
         className="absolute inset-0 h-full w-full object-cover"

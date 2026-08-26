@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
+const logo = "/assets/logo/inviteq-logo.png"
 import { useDraft } from '../context/DraftContext'
 import { templates, houseWarmingTemplates } from '../templates/templates'
 import { uploadToCloudinary } from '../utils/cloudinary'

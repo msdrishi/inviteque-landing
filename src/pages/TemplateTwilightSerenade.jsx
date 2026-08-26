@@ -12,21 +12,21 @@ import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
 // Cloudinary background asset URLs
-const desktopBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png"
-const smartphoneBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964627/smartphone.png"
-const photoBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964624/photo-section-desktop.png"
-const photoBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964626/photo-section-mobile.png"
-const messageBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964619/message-section-desktop.png"
-const messageBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964623/message-section-mobile.png"
-const locationBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964612/location-section-desktop.png"
-const locationBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964614/location-section-mobile.png"
-const countdownBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964566/countdown-section-desktop.png"
-const countdownBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964573/countdown-section-mobile.png"
-const twilightPhoto1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964628/twilight-photo-1.png"
-const twilightPhoto2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964629/twilight-photo-2.png"
-const twilightPhoto3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964631/twilight-photo-3.png"
+const desktopBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964581/desktop.png"
+const smartphoneBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964627/smartphone.png"
+const photoBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964624/photo-section-desktop.png"
+const photoBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964626/photo-section-mobile.png"
+const messageBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964619/message-section-desktop.png"
+const messageBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964623/message-section-mobile.png"
+const locationBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964612/location-section-desktop.png"
+const locationBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964614/location-section-mobile.png"
+const countdownBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964566/countdown-section-desktop.png"
+const countdownBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964573/countdown-section-mobile.png"
+const twilightPhoto1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1783964628/twilight-photo-1.png"
+const twilightPhoto2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1783964629/twilight-photo-2.png"
+const twilightPhoto3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1783964631/twilight-photo-3.png"
 
-const leafImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029563/kozuh0rafoxa9zwysfjq.png"
+const leafImg = "/assets/decorations/rose-petal.png"
 
 const leafConfig = Array.from({ length: 14 }).map((_, i) => {
   const isLeft = i % 2 === 0;

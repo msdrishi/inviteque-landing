@@ -17,7 +17,7 @@ import template3MessageBg from '../assets/themes/template3/message_bg.png'
 import template3VenueBg from '../assets/themes/template3/venue_bg.png'
 import template3DesktopBg from '../assets/themes/template3/desktop_bg.png'
 
-const logo = "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782036334/nuyo9eosd2rhpesywkt0.png"
+const logo = "/assets/logo/inviteq-logo.png"
 import { API_URL } from '../config'
 
 const TEMPLATE_MAP = {
@@ -41,16 +41,16 @@ const TEMPLATE_MAP = {
 
 const TEMPLATE_ASSETS = {
   'midnight-waltz': [
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831796/midnight-waltz-hero-dekstop.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831798/midnight-waltz-hero-mobile.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831788/midnight-waltz-bg-texture-desktop.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831790/midnight-waltz-bg-texture-mobile.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831815/midnight-waltz-welcome-desktop.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831816/midnight-waltz-welcome-mobile.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786884307/midnight-waltz-venue-desktop-1786884299844.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786884313/midnight-waltz-venue-mobile-1786884299844.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831792/midnight-waltz-countdown-desktop.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1786831794/midnight-waltz-countdown-mobile.png"
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786831796/midnight-waltz-hero-dekstop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786831798/midnight-waltz-hero-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786831788/midnight-waltz-bg-texture-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786831790/midnight-waltz-bg-texture-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786831815/midnight-waltz-welcome-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786831816/midnight-waltz-welcome-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786884307/midnight-waltz-venue-desktop-1786884299844.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786884313/midnight-waltz-venue-mobile-1786884299844.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786831792/midnight-waltz-countdown-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786831794/midnight-waltz-countdown-mobile.png"
   ],
   'modernhearth': [
     "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png",
@@ -59,28 +59,26 @@ const TEMPLATE_ASSETS = {
   'modern-hearth': [],
   'house-warming-1': [],
   'twilight-serenade': [
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964581/desktop.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964627/smartphone.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964624/photo-section-desktop.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964626/photo-section-mobile.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964619/message-section-desktop.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964623/message-section-mobile.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964612/location-section-desktop.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964614/location-section-mobile.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964566/countdown-section-desktop.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964573/countdown-section-mobile.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964628/twilight-photo-1.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964629/twilight-photo-2.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964631/twilight-photo-3.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1783964586/divider-flowers-mobile.png"
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964581/desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964627/smartphone.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964624/photo-section-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964626/photo-section-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964619/message-section-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964623/message-section-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964612/location-section-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964614/location-section-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964566/countdown-section-desktop.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964573/countdown-section-mobile.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1783964628/twilight-photo-1.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1783964629/twilight-photo-2.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1783964631/twilight-photo-3.png"
   ],
   'aura-of-elegance': [
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1780830584/bevo6p9kp87xs9glyczu.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/v1782033902/nelfh17u4fep6v8ksoei.webp",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029563/kozuh0rafoxa9zwysfjq.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786194482/sbwivzirylzohych9vju.png"
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1780830584/bevo6p9kp87xs9glyczu.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1782033902/nelfh17u4fep6v8ksoei.webp",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1779029548/d0kadhlyhbkrywpc4qeb.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1779029562/ucwqwm3grlx07v8iijxc.png",
+    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786194482/sbwivzirylzohych9vju.png"
   ],
   'template-3': Object.values(royalPalaceMapping),
   'royal-palace': Object.values(royalPalaceMapping),
@@ -91,9 +89,55 @@ const TEMPLATE_ASSETS = {
     template3VenueBg,
     template3DesktopBg
   ],
-  'template-4': Object.values(everlastingVowsMapping),
-  'everlasting-vows': Object.values(everlastingVowsMapping),
-  'everlastingvows': Object.values(everlastingVowsMapping)
+  // Curated list of actually-used assets (excludes 229 unused animation frames from the mapping)
+  'template-4': [
+    everlastingVowsMapping['hero_desktop.png'],
+    everlastingVowsMapping['hero_mobile.png'],
+    everlastingVowsMapping['photo_desktop.png'],
+    everlastingVowsMapping['photo_mobile.png'],
+    everlastingVowsMapping['venue_desktop.png'],
+    everlastingVowsMapping['venue_mobile.png'],
+    everlastingVowsMapping['countdown_desktop.png'],
+    everlastingVowsMapping['countdown_mobile.png'],
+    everlastingVowsMapping['photocards/template-4-1.png'],
+    everlastingVowsMapping['photocards/template-4-2.png'],
+    everlastingVowsMapping['photocards/template-4-3.png'],
+    everlastingVowsMapping['wedding-message/desktop.png'],
+    everlastingVowsMapping['wedding-message/mobile.png'],
+    everlastingVowsMapping['wedding-message/welcome_desktop.mp4'],
+  ].filter(Boolean),
+  'everlasting-vows': [
+    everlastingVowsMapping['hero_desktop.png'],
+    everlastingVowsMapping['hero_mobile.png'],
+    everlastingVowsMapping['photo_desktop.png'],
+    everlastingVowsMapping['photo_mobile.png'],
+    everlastingVowsMapping['venue_desktop.png'],
+    everlastingVowsMapping['venue_mobile.png'],
+    everlastingVowsMapping['countdown_desktop.png'],
+    everlastingVowsMapping['countdown_mobile.png'],
+    everlastingVowsMapping['photocards/template-4-1.png'],
+    everlastingVowsMapping['photocards/template-4-2.png'],
+    everlastingVowsMapping['photocards/template-4-3.png'],
+    everlastingVowsMapping['wedding-message/desktop.png'],
+    everlastingVowsMapping['wedding-message/mobile.png'],
+    everlastingVowsMapping['wedding-message/welcome_desktop.mp4'],
+  ].filter(Boolean),
+  'everlastingvows': [
+    everlastingVowsMapping['hero_desktop.png'],
+    everlastingVowsMapping['hero_mobile.png'],
+    everlastingVowsMapping['photo_desktop.png'],
+    everlastingVowsMapping['photo_mobile.png'],
+    everlastingVowsMapping['venue_desktop.png'],
+    everlastingVowsMapping['venue_mobile.png'],
+    everlastingVowsMapping['countdown_desktop.png'],
+    everlastingVowsMapping['countdown_mobile.png'],
+    everlastingVowsMapping['photocards/template-4-1.png'],
+    everlastingVowsMapping['photocards/template-4-2.png'],
+    everlastingVowsMapping['photocards/template-4-3.png'],
+    everlastingVowsMapping['wedding-message/desktop.png'],
+    everlastingVowsMapping['wedding-message/mobile.png'],
+    everlastingVowsMapping['wedding-message/welcome_desktop.mp4'],
+  ].filter(Boolean)
 }
 
 const extractImageUrls = (data) => {

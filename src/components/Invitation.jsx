@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-const letterImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029566/o5fazwrbkcpjtrcpt1bs.png"
+const letterImg = "/assets/decorations/invitation-letter-bg.png"
 
 const letterContainer = {
   hidden: { opacity: 0 },
