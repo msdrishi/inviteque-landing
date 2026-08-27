@@ -239,7 +239,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
         alignItems: 'center',
         textAlign: 'center',
         // Frame content under illustration cleanly across devices
-        paddingTop: isDesktop ? '54vh' : (isTablet ? '38svh' : '38svh'),
+        paddingTop: isDesktop ? '45vh' : (isTablet ? '38svh' : '38svh'),
         paddingBottom: isDesktop ? '28px' : '20px',
         paddingLeft: isTablet ? 36 : 24,
         paddingRight: isTablet ? 36 : 24,
