@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { useDraft } from '../context/DraftContext'
 import { API_URL } from '../config'
+import { uploadToCloudinary } from '../utils/cloudinary'
 const logo = "/assets/logo/inviteq-watermark.png"
 import { fadeUp } from '../motionVariants'
 import { templates, houseWarmingTemplates } from '../templates/templates'
@@ -15,6 +17,7 @@ export default function Payment() {
   const navigate = useNavigate()
   const { draftData, templateId } = location.state || {}
   const { saveInvitation, user, loading: authLoading } = useAuth()
+  const { updateDraft } = useDraft()
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -151,66 +154,107 @@ export default function Payment() {
   const handlePaymentClick = async () => {
     setIsProcessing(true)
     try {
+      // Upload any pending local photos to Cloudinary before saving
+      const resolvedPhotos = [...(draftData.photos || [null, null, null])]
+      const pendingFiles = draftData._pendingPhotoFiles || {}
+
+      const photoUploadPromises = Object.entries(pendingFiles).map(async ([index, file]) => {
+        if (file && (file instanceof Blob || file instanceof File)) {
+          const result = await uploadToCloudinary(file)
+          if (result && result.url) {
+            resolvedPhotos[Number(index)] = result.url
+          }
+        }
+      })
+
+      let resolvedFamilyPhoto = draftData.familyPhoto || null
+      if (draftData._pendingFamilyPhotoFile && (draftData._pendingFamilyPhotoFile instanceof Blob || draftData._pendingFamilyPhotoFile instanceof File)) {
+        const familyResult = await uploadToCloudinary(draftData._pendingFamilyPhotoFile)
+        if (familyResult && familyResult.url) {
+          resolvedFamilyPhoto = familyResult.url
+        }
+      }
+
+      await Promise.all(photoUploadPromises)
+
+      // Ensure any remaining local blob: URLs are cleared if not uploaded
+      const finalPhotos = resolvedPhotos.map(p => (p && typeof p === 'string' && p.startsWith('blob:') ? null : p))
+      const finalFamilyPhoto = resolvedFamilyPhoto && typeof resolvedFamilyPhoto === 'string' && resolvedFamilyPhoto.startsWith('blob:')
+        ? null
+        : resolvedFamilyPhoto
+
+      // Use the resolved (uploaded) URLs for the rest of the flow
+      const resolvedDraft = {
+        ...draftData,
+        photos: finalPhotos,
+        familyPhoto: finalFamilyPhoto
+      }
+      delete resolvedDraft._pendingPhotoFiles
+      delete resolvedDraft._pendingFamilyPhotoFile
+
+      // Update draft context so state is synchronized with Cloudinary URLs
+      updateDraft(resolvedDraft)
+
       // 1. Prepare backend request matching our JSONB columns
       const inviteRequest = {
-        code: draftData.code, // VERY IMPORTANT: Pass code to update instead of creating new
+        code: resolvedDraft.code, // VERY IMPORTANT: Pass code to update instead of creating new
         templateId,
         coupleData: {
-          groomName: draftData.groomName,
-          brideName: draftData.brideName,
-          groomPhoto: draftData.groomPhoto,
-          bridePhoto: draftData.bridePhoto
+          groomName: resolvedDraft.groomName,
+          brideName: resolvedDraft.brideName,
+          groomPhoto: resolvedDraft.groomPhoto,
+          bridePhoto: resolvedDraft.bridePhoto
         },
         heroData: {
-          groomName: draftData.groomName,
-          brideName: draftData.brideName,
-          weddingDate: draftData.weddingDate,
-          weddingMonth: draftData.weddingMonth,
-          weddingYear: draftData.weddingYear,
-          weddingTime: draftData.weddingTime
+          groomName: resolvedDraft.groomName,
+          brideName: resolvedDraft.brideName,
+          weddingDate: resolvedDraft.weddingDate,
+          weddingMonth: resolvedDraft.weddingMonth,
+          weddingYear: resolvedDraft.weddingYear,
+          weddingTime: resolvedDraft.weddingTime
         },
         venueData: {
-          mahalName: draftData.mahalName,
-          venueAddress: draftData.venueAddress,
-          venueCity: draftData.venueCity,
-          state: draftData.state,
-          mapLink: draftData.mapLink
+          mahalName: resolvedDraft.mahalName,
+          venueAddress: resolvedDraft.venueAddress,
+          venueCity: resolvedDraft.venueCity,
+          state: resolvedDraft.state,
+          mapLink: resolvedDraft.mapLink
         },
         // Flat fields
-        groomName: draftData.groomName,
-        brideName: draftData.brideName,
+        groomName: resolvedDraft.groomName,
+        brideName: resolvedDraft.brideName,
         weddingDate: {
-          day: draftData.weddingDate,
-          month: draftData.weddingMonth,
-          year: draftData.weddingYear
+          day: resolvedDraft.weddingDate,
+          month: resolvedDraft.weddingMonth,
+          year: resolvedDraft.weddingYear
         },
-        weddingTime: draftData.weddingTime,
-        mahalName: draftData.mahalName,
-        venueCity: draftData.venueCity,
-        venueName: draftData.venueAddress,
-        state: draftData.state,
-        mapLink: draftData.mapLink,
-        photos: draftData.photos,
-        eventSchedule: draftData.scheduleItems,
+        weddingTime: resolvedDraft.weddingTime,
+        mahalName: resolvedDraft.mahalName,
+        venueCity: resolvedDraft.venueCity,
+        venueName: resolvedDraft.venueAddress,
+        state: resolvedDraft.state,
+        mapLink: resolvedDraft.mapLink,
+        photos: resolvedDraft.photos,
+        eventSchedule: resolvedDraft.scheduleItems,
         scheduleData: {
-          showSchedule: draftData.showSchedule,
-          showGallery: draftData.showGallery,
-          items: draftData.scheduleItems
+          showSchedule: resolvedDraft.showSchedule,
+          showGallery: resolvedDraft.showGallery,
+          items: resolvedDraft.scheduleItems
         },
         storyData: {
-          photos: draftData.photos
+          photos: resolvedDraft.photos
         },
         invitationData: {
-          showFamilySection: draftData.showFamilySection,
-          familyMessage: draftData.familyMessage,
-          familyPhoto: draftData.familyPhoto,
-          showCustomSection: draftData.showCustomSection,
-          customSectionTitle: draftData.customSectionTitle,
-          customSectionSubtitle: draftData.customSectionSubtitle,
-          customSectionDate: draftData.customSectionDate,
-          customSectionLocation: draftData.customSectionLocation,
-          customSectionContent: draftData.customSectionContent,
-          customSectionPosition: draftData.customSectionPosition
+          showFamilySection: resolvedDraft.showFamilySection,
+          familyMessage: resolvedDraft.familyMessage,
+          familyPhoto: resolvedDraft.familyPhoto,
+          showCustomSection: resolvedDraft.showCustomSection,
+          customSectionTitle: resolvedDraft.customSectionTitle,
+          customSectionSubtitle: resolvedDraft.customSectionSubtitle,
+          customSectionDate: resolvedDraft.customSectionDate,
+          customSectionLocation: resolvedDraft.customSectionLocation,
+          customSectionContent: resolvedDraft.customSectionContent,
+          customSectionPosition: resolvedDraft.customSectionPosition
         },
         rsvpData: {}, // Placeholder
         status: isAlreadyPaid ? 'PAID' : 'DRAFT', // Leave as draft until payment succeeds
@@ -231,9 +275,9 @@ export default function Payment() {
           state: {
             orderId: savedInvite.id,
             inviteUrl,
-            draftData,
+            draftData: resolvedDraft,
             template,
-            amount: draftData.amountPaid || finalPrice,
+            amount: resolvedDraft.amountPaid || finalPrice,
             code: savedInvite.code,
             isUpdate: true
           }
@@ -266,7 +310,7 @@ export default function Payment() {
           state: {
             orderId: savedInvite.id,
             inviteUrl,
-            draftData,
+            draftData: resolvedDraft,
             template,
             amount: 0,
             code: savedInvite.code,
@@ -320,7 +364,7 @@ export default function Payment() {
           state: {
             orderId: savedInvite.id,
             inviteUrl,
-            draftData,
+            draftData: resolvedDraft,
             template,
             amount: finalPrice,
             code: savedInvite.code,
@@ -388,7 +432,7 @@ export default function Payment() {
               state: {
                 orderId: savedInvite.id,
                 inviteUrl,
-                draftData,
+                draftData: resolvedDraft,
                 template,
                 amount: finalPrice,
                 code: savedInvite.code,

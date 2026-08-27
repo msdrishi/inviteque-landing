@@ -14,6 +14,7 @@ import Account from './pages/Account.jsx'
 import InviteDetails from './pages/InviteDetails.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import AdminDashboard from './pages/AdminDashboard.jsx'
+import CustomMidnightWaltzPavitraSri from './pages/custom/CustomMidnightWaltzPavitraSri.jsx'
 import { API_URL } from './config'
 
 function ScrollToTop() {
@@ -91,8 +92,18 @@ export default function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/account/:code" element={<InviteDetails />} />
           <Route path="/builder/:templateId" element={<Builder />} />
+          
+          {/* Custom Client Template Routes (Pavitra & Sri) */}
+          <Route path="/template/midnight-waltz/Pavitra-Sri" element={<CustomMidnightWaltzPavitraSri />} />
+          <Route path="/template/midnight-waltz/Pavitra-Sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
+          <Route path="/templates/midnight-waltz/Pavitra-Sri" element={<CustomMidnightWaltzPavitraSri />} />
+          <Route path="/templates/midnight-waltz/Pavitra-Sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
+
+          {/* Standard Templates */}
           <Route path="/templates/:templateId" element={<TemplateRoute />} />
           <Route path="/templates/:templateId/:code" element={<TemplateRoute />} />
+          <Route path="/template/:templateId" element={<TemplateRoute />} />
+          <Route path="/template/:templateId/:code" element={<TemplateRoute />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
           

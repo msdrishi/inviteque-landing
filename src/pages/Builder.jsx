@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 const logo = "/assets/logo/inviteq-logo.png"
 import { useDraft } from '../context/DraftContext'
 import { templates, houseWarmingTemplates } from '../templates/templates'
-import { uploadToCloudinary } from '../utils/cloudinary'
+
 import { API_URL } from '../config'
 import { useAuth } from '../context/AuthContext'
 
@@ -168,6 +168,7 @@ export default function Builder() {
     amountPaid: 0,
     showFamilySection: false,
     familyMessage: '',
+    familyPhoto: null,
     showCustomSection: false,
     customSectionTitle: '',
     customSectionSubtitle: '',
@@ -175,6 +176,8 @@ export default function Builder() {
     customSectionLocation: '',
     customSectionContent: '',
     customSectionPosition: 'top-center',
+    _pendingPhotoFiles: {},
+    _pendingFamilyPhotoFile: null,
   }
 
   // If entering a creation flow (no editCode) but context has a PAID invitation, we must reset
@@ -234,7 +237,9 @@ export default function Builder() {
       customSectionDate: draftData.customSectionDate || '',
       customSectionLocation: draftData.customSectionLocation || '',
       customSectionContent: draftData.customSectionContent || '',
-      customSectionPosition: draftData.customSectionPosition || 'top-center'
+      customSectionPosition: draftData.customSectionPosition || 'top-center',
+      _pendingPhotoFiles: draftData._pendingPhotoFiles || {},
+      _pendingFamilyPhotoFile: draftData._pendingFamilyPhotoFile || null
     }
   })
 
@@ -387,8 +392,6 @@ export default function Builder() {
   }, [editCode, draftData.code, updateDraft, user])
 
   const [errors, setErrors] = useState({})
-  const [uploadingPhotos, setUploadingPhotos] = useState({ 0: false, 1: false, 2: false })
-  const [uploadingFamilyPhoto, setUploadingFamilyPhoto] = useState(false)
 
   // Get template details — search both wedding and house warming templates
   const isHouseWarming = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
@@ -464,7 +467,7 @@ export default function Builder() {
     nextStep()
   }
 
-  const handleFileChange = async (index, e) => {
+  const handleFileChange = (index, e) => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -473,21 +476,16 @@ export default function Builder() {
       return
     }
 
-    setUploadingPhotos(prev => ({ ...prev, [index]: true }))
+    // Create a local blob URL for preview (no Cloudinary upload yet)
+    const previewUrl = URL.createObjectURL(file)
+    const newPhotos = [...(formData.photos || [null, null, null])]
+    newPhotos[index] = previewUrl
 
-    try {
-      const result = await uploadToCloudinary(file)
-      if (result && result.url) {
-        const newPhotos = [...(formData.photos || [null, null, null])]
-        newPhotos[index] = result.url
-        setFormData(prev => ({ ...prev, photos: newPhotos }))
-      }
-    } catch (err) {
-      console.error('Error uploading photo:', err)
-      alert('Failed to upload image. Please try again.')
-    } finally {
-      setUploadingPhotos(prev => ({ ...prev, [index]: false }))
-    }
+    // Store the raw File object for later Cloudinary upload on purchase
+    const pendingFiles = { ...(formData._pendingPhotoFiles || {}) }
+    pendingFiles[index] = file
+
+    setFormData(prev => ({ ...prev, photos: newPhotos, _pendingPhotoFiles: pendingFiles }))
   }
 
   const handleChange = (e) => {
@@ -541,12 +539,22 @@ export default function Builder() {
   }
 
   const handleRemovePhoto = (index) => {
+    // Revoke the blob URL to free memory if it's a local preview
+    const currentUrl = formData.photos?.[index]
+    if (currentUrl && currentUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(currentUrl)
+    }
     const newPhotos = [...(formData.photos || [])]
     newPhotos[index] = null
-    setFormData(prev => ({ ...prev, photos: newPhotos }))
+
+    // Also remove the pending file
+    const pendingFiles = { ...(formData._pendingPhotoFiles || {}) }
+    delete pendingFiles[index]
+
+    setFormData(prev => ({ ...prev, photos: newPhotos, _pendingPhotoFiles: pendingFiles }))
   }
 
-  const handleFamilyPhotoUpload = async (e) => {
+  const handleFamilyPhotoUpload = (e) => {
     const file = e.target.files[0]
     if (!file) return
 
@@ -555,19 +563,9 @@ export default function Builder() {
       return
     }
 
-    setUploadingFamilyPhoto(true)
-
-    try {
-      const result = await uploadToCloudinary(file)
-      if (result && result.url) {
-        setFormData(prev => ({ ...prev, familyPhoto: result.url }))
-      }
-    } catch (err) {
-      console.error('Error uploading family photo:', err)
-      alert('Failed to upload image. Please try again.')
-    } finally {
-      setUploadingFamilyPhoto(false)
-    }
+    // Create a local blob URL for preview (no Cloudinary upload yet)
+    const previewUrl = URL.createObjectURL(file)
+    setFormData(prev => ({ ...prev, familyPhoto: previewUrl, _pendingFamilyPhotoFile: file }))
   }
 
   const handleFamilyMessageChange = (e) => {
@@ -976,12 +974,7 @@ export default function Builder() {
                             {[0, 1, 2].map(i => (
                               <div key={i} className="group relative aspect-square">
                                 <label className="cursor-pointer overflow-hidden rounded-xl border border-iqBorder bg-white transition-all hover:border-iqText h-full w-full flex">
-                                  {uploadingPhotos[i] ? (
-                                    <div className="flex h-full w-full flex-col items-center justify-center bg-iqBg text-iqText/40">
-                                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-iqText/25 border-t-iqText"></div>
-                                      <span className="text-[10px] mt-2 font-bold tracking-tight">Uploading...</span>
-                                    </div>
-                                  ) : formData.photos?.[i] ? (
+                                  {formData.photos?.[i] ? (
                                     <img src={formData.photos[i]} alt={`photo-${i}`} className="h-full w-full object-cover" />
                                   ) : (
                                     <div className="flex h-full w-full items-center justify-center text-iqText/20 transition-colors group-hover:text-iqText">
@@ -1217,12 +1210,7 @@ export default function Builder() {
                             <label className="text-xs font-bold uppercase tracking-wider opacity-50 block">Family Picture</label>
                             <div className="flex items-center gap-4">
                               <div className="relative h-28 w-28 rounded-xl border border-iqBorder bg-white overflow-hidden flex items-center justify-center flex-shrink-0">
-                                {uploadingFamilyPhoto ? (
-                                  <div className="flex flex-col items-center justify-center text-iqText/40">
-                                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-iqText/25 border-t-iqText"></div>
-                                    <span className="text-[9px] mt-1 font-bold">Uploading...</span>
-                                  </div>
-                                ) : formData.familyPhoto ? (
+                                {formData.familyPhoto ? (
                                   <img src={formData.familyPhoto} alt="Family" className="h-full w-full object-cover" />
                                 ) : (
                                   <div className="text-[10px] text-center text-iqText/30 px-2 font-medium">No Image Uploaded</div>
