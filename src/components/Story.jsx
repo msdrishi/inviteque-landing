@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-const texturePink = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png"
+const texturePink = "/assets/templates/aura-of-elegance/texture-pink.webp"
 
 const letterContainer = {
   hidden: { opacity: 0 },
@@ -111,7 +111,7 @@ export default function Story({ data, isDesktop, bgImage, theme }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        backgroundImage: `url(${bgImage || "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png"})`,
+        backgroundImage: `url(${bgImage || "/assets/templates/aura-of-elegance/texture-pink.webp"})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'repeat',
         backgroundAttachment: 'scroll',

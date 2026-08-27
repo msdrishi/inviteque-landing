@@ -7,21 +7,21 @@ import { weddingData as staticData } from '../weddingData.js'
 import WaterRevealImage from '../components/WaterRevealImage.jsx'
 import CustomSection from '../components/CustomSection.jsx'
 
-// Backgrounds (Cloudinary CDN with auto-format WebP)
-const bgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600526/house-warming-hw1/hw1-hero-desktop.png"
-const heroMobileBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600529/house-warming-hw1/hw1-hero-mobile.png"
+// Backgrounds (local Vercel CDN)
+const bgDesktop = "/assets/templates/modern-hearth/hero-desktop.webp"
+const heroMobileBg = "/assets/templates/modern-hearth/hero-mobile.webp"
 
-const welcomeBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600536/house-warming-hw1/hw1-welcome-house-warming.png"
-const welcomeBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600532/house-warming-hw1/hw1-welcome-desktop.png"
+const welcomeBgMobile = "/assets/templates/modern-hearth/welcome-house-warming.webp"
+const welcomeBgDesktop = "/assets/templates/modern-hearth/welcome-desktop.webp"
 
-const locationBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600544/house-warming-hw1/hw1-location-mobile.png"
-const locationBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600540/house-warming-hw1/hw1-location-desktop.png"
+const locationBgMobile = "/assets/templates/modern-hearth/location-mobile.webp"
+const locationBgDesktop = "/assets/templates/modern-hearth/location-desktop.webp"
 
-const scheduleBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600556/house-warming-hw1/hw1-schedule.png"
-const scheduleBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600550/house-warming-hw1/hw1-schedule-desktop.png"
+const scheduleBgMobile = "/assets/templates/modern-hearth/schedule-mobile.webp"
+const scheduleBgDesktop = "/assets/templates/modern-hearth/schedule-desktop.webp"
 
-const countdownBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600570/house-warming-hw1/hw1-countdown.png"
-const countdownBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786600563/house-warming-hw1/hw1-count-desktop.png"
+const countdownBgMobile = "/assets/templates/modern-hearth/countdown-mobile.webp"
+const countdownBgDesktop = "/assets/templates/modern-hearth/countdown-desktop.webp"
 const scissorPng = "/assets/decorations/hw1-scissor.png"
 const ribbonPng = "/assets/decorations/hw1-ribbon.png"
 

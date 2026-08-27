@@ -222,11 +222,11 @@ export default function TemplateAuraOfElegance({ savedData }) {
           )}
 
           <Hero data={data.hero} />
-          <CustomSection photoBgDesktop="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" photoBgMobile="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" data={customSectionData} />
+          <CustomSection photoBgDesktop="/assets/templates/aura-of-elegance/texture-pink.webp" photoBgMobile="/assets/templates/aura-of-elegance/texture-pink.webp" data={customSectionData} />
           {showGallery && <Story data={data.story} />}
           <Invitation data={data.invitation} />
           <Venue data={data.venue} />
-          {showSchedule && <Events data={data.events} bgImage="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" />}
+          {showSchedule && <Events data={data.events} bgImage="/assets/templates/aura-of-elegance/texture-pink.webp" />}
           <Countdown data={data.countdown} centerText={true} />
           <Footer data={data.footer} />
         </div>
@@ -269,7 +269,7 @@ export default function TemplateAuraOfElegance({ savedData }) {
           <Hero data={data.hero} isDesktop={true} />
         </div>
         <div className="w-full">
-          <CustomSection photoBgDesktop="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" photoBgMobile="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" data={customSectionData} />
+          <CustomSection photoBgDesktop="/assets/templates/aura-of-elegance/texture-pink.webp" photoBgMobile="/assets/templates/aura-of-elegance/texture-pink.webp" data={customSectionData} />
         </div>
 
         {/* 2) Our Moments Section (Photo 1, Photo 2, Photo 3 side-by-side) */}
@@ -286,13 +286,13 @@ export default function TemplateAuraOfElegance({ savedData }) {
 
         {/* 4) Venue Section (Details + QR Code map card side-by-side) */}
         <div className="w-full">
-          <Venue data={data.venue} isDesktop={true} bgImage="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1786194482/sbwivzirylzohych9vju.png" />
+          <Venue data={data.venue} isDesktop={true} bgImage="/assets/templates/aura-of-elegance/venue-bg.webp" />
         </div>
 
         {/* 5) Wedding Schedule Section (Reception, Haldi, Wedding Vows side-by-side) */}
         {showSchedule && (
           <div className="w-full">
-            <Events data={data.events} isDesktop={true} bgImage="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" />
+            <Events data={data.events} isDesktop={true} bgImage="/assets/templates/aura-of-elegance/texture-pink.webp" />
           </div>
         )}
 

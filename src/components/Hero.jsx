@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-const heroBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1780830584/bevo6p9kp87xs9glyczu.png"
+const heroBg = "/assets/templates/aura-of-elegance/hero-bg.webp"
 const petalImg = "/assets/decorations/rose-petal.png"
 
 /* ─────────────────────────────────────────
@@ -203,7 +203,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
   if (!data) return null
 
   const currentHeroBg = isDesktop
-    ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1782033902/nelfh17u4fep6v8ksoei.webp"
+    ? "/assets/templates/aura-of-elegance/hero-arch.webp"
     : heroBg
 
   return (

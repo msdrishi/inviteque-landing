@@ -3,11 +3,11 @@ import envelopeSvg from './assets/illustrations/envelope.svg'
 import heroArchSvg from './assets/illustrations/hero-arch.svg'
 const envelope = envelopeSvg
 const heroArch = heroArchSvg
-const heroBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1780830584/bevo6p9kp87xs9glyczu.png"
-const photo1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029555/yrekh9qkgebpcds6dplq.png"
-const photo2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029557/lly3pbmivrtjn203eclo.png"
-const photo3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029558/enoivgqhs1oi2bxery8n.png"
-const locationImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029562/ucwqwm3grlx07v8iijxc.png"
+const heroBg = "/assets/templates/aura-of-elegance/hero-bg.webp"
+const photo1 = "/assets/templates/aura-of-elegance/sample-photo-1.webp"
+const photo2 = "/assets/templates/aura-of-elegance/sample-photo-2.webp"
+const photo3 = "/assets/templates/aura-of-elegance/sample-photo-3.webp"
+const locationImg = "/assets/templates/aura-of-elegance/location-bg.webp"
 
 function parseWeddingDate(dateString) {
   const tokens = String(dateString || '').trim().split(/\s+/)

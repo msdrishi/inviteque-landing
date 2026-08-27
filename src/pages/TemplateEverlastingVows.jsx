@@ -13,21 +13,21 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
 import cMapping from '../everlastingVowsCloudinaryMapping.json'
 
-// Background assets (Cloudinary CDN with local fallback)
-const desktopBg = cMapping['hero_desktop.png'] || "/backgrounds/Everlasting%20Vows/hero_desktop.png"
-const smartphoneBg = cMapping['hero_mobile.png'] || "/backgrounds/Everlasting%20Vows/hero_mobile.png"
-const photoBgDesktop = cMapping['photo_desktop.png'] || "/backgrounds/Everlasting%20Vows/photo_desktop.png"
-const photoBgMobile = cMapping['photo_mobile.png'] || "/backgrounds/Everlasting%20Vows/photo_mobile.png"
-const messageBgDesktop = "/backgrounds/everlasting/welcome-desktop-everlasting.png"
-const messageBgMobile = "/backgrounds/everlasting/welcome-mobile-everlasting.png"
-const locationBgDesktop = cMapping['venue_desktop.png'] || "/backgrounds/Everlasting%20Vows/venue_desktop.png"
-const locationBgMobile = cMapping['venue_mobile.png'] || "/backgrounds/Everlasting%20Vows/venue_mobile.png"
-const countdownBgDesktop = cMapping['countdown_desktop.png'] || "/backgrounds/Everlasting%20Vows/countdown_desktop.png"
-const countdownBgMobile = cMapping['countdown_mobile.png'] || "/backgrounds/Everlasting%20Vows/countdown_mobile.png"
+// Background assets (local Vercel CDN)
+const desktopBg = cMapping['hero_desktop.png'] || "/assets/templates/everlasting-vows/hero-desktop.webp"
+const smartphoneBg = cMapping['hero_mobile.png'] || "/assets/templates/everlasting-vows/hero-mobile.webp"
+const photoBgDesktop = cMapping['photo_desktop.png'] || "/assets/templates/everlasting-vows/photo-desktop.webp"
+const photoBgMobile = cMapping['photo_mobile.png'] || "/assets/templates/everlasting-vows/photo-mobile.webp"
+const messageBgDesktop = "/assets/templates/everlasting-vows/wedding-message-desktop.webp"
+const messageBgMobile = "/assets/templates/everlasting-vows/wedding-message-mobile.webp"
+const locationBgDesktop = cMapping['venue_desktop.png'] || "/assets/templates/everlasting-vows/venue-desktop.webp"
+const locationBgMobile = cMapping['venue_mobile.png'] || "/assets/templates/everlasting-vows/venue-mobile.webp"
+const countdownBgDesktop = cMapping['countdown_desktop.png'] || "/assets/templates/everlasting-vows/countdown-desktop.webp"
+const countdownBgMobile = cMapping['countdown_mobile.png'] || "/assets/templates/everlasting-vows/countdown-mobile.webp"
 
-const defaultPhoto1 = cMapping['photocards/template-4-1.png'] || "/backgrounds/Everlasting%20Vows/photocards/template-4-1.png"
-const defaultPhoto2 = cMapping['photocards/template-4-2.png'] || "/backgrounds/Everlasting%20Vows/photocards/template-4-2.png"
-const defaultPhoto3 = cMapping['photocards/template-4-3.png'] || "/backgrounds/Everlasting%20Vows/photocards/template-4-3.png"
+const defaultPhoto1 = cMapping['photocards/template-4-1.png'] || "/assets/templates/everlasting-vows/photocard-1.webp"
+const defaultPhoto2 = cMapping['photocards/template-4-2.png'] || "/assets/templates/everlasting-vows/photocard-2.webp"
+const defaultPhoto3 = cMapping['photocards/template-4-3.png'] || "/assets/templates/everlasting-vows/photocard-3.webp"
 
 const petalConfig = Array.from({ length: 14 }).map((_, i) => {
   const isLeft = i % 2 === 0;

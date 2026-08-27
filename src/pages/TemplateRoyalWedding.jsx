@@ -230,7 +230,7 @@ export default function TemplateRoyalWedding({ savedData }) {
         )}
 
         <Hero data={data.hero} />
-        <CustomSection photoBgDesktop="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" photoBgMobile="https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029548/d0kadhlyhbkrywpc4qeb.png" data={customSectionData} />
+        <CustomSection photoBgDesktop="/assets/templates/aura-of-elegance/texture-pink.webp" photoBgMobile="/assets/templates/aura-of-elegance/texture-pink.webp" data={customSectionData} />
 
         {/* Photo Gallery is optional (Mapped to Story component) */}
         {showGallery && <Story data={data.story} />}

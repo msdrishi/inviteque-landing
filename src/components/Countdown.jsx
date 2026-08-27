@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-const countdownBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029546/jm1zlmjcwdjwvxkbjts7.png"
+const countdownBg = "/assets/templates/aura-of-elegance/countdown-bg.webp"
 
 function clampToZero(value) {
   return value < 0 ? 0 : value
@@ -133,7 +133,7 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText,
     >
       {/* Background image (no overlay/filter) */}
       <img
-        src={bgImage || (isDesktop ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1782033909/gmefgowakcfmgpx49vmi.png" : countdownBg)}
+        src={bgImage || (isDesktop ? "/assets/templates/aura-of-elegance/countdown-desktop-bg.webp" : countdownBg)}
         alt=""
         aria-hidden
         className="absolute inset-0 h-full w-full object-cover"

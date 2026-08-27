@@ -1,4 +1,4 @@
 {
-  "venue-desktop.png": "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786884307/midnight-waltz-venue-desktop-1786884299844.png",
-  "venue-mobile.png": "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786884313/midnight-waltz-venue-mobile-1786884299844.png"
+  "venue-desktop.png": "/assets/templates/midnight-waltz/venue-desktop.webp",
+  "venue-mobile.png": "/assets/templates/midnight-waltz/venue-mobile.webp"
 }

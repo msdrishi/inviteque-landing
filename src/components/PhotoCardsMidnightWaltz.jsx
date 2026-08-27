@@ -64,9 +64,9 @@ export default function PhotoCardsMidnightWaltz({
 
   // Photo Cards stack setup
   const defaultImages = [
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786831801/midnight-waltz-image-1.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786831803/midnight-waltz-image-2.png",
-    "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786831805/midnight-waltz-image-3.png"
+    "/assets/templates/midnight-waltz/sample-photo-1.webp",
+    "/assets/templates/midnight-waltz/sample-photo-2.webp",
+    "/assets/templates/midnight-waltz/sample-photo-3.webp"
   ]
 
   const defaultQuotes = [

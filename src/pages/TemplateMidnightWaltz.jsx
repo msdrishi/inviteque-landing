@@ -11,17 +11,17 @@ import CustomSection from '../components/CustomSection.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
-// ── Background asset URLs ────────────────────────────────────────
-const desktopHeroBg      = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786831796/midnight-waltz-hero-dekstop.png"
-const smartphoneHeroBg   = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786831798/midnight-waltz-hero-mobile.png"
-const photoBgDesktop     = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786831788/midnight-waltz-bg-texture-desktop.png"
-const photoBgMobile      = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786831790/midnight-waltz-bg-texture-mobile.png"
-const messageBgDesktop   = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786831815/midnight-waltz-welcome-desktop.png"
-const messageBgMobile    = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786831816/midnight-waltz-welcome-mobile.png"
-const locationBgDesktop  = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786884307/midnight-waltz-venue-desktop-1786884299844.png"
-const locationBgMobile   = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786884313/midnight-waltz-venue-mobile-1786884299844.png"
-const countdownBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1786831792/midnight-waltz-countdown-desktop.png"
-const countdownBgMobile  = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1786831794/midnight-waltz-countdown-mobile.png"
+// ── Background asset URLs (local Vercel CDN) ────────────────────────────────────────
+const desktopHeroBg      = "/assets/templates/midnight-waltz/hero-desktop.webp"
+const smartphoneHeroBg   = "/assets/templates/midnight-waltz/hero-mobile.webp"
+const photoBgDesktop     = "/assets/templates/midnight-waltz/photo-bg-desktop.webp"
+const photoBgMobile      = "/assets/templates/midnight-waltz/photo-bg-mobile.webp"
+const messageBgDesktop   = "/assets/templates/midnight-waltz/welcome-desktop.webp"
+const messageBgMobile    = "/assets/templates/midnight-waltz/welcome-mobile.webp"
+const locationBgDesktop  = "/assets/templates/midnight-waltz/venue-desktop.webp"
+const locationBgMobile   = "/assets/templates/midnight-waltz/venue-mobile.webp"
+const countdownBgDesktop = "/assets/templates/midnight-waltz/countdown-desktop.webp"
+const countdownBgMobile  = "/assets/templates/midnight-waltz/countdown-mobile.webp"
 const rosePetalSrc       = "/assets/decorations/midnight-waltz-rosePetal.png"
 
 // ── Petal configs — computed once at module level ────────────────

@@ -6,7 +6,7 @@ const logo = "/assets/logo/inviteq-watermark.png"
 import { fadeUp } from '../motionVariants'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
-const themeImg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto/v1779029551/j3pvwk2eiuvbrxt0m39d.png"
+const themeImg = "/assets/brand/theme-preview.webp"
 import { API_URL } from '../config'
 
 export default function InviteDetails() {
@@ -135,15 +135,15 @@ export default function InviteDetails() {
   const coverImage = isSunflower
     ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.png")
     : isTwilight 
-      ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1783964581/desktop.png" 
+      ? "/assets/templates/twilight-serenade/hero-desktop.webp" 
       : isEverlasting
-        ? (everlastingVowsMapping['hero_desktop.png'] || "/backgrounds/Everlasting%20Vows/hero_desktop.png")
+        ? (everlastingVowsMapping['hero_desktop.png'] || "/assets/templates/everlasting-vows/hero-desktop.webp")
         : isRoyalPalace
-          ? (royalPalaceMapping['hero-desktop.png'] || "/backgrounds/Royal Palace/hero-desktop.png")
+          ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/assets/templates/sunflower-fields/hero-first-frame-desktop.webp")
           : isModernHearth
-            ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786600526/house-warming-hw1/hw1-hero-desktop.png"
+            ? "/assets/templates/modern-hearth/hero-desktop.webp"
             : isMidnightWaltz
-              ? "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786831796/midnight-waltz-hero-dekstop.png"
+              ? "/assets/templates/midnight-waltz/hero-desktop.webp"
               : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"

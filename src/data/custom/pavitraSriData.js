@@ -46,21 +46,21 @@ export const pavitraSriData = {
     photos: [
       {
         id: 1,
-        image: "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786831801/midnight-waltz-image-1.png",
+        image: "/assets/templates/midnight-waltz/sample-photo-1.webp",
         title: "Side by Side",
         quote: "In your arms, I have found my forever home.",
         rotation: -3,
       },
       {
         id: 2,
-        image: "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786831803/midnight-waltz-image-2.png",
+        image: "/assets/templates/midnight-waltz/sample-photo-2.webp",
         title: "Shared Laughter",
         quote: "Every love story is beautiful, but ours is my favorite.",
         rotation: 3,
       },
       {
         id: 3,
-        image: "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1786831805/midnight-waltz-image-3.png",
+        image: "/assets/templates/midnight-waltz/sample-photo-3.webp",
         title: "Forever Us",
         quote: "Two hearts, one soul, a lifetime of beautiful memories.",
         rotation: -2,

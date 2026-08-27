@@ -9,7 +9,7 @@ import { useDraft } from '../context/DraftContext'
 import MobileNav from '../components/MobileNav'
 import { LazyImage } from '../components/LazyImage'
 import { API_URL } from '../config'
-const tailorRomanceBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1782036339/m2xlgvmlglao8ulz60dd.jpg"
+const tailorRomanceBg = "/assets/brand/landing-romance-bg.webp"
 
 const templateCardPop = {
   hidden: { opacity: 0, y: 18, scale: 0.96 },

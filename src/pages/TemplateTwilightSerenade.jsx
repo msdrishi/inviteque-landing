@@ -11,20 +11,20 @@ import CustomSection from '../components/CustomSection.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
-// Cloudinary background asset URLs
-const desktopBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964581/desktop.png"
-const smartphoneBg = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964627/smartphone.png"
-const photoBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964624/photo-section-desktop.png"
-const photoBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964626/photo-section-mobile.png"
-const messageBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964619/message-section-desktop.png"
-const messageBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964623/message-section-mobile.png"
-const locationBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964612/location-section-desktop.png"
-const locationBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964614/location-section-mobile.png"
-const countdownBgDesktop = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_1440/v1783964566/countdown-section-desktop.png"
-const countdownBgMobile = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_768/v1783964573/countdown-section-mobile.png"
-const twilightPhoto1 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1783964628/twilight-photo-1.png"
-const twilightPhoto2 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1783964629/twilight-photo-2.png"
-const twilightPhoto3 = "https://res.cloudinary.com/djbxuk2xr/image/upload/f_auto,q_auto,w_800/v1783964631/twilight-photo-3.png"
+// Background asset URLs (local Vercel CDN)
+const desktopBg = "/assets/templates/twilight-serenade/hero-desktop.webp"
+const smartphoneBg = "/assets/templates/twilight-serenade/hero-mobile.webp"
+const photoBgDesktop = "/assets/templates/twilight-serenade/photo-section-desktop.webp"
+const photoBgMobile = "/assets/templates/twilight-serenade/photo-section-mobile.webp"
+const messageBgDesktop = "/assets/templates/twilight-serenade/message-section-desktop.webp"
+const messageBgMobile = "/assets/templates/twilight-serenade/message-section-mobile.webp"
+const locationBgDesktop = "/assets/templates/twilight-serenade/location-section-desktop.webp"
+const locationBgMobile = "/assets/templates/twilight-serenade/location-section-mobile.webp"
+const countdownBgDesktop = "/assets/templates/twilight-serenade/countdown-section-desktop.webp"
+const countdownBgMobile = "/assets/templates/twilight-serenade/countdown-section-mobile.webp"
+const twilightPhoto1 = "/assets/templates/twilight-serenade/twilight-photo-1.webp"
+const twilightPhoto2 = "/assets/templates/twilight-serenade/twilight-photo-2.webp"
+const twilightPhoto3 = "/assets/templates/twilight-serenade/twilight-photo-3.webp"
 
 const leafImg = "/assets/decorations/rose-petal.png"
 
