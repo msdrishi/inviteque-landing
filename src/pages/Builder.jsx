@@ -106,6 +106,47 @@ function formatTimeRange(sh, sm, sa, eh, em, ea) {
   return start || end
 }
 
+// Function to check if Step 1 (Essential Details) is complete
+function isStep1Complete(data, isHouseWarming) {
+  if (!data) return false
+  if (!data.groomName?.trim()) return false
+  if (!isHouseWarming && !data.brideName?.trim()) return false
+  if (!data.weddingDate?.trim()) return false
+  if (!data.weddingMonth?.trim()) return false
+  if (!data.weddingYear?.trim()) return false
+  if (!data.weddingTime?.trim()) return false
+  if (!data.mahalName?.trim()) return false
+  if (!data.venueAddress?.trim()) return false
+  if (!data.venueCity?.trim()) return false
+  if (!data.state?.trim()) return false
+  if (!data.mapLink?.trim()) return false
+
+  // Verify selected date is not in the past
+  if (data.weddingDate && data.weddingMonth && data.weddingYear) {
+    const selectedDateStr = formatToDateInput(data.weddingDate, data.weddingMonth, data.weddingYear)
+    const todayStr = getTodayDateString()
+    if (selectedDateStr < todayStr) {
+      return false
+    }
+  }
+
+  return true
+}
+
+// Function to check if Step 2 (Schedule / Personalize) is complete
+function isStep2Complete(data) {
+  if (!data) return false
+  if (data.showSchedule && Array.isArray(data.scheduleItems)) {
+    for (const item of data.scheduleItems) {
+      if (!item.title?.trim()) return false
+      const timeVal = item.time || ''
+      const hasDigits = /\d+/.test(timeVal)
+      if (!timeVal.trim() || !hasDigits) return false
+    }
+  }
+  return true
+}
+
 export default function Builder() {
   const { templateId } = useParams()
   const [searchParams] = useSearchParams()
@@ -113,17 +154,32 @@ export default function Builder() {
   const editCode = searchParams.get('code')
   const navigate = useNavigate()
   const { draftData, updateDraft, resetDraft } = useDraft()
+  const isHouseWarmingDefault = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
+  const isHouseWarming = isHouseWarmingDefault
+
   const [step, setStep] = useState(() => {
     const stepParam = searchParams.get('step')
+    let parsedStep = 1
     if (stepParam) {
       const parsed = parseInt(stepParam, 10)
-      if (!isNaN(parsed) && parsed >= 1 && parsed <= 4) return parsed
-    }
-    if (location.state?.step) {
+      if (!isNaN(parsed) && parsed >= 1 && parsed <= 4) parsedStep = parsed
+    } else if (location.state?.step) {
       const parsed = parseInt(location.state.step, 10)
-      if (!isNaN(parsed) && parsed >= 1 && parsed <= 4) return parsed
+      if (!isNaN(parsed) && parsed >= 1 && parsed <= 4) parsedStep = parsed
     }
-    return 1
+
+    if (editCode) return parsedStep
+
+    const shouldStartFreshInit = !editCode && draftData.status === 'PAID'
+    const initialData = shouldStartFreshInit ? null : draftData
+
+    if (parsedStep > 1 && !isStep1Complete(initialData, isHouseWarmingDefault)) {
+      return 1
+    }
+    if (parsedStep > 2 && !isStep2Complete(initialData)) {
+      return 2
+    }
+    return parsedStep
   })
   const [showMapTooltip, setShowMapTooltip] = useState(false)
   const { user, loading: authLoading } = useAuth()
@@ -134,8 +190,6 @@ export default function Builder() {
       navigate('/login')
     }
   }, [user, authLoading, navigate])
-
-  const isHouseWarmingDefault = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
 
   const defaultFormData = {
     groomName: isHouseWarmingDefault ? 'House Warming' : '',
@@ -391,10 +445,29 @@ export default function Builder() {
     }
   }, [editCode, draftData.code, updateDraft, user])
 
+  useEffect(() => {
+    if (loading || authLoading) return
+
+    const stepParam = searchParams.get('step')
+    const targetStep = stepParam ? parseInt(stepParam, 10) : step
+
+    if (targetStep > 1 && !isStep1Complete(formData, isHouseWarming)) {
+      setStep(1)
+      const newParams = new URLSearchParams(searchParams)
+      newParams.delete('step')
+      const newQuery = newParams.toString() ? `?${newParams.toString()}` : ''
+      navigate(`/builder/${templateId}${newQuery}`, { replace: true })
+    } else if (targetStep > 2 && !isStep2Complete(formData)) {
+      setStep(2)
+      const newParams = new URLSearchParams(searchParams)
+      newParams.set('step', '2')
+      navigate(`/builder/${templateId}?${newParams.toString()}`, { replace: true })
+    }
+  }, [loading, authLoading, searchParams, formData, isHouseWarming, templateId, navigate, step])
+
   const [errors, setErrors] = useState({})
 
   // Get template details — search both wedding and house warming templates
-  const isHouseWarming = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
   const template = templates.find(t => t.id === templateId) || houseWarmingTemplates.find(t => t.id === templateId)
 
   if (loading || authLoading) {

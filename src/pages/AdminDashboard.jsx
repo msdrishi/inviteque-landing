@@ -1,9 +1,10 @@
 import { useEffect, useState, useMemo, useRef } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { API_URL } from '../config'
 import { motion, AnimatePresence } from 'framer-motion'
 import { templates, houseWarmingTemplates } from '../templates/templates'
+import ExpenseTracker from '../components/admin/ExpenseTracker'
 
 const logo = "/assets/logo/inviteq-logo.png"
 
@@ -75,7 +76,14 @@ export default function AdminDashboard() {
   }, [user, navigate])
 
   // Navigation states
-  const [activeTab, setActiveTab] = useState('overview') // 'overview', 'transactions', 'templates', 'coupons', 'website'
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [activeTab, setActiveTab] = useState(() => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam && ['overview', 'expenses', 'transactions', 'templates', 'coupons', 'website', 'users'].includes(tabParam)) {
+      return tabParam
+    }
+    return 'overview'
+  })
   const [timeframe, setTimeframe] = useState('month') // 'week' (7 days), 'month' (30 days), 'year' (12 months)
 
   // API Data states
@@ -873,6 +881,7 @@ export default function AdminDashboard() {
         <nav className="space-y-1.5 p-4">
           {[
             { id: 'overview', label: 'Dashboard', icon: '📊' },
+            { id: 'expenses', label: 'Expense & Operations', icon: '💼' },
             { id: 'transactions', label: 'Transactions', icon: '💸' },
             { id: 'templates', label: 'Templates', icon: '🎨' },
             { id: 'coupons', label: 'Coupons', icon: '🏷️' },
@@ -881,7 +890,10 @@ export default function AdminDashboard() {
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id)
+                setSearchParams({ tab: tab.id })
+              }}
               className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
                 activeTab === tab.id
                   ? 'bg-slate-900 text-white shadow-md shadow-slate-900/10'
@@ -921,10 +933,14 @@ export default function AdminDashboard() {
         <div className="flex gap-2">
           <select
             value={activeTab}
-            onChange={(e) => setActiveTab(e.target.value)}
+            onChange={(e) => {
+              setActiveTab(e.target.value)
+              setSearchParams({ tab: e.target.value })
+            }}
             className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-bold outline-none"
           >
             <option value="overview">Dashboard</option>
+            <option value="expenses">Expense & Operations</option>
             <option value="transactions">Transactions</option>
             <option value="templates">Templates</option>
             <option value="coupons">Coupons</option>
@@ -938,17 +954,19 @@ export default function AdminDashboard() {
       </div>
 
       {/* 2. MAIN CONTENT AREA */}
-      <main className="flex-1 md:pl-64 pt-14 md:pt-0">
-        <div className="mx-auto max-w-6xl px-4 py-8 md:px-8 space-y-8">
+      <main className="flex-1 md:pl-64 pt-14 md:pt-0 min-w-0 max-w-full overflow-x-hidden">
+        <div className="mx-auto max-w-6xl px-3 py-6 sm:px-4 sm:py-8 md:px-8 space-y-6 sm:space-y-8 min-w-0 max-w-full">
           
           {/* Header row */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight capitalize text-slate-900">
-                {activeTab === 'overview' ? 'analytics overview' : activeTab}
+                {activeTab === 'overview' ? 'analytics overview' : activeTab === 'expenses' ? 'Expense & Operations Suite' : activeTab}
               </h1>
               <p className="text-xs md:text-sm font-medium text-slate-400">
-                InviteQue platform performance summary metrics
+                {activeTab === 'expenses' 
+                  ? 'Track revenue, manual settlements, operational expenses, delivery pipeline & tasks' 
+                  : 'InviteQue platform performance summary metrics'}
               </p>
             </div>
             {activeTab === 'overview' && (
@@ -978,6 +996,11 @@ export default function AdminDashboard() {
             <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-600">
               ⚠️ {error}
             </div>
+          )}
+
+          {/* TAB: EXPENSES & OPERATIONS SUITE */}
+          {activeTab === 'expenses' && (
+            <ExpenseTracker dbPurchases={purchases} />
           )}
 
           {/* TAB 1: OVERVIEW */}
