@@ -31,6 +31,17 @@ export default function CustomTemplateEditor() {
 
   const [activeTab, setActiveTab] = useState('couple') // couple, story, photos, welcome, events, countdown, rsvp, sections
 
+  const tabsList = useMemo(() => [
+    { id: 'couple', label: 'Couple & Date', icon: '💍', num: 1 },
+    { id: 'story', label: 'Our Story', icon: '📖', num: 2 },
+    { id: 'photos', label: 'Photo Moments', icon: '🖼️', num: 3 },
+    { id: 'welcome', label: 'Welcome Note', icon: '💌', num: 4 },
+    { id: 'events', label: 'Multi-Events', icon: '🏛️', num: 5 },
+    { id: 'countdown', label: 'Countdown', icon: '⏳', num: 6 },
+    { id: 'rsvp', label: 'RSVP & Registry', icon: '✍️', num: 7 },
+    { id: 'sections', label: 'Section Toggles', icon: '⚙️', num: 8 },
+  ], [])
+
   // Default events based on variant
   const defaultEvents = useMemo(() => {
     if (variant === '2') {
@@ -41,64 +52,67 @@ export default function CustomTemplateEditor() {
   }, [variant])
 
   const [formData, setFormData] = useState(() => {
+    let saved = null
     try {
-      const saved = localStorage.getItem(storageKey)
-      if (saved) {
-        return JSON.parse(saved)
-      }
-      // Also check fallback key without variant if variant is 1
-      if (variant === '1') {
-        const fallback = localStorage.getItem(`inviteque_custom_data_${templateId}_${customSlug}`)
-        if (fallback) return JSON.parse(fallback)
+      const raw = localStorage.getItem(storageKey)
+      if (raw) {
+        saved = JSON.parse(raw)
+      } else if (variant === '1') {
+        const rawFallback = localStorage.getItem(`inviteque_custom_data_${templateId}_${customSlug}`)
+        if (rawFallback) saved = JSON.parse(rawFallback)
       }
     } catch (e) {
       console.warn('Failed to load custom data:', e)
     }
 
+    const defaultRsvpUrl = pavitraSriData.celebrate.rsvp?.url || `/templates/midnight-waltz/PAVITRASRI/RSVP`
+
     return {
       // Couple & Hero
-      groomName: pavitraSriData.hero.groomName || 'Sri',
-      brideName: pavitraSriData.hero.brideName || 'Pavitra',
-      weddingDate: pavitraSriData.hero.weddingDate || '15',
-      weddingMonth: pavitraSriData.hero.weddingMonth || 'July',
-      weddingYear: pavitraSriData.hero.weddingYear || '2026',
-      weddingTime: pavitraSriData.hero.weddingTime || '09:00 AM - 10:30 AM',
-      heroSubtitle: pavitraSriData.hero.subtitle || 'Are Getting Married',
+      groomName: saved?.groomName || pavitraSriData.hero.groomName || 'Sri',
+      brideName: saved?.brideName || pavitraSriData.hero.brideName || 'Pavitra',
+      weddingDate: saved?.weddingDate || pavitraSriData.hero.weddingDate || '15',
+      weddingMonth: saved?.weddingMonth || pavitraSriData.hero.weddingMonth || 'July',
+      weddingYear: saved?.weddingYear || pavitraSriData.hero.weddingYear || '2026',
+      weddingTime: saved?.weddingTime || pavitraSriData.hero.weddingTime || '09:00 AM - 10:30 AM',
+      heroSubtitle: saved?.heroSubtitle || pavitraSriData.hero.subtitle || 'Are Getting Married',
 
       // Our Story
-      storyQuote: pavitraSriData.story.quote || '"Two lives, one shared dream of a lifetime together."',
-      storyMessage: pavitraSriData.story.message || 'From casual conversations to unforgettable moments, our path led us to this special day. We are blessed to begin this new chapter filled with love, laughter, and lifelong partnership.',
+      storyQuote: saved?.storyQuote || pavitraSriData.story.quote || '"Two lives, one shared dream of a lifetime together."',
+      storyMessage: saved?.storyMessage || pavitraSriData.story.message || 'From casual conversations to unforgettable moments, our path led us to this special day. We are blessed to begin this new chapter filled with love, laughter, and lifelong partnership.',
 
       // Photo Moments (3 Photos)
-      photos: pavitraSriData.moments.photos.map(p => p.image),
+      photos: (saved?.photos && Array.isArray(saved.photos) && saved.photos.length >= 3)
+        ? saved.photos
+        : pavitraSriData.moments.photos.map(p => p.image),
 
       // Welcome Message
-      welcomeLabel: pavitraSriData.welcome.label || 'Welcome',
-      welcomeHeading1: pavitraSriData.welcome.headingLine1 || 'Dear Friends',
-      welcomeHeading2: pavitraSriData.welcome.headingLine2 || '& Family,',
-      welcomeMessage: pavitraSriData.welcome.message || 'With great joy and grateful hearts, we invite you to be part of our wedding celebrations. Your love and presence mean the world to us.',
+      welcomeLabel: saved?.welcomeLabel || pavitraSriData.welcome.label || 'Welcome',
+      welcomeHeading1: saved?.welcomeHeading1 || pavitraSriData.welcome.headingLine1 || 'Dear Friends',
+      welcomeHeading2: saved?.welcomeHeading2 || pavitraSriData.welcome.headingLine2 || '& Family,',
+      welcomeMessage: saved?.welcomeMessage || pavitraSriData.welcome.message || 'With great joy and grateful hearts, we invite you to be part of our wedding celebrations. Your love and presence mean the world to us.',
 
       // Multi-Event Ceremonies
-      events: defaultEvents,
+      events: (saved?.events && Array.isArray(saved.events) && saved.events.length > 0)
+        ? saved.events
+        : defaultEvents,
 
       // Countdown
-      countdownTargetDate: pavitraSriData.countdown.targetDate || '2026-07-15',
+      countdownTargetDate: saved?.countdownTargetDate || pavitraSriData.countdown.targetDate || '2026-07-15',
 
       // RSVP & Registry
-      rsvpTitle: pavitraSriData.celebrate.rsvp?.title || 'RSVP & Guest Confirmation',
-      rsvpDescription: pavitraSriData.celebrate.rsvp?.description || 'Kindly let us know if you will be able to join us on our special day.',
-      rsvpButtonLabel: pavitraSriData.celebrate.rsvp?.buttonLabel || 'RSVP Online',
-      rsvpUrl: pavitraSriData.celebrate.rsvp?.url || `/template/${templateId}/${customSlug}/rsvp`,
-      hasRsvp: true,
+      rsvpTitle: saved?.rsvpTitle || pavitraSriData.celebrate.rsvp?.title || 'RSVP',
+      rsvpDescription: saved?.rsvpDescription || pavitraSriData.celebrate.rsvp?.description || 'Please let us know if you will be joining us by October 25, 2026.',
+      rsvpUrl: saved?.rsvpUrl || defaultRsvpUrl,
+      hasRsvp: saved?.hasRsvp !== undefined ? saved.hasRsvp : true,
 
-      registryTitle: pavitraSriData.celebrate.registry?.title || 'Wedding Registry',
-      registryDescription: pavitraSriData.celebrate.registry?.description || 'Your presence is our present. Should you wish to honor us with a gift, details are available here.',
-      registryButtonLabel: pavitraSriData.celebrate.registry?.buttonLabel || 'View Registry',
-      registryUrl: pavitraSriData.celebrate.registry?.url || '#',
-      hasRegistry: pavitraSriData.celebrate.registry?.enabled ?? true,
+      registryTitle: saved?.registryTitle || pavitraSriData.celebrate.registry?.title || 'Gift Registry',
+      registryDescription: saved?.registryDescription || pavitraSriData.celebrate.registry?.description || 'For loved ones who have asked, view our curated wedding wishlist.',
+      registryUrl: saved?.registryUrl || pavitraSriData.celebrate.registry?.url || 'https://www.amazon.com/wedding',
+      hasRegistry: saved?.hasRegistry !== undefined ? saved.hasRegistry : (pavitraSriData.celebrate.registry?.enabled ?? true),
 
       // Section Visibility Toggles
-      sections: {
+      sections: saved?.sections || {
         showHero: true,
         showStory: true,
         showGallery: true,
@@ -336,11 +350,12 @@ export default function CustomTemplateEditor() {
   const liveUrl = `/template/${templateId}/${customSlug}/${variant}`
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] font-saas text-slate-900 flex flex-col relative">
+    <div className="min-h-screen bg-[#FDFCFB] font-saas text-slate-900 flex flex-col relative w-full overflow-x-hidden">
       {/* Luxury Splash Screen overlay (Identical to other templates) */}
       <SplashScreen loading={showSplash || authLoading} />
+      
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-md w-full">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 sm:px-6 py-3.5">
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-2">
@@ -397,7 +412,7 @@ export default function CustomTemplateEditor() {
       </header>
 
       {/* Main Form Area */}
-      <main className="flex-1 mx-auto w-full max-w-4xl px-4 sm:px-6 py-8 space-y-6">
+      <main className="flex-1 mx-auto w-full max-w-4xl px-4 sm:px-6 py-6 sm:py-8 space-y-6 overflow-x-hidden">
         
         {/* Title Card */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
@@ -429,7 +444,7 @@ export default function CustomTemplateEditor() {
         </div>
 
         {/* Variant Switcher on Mobile */}
-        <div className="sm:hidden flex items-center gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+        <div className="sm:hidden flex items-center gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200 w-full">
           <Link
             to={`/template/${templateId}/${customSlug}/1/edit`}
             className={`flex-1 text-center py-2 rounded-xl text-xs font-bold transition ${
@@ -448,36 +463,95 @@ export default function CustomTemplateEditor() {
           </Link>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-200 scrollbar-none">
-          {[
-            { id: 'couple', label: '1. Couple & Date', icon: '💍' },
-            { id: 'story', label: '2. Our Story', icon: '📖' },
-            { id: 'photos', label: '3. Photo Moments', icon: '🖼️' },
-            { id: 'welcome', label: '4. Welcome Note', icon: '💌' },
-            { id: 'events', label: '5. Multi-Events', icon: '🏛️' },
-            { id: 'countdown', label: '6. Countdown', icon: '⏳' },
-            { id: 'rsvp', label: '7. RSVP & Registry', icon: '✍️' },
-            { id: 'sections', label: '8. Section Toggles', icon: '⚙️' },
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all ${
-                activeTab === tab.id
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-              }`}
-            >
-              <span>{tab.icon}</span>
-              {tab.label}
-            </button>
-          ))}
+        {/* Responsive Section Selector Grid (All 8 sections visible without horizontal scrolling!) */}
+        <div className="space-y-3 w-full">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              Select Section to Edit:
+            </span>
+            <span className="text-xs font-extrabold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-lg">
+              Step {tabsList.findIndex(t => t.id === activeTab) + 1} of 8
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full">
+            {tabsList.map(tab => {
+              const isActive = activeTab === tab.id
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 p-2.5 rounded-2xl border text-left transition-all ${
+                    isActive
+                      ? 'bg-slate-900 border-slate-900 text-white shadow-md'
+                      : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50/80 shadow-xs'
+                  }`}
+                >
+                  <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl text-sm ${
+                    isActive ? 'bg-white/20' : 'bg-slate-100'
+                  }`}>
+                    {tab.icon}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <span className={`block text-[10px] font-bold uppercase tracking-wider ${
+                      isActive ? 'text-amber-300' : 'text-slate-400'
+                    }`}>
+                      Section {tab.num}
+                    </span>
+                    <span className="block text-xs font-bold truncate">
+                      {tab.label}
+                    </span>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         {/* Tab Panels */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+        <div className="bg-white rounded-3xl border border-slate-200 p-5 sm:p-8 shadow-sm space-y-6">
           
+          {/* Quick Header Stepper */}
+          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">{tabsList.find(t => t.id === activeTab)?.icon}</span>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Editing Section {tabsList.findIndex(t => t.id === activeTab) + 1} of 8
+                </span>
+                <h3 className="text-base font-extrabold text-slate-900">
+                  {tabsList.find(t => t.id === activeTab)?.label}
+                </h3>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                disabled={tabsList.findIndex(t => t.id === activeTab) === 0}
+                onClick={() => {
+                  const idx = tabsList.findIndex(t => t.id === activeTab)
+                  if (idx > 0) setActiveTab(tabsList[idx - 1].id)
+                }}
+                className="px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-700 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition"
+              >
+                ◀ Prev
+              </button>
+              <button
+                type="button"
+                disabled={tabsList.findIndex(t => t.id === activeTab) === tabsList.length - 1}
+                onClick={() => {
+                  const idx = tabsList.findIndex(t => t.id === activeTab)
+                  if (idx < tabsList.length - 1) setActiveTab(tabsList[idx + 1].id)
+                }}
+                className="px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-700 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition"
+              >
+                Next ▶
+              </button>
+            </div>
+          </div>
+
           {activeTab === 'couple' && (
             <CoupleHeroTab formData={formData} handleFieldChange={handleFieldChange} />
           )}
@@ -516,9 +590,40 @@ export default function CustomTemplateEditor() {
             <SectionTogglesTab formData={formData} handleSectionToggle={handleSectionToggle} />
           )}
 
+          {/* Bottom In-Card Step Flow */}
+          <div className="flex items-center justify-between pt-5 border-t border-slate-100">
+            {tabsList.findIndex(t => t.id === activeTab) > 0 ? (
+              <button
+                type="button"
+                onClick={() => {
+                  const idx = tabsList.findIndex(t => t.id === activeTab)
+                  setActiveTab(tabsList[idx - 1].id)
+                }}
+                className="text-xs font-bold text-slate-600 hover:text-slate-900 transition flex items-center gap-1"
+              >
+                ◀ Back to {tabsList[tabsList.findIndex(t => t.id === activeTab) - 1]?.label}
+              </button>
+            ) : <div />}
+
+            {tabsList.findIndex(t => t.id === activeTab) < tabsList.length - 1 ? (
+              <button
+                type="button"
+                onClick={() => {
+                  const idx = tabsList.findIndex(t => t.id === activeTab)
+                  setActiveTab(tabsList[idx + 1].id)
+                }}
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold transition flex items-center gap-1.5"
+              >
+                Next: {tabsList[tabsList.findIndex(t => t.id === activeTab) + 1]?.label} ▶
+              </button>
+            ) : (
+              <span className="text-xs font-bold text-emerald-700">✓ All Sections Reviewed</span>
+            )}
+          </div>
+
         </div>
 
-        {/* Footer Actions */}
+        {/* Sticky/Fixed Footer Actions */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200">
           <a
             href={liveUrl}
