@@ -7,6 +7,7 @@ import Countdown from '../../components/Countdown.jsx'
 import Footer from '../../components/Footer.jsx'
 import { useDraft } from '../../context/DraftContext.jsx'
 import { API_URL } from '../../config.js'
+import SplashScreen from '../../components/SplashScreen.jsx'
 
 // ── Background asset URLs (local Vercel CDN) ────────────────────────────────────────
 const desktopHeroBg = "/assets/templates/midnight-waltz/hero-desktop.webp"
@@ -1885,6 +1886,14 @@ export default function CustomMidnightWaltzPavitraSri() {
   const codeParam = searchParams.get('code') || (!['1', '2', 'full', 'wedding'].includes(variant) ? variant : null)
   const { draftData } = useDraft()
   const [liveInvite, setLiveInvite] = useState(null)
+  const [showSplash, setShowSplash] = useState(!isPreview)
+
+  useEffect(() => {
+    if (!isPreview) {
+      const timer = setTimeout(() => setShowSplash(false), 900)
+      return () => clearTimeout(timer)
+    }
+  }, [isPreview])
 
   useEffect(() => {
     if (codeParam && !isPreview) {
@@ -2047,6 +2056,8 @@ export default function CustomMidnightWaltzPavitraSri() {
 
   return (
     <div className="relative min-h-screen bg-[#FDFBF7] text-[#4A3E20]">
+      {/* Luxury Splash Screen overlay (Identical to other templates) */}
+      <SplashScreen loading={showSplash} />
 
       {/* ── MOBILE VIEW ── */}
       <div className="lg:hidden flex justify-center items-start min-h-screen bg-[#F0E8D8]">

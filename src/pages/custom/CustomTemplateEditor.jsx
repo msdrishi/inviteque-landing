@@ -14,6 +14,7 @@ import MultiEventsTab from '../../components/customEditor/MultiEventsTab.jsx'
 import CountdownTab from '../../components/customEditor/CountdownTab.jsx'
 import RsvpRegistryTab from '../../components/customEditor/RsvpRegistryTab.jsx'
 import SectionTogglesTab from '../../components/customEditor/SectionTogglesTab.jsx'
+import SplashScreen from '../../components/SplashScreen.jsx'
 
 const logo = "/assets/logo/inviteq-logo.png"
 
@@ -22,6 +23,7 @@ export default function CustomTemplateEditor() {
   const { user, loading: authLoading, saveInvitation } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const [showSplash, setShowSplash] = useState(true)
 
   const storageKey = useMemo(() => {
     return `inviteque_custom_data_${templateId}_${customSlug}_v${variant}`
@@ -113,11 +115,17 @@ export default function CustomTemplateEditor() {
 
   // 1. Authentication Guard & DB Preload
   useEffect(() => {
-    if (!authLoading && !user) {
-      navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`, { replace: true })
-      return
+    if (!authLoading) {
+      if (!user) {
+        navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`, { replace: true })
+      } else {
+        const timer = setTimeout(() => setShowSplash(false), 900)
+        return () => clearTimeout(timer)
+      }
     }
+  }, [user, authLoading, navigate, location.pathname])
 
+  useEffect(() => {
     const fetchDbData = async () => {
       if (!user?.token) return
       try {
@@ -171,7 +179,7 @@ export default function CustomTemplateEditor() {
     }
 
     fetchDbData()
-  }, [user, authLoading, navigate, location.pathname, variant])
+  }, [user, variant])
 
   const handleFieldChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -325,18 +333,12 @@ export default function CustomTemplateEditor() {
     }
   }
 
-  if (authLoading || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7]">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#7A6840] border-t-transparent" />
-      </div>
-    )
-  }
-
   const liveUrl = `/template/${templateId}/${customSlug}/${variant}`
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] font-saas text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-[#FDFCFB] font-saas text-slate-900 flex flex-col relative">
+      {/* Luxury Splash Screen overlay (Identical to other templates) */}
+      <SplashScreen loading={showSplash || authLoading} />
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 sm:px-6 py-3.5">
