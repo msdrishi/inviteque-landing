@@ -16,6 +16,7 @@ import AdminLogin from './pages/AdminLogin.jsx'
 import AdminDashboard from './pages/AdminDashboard.jsx'
 import CustomerRsvpDashboard from './pages/CustomerRsvpDashboard.jsx'
 import CustomMidnightWaltzPavitraSri from './pages/custom/CustomMidnightWaltzPavitraSri.jsx'
+import CustomEverlastingVowsShradha from './pages/custom/CustomEverlastingVowsShradha.jsx'
 import CustomTemplateEditor from './pages/custom/CustomTemplateEditor.jsx'
 import { API_URL } from './config'
 
@@ -109,6 +110,16 @@ export default function App() {
           <Route path="/template/midnight-waltz/Pavitra-Sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
           <Route path="/templates/midnight-waltz/Pavitra-Sri" element={<CustomMidnightWaltzPavitraSri />} />
           <Route path="/templates/midnight-waltz/Pavitra-Sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
+
+          {/* Custom Client Template Routes (Shradha - Everlasting Vows Roka & Engagement) */}
+          <Route path="/template/everlastingvows/Shradha" element={<CustomEverlastingVowsShradha />} />
+          <Route path="/template/everlastingvows/Shradha/:variant" element={<CustomEverlastingVowsShradha />} />
+          <Route path="/templates/everlastingvows/Shradha" element={<CustomEverlastingVowsShradha />} />
+          <Route path="/templates/everlastingvows/Shradha/:variant" element={<CustomEverlastingVowsShradha />} />
+          <Route path="/template/everlastingvows/shradha" element={<CustomEverlastingVowsShradha />} />
+          <Route path="/template/everlastingvows/shradha/:variant" element={<CustomEverlastingVowsShradha />} />
+          <Route path="/templates/everlastingvows/shradha" element={<CustomEverlastingVowsShradha />} />
+          <Route path="/templates/everlastingvows/shradha/:variant" element={<CustomEverlastingVowsShradha />} />
 
           {/* Customer RSVP Dashboard Routes (Uppercase & Lowercase) */}
           <Route path="/templates/:templateId/:code/RSVP" element={<CustomerRsvpDashboard />} />

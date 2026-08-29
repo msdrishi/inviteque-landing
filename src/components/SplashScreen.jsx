@@ -5,7 +5,7 @@ export default function SplashScreen({ loading = true }) {
 
   return (
     <div 
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#FDFCFB] transition-opacity duration-500 ease-in-out"
+      className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#FDFCFB] transition-opacity duration-500 ease-in-out"
       style={{ 
         opacity: loading ? 1 : 0,
         pointerEvents: loading ? 'all' : 'none'

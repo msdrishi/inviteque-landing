@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation, useParams, Navigate } from 'react-route
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { pavitraSriData } from '../../data/custom/pavitraSriData.js'
+import { shradhaData } from '../../data/custom/shradhaData.js'
 import { API_URL } from '../../config.js'
 
 // Reusable Editor Tab Components
@@ -25,6 +26,9 @@ export default function CustomTemplateEditor() {
   const location = useLocation()
   const [showSplash, setShowSplash] = useState(true)
 
+  const isShradha = customSlug?.toLowerCase() === 'shradha' || templateId?.toLowerCase() === 'everlastingvows'
+  const activeBaseData = isShradha ? shradhaData : pavitraSriData
+
   const storageKey = useMemo(() => {
     return `inviteque_custom_data_${templateId}_${customSlug}_v${variant}`
   }, [templateId, customSlug, variant])
@@ -44,12 +48,12 @@ export default function CustomTemplateEditor() {
 
   // Default events based on variant
   const defaultEvents = useMemo(() => {
-    if (variant === '2') {
+    if (!isShradha && variant === '2') {
       const weddingEvents = pavitraSriData.events.filter(e => e.isWeddingOnly)
       return weddingEvents.length > 0 ? weddingEvents.map(e => ({ ...e })) : [pavitraSriData.events[pavitraSriData.events.length - 1]]
     }
-    return pavitraSriData.events.map(e => ({ ...e }))
-  }, [variant])
+    return activeBaseData.events.map(e => ({ ...e }))
+  }, [variant, isShradha, activeBaseData])
 
   const [formData, setFormData] = useState(() => {
     let saved = null
@@ -65,35 +69,35 @@ export default function CustomTemplateEditor() {
       console.warn('Failed to load custom data:', e)
     }
 
-    const defaultRsvpUrl = pavitraSriData.celebrate.rsvp?.url || `/templates/midnight-waltz/PAVITRASRI/RSVP`
+    const defaultRsvpUrl = activeBaseData.celebrate?.rsvp?.url || `/templates/${templateId}/${isShradha ? 'SHRADHA' : 'PAVITRASRI'}/RSVP`
 
     return {
       // Couple & Hero
-      groomName: saved?.groomName || pavitraSriData.hero.groomName || 'Sri',
-      brideName: saved?.brideName || pavitraSriData.hero.brideName || 'Pavitra',
-      weddingDate: saved?.weddingDate || pavitraSriData.hero.weddingDate || '15',
-      weddingMonth: saved?.weddingMonth || pavitraSriData.hero.weddingMonth || 'July',
-      weddingYear: saved?.weddingYear || pavitraSriData.hero.weddingYear || '2026',
-      weddingTime: saved?.weddingTime || pavitraSriData.hero.weddingTime || '09:00 AM - 10:30 AM',
-      heroSubtitle: saved?.heroSubtitle || pavitraSriData.hero.subtitle || 'Are Getting Married',
+      groomName: saved?.groomName || activeBaseData.hero.groomName || (isShradha ? 'Aayush' : 'Sri'),
+      brideName: saved?.brideName || activeBaseData.hero.brideName || (isShradha ? 'Shradha' : 'Pavitra'),
+      weddingDate: saved?.weddingDate || activeBaseData.hero.weddingDate || (isShradha ? '18' : '15'),
+      weddingMonth: saved?.weddingMonth || activeBaseData.hero.weddingMonth || (isShradha ? 'December' : 'July'),
+      weddingYear: saved?.weddingYear || activeBaseData.hero.weddingYear || '2026',
+      weddingTime: saved?.weddingTime || activeBaseData.hero.weddingTime || (isShradha ? '10:00 AM onwards' : '09:00 AM - 10:30 AM'),
+      heroSubtitle: saved?.heroSubtitle || activeBaseData.hero.subtitle || (isShradha ? 'Roka & Engagement Ceremony' : 'Are Getting Married'),
 
       // Our Story
-      storySectionLabel: saved?.storySectionLabel || pavitraSriData.story.sectionLabel || 'Our Story',
-      storyHeading: saved?.storyHeading || pavitraSriData.story.heading || 'From A Chance Encounter to Forever',
-      storyParagraph1: saved?.storyParagraph1 || (Array.isArray(saved?.storyParagraphs) ? saved.storyParagraphs[0] : null) || (saved?.storyMessage ? saved.storyMessage.split('\n\n')[0] : null) || pavitraSriData.story.paragraph1 || pavitraSriData.story.paragraphs[0] || 'What began as a simple conversation blossomed into a connection that felt like coming home. Through shared laughter, quiet evenings, and countless adventures, we discovered that life\'s most precious moments are the ones spent together.',
-      storyParagraph2: saved?.storyParagraph2 || (Array.isArray(saved?.storyParagraphs) ? saved.storyParagraphs[1] : null) || (saved?.storyMessage?.includes('\n\n') ? saved.storyMessage.split('\n\n')[1] : null) || pavitraSriData.story.paragraph2 || pavitraSriData.story.paragraphs[1] || 'With the blessings of our parents and surrounded by the love of family and friends, we are thrilled to step into this new chapter of our lives hand in hand.',
-      storyQuote: saved?.storyQuote || pavitraSriData.story.quote || '“In your arms, I have found my forever home and love.”',
+      storySectionLabel: saved?.storySectionLabel || activeBaseData.story?.sectionLabel || 'Our Story',
+      storyHeading: saved?.storyHeading || activeBaseData.story?.heading || 'From A Chance Encounter to Forever',
+      storyParagraph1: saved?.storyParagraph1 || (Array.isArray(saved?.storyParagraphs) ? saved.storyParagraphs[0] : null) || (saved?.storyMessage ? saved.storyMessage.split('\n\n')[0] : null) || activeBaseData.story?.paragraph1 || activeBaseData.story?.paragraphs?.[0] || 'What began as a simple conversation blossomed into a connection that felt like coming home. Through shared laughter, quiet evenings, and countless adventures, we discovered that life\'s most precious moments are the ones spent together.',
+      storyParagraph2: saved?.storyParagraph2 || (Array.isArray(saved?.storyParagraphs) ? saved.storyParagraphs[1] : null) || (saved?.storyMessage?.includes('\n\n') ? saved.storyMessage.split('\n\n')[1] : null) || activeBaseData.story?.paragraph2 || activeBaseData.story?.paragraphs?.[1] || 'With the blessings of our parents and surrounded by the love of family and friends, we are thrilled to step into this new chapter of our lives hand in hand.',
+      storyQuote: saved?.storyQuote || activeBaseData.story?.quote || '“In your arms, I have found my forever home and love.”',
 
       // Photo Moments (3 Photos)
       photos: (saved?.photos && Array.isArray(saved.photos) && saved.photos.length >= 3)
         ? saved.photos
-        : pavitraSriData.moments.photos.map(p => p.image),
+        : (activeBaseData.moments?.photos?.map(p => p.image) || []),
 
       // Welcome Message
-      welcomeLabel: saved?.welcomeLabel || pavitraSriData.welcome.label || 'Welcome',
-      welcomeHeading1: saved?.welcomeHeading1 || pavitraSriData.welcome.headingLine1 || 'Dear Friends',
-      welcomeHeading2: saved?.welcomeHeading2 || pavitraSriData.welcome.headingLine2 || '& Family,',
-      welcomeMessage: saved?.welcomeMessage || pavitraSriData.welcome.message || 'With great joy and grateful hearts, we invite you to be part of our wedding celebrations. Your love and presence mean the world to us.',
+      welcomeLabel: saved?.welcomeLabel || activeBaseData.welcome?.label || 'Welcome',
+      welcomeHeading1: saved?.welcomeHeading1 || activeBaseData.welcome?.headingLine1 || 'Dear Friends',
+      welcomeHeading2: saved?.welcomeHeading2 || activeBaseData.welcome?.headingLine2 || '& Family,',
+      welcomeMessage: saved?.welcomeMessage || activeBaseData.welcome?.message || 'With great joy and grateful hearts, we invite you to be part of our celebrations. Your love and presence mean the world to us.',
 
       // Multi-Event Ceremonies
       events: (saved?.events && Array.isArray(saved.events) && saved.events.length > 0)
@@ -101,25 +105,25 @@ export default function CustomTemplateEditor() {
         : defaultEvents,
 
       // Countdown
-      countdownTargetDate: saved?.countdownTargetDate || pavitraSriData.countdown.targetDate || '2026-07-15',
+      countdownTargetDate: saved?.countdownTargetDate || (isShradha ? '2026-12-18' : '2026-07-15'),
 
       // RSVP & Registry
-      rsvpTitle: saved?.rsvpTitle || pavitraSriData.celebrate.rsvp?.title || 'RSVP',
-      rsvpDescription: saved?.rsvpDescription || pavitraSriData.celebrate.rsvp?.description || 'Please let us know if you will be joining us by October 25, 2026.',
+      rsvpTitle: saved?.rsvpTitle || activeBaseData.celebrate?.rsvp?.title || (isShradha ? 'RSVP For Roka & Engagement' : 'RSVP'),
+      rsvpDescription: saved?.rsvpDescription || activeBaseData.celebrate?.rsvp?.description || 'Please let us know if you will be joining us.',
       rsvpUrl: saved?.rsvpUrl || defaultRsvpUrl,
       hasRsvp: saved?.hasRsvp !== undefined ? saved.hasRsvp : true,
 
-      registryTitle: saved?.registryTitle || pavitraSriData.celebrate.registry?.title || 'Gift Registry',
-      registryDescription: saved?.registryDescription || pavitraSriData.celebrate.registry?.description || 'For loved ones who have asked, view our curated wedding wishlist.',
-      registryUrl: saved?.registryUrl || pavitraSriData.celebrate.registry?.url || 'https://www.amazon.com/wedding',
-      hasRegistry: saved?.hasRegistry !== undefined ? saved.hasRegistry : (pavitraSriData.celebrate.registry?.enabled ?? true),
+      registryTitle: saved?.registryTitle || activeBaseData.celebrate?.registry?.title || 'Gift Registry',
+      registryDescription: saved?.registryDescription || activeBaseData.celebrate?.registry?.description || 'For loved ones who have asked, view our curated wishlist.',
+      registryUrl: saved?.registryUrl || activeBaseData.celebrate?.registry?.url || 'https://www.amazon.com/wedding',
+      hasRegistry: saved?.hasRegistry !== undefined ? saved.hasRegistry : (activeBaseData.celebrate?.registry?.enabled ?? true),
 
       // Section Visibility Toggles
       sections: saved?.sections || {
         showHero: true,
-        showStory: true,
-        showGallery: true,
-        showWelcome: true,
+        showStory: !isShradha,
+        showGallery: !isShradha,
+        showWelcome: !isShradha,
         showVenue: true,
         showCountdown: true,
         hasRsvp: true,
@@ -304,7 +308,7 @@ export default function CustomTemplateEditor() {
         try {
           const payload = {
             templateId,
-            code: 'PAVITRASRI',
+            code: isShradha ? 'SHRADHA' : 'PAVITRASRI',
             coupleNames: `${formData.groomName || ''} & ${formData.brideName || ''}`.trim(),
             groomName: formData.groomName,
             brideName: formData.brideName,
@@ -414,7 +418,9 @@ export default function CustomTemplateEditor() {
     )
   }
 
-  const liveUrl = `/template/${templateId}/${customSlug}/${variant}`
+  const liveUrl = isShradha 
+    ? `/template/everlastingvows/Shradha`
+    : `/template/${templateId}/${customSlug}/${variant}`
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] font-saas text-slate-900 flex flex-col relative w-full overflow-x-hidden">
