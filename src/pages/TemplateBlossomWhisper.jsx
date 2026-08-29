@@ -5,6 +5,7 @@ import Countdown from '../components/Countdown.jsx'
 import Events from '../components/Events.jsx'
 import Footer from '../components/Footer.jsx'
 import CustomSection from '../components/CustomSection.jsx'
+import InviteQRSVP from '../components/InviteQRSVP.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -14,12 +15,13 @@ import messageBg from '../assets/themes/template3/message_bg.png'
 import venueBg from '../assets/themes/template3/venue_bg.png'
 import desktopBg from '../assets/themes/template3/desktop_bg.png'
 
-export default function TemplateBlossomWhisper({ savedData }) {
+export default function TemplateBlossomWhisper({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData } = useDraft()
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
+  const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   // Watermark is shown unless paid
   const isPaid = savedData && (
@@ -127,9 +129,28 @@ export default function TemplateBlossomWhisper({ savedData }) {
     }
   } : staticData
 
-  const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
-  const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const showGallery = savedData
+    ? (savedData.invitationData?.showGallery !== undefined 
+        ? Boolean(savedData.invitationData.showGallery)
+        : (savedData.scheduleData?.showGallery !== undefined
+            ? Boolean(savedData.scheduleData.showGallery)
+            : true))
+    : Boolean(draftData.showGallery)
+
+  const showSchedule = savedData
+    ? (savedData.invitationData?.showSchedule !== undefined 
+        ? Boolean(savedData.invitationData.showSchedule)
+        : (savedData.scheduleData?.showSchedule !== undefined
+            ? Boolean(savedData.scheduleData.showSchedule)
+            : true))
+    : Boolean(draftData.showSchedule)
+
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
+  const showRsvp = savedData 
+    ? (savedData.invitationData?.hasRsvp !== undefined 
+        ? Boolean(savedData.invitationData.hasRsvp) 
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
+    : Boolean(draftData?.hasRsvp)
 
   return (
     <div 
@@ -193,6 +214,17 @@ export default function TemplateBlossomWhisper({ savedData }) {
           <div className="bg-[#7A0010] py-6 border-b border-[#D4AF37]/15">
             <Events data={data.events} theme="red" />
           </div>
+        )}
+
+        {/* ── RSVP SECTION ── */}
+        {showRsvp && (
+          <InviteQRSVP
+            weddingCode={savedData?.code}
+            groupSlug={groupSlug}
+            isPreview={!savedData}
+            theme="royal"
+            config={savedData?.rsvpData}
+          />
         )}
 
         {/* ── SECTION 6: COUNTDOWN ── */}

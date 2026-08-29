@@ -15,18 +15,32 @@ const themeImg = "/assets/brand/theme-preview.webp"
 export default function Payment() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { draftData, templateId } = location.state || {}
   const { saveInvitation, user, loading: authLoading } = useAuth()
-  const { updateDraft } = useDraft()
+  const { draftData: contextDraft, updateDraft } = useDraft()
+
+  // State hooks MUST be declared unconditionally at the very top of the component
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [couponCode, setCouponCode] = useState('')
+  const [appliedCoupon, setAppliedCoupon] = useState(null)
+  const [couponError, setCouponError] = useState('')
+  const [couponSuccess, setCouponSuccess] = useState('')
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false)
+
+  // Resolve draftData and templateId safely from location.state OR DraftContext
+  const draftData = location.state?.draftData || contextDraft || {}
+  const templateId = location.state?.templateId || draftData?.templateId || new URLSearchParams(location.search).get('templateId') || 'twilight-serenade'
+
+  // Get template details — search both wedding and house warming with safe fallback
+  const template = templates.find(t => t.id === templateId) || 
+                   houseWarmingTemplates.find(t => t.id === templateId) || 
+                   templates.find(t => t.id === 'twilight-serenade') || 
+                   templates[0]
 
   useEffect(() => {
     if (!authLoading && !user) {
       navigate('/login')
     }
   }, [user, authLoading, navigate])
-
-  // Get template details — search both wedding and house warming
-  const template = templates.find(t => t.id === templateId) || houseWarmingTemplates.find(t => t.id === templateId)
 
   const isSunflower = templateId === 'sunflower-fields'
   const isTwilight = templateId === 'template-2' || templateId === 'twilight-serenade'
@@ -59,6 +73,14 @@ export default function Payment() {
 
   const TEMPLATE_PRICE = 999 // Price in INR
 
+  const isTemplatePaid = draftData.status === 'PAID' || draftData.isPaid === true
+  const wasRsvpPaid = Boolean(isTemplatePaid && (draftData.wasRsvpPaid || draftData.rsvpData?.enabled))
+  const wantsRsvp = Boolean(draftData.hasRsvp)
+
+  // Is this an RSVP add-on upgrade for an invitation that was already paid?
+  const isRsvpUpgrade = isTemplatePaid && wantsRsvp && !wasRsvpPaid
+  const isAlreadyFullyPaid = isTemplatePaid && (!wantsRsvp || wasRsvpPaid)
+
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-iqBg">
@@ -84,15 +106,6 @@ export default function Payment() {
       </div>
     )
   }
-
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [couponCode, setCouponCode] = useState('')
-  const [appliedCoupon, setAppliedCoupon] = useState(null)
-  const [couponError, setCouponError] = useState('')
-  const [couponSuccess, setCouponSuccess] = useState('')
-  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false)
-
-  const isAlreadyPaid = draftData.status === 'PAID'
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) {
@@ -148,8 +161,11 @@ export default function Payment() {
     setCouponError('')
   }
 
-  const discount = appliedCoupon ? Number(((TEMPLATE_PRICE * appliedCoupon.discountPercentage) / 100).toFixed(2)) : 0
-  const finalPrice = Number((TEMPLATE_PRICE - discount).toFixed(2))
+  const templatePriceToCharge = isTemplatePaid ? 0 : TEMPLATE_PRICE
+  const rsvpPriceToCharge = isTemplatePaid ? (isRsvpUpgrade ? 500 : 0) : (wantsRsvp ? 500 : 0)
+  const BASE_TOTAL_PRICE = templatePriceToCharge + rsvpPriceToCharge
+  const discount = appliedCoupon ? Number(((BASE_TOTAL_PRICE * appliedCoupon.discountPercentage) / 100).toFixed(2)) : 0
+  const finalPrice = Number((BASE_TOTAL_PRICE - discount).toFixed(2))
 
   const handlePaymentClick = async () => {
     setIsProcessing(true)
@@ -245,6 +261,9 @@ export default function Payment() {
           photos: resolvedDraft.photos
         },
         invitationData: {
+          showGallery: resolvedDraft.showGallery,
+          showSchedule: resolvedDraft.showSchedule,
+          hasRsvp: Boolean(resolvedDraft.hasRsvp),
           showFamilySection: resolvedDraft.showFamilySection,
           familyMessage: resolvedDraft.familyMessage,
           familyPhoto: resolvedDraft.familyPhoto,
@@ -256,7 +275,13 @@ export default function Payment() {
           customSectionContent: resolvedDraft.customSectionContent,
           customSectionPosition: resolvedDraft.customSectionPosition
         },
-        rsvpData: {}, // Placeholder
+        rsvpData: {
+          enabled: Boolean(resolvedDraft.hasRsvp),
+          allowGuestCount: true,
+          allowEventSelection: true,
+          allowMessage: true,
+          allowMaybe: false,
+        },
         status: isAlreadyPaid ? 'PAID' : 'DRAFT', // Leave as draft until payment succeeds
         couponCode: appliedCoupon ? appliedCoupon.code : null
       }
@@ -269,15 +294,15 @@ export default function Payment() {
       inviteRequest.id = savedInvite.id
       inviteRequest.code = savedInvite.code
 
-      // If already paid, bypass payment entirely
-      if (isAlreadyPaid) {
+      // If already fully paid and no RSVP upgrade is needed, bypass payment entirely
+      if (isAlreadyFullyPaid) {
         navigate('/payment-confirmation', {
           state: {
             orderId: savedInvite.id,
             inviteUrl,
             draftData: resolvedDraft,
             template,
-            amount: resolvedDraft.amountPaid || finalPrice,
+            amount: resolvedDraft.amountPaid || 0,
             code: savedInvite.code,
             isUpdate: true
           }
@@ -285,7 +310,7 @@ export default function Payment() {
         return
       }
 
-      // If final price is 0 (100% discount coupon applied), bypass Razorpay flow entirely
+      // If final price is 0 (e.g. 100% discount coupon applied), bypass Razorpay flow
       if (finalPrice <= 0) {
         const verifyRes = await fetch(`${API_URL}/api/payments/verify`, {
           method: 'POST',
@@ -314,7 +339,7 @@ export default function Payment() {
             template,
             amount: 0,
             code: savedInvite.code,
-            isUpdate: isAlreadyPaid
+            isUpdate: isTemplatePaid
           }
         })
         return
@@ -350,7 +375,7 @@ export default function Payment() {
           },
           body: JSON.stringify({
             inviteCode: savedInvite.code,
-            amountPaid: finalPrice,
+            amountPaid: (draftData.amountPaid || 0) + finalPrice,
             inviteRequest: { ...inviteRequest, status: 'PAID' }
           })
         })
@@ -368,7 +393,7 @@ export default function Payment() {
             template,
             amount: finalPrice,
             code: savedInvite.code,
-            isUpdate: isAlreadyPaid
+            isUpdate: isTemplatePaid
           }
         })
         return
@@ -496,12 +521,18 @@ export default function Payment() {
           <div className="space-y-6">
             <div className="text-center">
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
-                {isAlreadyPaid ? 'Review Your Updates' : 'Order Summary'}
+                {isAlreadyFullyPaid
+                  ? 'Review Your Updates'
+                  : isRsvpUpgrade
+                    ? 'Upgrade with RSVP Add-on'
+                    : 'Order Summary'}
               </h1>
               <p className="text-iqText/60">
-                {isAlreadyPaid
-                  ? 'Confirm the changes before they go live'
-                  : 'Review your invitation details and proceed to payment'}
+                {isAlreadyFullyPaid
+                  ? 'Confirm your updated wedding details before they go live'
+                  : isRsvpUpgrade
+                    ? 'Activate interactive RSVP tracking and guest management for your invitation'
+                    : 'Review your invitation details and proceed to activate'}
               </p>
             </div>
 
@@ -549,19 +580,23 @@ export default function Payment() {
                 </div>
 
                 {/* Feature Status */}
-                <div className="grid grid-cols-2 gap-4 pb-6">
-                  <div className="rounded-2xl bg-iqBg/50 p-4 border border-iqBorder">
+                <div className="grid grid-cols-3 gap-3 pb-6">
+                  <div className="rounded-2xl bg-iqBg/50 p-3.5 border border-iqBorder text-center">
                     <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">Gallery</span>
                     <span className="text-xs font-bold">{draftData.showGallery ? '✅ Enabled' : '❌ Disabled'}</span>
                   </div>
-                  <div className="rounded-2xl bg-iqBg/50 p-4 border border-iqBorder">
+                  <div className="rounded-2xl bg-iqBg/50 p-3.5 border border-iqBorder text-center">
                     <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">Schedule</span>
                     <span className="text-xs font-bold">{draftData.showSchedule ? '✅ Enabled' : '❌ Disabled'}</span>
                   </div>
+                  <div className="rounded-2xl bg-iqBg/50 p-3.5 border border-iqBorder text-center">
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">RSVP Subsystem</span>
+                    <span className="text-xs font-bold">{draftData.hasRsvp ? '✅ Enabled' : '❌ Disabled'}</span>
+                  </div>
                 </div>
 
-                {/* Coupon Code Input */}
-                {!isAlreadyPaid && (
+                {/* Coupon Code Input (if payment is due) */}
+                {!isAlreadyFullyPaid && (
                   <div className="space-y-3 pt-4 border-t border-iqBorder">
                     <span className="text-iqText/40 font-bold uppercase tracking-widest text-[10px]">Have a Coupon?</span>
                     <div className="flex flex-col sm:flex-row gap-2">
@@ -605,37 +640,45 @@ export default function Payment() {
                   </div>
                 )}
 
-                {/* Price (Only show if not paid) */}
-                {!isAlreadyPaid ? (
-                  <div className="space-y-3 pt-4">
-                    {appliedCoupon ? (
-                      <div className="space-y-2 w-full pt-4 border-t border-iqBorder">
-                        <div className="flex justify-between items-center text-sm text-iqText/60">
-                          <span>Original Amount</span>
-                          <span>₹{TEMPLATE_PRICE}</span>
+                {/* Price Breakdown */}
+                {!isAlreadyFullyPaid ? (
+                  <div className="space-y-3 pt-4 border-t border-iqBorder">
+                    <div className="space-y-2 w-full text-sm text-iqText/70">
+                      <div className="flex justify-between items-center">
+                        <span>Template Design</span>
+                        <span className="font-semibold text-iqText">
+                          {isTemplatePaid ? (
+                            <span className="text-emerald-700 font-bold">₹999 (Already Paid ✓)</span>
+                          ) : (
+                            `₹${TEMPLATE_PRICE}`
+                          )}
+                        </span>
+                      </div>
+                      {Boolean(draftData.hasRsvp) && (
+                        <div className="flex justify-between items-center text-emerald-700 font-medium">
+                          <span>RSVP &amp; Guest Management {isRsvpUpgrade ? 'Upgrade' : 'Add-on'}</span>
+                          <span className="font-bold">+₹500</span>
                         </div>
-                        <div className="flex justify-between items-center text-sm text-green-600 font-medium">
+                      )}
+                      {appliedCoupon && (
+                        <div className="flex justify-between items-center text-green-600 font-medium">
                           <span>Discount ({appliedCoupon.discountPercentage}%)</span>
                           <span>-₹{discount.toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between items-end pt-2 border-t border-dashed border-iqBorder">
-                          <span className="font-bold">Total Amount</span>
-                          <span className="text-3xl font-bold text-iqText">₹{finalPrice.toFixed(2)}</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex justify-between items-end border-t border-iqBorder pt-6">
-                        <span className="font-bold">Total Amount</span>
-                        <span className="text-3xl font-bold text-iqText">₹{TEMPLATE_PRICE}</span>
-                      </div>
-                    )}
+                      )}
+                    </div>
+
+                    <div className="flex justify-between items-end pt-3 border-t border-dashed border-iqBorder">
+                      <span className="font-bold">{isRsvpUpgrade ? 'Total Due to Upgrade' : 'Total Amount'}</span>
+                      <span className="text-3xl font-bold text-iqText">₹{finalPrice.toFixed(2)}</span>
+                    </div>
                     <p className="text-[10px] text-iqText/40 text-center uppercase tracking-widest font-bold">Inclusive of all taxes</p>
                   </div>
                 ) : (
                   <div className="rounded-2xl bg-green-50 p-5 border border-green-100 flex items-center justify-between">
                     <div>
                       <span className="text-[10px] font-bold text-green-700 uppercase tracking-widest block">Premium Status</span>
-                      <span className="text-sm font-bold text-green-700">All features unlocked</span>
+                      <span className="text-sm font-bold text-green-700">All features unlocked • Free unlimited edits</span>
                     </div>
                     <span className="bg-green-600 text-white px-3 py-1 rounded-full text-[10px] font-bold">PAID</span>
                   </div>
@@ -646,15 +689,21 @@ export default function Payment() {
             {/* Info Box */}
             <motion.div
               variants={fadeUp}
-              className={`rounded-2xl p-6 space-y-3 ${isAlreadyPaid ? 'bg-blue-50 border border-blue-100' : 'bg-iqBg/50 border border-iqBorder'}`}
+              className={`rounded-2xl p-6 space-y-3 ${isAlreadyFullyPaid ? 'bg-blue-50 border border-blue-100' : isRsvpUpgrade ? 'bg-amber-50 border border-amber-100' : 'bg-iqBg/50 border border-iqBorder'}`}
             >
-              <h3 className={`font-bold text-sm ${isAlreadyPaid ? 'text-blue-900' : 'text-iqText'}`}>
-                {isAlreadyPaid ? '✨ Free Updates Enabled' : '🎁 What happens next?'}
+              <h3 className={`font-bold text-sm ${isAlreadyFullyPaid ? 'text-blue-900' : isRsvpUpgrade ? 'text-amber-950' : 'text-iqText'}`}>
+                {isAlreadyFullyPaid
+                  ? '✨ Free Updates Enabled'
+                  : isRsvpUpgrade
+                    ? '🎉 RSVP Subsystem Activation'
+                    : '🎁 What happens next?'}
               </h3>
-              <p className={`text-xs leading-relaxed ${isAlreadyPaid ? 'text-blue-800/70' : 'text-iqText/60'}`}>
-                {isAlreadyPaid
+              <p className={`text-xs leading-relaxed ${isAlreadyFullyPaid ? 'text-blue-800/70' : isRsvpUpgrade ? 'text-amber-900/80' : 'text-iqText/60'}`}>
+                {isAlreadyFullyPaid
                   ? 'As a premium user, you can update your wedding details as many times as you like. Your live link will be refreshed instantly once you click update.'
-                  : 'After a successful payment, you will receive your unique digital invitation link. You can share this link with your guests instantly via WhatsApp or Email.'}
+                  : isRsvpUpgrade
+                    ? 'By completing this ₹500 RSVP upgrade, the interactive RSVP section and your private RSVP dashboard will be enabled on your live wedding invitation!'
+                    : 'After a successful payment, you will receive your unique digital invitation link. You can share this link with your guests instantly via WhatsApp or Email.'}
               </p>
             </motion.div>
           </div>
@@ -682,10 +731,15 @@ export default function Payment() {
                 </>
               ) : (
                 <>
-                  {isAlreadyPaid ? (
+                  {isAlreadyFullyPaid ? (
                     <>
                       <span>💾</span>
                       Update Invitation
+                    </>
+                  ) : isRsvpUpgrade ? (
+                    <>
+                      <span>💳</span>
+                      Pay ₹{finalPrice.toFixed(2)} &amp; Enable RSVP
                     </>
                   ) : (
                     <>

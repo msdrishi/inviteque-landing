@@ -8,6 +8,7 @@ import Invitation from '../components/InvitationEverlastingVows.jsx'
 import Story from '../components/StoryEverlastingVows.jsx'
 import Venue from '../components/Venue.jsx'
 import CustomSection from '../components/CustomSection.jsx'
+import InviteQRSVP from '../components/InviteQRSVP.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -425,12 +426,13 @@ function EverlastingVowsHero({ data, isDesktop }) {
   )
 }
 
-export default function TemplateEverlastingVows({ savedData }) {
+export default function TemplateEverlastingVows({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData } = useDraft()
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
+  const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   // Watermark status
   const isPaid = savedData && (
@@ -441,28 +443,29 @@ export default function TemplateEverlastingVows({ savedData }) {
   const showWatermark = !isPaid
 
   // Active data
-  const hasDraft = draftData && (draftData.groomName || draftData.brideName)
-  const activeData = savedData || (hasDraft ? draftData : null)
+  const activeData = savedData || (isPreview ? draftData : (draftData?.groomName ? draftData : null))
 
   const data = activeData ? {
     ...staticData,
     hero: {
       ...staticData.hero,
-      names: savedData
-        ? `${savedData.coupleData.groomName} & ${savedData.coupleData.brideName}`
-        : `${draftData.groomName} & ${draftData.brideName}`,
-      groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
-      brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
-      dateLine: savedData
-        ? `${savedData.heroData.weddingDate} ${savedData.heroData.weddingMonth} ${savedData.heroData.weddingYear}`
-        : `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear}`,
-      weddingTime: savedData
-        ? (savedData.heroData?.weddingTime || '09:00 AM - 10:30 AM')
-        : (draftData.weddingTime || '09:00 AM - 10:30 AM'),
-      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || 'The Leela Palace',
+      names: (savedData ? `${savedData.coupleData?.groomName || savedData.groomName || 'Abhishek'} & ${savedData.coupleData?.brideName || savedData.brideName || 'Kanika'}` : `${draftData?.groomName || 'Abhishek'} & ${draftData?.brideName || 'Kanika'}`),
+      groomName: (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || 'Abhishek',
+      brideName: (savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName) || 'Kanika',
+      dateLine: (() => {
+        if (savedData?.heroData?.weddingDate && savedData?.heroData?.weddingMonth) {
+          return `${savedData.heroData.weddingDate} ${savedData.heroData.weddingMonth} ${savedData.heroData.weddingYear || ''}`.trim()
+        }
+        if (draftData?.weddingDate && draftData?.weddingMonth) {
+          return `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear || ''}`.trim()
+        }
+        return '18 December 2026'
+      })(),
+      weddingTime: (savedData ? (savedData.heroData?.weddingTime || savedData.weddingTime) : draftData?.weddingTime) || '09:00 AM - 10:30 AM',
+      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || 'The Leela Palace',
       venueCity: (savedData
         ? [savedData.venueData?.venueCity || savedData.venueCity, savedData.venueData?.state || savedData.state].filter(Boolean).join(', ')
-        : [draftData.venueCity, draftData.state].filter(Boolean).join(', ')
+        : [draftData?.venueCity, draftData?.state].filter(Boolean).join(', ')
       ) || 'New Delhi, India',
       addressParts: (() => {
         const rawParts = savedData
@@ -473,10 +476,10 @@ export default function TemplateEverlastingVows({ savedData }) {
               savedData.venueData?.state || savedData.state
             ].map(s => String(s || '').trim()).filter(Boolean)
           : [
-              draftData.mahalName,
-              draftData.venueAddress,
-              draftData.venueCity,
-              draftData.state
+              draftData?.mahalName,
+              draftData?.venueAddress,
+              draftData?.venueCity,
+              draftData?.state
             ].map(s => String(s || '').trim()).filter(Boolean)
 
         if (rawParts.length > 0) {
@@ -498,38 +501,41 @@ export default function TemplateEverlastingVows({ savedData }) {
             savedData.venueData?.state || savedData.state
           ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
         : [
-            draftData.mahalName,
-            draftData.venueAddress,
-            draftData.venueCity,
-            draftData.state
+            draftData?.mahalName,
+            draftData?.venueAddress,
+            draftData?.venueCity,
+            draftData?.state
           ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
       ) || 'The Leela Palace, Diplomatic Enclave, Chanakyapuri, New Delhi, Delhi 110021',
       hashtag: (() => {
-        const groom = savedData ? savedData.coupleData.groomName : draftData.groomName
-        const bride = savedData ? savedData.coupleData.brideName : draftData.brideName
-        const gName = (groom || '').trim().replace(/\s+/g, '')
-        const bName = (bride || '').trim().replace(/\s+/g, '')
+        const groom = savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName
+        const bride = savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName
+        const gName = (groom || 'Abhishek').trim().replace(/\s+/g, '')
+        const bName = (bride || 'Kanika').trim().replace(/\s+/g, '')
         return `#${gName}${bName}Forever`
       })(),
       dayOfWeek: (() => {
-        const month = savedData ? savedData.heroData.weddingMonth : draftData.weddingMonth
-        const date = savedData ? savedData.heroData.weddingDate : draftData.weddingDate
-        const year = savedData ? savedData.heroData.weddingYear : draftData.weddingYear
-        const d = new Date(`${month} ${date}, ${year}`)
-        return isNaN(d.getTime()) ? 'Friday' : d.toLocaleDateString('en-US', { weekday: 'long' })
+        const month = savedData ? (savedData.heroData?.weddingMonth || savedData.weddingMonth) : draftData?.weddingMonth
+        const date = savedData ? (savedData.heroData?.weddingDate || savedData.weddingDate) : draftData?.weddingDate
+        const year = savedData ? (savedData.heroData?.weddingYear || savedData.weddingYear) : draftData?.weddingYear
+        if (month && date && year) {
+          const d = new Date(`${month} ${date}, ${year}`)
+          if (!isNaN(d.getTime())) return d.toLocaleDateString('en-US', { weekday: 'long' })
+        }
+        return 'Friday'
       })(),
     },
     venue: {
       ...staticData.venue,
-      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || 'The Leela Palace',
+      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || 'The Leela Palace',
       venueLine1: (savedData
         ? [
             savedData.venueData?.mahalName || savedData.mahalName,
             savedData.venueData?.venueAddress || savedData.venueName
           ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
         : [
-            draftData.mahalName,
-            draftData.venueAddress
+            draftData?.mahalName,
+            draftData?.venueAddress
           ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
       ) || 'The Leela Palace, Diplomatic Enclave, Chanakyapuri',
       venueLine2: (savedData
@@ -538,8 +544,8 @@ export default function TemplateEverlastingVows({ savedData }) {
             savedData.venueData?.state || savedData.state
           ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
         : [
-            draftData.venueCity,
-            draftData.state
+            draftData?.venueCity,
+            draftData?.state
           ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
       ) || 'New Delhi, Delhi 110021',
       location: (savedData
@@ -550,13 +556,13 @@ export default function TemplateEverlastingVows({ savedData }) {
             savedData.venueData?.state || savedData.state
           ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
         : [
-            draftData.mahalName,
-            draftData.venueAddress,
-            draftData.venueCity,
-            draftData.state
+            draftData?.mahalName,
+            draftData?.venueAddress,
+            draftData?.venueCity,
+            draftData?.state
           ].map(s => String(s || '').trim()).filter(Boolean).join(', ')
       ) || 'The Leela Palace, Diplomatic Enclave, Chanakyapuri, New Delhi, Delhi 110021',
-      mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData.mapLink) || staticData.venue.mapUrl,
+      mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData?.mapLink) || staticData.venue.mapUrl,
     },
     countdown: {
       ...staticData.countdown,
@@ -577,7 +583,7 @@ export default function TemplateEverlastingVows({ savedData }) {
       items: (() => {
         const photos = savedData
           ? (savedData.storyData?.photos || savedData.photos || [])
-          : (draftData.photos || [])
+          : (draftData?.photos || [])
         const activePhotos = photos.filter(Boolean)
         return activePhotos.length > 0
           ? activePhotos.map(p => ({ image: p }))
@@ -593,7 +599,7 @@ export default function TemplateEverlastingVows({ savedData }) {
       items: (() => {
         const scheduleItems = savedData
           ? (savedData.scheduleData?.items || [])
-          : (Array.isArray(draftData.scheduleItems) ? draftData.scheduleItems : [])
+          : (Array.isArray(draftData?.scheduleItems) ? draftData.scheduleItems : [])
         const icons = ['✦', '◎', '✿', '◆', '♪']
         return scheduleItems.map((item, index) => ({
           icon: icons[index % icons.length],
@@ -605,8 +611,8 @@ export default function TemplateEverlastingVows({ savedData }) {
     },
     invitation: {
       ...staticData.invitation,
-      groomName: (savedData ? savedData.coupleData.groomName : draftData.groomName) || 'Abhishek',
-      brideName: (savedData ? savedData.coupleData.brideName : draftData.brideName) || 'Kanika',
+      groomName: (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || 'Abhishek',
+      brideName: (savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName) || 'Kanika',
     }
   } : {
     ...staticData,
@@ -645,9 +651,28 @@ export default function TemplateEverlastingVows({ savedData }) {
     }
   }
 
-  const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
-  const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const showGallery = savedData
+    ? (savedData.invitationData?.showGallery !== undefined 
+        ? Boolean(savedData.invitationData.showGallery)
+        : (savedData.scheduleData?.showGallery !== undefined
+            ? Boolean(savedData.scheduleData.showGallery)
+            : true))
+    : Boolean(draftData.showGallery)
+
+  const showSchedule = savedData
+    ? (savedData.invitationData?.showSchedule !== undefined 
+        ? Boolean(savedData.invitationData.showSchedule)
+        : (savedData.scheduleData?.showSchedule !== undefined
+            ? Boolean(savedData.scheduleData.showSchedule)
+            : true))
+    : Boolean(draftData.showSchedule)
+
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
+  const showRsvp = savedData 
+    ? (savedData.invitationData?.hasRsvp !== undefined 
+        ? Boolean(savedData.invitationData.hasRsvp) 
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
+    : Boolean(draftData?.hasRsvp)
 
   return (
     <div className="relative min-h-screen bg-[#FFFDF2] text-[#8A6E1E]">
@@ -695,6 +720,15 @@ export default function TemplateEverlastingVows({ savedData }) {
           <Invitation data={data.invitation} isDesktop={false} bgImage={messageBgMobile} />
           <Venue data={data.venue} bgImage={locationBgMobile} theme="gold" isDesktop={false} />
           {showSchedule && <Events data={data.events} theme="gold" bgImage={photoBgMobile} isDesktop={false} />}
+          {showRsvp && (
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="everlasting"
+              config={savedData?.rsvpData}
+            />
+          )}
           <Countdown data={data.countdown} bgImage={countdownBgMobile} theme="gold" isDesktop={false} />
           <Footer data={data.footer} theme="gold" />
         </div>
@@ -750,6 +784,17 @@ export default function TemplateEverlastingVows({ savedData }) {
         {showSchedule && (
           <div className="w-full">
             <Events data={data.events} isDesktop={true} theme="gold" bgImage={photoBgDesktop} />
+          </div>
+        )}
+        {showRsvp && (
+          <div className="w-full">
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="everlasting"
+              config={savedData?.rsvpData}
+            />
           </div>
         )}
         <div className="w-full">

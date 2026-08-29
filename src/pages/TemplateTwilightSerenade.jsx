@@ -8,6 +8,7 @@ import Invitation from '../components/InvitationTwilightSerenade.jsx'
 import Story from '../components/StoryTwilightSerenade.jsx'
 import Venue from '../components/Venue.jsx'
 import CustomSection from '../components/CustomSection.jsx'
+import InviteQRSVP from '../components/InviteQRSVP.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -430,12 +431,13 @@ function TwilightSerenadeHero({ data, isDesktop }) {
   )
 }
 
-export default function TemplateTwilightSerenade({ savedData }) {
+export default function TemplateTwilightSerenade({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData } = useDraft()
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
+  const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   // Watermark is shown unless the invitation has been paid
   const isPaid = savedData && (
@@ -607,9 +609,28 @@ export default function TemplateTwilightSerenade({ savedData }) {
     }
   }
 
-  const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
-  const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const showGallery = savedData
+    ? (savedData.invitationData?.showGallery !== undefined 
+        ? Boolean(savedData.invitationData.showGallery)
+        : (savedData.scheduleData?.showGallery !== undefined
+            ? Boolean(savedData.scheduleData.showGallery)
+            : true))
+    : Boolean(draftData.showGallery)
+
+  const showSchedule = savedData
+    ? (savedData.invitationData?.showSchedule !== undefined 
+        ? Boolean(savedData.invitationData.showSchedule)
+        : (savedData.scheduleData?.showSchedule !== undefined
+            ? Boolean(savedData.scheduleData.showSchedule)
+            : true))
+    : Boolean(draftData.showSchedule)
+
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
+  const showRsvp = savedData 
+    ? (savedData.invitationData?.hasRsvp !== undefined 
+        ? Boolean(savedData.invitationData.hasRsvp) 
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
+    : Boolean(draftData?.hasRsvp)
 
   return (
     <div className="relative min-h-screen bg-[#FBF7F0] text-[#3D5236]">
@@ -657,6 +678,15 @@ export default function TemplateTwilightSerenade({ savedData }) {
           <Invitation data={data.invitation} bgImage={messageBgMobile} />
           <Venue data={data.venue} bgImage={locationBgMobile} theme="green" />
           {showSchedule && <Events data={data.events} theme="green" bgImage={photoBgMobile} />}
+          {showRsvp && (
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="green"
+              config={savedData?.rsvpData}
+            />
+          )}
           <Countdown data={data.countdown} bgImage={countdownBgMobile} theme="green" />
           <Footer data={data.footer} theme="green" />
         </div>
@@ -712,6 +742,17 @@ export default function TemplateTwilightSerenade({ savedData }) {
         {showSchedule && (
           <div className="w-full">
             <Events data={data.events} isDesktop={true} theme="green" bgImage={photoBgDesktop} />
+          </div>
+        )}
+        {showRsvp && (
+          <div className="w-full">
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="green"
+              config={savedData?.rsvpData}
+            />
           </div>
         )}
         <div className="w-full">

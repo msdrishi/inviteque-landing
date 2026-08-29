@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Navigate, useParams, useNavigate } from 'react-router-dom'
+import { Navigate, useParams, useNavigate, useLocation } from 'react-router-dom'
 import TemplateRoyalWedding from './TemplateRoyalWedding.jsx'
 import TemplateAuraOfElegance from './TemplateAuraOfElegance.jsx'
 import TemplateTwilightSerenade from './TemplateTwilightSerenade.jsx'
@@ -194,16 +194,26 @@ const preloadAssets = (urls) => {
 }
 
 export default function TemplateRoute() {
-  const { templateId, code } = useParams()
+  const { templateId, code, groupSlug } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
+  const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const [inviteData, setInviteData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [showSplash, setShowSplash] = useState(true)
+  const [loading, setLoading] = useState(!isPreview)
+  const [showSplash, setShowSplash] = useState(!isPreview)
 
   useEffect(() => {
     let active = true;
 
     async function loadAll() {
+      if (isPreview) {
+        if (active) {
+          setLoading(false);
+          setShowSplash(false);
+        }
+        return;
+      }
+
       try {
         let fetchedData = null;
         if (code) {
@@ -233,8 +243,8 @@ export default function TemplateRoute() {
 
         const assetsPromise = preloadAssets(allAssets);
         const fontsPromise = document.fonts.ready;
-        const delayPromise = new Promise(resolve => setTimeout(resolve, 1500));
-        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 6000)); // 6 seconds max wait
+        const delayPromise = new Promise(resolve => setTimeout(resolve, 1000));
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 4000)); // 4 seconds max wait
 
         await Promise.race([
           Promise.all([assetsPromise, fontsPromise, delayPromise]),
@@ -247,7 +257,8 @@ export default function TemplateRoute() {
       } catch (err) {
         console.error("Failed to load template assets:", err);
         if (active) {
-          navigate('/', { replace: true });
+          setLoading(false);
+          setShowSplash(false);
         }
       }
     }
@@ -257,30 +268,25 @@ export default function TemplateRoute() {
     return () => {
       active = false;
     };
-  }, [code, templateId, navigate])
+  }, [code, templateId, isPreview, navigate])
 
   useEffect(() => {
     if (!loading) {
       const timer = setTimeout(() => {
         setShowSplash(false)
-      }, 500)
+      }, 300)
       return () => clearTimeout(timer)
     }
   }, [loading])
 
-  const TemplateComponent = TEMPLATE_MAP[templateId]
-
-  if (!TemplateComponent) {
-    return <Navigate to="/" replace />
-  }
-
-  const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true'
+  const normalizedId = (templateId || '').toLowerCase().trim()
+  const TemplateComponent = TEMPLATE_MAP[normalizedId] || TEMPLATE_MAP['twilight-serenade'] || TemplateTwilightSerenade
 
   return (
     <div className="relative w-full min-h-screen">
-      {/* Template Component is mounted only when loading finishes */}
-      {!loading && (!code || inviteData || isPreview) && (
-        <TemplateComponent savedData={inviteData} />
+      {/* Template Component is mounted when loading finishes or immediately in preview */}
+      {(!loading || isPreview) && (
+        <TemplateComponent savedData={inviteData} groupSlug={groupSlug} />
       )}
 
       {/* Splash Screen overlay (fixed on top, fades out when loading finishes) */}

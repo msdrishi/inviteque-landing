@@ -6,6 +6,7 @@ import Footer from '../components/Footer.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import WaterRevealImage from '../components/WaterRevealImage.jsx'
 import CustomSection from '../components/CustomSection.jsx'
+import InviteQRSVP from '../components/InviteQRSVP.jsx'
 
 // Backgrounds (local Vercel CDN)
 const bgDesktop = "/assets/templates/modern-hearth/hero-desktop.webp"
@@ -73,12 +74,13 @@ const scrollItemVariants = {
   }
 }
 
-export default function TemplateModernHearth({ savedData }) {
+export default function TemplateModernHearth({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { templateId } = useParams()
   const { draftData } = useDraft()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
+  const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   // Watermark status
   const isPaid = savedData && (
@@ -121,6 +123,11 @@ export default function TemplateModernHearth({ savedData }) {
     ? (activeData.familyPhoto || activeData.invitationData?.familyPhoto)
     : null
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
+  const showRsvp = savedData 
+    ? (savedData.invitationData?.hasRsvp !== undefined 
+        ? Boolean(savedData.invitationData.hasRsvp) 
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
+    : Boolean(draftData?.hasRsvp)
 
   const data = useMemo(() => {
     if (!activeData) return staticData
@@ -436,6 +443,19 @@ export default function TemplateModernHearth({ savedData }) {
         <div className="hidden xl:block">
           <HW1Venue data={data.venue} bgImage={locationBgDesktop} isDesktop={true} />
         </div>
+
+        {/* RSVP Section */}
+        {showRsvp && (
+          <div className="w-full">
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="terracotta"
+              config={savedData?.rsvpData}
+            />
+          </div>
+        )}
 
         {/* Countdown Section */}
         {showCountdown && (

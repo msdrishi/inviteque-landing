@@ -9,14 +9,16 @@ import Invitation from '../components/Invitation.jsx'
 import Story from '../components/Story.jsx'
 import Venue from '../components/Venue.jsx'
 import CustomSection from '../components/CustomSection.jsx'
+import InviteQRSVP from '../components/InviteQRSVP.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 
-export default function TemplateRoyalWedding({ savedData }) {
+export default function TemplateRoyalWedding({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData } = useDraft()
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
+  const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   // Watermark is shown unless the invitation has been paid
   const isPaid = savedData && (
@@ -167,19 +169,38 @@ export default function TemplateRoyalWedding({ savedData }) {
     },
     invitation: {
       ...staticData.invitation,
-      groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
-      brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
+      groomName: savedData ? savedData.coupleData?.groomName : draftData.groomName,
+      brideName: savedData ? savedData.coupleData?.brideName : draftData.brideName,
     }
   } : staticData
 
-  const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
-  const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const showGallery = savedData
+    ? (savedData.invitationData?.showGallery !== undefined 
+        ? Boolean(savedData.invitationData.showGallery)
+        : (savedData.scheduleData?.showGallery !== undefined
+            ? Boolean(savedData.scheduleData.showGallery)
+            : true))
+    : Boolean(draftData.showGallery)
+
+  const showSchedule = savedData
+    ? (savedData.invitationData?.showSchedule !== undefined 
+        ? Boolean(savedData.invitationData.showSchedule)
+        : (savedData.scheduleData?.showSchedule !== undefined
+            ? Boolean(savedData.scheduleData.showSchedule)
+            : true))
+    : Boolean(draftData.showSchedule)
+
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
+  const showRsvp = savedData 
+    ? (savedData.invitationData?.hasRsvp !== undefined 
+        ? Boolean(savedData.invitationData.hasRsvp) 
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
+    : Boolean(draftData?.hasRsvp)
 
   return (
     <div className="flex justify-center items-start min-h-screen bg-[#1a1a1a]">
       {/* Mobile viewport container - max 430px like a phone */}
-      <div className="relative w-full max-w-[430px] min-h-[100svh] bg-background text-primary shadow-[0_0_80px_rgba(0,0,0,0.5)]">
+      <div className="relative w-full max-w-[430px] min-h-[100svh] bg-background text-primary shadow-[0_0_80px_rgba(0,0,0,0.5)] overflow-hidden">
         {/* Fixed Watermark Overlay */}
         {showWatermark && (
           <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.45] select-none">
@@ -241,6 +262,17 @@ export default function TemplateRoyalWedding({ savedData }) {
 
         {/* Wedding Schedule is optional */}
         {showSchedule && <Events data={data.events} />}
+
+        {/* RSVP is optional */}
+        {showRsvp && (
+          <InviteQRSVP
+            weddingCode={savedData?.code}
+            groupSlug={groupSlug}
+            isPreview={!savedData}
+            theme="royal"
+            config={savedData?.rsvpData}
+          />
+        )}
 
         <Countdown data={data.countdown} />
 

@@ -9,14 +9,16 @@ import Invitation from '../components/Invitation.jsx'
 import Story from '../components/Story.jsx'
 import Venue from '../components/Venue.jsx'
 import CustomSection from '../components/CustomSection.jsx'
+import InviteQRSVP from '../components/InviteQRSVP.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 
-export default function TemplateAuraOfElegance({ savedData }) {
+export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData } = useDraft()
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
+  const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   // Watermark is shown unless the invitation has been paid
   const isPaid = savedData && (
@@ -170,14 +172,33 @@ export default function TemplateAuraOfElegance({ savedData }) {
     },
     invitation: {
       ...staticData.invitation,
-      groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
-      brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
+      groomName: savedData ? savedData.coupleData?.groomName : draftData.groomName,
+      brideName: savedData ? savedData.coupleData?.brideName : draftData.brideName,
     }
   } : staticData
 
-  const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
-  const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const showGallery = savedData
+    ? (savedData.invitationData?.showGallery !== undefined 
+        ? Boolean(savedData.invitationData.showGallery)
+        : (savedData.scheduleData?.showGallery !== undefined
+            ? Boolean(savedData.scheduleData.showGallery)
+            : true))
+    : Boolean(draftData.showGallery)
+
+  const showSchedule = savedData
+    ? (savedData.invitationData?.showSchedule !== undefined 
+        ? Boolean(savedData.invitationData.showSchedule)
+        : (savedData.scheduleData?.showSchedule !== undefined
+            ? Boolean(savedData.scheduleData.showSchedule)
+            : true))
+    : Boolean(draftData.showSchedule)
+
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
+  const showRsvp = savedData 
+    ? (savedData.invitationData?.hasRsvp !== undefined 
+        ? Boolean(savedData.invitationData.hasRsvp) 
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
+    : Boolean(draftData?.hasRsvp)
 
   return (
     <div className="relative min-h-screen bg-[#FFF0EC] text-primary">
@@ -227,6 +248,15 @@ export default function TemplateAuraOfElegance({ savedData }) {
           <Invitation data={data.invitation} />
           <Venue data={data.venue} />
           {showSchedule && <Events data={data.events} bgImage="/assets/templates/aura-of-elegance/texture-pink.webp" />}
+          {showRsvp && (
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="rose"
+              config={savedData?.rsvpData}
+            />
+          )}
           <Countdown data={data.countdown} centerText={true} />
           <Footer data={data.footer} />
         </div>
@@ -296,7 +326,20 @@ export default function TemplateAuraOfElegance({ savedData }) {
           </div>
         )}
 
-        {/* 6) Forever / Countdown Section */}
+        {/* 6) RSVP Section */}
+        {showRsvp && (
+          <div className="w-full">
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="rose"
+              config={savedData?.rsvpData}
+            />
+          </div>
+        )}
+
+        {/* 7) Forever / Countdown Section */}
         <div className="w-full">
           <Countdown data={data.countdown} isDesktop={true} centerText={true} />
         </div>

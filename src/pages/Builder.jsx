@@ -182,8 +182,9 @@ export default function Builder() {
     return parsedStep
   })
   const [showMapTooltip, setShowMapTooltip] = useState(false)
-  const { user, loading: authLoading } = useAuth()
+  const { user, loading: authLoading, saveInvitation } = useAuth()
   const [loading, setLoading] = useState(!!editCode && !draftData.code)
+  const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -230,6 +231,7 @@ export default function Builder() {
     customSectionLocation: '',
     customSectionContent: '',
     customSectionPosition: 'top-center',
+    hasRsvp: false,
     _pendingPhotoFiles: {},
     _pendingFamilyPhotoFile: null,
   }
@@ -282,6 +284,7 @@ export default function Builder() {
       code: editCode || draftData.code || null,
       status: draftData.status || 'DRAFT',
       amountPaid: draftData.amountPaid || 0,
+      hasRsvp: draftData.hasRsvp || false,
       showFamilySection: draftData.showFamilySection !== undefined ? draftData.showFamilySection : false,
       familyMessage: draftData.familyMessage || '',
       familyPhoto: draftData.familyPhoto || null,
@@ -421,6 +424,8 @@ export default function Builder() {
               code: data.code,
               status: data.status,
               amountPaid: data.amountPaid || 0,
+              hasRsvp: Boolean(data.rsvpData?.enabled || data.hasRsvp),
+              wasRsvpPaid: Boolean(data.status === 'PAID' && (data.rsvpData?.enabled || data.hasRsvp)),
               showFamilySection: data.invitationData?.showFamilySection !== undefined ? data.invitationData.showFamilySection : false,
               familyMessage: data.invitationData?.familyMessage || '',
               familyPhoto: data.invitationData?.familyPhoto || null,
@@ -604,6 +609,18 @@ export default function Builder() {
     }))
   }
 
+  const handleDuplicateScheduleItem = (index) => {
+    const itemToClone = formData.scheduleItems[index]
+    if (!itemToClone) return
+    const cloned = { 
+      ...itemToClone, 
+      title: itemToClone.title ? `${itemToClone.title} (Copy)` : 'Ceremony (Copy)' 
+    }
+    const newItems = [...formData.scheduleItems]
+    newItems.splice(index + 1, 0, cloned)
+    setFormData(prev => ({ ...prev, scheduleItems: newItems }))
+  }
+
   const handleDeleteScheduleItem = (index) => {
     setFormData(prev => ({
       ...prev,
@@ -661,11 +678,79 @@ export default function Builder() {
     window.scrollTo(0, 0)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    updateDraft(formData)
-    window.scrollTo(0, 0)
-    navigate(`/templates/${templateId}?preview=true`)
+    setIsSaving(true)
+    try {
+      updateDraft(formData)
+      if (editCode && saveInvitation) {
+        const resolvedDraft = { ...draftData, ...formData }
+        const inviteRequest = {
+          templateId,
+          code: editCode,
+          coupleNames: `${resolvedDraft.groomName || ''} & ${resolvedDraft.brideName || ''}`.trim(),
+          groomName: resolvedDraft.groomName,
+          brideName: resolvedDraft.brideName,
+          weddingDate: {
+            day: resolvedDraft.weddingDate,
+            month: resolvedDraft.weddingMonth,
+            year: resolvedDraft.weddingYear
+          },
+          weddingTime: resolvedDraft.weddingTime,
+          mahalName: resolvedDraft.mahalName,
+          venueAddress: resolvedDraft.venueAddress,
+          venueCity: resolvedDraft.venueCity,
+          venueName: resolvedDraft.venueAddress,
+          state: resolvedDraft.state,
+          mapLink: resolvedDraft.mapLink,
+          photos: resolvedDraft.photos,
+          eventSchedule: resolvedDraft.scheduleItems,
+          scheduleData: {
+            showSchedule: resolvedDraft.showSchedule !== undefined ? resolvedDraft.showSchedule : true,
+            showGallery: resolvedDraft.showGallery !== undefined ? resolvedDraft.showGallery : true,
+            items: resolvedDraft.scheduleItems
+          },
+          storyData: {
+            photos: resolvedDraft.photos
+          },
+          invitationData: {
+            showGallery: resolvedDraft.showGallery !== undefined ? resolvedDraft.showGallery : true,
+            showSchedule: resolvedDraft.showSchedule !== undefined ? resolvedDraft.showSchedule : true,
+            hasRsvp: Boolean(resolvedDraft.hasRsvp),
+            showFamilySection: resolvedDraft.showFamilySection,
+            familyMessage: resolvedDraft.familyMessage,
+            familyPhoto: resolvedDraft.familyPhoto,
+            showCustomSection: resolvedDraft.showCustomSection,
+            customSectionTitle: resolvedDraft.customSectionTitle,
+            customSectionSubtitle: resolvedDraft.customSectionSubtitle,
+            customSectionDate: resolvedDraft.customSectionDate,
+            customSectionLocation: resolvedDraft.customSectionLocation,
+            customSectionContent: resolvedDraft.customSectionContent,
+            customSectionPosition: resolvedDraft.customSectionPosition
+          },
+          rsvpData: {
+            enabled: Boolean(resolvedDraft.hasRsvp),
+            allowGuestCount: true,
+            allowEventSelection: true,
+            allowMessage: true,
+            allowMaybe: false,
+          },
+          status: 'PAID'
+        }
+        await saveInvitation(inviteRequest)
+      }
+      window.scrollTo(0, 0)
+      if (editCode) {
+        navigate(`/account/${editCode}`)
+      } else {
+        navigate(`/templates/${templateId}?preview=true`)
+      }
+    } catch (err) {
+      console.error('Save failed:', err)
+      alert(err.message || 'Failed to save changes. Please try again.')
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
@@ -1115,13 +1200,23 @@ export default function Builder() {
                                     <span className="rounded-lg bg-iqBg px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-iqText/50">
                                       Event {idx + 1}
                                     </span>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleDeleteScheduleItem(idx)}
-                                      className="text-xs font-semibold text-red-500 hover:text-red-600 transition-colors"
-                                    >
-                                      Remove
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                      <button
+                                        type="button"
+                                        onClick={() => handleDuplicateScheduleItem(idx)}
+                                        className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                                      >
+                                        Duplicate
+                                      </button>
+                                      <span className="text-iqBorder opacity-40">|</span>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleDeleteScheduleItem(idx)}
+                                        className="text-xs font-semibold text-red-500 hover:text-red-600 transition-colors"
+                                      >
+                                        Remove
+                                      </button>
+                                    </div>
                                   </div>
 
                                   {/* Inputs */}
@@ -1340,13 +1435,100 @@ export default function Builder() {
               >
                 <div className="space-y-2">
                   <span className="text-xs font-bold uppercase tracking-widest text-gold">Step 03</span>
-                  <h2 className="text-2xl md:text-3xl font-bold">Customize Section</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold">Customize Sections &amp; Features</h2>
                   <p className="text-sm md:text-base text-iqText/60">
-                    Add custom information to your template (e.g. engagement date, special message, or invitation details).
+                    Enable or disable any section, add bespoke content, or configure RSVP settings to make your invitation truly yours.
                   </p>
                 </div>
 
                 <div className="space-y-6">
+                  {/* Section Visibility Controls */}
+                  <div className="rounded-2xl border border-iqBorder bg-white p-5 md:p-6 shadow-sm space-y-4">
+                    <div className="flex items-center justify-between border-b border-iqBg pb-3">
+                      <div>
+                        <h3 className="text-base font-bold text-iqText">Template Section Visibility</h3>
+                        <p className="text-xs text-iqText/50">Turn individual sections on or off as desired</p>
+                      </div>
+                      <span className="text-xs font-bold px-2.5 py-1 bg-amber-50 text-amber-700 rounded-full border border-amber-200">
+                        Modular
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                      {/* Hero Section Toggle */}
+                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
+                        <span className="text-xs font-bold">1. Hero Entrance Section</span>
+                        <input
+                          type="checkbox"
+                          name="showHero"
+                          checked={formData.showHero !== false}
+                          onChange={(e) => setFormData(prev => ({ ...prev, showHero: e.target.checked }))}
+                          className="h-4 w-4 rounded accent-black"
+                        />
+                      </label>
+
+                      {/* Photo Moments Toggle */}
+                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
+                        <span className="text-xs font-bold">2. Our Moments / Photo Cards</span>
+                        <input
+                          type="checkbox"
+                          name="showGallery"
+                          checked={formData.showGallery !== false}
+                          onChange={(e) => setFormData(prev => ({ ...prev, showGallery: e.target.checked }))}
+                          className="h-4 w-4 rounded accent-black"
+                        />
+                      </label>
+
+                      {/* Welcome Message Toggle */}
+                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
+                        <span className="text-xs font-bold">3. Welcome Invitation Message</span>
+                        <input
+                          type="checkbox"
+                          name="showWelcome"
+                          checked={formData.showWelcome !== false}
+                          onChange={(e) => setFormData(prev => ({ ...prev, showWelcome: e.target.checked }))}
+                          className="h-4 w-4 rounded accent-black"
+                        />
+                      </label>
+
+                      {/* Schedule Toggle */}
+                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
+                        <span className="text-xs font-bold">4. Event Schedule &amp; Timelines</span>
+                        <input
+                          type="checkbox"
+                          name="showSchedule"
+                          checked={formData.showSchedule !== false}
+                          onChange={(e) => setFormData(prev => ({ ...prev, showSchedule: e.target.checked }))}
+                          className="h-4 w-4 rounded accent-black"
+                        />
+                      </label>
+
+                      {/* Venue Section Toggle */}
+                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
+                        <span className="text-xs font-bold">5. Venue Details &amp; QR Map</span>
+                        <input
+                          type="checkbox"
+                          name="showVenue"
+                          checked={formData.showVenue !== false}
+                          onChange={(e) => setFormData(prev => ({ ...prev, showVenue: e.target.checked }))}
+                          className="h-4 w-4 rounded accent-black"
+                        />
+                      </label>
+
+                      {/* Countdown Toggle */}
+                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
+                        <span className="text-xs font-bold">6. Live Countdown Timer</span>
+                        <input
+                          type="checkbox"
+                          name="showCountdown"
+                          checked={formData.showCountdown !== false}
+                          onChange={(e) => setFormData(prev => ({ ...prev, showCountdown: e.target.checked }))}
+                          className="h-4 w-4 rounded accent-black"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
                   {/* Enable Switch */}
                   <label className="flex items-center gap-4 cursor-pointer rounded-2xl border border-iqBorder bg-white p-4 md:p-5 transition-all hover:shadow-md">
                     <input
@@ -1431,6 +1613,27 @@ export default function Builder() {
                       </div>
                     </div>
                   )}
+                  {/* RSVP & Guest Management Addon Option (+₹500) */}
+                  <label className="flex items-center gap-4 cursor-pointer rounded-2xl border border-iqBorder bg-white p-4 md:p-5 transition-all hover:shadow-md">
+                    <input
+                      type="checkbox"
+                      name="hasRsvp"
+                      checked={Boolean(formData.hasRsvp)}
+                      onChange={(e) => setFormData(prev => ({ ...prev, hasRsvp: e.target.checked }))}
+                      className="h-5 w-5 rounded accent-emerald-700 flex-shrink-0"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-3 mb-1">
+                        <p className="font-bold text-base md:text-lg">Enable RSVP &amp; Guest Management</p>
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 flex-shrink-0 whitespace-nowrap">
+                          +₹500
+                        </span>
+                      </div>
+                      <p className="text-xs text-iqText/50">
+                        Collect guest attendance, headcounts, event choices, and manage guest links with a live RSVP dashboard.
+                      </p>
+                    </div>
+                  </label>
                 </div>
 
                 <div className="pt-6 flex gap-4">
@@ -1491,9 +1694,15 @@ export default function Builder() {
                       <span className="font-bold text-green-600">Enabled ({formData.customSectionTitle || 'Custom Info'})</span>
                     </div>
                   )}
+                  <div className="flex justify-between text-sm">
+                    <span className="opacity-50">RSVP &amp; Guest Management</span>
+                    <span className={`font-bold ${formData.hasRsvp ? 'text-emerald-700' : 'opacity-40'}`}>
+                      {formData.hasRsvp ? 'Enabled (+₹500)' : 'Disabled'}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="pt-6 flex gap-4">
+                <div className="pt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <button
                     type="button"
                     onClick={prevStep}
@@ -1501,12 +1710,35 @@ export default function Builder() {
                   >
                     Back
                   </button>
-                  <button
-                    type="submit"
-                    className="flex-[2] rounded-full bg-black py-3 md:py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90"
-                  >
-                    View Preview
-                  </button>
+
+                  {editCode ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          updateDraft(formData)
+                          window.open(`/templates/${templateId}/${editCode}?preview=true`, '_blank')
+                        }}
+                        className="flex-1 rounded-full border border-neutral-300 bg-white py-3 md:py-4 text-sm font-bold text-neutral-800 shadow-sm transition hover:bg-neutral-50"
+                      >
+                        👁️ Preview Live
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isSaving}
+                        className="flex-[2] rounded-full bg-emerald-600 hover:bg-emerald-700 py-3 md:py-4 text-sm font-bold text-white shadow-xl transition disabled:opacity-50 flex items-center justify-center gap-2"
+                      >
+                        {isSaving ? 'Saving Changes...' : '💾 Save & Update Invitation'}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="flex-[2] rounded-full bg-black py-3 md:py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90"
+                    >
+                      View Preview
+                    </button>
+                  )}
                 </div>
               </motion.div>
             )}

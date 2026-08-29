@@ -8,6 +8,7 @@ import cMapping from '../royalPalaceCloudinaryMapping.json'
 import Events from '../components/Events.jsx'
 import Footer from '../components/Footer.jsx'
 import CustomSection from '../components/CustomSection.jsx'
+import InviteQRSVP from '../components/InviteQRSVP.jsx'
 
 // Background Assets (local Vercel CDN)
 const firstFrameDesktop = cMapping['hero-first-frame-desktop.jpg'] || "/assets/templates/sunflower-fields/hero-first-frame-desktop.webp"
@@ -1443,12 +1444,13 @@ function RoyalPalaceFooter({ data }) {
 /* ─────────────────────────────────────────
    MAIN PAGE EXPORT
    ───────────────────────────────────────── */
-export default function TemplateSunflowersFields({ savedData }) {
+export default function TemplateSunflowersFields({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData } = useDraft()
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
+  const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   const warmGoldBgStyle = {
     backgroundColor: '#FEF1D6',
@@ -1648,9 +1650,28 @@ export default function TemplateSunflowersFields({ savedData }) {
     }
   }
 
-  const showGallery = savedData ? savedData.scheduleData?.showGallery : draftData.showGallery
-  const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData.showSchedule
+  const showGallery = savedData
+    ? (savedData.invitationData?.showGallery !== undefined 
+        ? Boolean(savedData.invitationData.showGallery)
+        : (savedData.scheduleData?.showGallery !== undefined
+            ? Boolean(savedData.scheduleData.showGallery)
+            : true))
+    : Boolean(draftData.showGallery)
+
+  const showSchedule = savedData
+    ? (savedData.invitationData?.showSchedule !== undefined 
+        ? Boolean(savedData.invitationData.showSchedule)
+        : (savedData.scheduleData?.showSchedule !== undefined
+            ? Boolean(savedData.scheduleData.showSchedule)
+            : true))
+    : Boolean(draftData.showSchedule)
+
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
+  const showRsvp = savedData 
+    ? (savedData.invitationData?.hasRsvp !== undefined 
+        ? Boolean(savedData.invitationData.hasRsvp) 
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
+    : Boolean(draftData?.hasRsvp)
 
   const sunflowerStoryBgStyle = {
     backgroundColor: '#FEF1D6',
@@ -1725,6 +1746,15 @@ export default function TemplateSunflowersFields({ savedData }) {
               {eventsWatermarks}
             </Events>
           )}
+          {showRsvp && (
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="gold"
+              config={savedData?.rsvpData}
+            />
+          )}
           <RoyalPalaceCountdown data={data.countdown} isDesktop={false} />
           <Footer data={data.footer} theme="gold" />
         </div>
@@ -1797,6 +1827,17 @@ export default function TemplateSunflowersFields({ savedData }) {
             <Events data={data.events} isDesktop={true} theme="gold" style={warmGoldBgStyle}>
               {eventsWatermarks}
             </Events>
+          </div>
+        )}
+        {showRsvp && (
+          <div className="w-full">
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="gold"
+              config={savedData?.rsvpData}
+            />
           </div>
         )}
         <div className="w-full">

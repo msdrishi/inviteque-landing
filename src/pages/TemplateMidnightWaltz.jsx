@@ -8,6 +8,7 @@ import PhotoCardsMidnightWaltz from '../components/PhotoCardsMidnightWaltz.jsx'
 import WelcomeMidnightWaltz from '../components/WelcomeMidnightWaltz.jsx'
 import VenueMidnightWaltz from '../components/VenueMidnightWaltz.jsx'
 import CustomSection from '../components/CustomSection.jsx'
+import InviteQRSVP from '../components/InviteQRSVP.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -687,12 +688,13 @@ function MidnightWaltzHero({ data, isDesktop }) {
 // ═══════════════════════════════════════════════════════════════
 //  MAIN PAGE EXPORT
 // ═══════════════════════════════════════════════════════════════
-export default function TemplateMidnightWaltz({ savedData }) {
+export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupSlug }) {
   const location    = useLocation()
   const { templateId } = useParams()
   const { draftData }  = useDraft()
   const navigate    = useNavigate()
   const isPreview   = new URLSearchParams(location.search).get('preview') === 'true'
+  const groupSlug   = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   const isPaid = savedData && (
     String(savedData.status).toUpperCase() === 'PAID' ||
@@ -707,24 +709,28 @@ export default function TemplateMidnightWaltz({ savedData }) {
     ...staticData,
     hero: {
       ...staticData.hero,
-      groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
-      brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
-      dateLine: savedData
-        ? `${savedData.heroData.weddingDate} ${savedData.heroData.weddingMonth} ${savedData.heroData.weddingYear}`
-        : `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear}`,
-      weddingTime: savedData
-        ? (savedData.heroData?.weddingTime || '09:00 AM - 10:30 AM')
-        : (draftData.weddingTime || '09:00 AM - 10:30 AM'),
-      venueName: (savedData ? savedData.venueData.mahalName : draftData.mahalName) || '',
-      venueCity: (savedData ? savedData.venueData.venueCity : draftData.venueCity) || '',
+      groomName: (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || 'Abhishek',
+      brideName: (savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName) || 'Kanika',
+      dateLine: (() => {
+        if (savedData?.heroData?.weddingDate && savedData?.heroData?.weddingMonth) {
+          return `${savedData.heroData.weddingDate} ${savedData.heroData.weddingMonth} ${savedData.heroData.weddingYear || ''}`.trim()
+        }
+        if (draftData?.weddingDate && draftData?.weddingMonth) {
+          return `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear || ''}`.trim()
+        }
+        return '18 December 2026'
+      })(),
+      weddingTime: (savedData ? (savedData.heroData?.weddingTime || savedData.weddingTime) : draftData?.weddingTime) || '09:00 AM - 10:30 AM',
+      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || 'The Leela Palace',
+      venueCity: (savedData ? (savedData.venueData?.venueCity || savedData.venueCity) : draftData?.venueCity) || 'New Delhi, India',
       addressParts: savedData
         ? {
             desktop: [
-              savedData.venueData?.mahalName,
+              savedData.venueData?.mahalName || savedData.mahalName,
               [savedData.venueData?.venueAddress, savedData.venueData?.venueCity, savedData.venueData?.state].filter(Boolean).join(', ')
             ].map(s => String(s || '').trim()).filter(Boolean),
             mobile: [
-              savedData.venueData?.mahalName,
+              savedData.venueData?.mahalName || savedData.mahalName,
               savedData.venueData?.venueAddress,
               savedData.venueData?.venueCity,
               savedData.venueData?.state
@@ -732,38 +738,41 @@ export default function TemplateMidnightWaltz({ savedData }) {
           }
         : {
             desktop: [
-              draftData.mahalName,
-              [draftData.venueAddress, draftData.venueCity, draftData.state].filter(Boolean).join(', ')
+              draftData?.mahalName || 'The Leela Palace',
+              [draftData?.venueAddress, draftData?.venueCity, draftData?.state].filter(Boolean).join(', ') || 'Diplomatic Enclave, Chanakyapuri, New Delhi, Delhi'
             ].map(s => String(s || '').trim()).filter(Boolean),
             mobile: [
-              draftData.mahalName,
-              draftData.venueAddress,
-              draftData.venueCity,
-              draftData.state
+              draftData?.mahalName || 'The Leela Palace',
+              draftData?.venueAddress || 'Diplomatic Enclave',
+              draftData?.venueCity || 'Chanakyapuri',
+              draftData?.state || 'New Delhi, Delhi'
             ].map(s => String(s || '').trim()).filter(Boolean)
           },
-      mapUrl: savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData.mapLink,
+      mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData?.mapLink) || staticData.venue?.mapUrl || '',
       dayOfWeek: (() => {
-        const month = savedData ? savedData.heroData.weddingMonth : draftData.weddingMonth
-        const date  = savedData ? savedData.heroData.weddingDate  : draftData.weddingDate
-        const year  = savedData ? savedData.heroData.weddingYear  : draftData.weddingYear
-        const d = new Date(`${month} ${date}, ${year}`)
-        return isNaN(d.getTime()) ? 'Friday' : d.toLocaleDateString('en-US', { weekday: 'long' })
+        const month = savedData ? (savedData.heroData?.weddingMonth || savedData.weddingMonth) : draftData?.weddingMonth
+        const date  = savedData ? (savedData.heroData?.weddingDate || savedData.weddingDate)   : draftData?.weddingDate
+        const year  = savedData ? (savedData.heroData?.weddingYear || savedData.weddingYear)   : draftData?.weddingYear
+        if (month && date && year) {
+          const d = new Date(`${month} ${date}, ${year}`)
+          if (!isNaN(d.getTime())) return d.toLocaleDateString('en-US', { weekday: 'long' })
+        }
+        return 'Friday'
       })(),
     },
     venue: {
       ...staticData.venue,
-      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData.mahalName) || '',
+      venueName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || 'The Leela Palace',
       venueLine1: savedData
         ? [savedData.venueData?.mahalName, savedData.venueData?.venueAddress].map(s => String(s || '').trim()).filter(Boolean).join(', ')
-        : [draftData.mahalName, draftData.venueAddress].map(s => String(s || '').trim()).filter(Boolean).join(', '),
+        : [draftData?.mahalName, draftData?.venueAddress].map(s => String(s || '').trim()).filter(Boolean).join(', ') || 'The Leela Palace, Diplomatic Enclave, Chanakyapuri',
       venueLine2: savedData
         ? [savedData.venueData?.venueCity, savedData.venueData?.state].map(s => String(s || '').trim()).filter(Boolean).join(', ')
-        : [draftData.venueCity, draftData.state].map(s => String(s || '').trim()).filter(Boolean).join(', '),
+        : [draftData?.venueCity, draftData?.state].map(s => String(s || '').trim()).filter(Boolean).join(', ') || 'New Delhi, Delhi 110021',
       location: savedData
         ? [savedData.venueData?.mahalName, savedData.venueData?.venueAddress, savedData.venueData?.venueCity, savedData.venueData?.state].map(s => String(s || '').trim()).filter(Boolean).join(', ')
-        : [draftData.mahalName, draftData.venueAddress, draftData.venueCity, draftData.state].map(s => String(s || '').trim()).filter(Boolean).join(', '),
-      mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData.mapLink) || staticData.venue.mapUrl,
+        : [draftData?.mahalName, draftData?.venueAddress, draftData?.venueCity, draftData?.state].map(s => String(s || '').trim()).filter(Boolean).join(', ') || 'The Leela Palace, Diplomatic Enclave, Chanakyapuri, New Delhi, Delhi 110021',
+      mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData?.mapLink) || staticData.venue?.mapUrl || '',
     },
     countdown: {
       ...staticData.countdown,
@@ -782,7 +791,7 @@ export default function TemplateMidnightWaltz({ savedData }) {
     story: {
       ...staticData.story,
       items: (() => {
-        const photos = savedData ? (savedData.storyData?.photos || []) : (draftData.photos || [])
+        const photos = savedData ? (savedData.storyData?.photos || []) : (draftData?.photos || [])
         const active = photos.filter(Boolean)
         return active.length > 0 ? active.map(p => ({ image: p })) : staticData.story.items
       })(),
@@ -792,7 +801,7 @@ export default function TemplateMidnightWaltz({ savedData }) {
       items: (() => {
         const scheduleItems = savedData
           ? (savedData.scheduleData?.items || [])
-          : (Array.isArray(draftData.scheduleItems) ? draftData.scheduleItems : [])
+          : (Array.isArray(draftData?.scheduleItems) ? draftData.scheduleItems : [])
         const icons = ['✦', '◎', '✿', '◆', '♪']
         return scheduleItems.map((item, index) => ({
           icon: icons[index % icons.length],
@@ -804,8 +813,8 @@ export default function TemplateMidnightWaltz({ savedData }) {
     },
     invitation: {
       ...staticData.invitation,
-      groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
-      brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
+      groomName: (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || 'Abhishek',
+      brideName: (savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName) || 'Kanika',
     },
   } : {
     // ── Default / preview data matching reference image ─────────
@@ -849,9 +858,28 @@ export default function TemplateMidnightWaltz({ savedData }) {
 
   const groomPhoto  = (savedData ? (savedData.coupleData?.groomPhoto || null) : (draftData?.groomPhoto || null)) || "/backgrounds/Midnight Waltz/groom.png"
   const bridePhoto  = (savedData ? (savedData.coupleData?.bridePhoto || null) : (draftData?.bridePhoto || null)) || "/backgrounds/Midnight Waltz/bride.png"
-  const showGallery  = savedData ? savedData.scheduleData?.showGallery  : draftData?.showGallery
-  const showSchedule = savedData ? savedData.scheduleData?.showSchedule : draftData?.showSchedule
+  const showGallery = savedData
+    ? (savedData.invitationData?.showGallery !== undefined 
+        ? Boolean(savedData.invitationData.showGallery)
+        : (savedData.scheduleData?.showGallery !== undefined
+            ? Boolean(savedData.scheduleData.showGallery)
+            : true))
+    : Boolean(draftData?.showGallery)
+
+  const showSchedule = savedData
+    ? (savedData.invitationData?.showSchedule !== undefined 
+        ? Boolean(savedData.invitationData.showSchedule)
+        : (savedData.scheduleData?.showSchedule !== undefined
+            ? Boolean(savedData.scheduleData.showSchedule)
+            : true))
+    : Boolean(draftData?.showSchedule)
+
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
+  const showRsvp = savedData 
+    ? (savedData.invitationData?.hasRsvp !== undefined 
+        ? Boolean(savedData.invitationData.hasRsvp) 
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
+    : Boolean(draftData?.hasRsvp)
 
   const userPhotos = savedData
     ? (savedData.storyData?.photos || savedData.photos || [])
@@ -956,6 +984,16 @@ export default function TemplateMidnightWaltz({ savedData }) {
             />
           )}
 
+          {showRsvp && (
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="midnight"
+              config={savedData?.rsvpData}
+            />
+          )}
+
           <Countdown
             data={data.countdown}
             bgImage={countdownBgMobile}
@@ -1020,6 +1058,18 @@ export default function TemplateMidnightWaltz({ savedData }) {
               theme="traditional"
               bgImage={photoBgDesktop}
               isDesktop={true}
+            />
+          </div>
+        )}
+
+        {showRsvp && (
+          <div className="w-full">
+            <InviteQRSVP
+              weddingCode={savedData?.code}
+              groupSlug={groupSlug}
+              isPreview={!savedData}
+              theme="midnight"
+              config={savedData?.rsvpData}
             />
           </div>
         )}

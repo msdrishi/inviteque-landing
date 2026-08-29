@@ -238,7 +238,7 @@ export default function InviteDetails() {
               </div>
 
               {/* Event Details Grid */}
-              <div className="grid grid-cols-2 gap-8 py-8 border-y border-iqBorder text-black">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 py-8 border-y border-iqBorder text-black">
                 <div className="space-y-1">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">Date</span>
                   <p className="font-bold">{invite.heroData?.weddingDate} {invite.heroData?.weddingMonth} {invite.heroData?.weddingYear}</p>
@@ -249,39 +249,59 @@ export default function InviteDetails() {
                 </div>
                 <div className="space-y-1">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">Venue</span>
-                  <p className="font-bold truncate">{invite.venueData?.mahalName || invite.venueData?.venueCity}</p>
+                  <p className="font-bold truncate">{invite.venueData?.mahalName || invite.venueData?.venueCity || 'Venue'}</p>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">Gallery</span>
-                  <p className="font-bold">{invite.scheduleData?.showGallery ? 'Enabled' : 'Disabled'}</p>
+                  <p className="font-bold">{Boolean(invite.invitationData?.showGallery !== undefined ? invite.invitationData.showGallery : (invite.scheduleData?.showGallery ?? true)) ? 'Enabled' : 'Disabled'}</p>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">Schedule</span>
-                  <p className="font-bold">{invite.scheduleData?.showSchedule ? `${invite.scheduleData.items?.length || 0} Events` : 'Disabled'}</p>
+                  <p className="font-bold">{Boolean(invite.invitationData?.showSchedule !== undefined ? invite.invitationData.showSchedule : (invite.scheduleData?.showSchedule ?? true)) ? `${invite.scheduleData?.items?.length || 0} Events` : 'Disabled'}</p>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-black/60">RSVP</span>
+                  <p className="font-bold">{Boolean(invite.hasRsvp || invite.rsvpData?.enabled || invite.invitationData?.hasRsvp) ? 'Enabled' : 'Disabled'}</p>
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <button
-                  onClick={() => navigate(`/builder/${invite.templateId}?code=${invite.code}`)}
-                  className="flex-1 rounded-full border border-iqBorder py-4 text-sm font-bold text-black transition hover:bg-black hover:text-white shadow-sm hover:shadow-lg"
-                >
-                  Edit Details
-                </button>
-                <button
-                  onClick={handleShareWhatsApp}
-                  className="flex-1 rounded-full bg-black py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90 flex items-center justify-center gap-3"
-                >
-                  <span>Share on WhatsApp</span>
-                </button>
+              {/* Action Area */}
+              <div className="space-y-4 pt-2">
+                {/* Secondary Action Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <button
+                    onClick={() => navigate(`/builder/${invite.templateId}?code=${invite.code}`)}
+                    className="w-full rounded-full border border-neutral-200 bg-white py-3 px-4 text-xs font-bold uppercase tracking-wider text-neutral-800 transition hover:bg-neutral-50 hover:border-neutral-300 shadow-sm flex items-center justify-center gap-2"
+                  >
+                    Edit Details
+                  </button>
+                  <button
+                    onClick={handleShareWhatsApp}
+                    className="w-full rounded-full bg-black py-3 px-4 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:opacity-90 flex items-center justify-center gap-2 active:scale-98"
+                  >
+                    Share on WhatsApp
+                  </button>
+                </div>
+
+                {/* RSVP Dashboard Button - Only shown if user enabled RSVP during purchase */}
+                {Boolean(invite.rsvpData?.enabled || invite.hasRsvp) && (
+                  <div className="flex justify-center pt-1">
+                    <button
+                      onClick={() => navigate(`/templates/${invite.templateId}/${invite.code}/RSVP`)}
+                      className="rounded-full border border-neutral-300 bg-neutral-100 hover:bg-neutral-200 px-6 py-2 text-xs font-bold uppercase tracking-wider text-neutral-800 transition shadow-sm"
+                    >
+                      RSVP Dashboard
+                    </button>
+                  </div>
+                )}
               </div>
- 
-              <div className="flex justify-center">
+
+              {/* View Live Invitation Link */}
+              <div className="flex justify-center pt-2">
                 <Link 
                   to={`/templates/${invite.templateId}/${invite.code}`}
                   target="_blank"
-                  className="text-xs font-bold text-black/60 hover:text-black hover:underline transition-all"
+                  className="text-xs font-bold text-neutral-500 hover:text-black hover:underline transition-all"
                 >
                   View Live Invitation
                 </Link>

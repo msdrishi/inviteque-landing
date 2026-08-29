@@ -147,9 +147,23 @@ export default function Account() {
                             : 'Date TBD'}
                         </span>
                       </div>
-                      <span className="group-hover:text-iqText transition-colors font-bold flex items-center gap-1">
-                        View Details <span>→</span>
-                      </span>
+                      <div className="flex items-center gap-2.5">
+                        {Boolean(invite.rsvpData?.enabled || invite.hasRsvp) && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              navigate(`/templates/${invite.templateId}/${invite.code}/RSVP`)
+                            }}
+                            className="px-3 py-1 rounded-full border border-neutral-300 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-bold text-[11px] uppercase tracking-wider transition-colors"
+                          >
+                            RSVP
+                          </button>
+                        )}
+                        <span className="group-hover:text-iqText transition-colors font-bold flex items-center gap-1">
+                          Details <span>→</span>
+                        </span>
+                      </div>
                     </div>
                   </motion.div>
                 ))}

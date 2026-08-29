@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 const logo = "/assets/logo/inviteq-logo.png"
@@ -12,12 +12,14 @@ export default function Login() {
   const [error, setError] = useState('')
   const { user, login } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const redirectTarget = searchParams.get('redirect') || '/'
 
   useEffect(() => {
     if (user) {
-      navigate('/', { replace: true })
+      navigate(redirectTarget, { replace: true })
     }
-  }, [user, navigate])
+  }, [user, navigate, redirectTarget])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -26,7 +28,7 @@ export default function Login() {
     const result = await login(email, password)
     
     if (result.success) {
-      window.location.replace('/')
+      window.location.replace(redirectTarget)
     } else {
       setError(result.message)
     }

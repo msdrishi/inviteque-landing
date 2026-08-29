@@ -14,7 +14,9 @@ import Account from './pages/Account.jsx'
 import InviteDetails from './pages/InviteDetails.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import AdminDashboard from './pages/AdminDashboard.jsx'
+import CustomerRsvpDashboard from './pages/CustomerRsvpDashboard.jsx'
 import CustomMidnightWaltzPavitraSri from './pages/custom/CustomMidnightWaltzPavitraSri.jsx'
+import CustomTemplateEditor from './pages/custom/CustomTemplateEditor.jsx'
 import { API_URL } from './config'
 
 function ScrollToTop() {
@@ -91,19 +93,36 @@ export default function App() {
           <Route path="/login-success" element={<LoginSuccess />} />
           <Route path="/account" element={<Account />} />
           <Route path="/account/:code" element={<InviteDetails />} />
+          <Route path="/account/:code/rsvp" element={<CustomerRsvpDashboard />} />
           <Route path="/builder/:templateId" element={<Builder />} />
           
           {/* Custom Client Template Routes (Pavitra & Sri) */}
+          <Route path="/template/midnight-waltz/Pavitra-Sri/:variant/edit" element={<CustomTemplateEditor />} />
+          <Route path="/template/midnight-waltz/Pavitra-Sri/edit" element={<CustomTemplateEditor />} />
+          <Route path="/templates/midnight-waltz/Pavitra-Sri/:variant/edit" element={<CustomTemplateEditor />} />
+          <Route path="/templates/midnight-waltz/Pavitra-Sri/edit" element={<CustomTemplateEditor />} />
+          <Route path="/template/:templateId/:customSlug/:variant/edit" element={<CustomTemplateEditor />} />
+          <Route path="/template/:templateId/:customSlug/edit" element={<CustomTemplateEditor />} />
+          <Route path="/templates/:templateId/:customSlug/:variant/edit" element={<CustomTemplateEditor />} />
+          <Route path="/templates/:templateId/:customSlug/edit" element={<CustomTemplateEditor />} />
           <Route path="/template/midnight-waltz/Pavitra-Sri" element={<CustomMidnightWaltzPavitraSri />} />
           <Route path="/template/midnight-waltz/Pavitra-Sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
           <Route path="/templates/midnight-waltz/Pavitra-Sri" element={<CustomMidnightWaltzPavitraSri />} />
           <Route path="/templates/midnight-waltz/Pavitra-Sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
 
-          {/* Standard Templates */}
+          {/* Customer RSVP Dashboard Routes (Uppercase & Lowercase) */}
+          <Route path="/templates/:templateId/:code/RSVP" element={<CustomerRsvpDashboard />} />
+          <Route path="/templates/:templateId/:code/rsvp" element={<CustomerRsvpDashboard />} />
+          <Route path="/template/:templateId/:code/RSVP" element={<CustomerRsvpDashboard />} />
+          <Route path="/template/:templateId/:code/rsvp" element={<CustomerRsvpDashboard />} />
+
+          {/* Standard & Multi-Link Templates */}
           <Route path="/templates/:templateId" element={<TemplateRoute />} />
           <Route path="/templates/:templateId/:code" element={<TemplateRoute />} />
+          <Route path="/templates/:templateId/:code/:groupSlug" element={<TemplateRoute />} />
           <Route path="/template/:templateId" element={<TemplateRoute />} />
           <Route path="/template/:templateId/:code" element={<TemplateRoute />} />
+          <Route path="/template/:templateId/:code/:groupSlug" element={<TemplateRoute />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
           

@@ -128,6 +128,33 @@ export default function AdminDashboard() {
   const [usersLoading, setUsersLoading] = useState(false)
   const usersPerPage = 10
 
+  // Custom Client Template Provisioning states
+  const [showCustomModal, setShowCustomModal] = useState(false)
+  const [customClientData, setCustomClientData] = useState({
+    clientName: 'Pavitra & Sri',
+    clientEmail: '',
+    templateId: 'midnight-waltz',
+    customCode: 'PAVITRASRI',
+    customRoute: '/template/midnight-waltz/Pavitra-Sri/1',
+    groomName: 'Sri',
+    brideName: 'Pavitra',
+    weddingDate: '15',
+    weddingMonth: 'July',
+    weddingYear: '2026',
+    weddingTime: '09:00 AM - 10:30 AM',
+    mahalName: 'The Leela Palace',
+    venueAddress: '23 Old Airport Road',
+    venueCity: 'Bangalore',
+    state: 'Karnataka',
+    mapLink: 'https://maps.google.com',
+    hasRsvp: true,
+    amountPaid: 1499,
+  })
+  const [customProvisionSuccess, setCustomProvisionSuccess] = useState(null)
+  const [customLoading, setCustomLoading] = useState(false)
+  const [customError, setCustomError] = useState('')
+  const [copiedPkg, setCopiedPkg] = useState(false)
+
   // Track container width for responsive SVG rendering
   useEffect(() => {
     if (chartContainerRef.current) {
@@ -853,6 +880,124 @@ export default function AdminDashboard() {
     document.body.removeChild(link)
   }
 
+  const handleProvisionCustomTemplate = async (e) => {
+    e.preventDefault()
+    setCustomError('')
+    setCustomLoading(true)
+
+    try {
+      if (!customClientData.clientEmail?.trim()) {
+        throw new Error('Client email address is required.')
+      }
+
+      const tempPassword = `InviteQue@${Math.floor(1000 + Math.random() * 9000)}`
+      const cleanCode = (customClientData.customCode || `CUST${Math.floor(1000 + Math.random() * 9000)}`).trim().toUpperCase()
+      
+      const payload = {
+        templateId: customClientData.templateId,
+        code: cleanCode,
+        coupleNames: `${customClientData.groomName} & ${customClientData.brideName}`,
+        groomName: customClientData.groomName,
+        brideName: customClientData.brideName,
+        weddingDate: {
+          day: customClientData.weddingDate,
+          month: customClientData.weddingMonth,
+          year: customClientData.weddingYear
+        },
+        weddingTime: customClientData.weddingTime,
+        mahalName: customClientData.mahalName,
+        venueAddress: customClientData.venueAddress,
+        venueCity: customClientData.venueCity,
+        venueName: customClientData.venueAddress,
+        state: customClientData.state,
+        mapLink: customClientData.mapLink,
+        status: 'PAID',
+        amountPaid: Number(customClientData.amountPaid) || 1499,
+        hasRsvp: Boolean(customClientData.hasRsvp),
+        scheduleData: {
+          showSchedule: true,
+          showGallery: true,
+          items: [
+            { time: '11:00 AM', title: 'Haldi Ceremony' },
+            { time: '04:00 PM', title: 'Wedding Vows' },
+            { time: '07:00 PM', title: 'Grand Reception' }
+          ]
+        },
+        rsvpData: {
+          enabled: Boolean(customClientData.hasRsvp),
+          allowGuestCount: true,
+          allowEventSelection: true,
+          allowMessage: true,
+          allowMaybe: false,
+        }
+      }
+
+      // Save via API
+      try {
+        await fetch(`${API_URL}/api/invites`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
+          },
+          body: JSON.stringify(payload)
+        })
+      } catch (saveErr) {
+        console.warn('Backend API save notice:', saveErr)
+      }
+
+      const liveUrl = customClientData.customRoute 
+        ? `${window.location.origin}${customClientData.customRoute}`
+        : `${window.location.origin}/templates/${customClientData.templateId}/${cleanCode}`
+
+      const editUrl = `${window.location.origin}/builder/${customClientData.templateId}?code=${cleanCode}`
+      const rsvpUrl = `${window.location.origin}/templates/${customClientData.templateId}/${cleanCode}/RSVP`
+      const accountUrl = `${window.location.origin}/login`
+
+      const whatsappText = 
+`✨ *Your Bespoke Digital Wedding Invitation is Ready!* ✨
+
+Dear ${customClientData.clientName || 'Couple'},
+We are delighted to present your customized digital wedding invitation!
+
+🔗 *Public Live Invitation*:
+${liveUrl}
+
+🛠️ *Edit & Personalize Anytime*:
+You can edit names, dates, ceremonies, moments photos & toggle sections anytime from your account:
+👉 Login: ${accountUrl}
+📧 Email: ${customClientData.clientEmail}
+🔑 Temporary Password: ${tempPassword}
+
+✏️ *Direct Visual Editor Link*:
+${editUrl}
+
+💌 *Live Guest RSVP Dashboard*:
+${rsvpUrl}
+
+With love & congratulations,
+Inviteque Team ❤️`
+
+      setCustomProvisionSuccess({
+        clientEmail: customClientData.clientEmail,
+        clientName: customClientData.clientName,
+        tempPassword,
+        code: cleanCode,
+        liveUrl,
+        editUrl,
+        rsvpUrl,
+        accountUrl,
+        whatsappText
+      })
+
+      fetchData(true)
+    } catch (err) {
+      setCustomError(err.message || 'Failed to provision custom template.')
+    } finally {
+      setCustomLoading(false)
+    }
+  }
+
   // Device stats mapping
   const deviceStats = summary?.deviceDistribution || { desktop: 64, mobile: 36 }
 
@@ -969,27 +1114,42 @@ export default function AdminDashboard() {
                   : 'InviteQue platform performance summary metrics'}
               </p>
             </div>
-            {activeTab === 'overview' && (
-              <div className="flex items-center gap-1 rounded-xl bg-slate-200/50 p-1 self-start">
-                {[
-                  { id: 'week', label: '7 Days' },
-                  { id: 'month', label: '30 Days' },
-                  { id: 'year', label: '12 Months' }
-                ].map(opt => (
-                  <button
-                    key={opt.id}
-                    onClick={() => setTimeframe(opt.id)}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
-                      timeframe === opt.id
-                        ? 'bg-white text-slate-900 shadow-sm'
-                        : 'text-slate-400 hover:text-slate-900'
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            )}
+
+            <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  setCustomProvisionSuccess(null)
+                  setCustomError('')
+                  setShowCustomModal(true)
+                }}
+                className="rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold text-xs px-4 py-2.5 shadow-md flex items-center gap-2 transition active:scale-95"
+              >
+                ✨ Provision Custom Template
+              </button>
+
+              {activeTab === 'overview' && (
+                <div className="flex items-center gap-1 rounded-xl bg-slate-200/50 p-1">
+                  {[
+                    { id: 'week', label: '7 Days' },
+                    { id: 'month', label: '30 Days' },
+                    { id: 'year', label: '12 Months' }
+                  ].map(opt => (
+                    <button
+                      key={opt.id}
+                      onClick={() => setTimeframe(opt.id)}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                        timeframe === opt.id
+                          ? 'bg-white text-slate-900 shadow-sm'
+                          : 'text-slate-400 hover:text-slate-900'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {error && (
@@ -2293,6 +2453,324 @@ export default function AdminDashboard() {
                   🔗 View Live Invitation
                 </a>
               </div>
+            </motion.div>
+          </div>
+        )}
+
+        {/* CUSTOM CLIENT TEMPLATE PROVISIONING MODAL */}
+        {showCustomModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowCustomModal(false)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            />
+
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl border border-slate-200 p-6 sm:p-8 space-y-6 z-10"
+            >
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                  <h3 className="text-lg md:text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                    <span>✨</span> Provision Custom Client Template
+                  </h3>
+                  <p className="text-xs text-slate-400 font-medium mt-0.5">
+                    Assign a bespoke template, generate login credentials, and enable self-service editing for your client
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowCustomModal(false)}
+                  className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center text-sm transition"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {customProvisionSuccess ? (
+                <div className="space-y-6">
+                  <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-5 space-y-2">
+                    <div className="flex items-center gap-2 text-emerald-800 font-bold text-sm">
+                      <span>✓</span> Custom Invitation Provisioned Successfully!
+                    </div>
+                    <p className="text-xs text-emerald-700">
+                      The template has been linked to <strong>{customProvisionSuccess.clientEmail}</strong> with code <strong>{customProvisionSuccess.code}</strong>.
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">WhatsApp Onboarding Message</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(customProvisionSuccess.whatsappText)
+                          setCopiedPkg(true)
+                          setTimeout(() => setCopiedPkg(false), 2000)
+                        }}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm ${
+                          copiedPkg ? 'bg-emerald-600 text-white' : 'bg-slate-900 hover:bg-slate-800 text-white'
+                        }`}
+                      >
+                        {copiedPkg ? '✓ Copied Message' : '📋 Copy WhatsApp Message'}
+                      </button>
+                    </div>
+
+                    <pre className="text-xs font-mono bg-white p-3 rounded-xl border border-slate-200 text-slate-800 whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
+                      {customProvisionSuccess.whatsappText}
+                    </pre>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <a
+                      href={customProvisionSuccess.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-3 text-center transition"
+                    >
+                      🔗 Live Invite
+                    </a>
+                    <a
+                      href={customProvisionSuccess.editUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold py-3 text-center transition"
+                    >
+                      ✏️ Edit in Builder
+                    </a>
+                    <a
+                      href={customProvisionSuccess.rsvpUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold py-3 text-center transition"
+                    >
+                      💌 RSVP Dashboard
+                    </a>
+                  </div>
+
+                  <div className="pt-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setShowCustomModal(false)}
+                      className="rounded-full bg-slate-900 text-white text-xs font-bold px-8 py-3 transition hover:opacity-90 shadow-md"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleProvisionCustomTemplate} className="space-y-6">
+                  {customError && (
+                    <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-bold text-red-600">
+                      ⚠️ {customError}
+                    </div>
+                  )}
+
+                  {/* Customer Credentials */}
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">1. Client Account Credentials</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">Client Name <span className="text-red-500">*</span></label>
+                        <input
+                          type="text"
+                          required
+                          value={customClientData.clientName}
+                          onChange={(e) => setCustomClientData(prev => ({ ...prev, clientName: e.target.value }))}
+                          placeholder="e.g. Pavitra & Sri"
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white transition"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">Client Email (Login ID) <span className="text-red-500">*</span></label>
+                        <input
+                          type="email"
+                          required
+                          value={customClientData.clientEmail}
+                          onChange={(e) => setCustomClientData(prev => ({ ...prev, clientEmail: e.target.value }))}
+                          placeholder="client@gmail.com"
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white transition"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Template & Code */}
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">2. Template &amp; Route Mapping</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">Base Template</label>
+                        <select
+                          value={customClientData.templateId}
+                          onChange={(e) => setCustomClientData(prev => ({ ...prev, templateId: e.target.value }))}
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white transition"
+                        >
+                          <option value="midnight-waltz">Midnight Waltz (Bespoke)</option>
+                          <option value="sunflower-fields">Sunflower Fields</option>
+                          <option value="twilight-serenade">Twilight Serenade</option>
+                          <option value="everlasting-vows">Everlasting Vows</option>
+                          <option value="aura-of-elegance">Aura of Elegance</option>
+                          <option value="modern-hearth">Modern Hearth</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">Custom Code</label>
+                        <input
+                          type="text"
+                          value={customClientData.customCode}
+                          onChange={(e) => setCustomClientData(prev => ({ ...prev, customCode: e.target.value.toUpperCase() }))}
+                          placeholder="PAVITRASRI"
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white transition font-mono uppercase"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">Custom URL Slug</label>
+                        <input
+                          type="text"
+                          value={customClientData.customRoute}
+                          onChange={(e) => setCustomClientData(prev => ({ ...prev, customRoute: e.target.value }))}
+                          placeholder="/template/midnight-waltz/Pavitra-Sri/1"
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white transition text-slate-700"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Wedding Details */}
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">3. Initial Preset Data (Preloaded in Builder)</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">Groom's Name</label>
+                        <input
+                          type="text"
+                          value={customClientData.groomName}
+                          onChange={(e) => setCustomClientData(prev => ({ ...prev, groomName: e.target.value }))}
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white transition"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">Bride's Name</label>
+                        <input
+                          type="text"
+                          value={customClientData.brideName}
+                          onChange={(e) => setCustomClientData(prev => ({ ...prev, brideName: e.target.value }))}
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white transition"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">Date (Day Month Year)</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          <input
+                            type="text"
+                            value={customClientData.weddingDate}
+                            onChange={(e) => setCustomClientData(prev => ({ ...prev, weddingDate: e.target.value }))}
+                            placeholder="15"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-2 py-2.5 text-xs text-center font-semibold outline-none focus:border-slate-900 focus:bg-white"
+                          />
+                          <input
+                            type="text"
+                            value={customClientData.weddingMonth}
+                            onChange={(e) => setCustomClientData(prev => ({ ...prev, weddingMonth: e.target.value }))}
+                            placeholder="July"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-2 py-2.5 text-xs text-center font-semibold outline-none focus:border-slate-900 focus:bg-white"
+                          />
+                          <input
+                            type="text"
+                            value={customClientData.weddingYear}
+                            onChange={(e) => setCustomClientData(prev => ({ ...prev, weddingYear: e.target.value }))}
+                            placeholder="2026"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-2 py-2.5 text-xs text-center font-semibold outline-none focus:border-slate-900 focus:bg-white"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">Ceremony Time</label>
+                        <input
+                          type="text"
+                          value={customClientData.weddingTime}
+                          onChange={(e) => setCustomClientData(prev => ({ ...prev, weddingTime: e.target.value }))}
+                          placeholder="09:00 AM - 10:30 AM"
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white transition"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">Venue / Mahal Name</label>
+                        <input
+                          type="text"
+                          value={customClientData.mahalName}
+                          onChange={(e) => setCustomClientData(prev => ({ ...prev, mahalName: e.target.value }))}
+                          placeholder="The Leela Palace"
+                          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white transition"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-700">City &amp; State</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <input
+                            type="text"
+                            value={customClientData.venueCity}
+                            onChange={(e) => setCustomClientData(prev => ({ ...prev, venueCity: e.target.value }))}
+                            placeholder="Bangalore"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white"
+                          />
+                          <input
+                            type="text"
+                            value={customClientData.state}
+                            onChange={(e) => setCustomClientData(prev => ({ ...prev, state: e.target.value }))}
+                            placeholder="Karnataka"
+                            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-xs font-semibold outline-none focus:border-slate-900 focus:bg-white"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Addon / Features */}
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-bold text-slate-900 block">Enable RSVP &amp; Guest Management Suite</span>
+                      <span className="text-[11px] text-slate-500">Gives the client their personal live RSVP dashboard</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={Boolean(customClientData.hasRsvp)}
+                      onChange={(e) => setCustomClientData(prev => ({ ...prev, hasRsvp: e.target.checked }))}
+                      className="h-5 w-5 rounded accent-emerald-600 cursor-pointer"
+                    />
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowCustomModal(false)}
+                      className="flex-1 rounded-xl border border-slate-200 bg-white py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 transition"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={customLoading}
+                      className="flex-[2] rounded-xl bg-slate-900 hover:bg-slate-800 text-white py-3 text-xs font-bold shadow-lg transition disabled:opacity-50 flex items-center justify-center gap-2 active:scale-98"
+                    >
+                      {customLoading ? 'Provisioning...' : '✨ Generate Credentials & Assign Template'}
+                    </button>
+                  </div>
+                </form>
+              )}
             </motion.div>
           </div>
         )}
