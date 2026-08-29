@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Link, useNavigate, useLocation, useParams } from 'react-router-dom'
+import { Link, useNavigate, useLocation, useParams, Navigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { pavitraSriData } from '../../data/custom/pavitraSriData.js'
@@ -78,8 +78,11 @@ export default function CustomTemplateEditor() {
       heroSubtitle: saved?.heroSubtitle || pavitraSriData.hero.subtitle || 'Are Getting Married',
 
       // Our Story
-      storyQuote: saved?.storyQuote || pavitraSriData.story.quote || '"Two lives, one shared dream of a lifetime together."',
-      storyMessage: saved?.storyMessage || pavitraSriData.story.message || 'From casual conversations to unforgettable moments, our path led us to this special day. We are blessed to begin this new chapter filled with love, laughter, and lifelong partnership.',
+      storySectionLabel: saved?.storySectionLabel || pavitraSriData.story.sectionLabel || 'Our Story',
+      storyHeading: saved?.storyHeading || pavitraSriData.story.heading || 'From A Chance Encounter to Forever',
+      storyParagraph1: saved?.storyParagraph1 || (Array.isArray(saved?.storyParagraphs) ? saved.storyParagraphs[0] : null) || (saved?.storyMessage ? saved.storyMessage.split('\n\n')[0] : null) || pavitraSriData.story.paragraph1 || pavitraSriData.story.paragraphs[0] || 'What began as a simple conversation blossomed into a connection that felt like coming home. Through shared laughter, quiet evenings, and countless adventures, we discovered that life\'s most precious moments are the ones spent together.',
+      storyParagraph2: saved?.storyParagraph2 || (Array.isArray(saved?.storyParagraphs) ? saved.storyParagraphs[1] : null) || (saved?.storyMessage?.includes('\n\n') ? saved.storyMessage.split('\n\n')[1] : null) || pavitraSriData.story.paragraph2 || pavitraSriData.story.paragraphs[1] || 'With the blessings of our parents and surrounded by the love of family and friends, we are thrilled to step into this new chapter of our lives hand in hand.',
+      storyQuote: saved?.storyQuote || pavitraSriData.story.quote || '“In your arms, I have found my forever home and love.”',
 
       // Photo Moments (3 Photos)
       photos: (saved?.photos && Array.isArray(saved.photos) && saved.photos.length >= 3)
@@ -127,17 +130,15 @@ export default function CustomTemplateEditor() {
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
+  const [unauthorized, setUnauthorized] = useState(false)
+
   // 1. Authentication Guard & DB Preload
   useEffect(() => {
-    if (!authLoading) {
-      if (!user) {
-        navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`, { replace: true })
-      } else {
-        const timer = setTimeout(() => setShowSplash(false), 900)
-        return () => clearTimeout(timer)
-      }
+    if (!authLoading && user) {
+      const timer = setTimeout(() => setShowSplash(false), 900)
+      return () => clearTimeout(timer)
     }
-  }, [user, authLoading, navigate, location.pathname])
+  }, [user, authLoading])
 
   useEffect(() => {
     const fetchDbData = async () => {
@@ -146,6 +147,13 @@ export default function CustomTemplateEditor() {
         const res = await fetch(`${API_URL}/api/invites/PAVITRASRI`, {
           headers: { 'Authorization': `Bearer ${user.token}` }
         })
+        if (res.status === 403) {
+          const isAdmin = user.roles?.includes('ADMIN') || user.role === 'ADMIN'
+          if (!isAdmin) {
+            setUnauthorized(true)
+            return
+          }
+        }
         if (res.ok) {
           const inv = await res.json()
           if (inv) {
@@ -158,6 +166,12 @@ export default function CustomTemplateEditor() {
             const photos = inv.photos || inv.storyData?.photos
             const schedule = inv.eventSchedule || inv.scheduleData?.items
 
+            const storySectionLabel = inv.storyData?.sectionLabel || inv.invitationData?.storySectionLabel
+            const storyHeading = inv.storyData?.heading || inv.invitationData?.storyHeading || inv.invitationData?.customSectionTitle
+            const storyPara1 = inv.storyData?.paragraph1 || inv.storyData?.paragraphs?.[0] || inv.invitationData?.storyParagraph1
+            const storyPara2 = inv.storyData?.paragraph2 || inv.storyData?.paragraphs?.[1] || inv.invitationData?.storyParagraph2
+            const storyQuote = inv.storyData?.quote || inv.invitationData?.customSectionSubtitle || inv.customSectionSubtitle
+
             setFormData(prev => ({
               ...prev,
               groomName: groom || prev.groomName,
@@ -167,8 +181,11 @@ export default function CustomTemplateEditor() {
               weddingYear: year || prev.weddingYear,
               weddingTime: time || prev.weddingTime,
               photos: photos && Array.isArray(photos) && photos.filter(Boolean).length >= 3 ? photos : prev.photos,
-              storyQuote: inv.invitationData?.customSectionSubtitle || inv.customSectionSubtitle || prev.storyQuote,
-              storyMessage: inv.invitationData?.customSectionContent || inv.customSectionContent || prev.storyMessage,
+              storySectionLabel: storySectionLabel || prev.storySectionLabel,
+              storyHeading: storyHeading || prev.storyHeading,
+              storyParagraph1: storyPara1 || prev.storyParagraph1,
+              storyParagraph2: storyPara2 || prev.storyParagraph2,
+              storyQuote: storyQuote || prev.storyQuote,
               welcomeMessage: inv.invitationData?.familyMessage || inv.familyMessage || prev.welcomeMessage,
               events: (schedule && Array.isArray(schedule) && schedule.length > 0)
                 ? (variant === '2' ? schedule.slice(schedule.length - 1) : schedule).map((ev, i) => ({
@@ -312,6 +329,12 @@ export default function CustomTemplateEditor() {
               items: formData.events.map(ev => ({ time: ev.time, title: ev.eventName }))
             },
             storyData: {
+              sectionLabel: formData.storySectionLabel,
+              heading: formData.storyHeading,
+              paragraph1: formData.storyParagraph1,
+              paragraph2: formData.storyParagraph2,
+              paragraphs: [formData.storyParagraph1, formData.storyParagraph2].filter(Boolean),
+              quote: formData.storyQuote,
               photos: formData.photos
             },
             invitationData: {
@@ -319,8 +342,13 @@ export default function CustomTemplateEditor() {
               showSchedule: formData.sections.showVenue,
               hasRsvp: Boolean(formData.sections.hasRsvp),
               familyMessage: formData.welcomeMessage,
+              storySectionLabel: formData.storySectionLabel,
+              storyHeading: formData.storyHeading,
+              storyParagraph1: formData.storyParagraph1,
+              storyParagraph2: formData.storyParagraph2,
+              customSectionTitle: formData.storyHeading,
               customSectionSubtitle: formData.storyQuote,
-              customSectionContent: formData.storyMessage,
+              customSectionContent: [formData.storyParagraph1, formData.storyParagraph2].filter(Boolean).join('\n\n'),
             },
             rsvpData: {
               enabled: Boolean(formData.sections.hasRsvp),
@@ -345,6 +373,45 @@ export default function CustomTemplateEditor() {
     } finally {
       setSaving(false)
     }
+  }
+
+  // Route protection: Must be logged in
+  if (authLoading) {
+    return <SplashScreen loading={true} />
+  }
+
+  if (!user) {
+    return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname)}`} replace />
+  }
+
+  if (unauthorized) {
+    return (
+      <div className="min-h-screen bg-[#FDFCFB] flex flex-col items-center justify-center p-6 text-center font-saas">
+        <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-4">
+          <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center mx-auto text-xl font-bold">
+            🔒
+          </div>
+          <h2 className="text-xl font-bold text-slate-900">Access Restricted</h2>
+          <p className="text-sm text-slate-500">
+            You are logged in as <strong>{user.email}</strong>, but this bespoke invitation editor is reserved for the assigned client account or administrator.
+          </p>
+          <div className="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
+            <Link
+              to={`/login?redirect=${encodeURIComponent(location.pathname)}`}
+              className="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition"
+            >
+              Log in with Client Account
+            </Link>
+            <Link
+              to="/account"
+              className="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 transition"
+            >
+              My Dashboard
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const liveUrl = `/template/${templateId}/${customSlug}/${variant}`

@@ -32,11 +32,13 @@ export const pavitraSriData = {
   story: {
     sectionLabel: "Our Story",
     heading: "From A Chance Encounter to Forever",
+    paragraph1: "What began as a simple conversation blossomed into a connection that felt like coming home. Through shared laughter, quiet evenings, and countless adventures, we discovered that life's most precious moments are the ones spent together.",
+    paragraph2: "With the blessings of our parents and surrounded by the love of family and friends, we are thrilled to step into this new chapter of our lives hand in hand.",
     paragraphs: [
       "What began as a simple conversation blossomed into a connection that felt like coming home. Through shared laughter, quiet evenings, and countless adventures, we discovered that life's most precious moments are the ones spent together.",
       "With the blessings of our parents and surrounded by the love of family and friends, we are thrilled to step into this new chapter of our lives hand in hand.",
     ],
-    quote: "“In your arms, I have found my forever home.”",
+    quote: "“In your arms, I have found my forever home and love.”",
   },
 
   moments: {

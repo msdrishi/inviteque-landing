@@ -893,6 +893,31 @@ export default function AdminDashboard() {
       const tempPassword = `InviteQue@${Math.floor(1000 + Math.random() * 9000)}`
       const cleanCode = (customClientData.customCode || `CUST${Math.floor(1000 + Math.random() * 9000)}`).trim().toUpperCase()
       
+      // 1. Register Client Account in Auth system so they can login immediately
+      let clientToken = user?.token
+      try {
+        const regRes = await fetch(`${API_URL}/api/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: customClientData.clientName || `${customClientData.groomName || ''} & ${customClientData.brideName || ''}`.trim() || 'Client',
+            email: customClientData.clientEmail.trim(),
+            password: tempPassword,
+            phoneNumber: customClientData.clientPhone || ''
+          })
+        })
+        if (regRes.ok) {
+          const regData = await regRes.json()
+          if (regData?.token) {
+            clientToken = regData.token
+          }
+        } else {
+          console.warn('User account already exists or registration notice:', await regRes.text().catch(() => ''))
+        }
+      } catch (authErr) {
+        console.warn('Client user registration notice:', authErr)
+      }
+
       const payload = {
         templateId: customClientData.templateId,
         code: cleanCode,
@@ -923,6 +948,17 @@ export default function AdminDashboard() {
             { time: '07:00 PM', title: 'Grand Reception' }
           ]
         },
+        storyData: {
+          sectionLabel: "Our Story",
+          heading: "From A Chance Encounter to Forever",
+          paragraph1: "What began as a simple conversation blossomed into a connection that felt like coming home. Through shared laughter, quiet evenings, and countless adventures, we discovered that life's most precious moments are the ones spent together.",
+          paragraph2: "With the blessings of our parents and surrounded by the love of family and friends, we are thrilled to step into this new chapter of our lives hand in hand.",
+          paragraphs: [
+            "What began as a simple conversation blossomed into a connection that felt like coming home. Through shared laughter, quiet evenings, and countless adventures, we discovered that life's most precious moments are the ones spent together.",
+            "With the blessings of our parents and surrounded by the love of family and friends, we are thrilled to step into this new chapter of our lives hand in hand."
+          ],
+          quote: "“In your arms, I have found my forever home and love.”"
+        },
         rsvpData: {
           enabled: Boolean(customClientData.hasRsvp),
           allowGuestCount: true,
@@ -932,13 +968,13 @@ export default function AdminDashboard() {
         }
       }
 
-      // Save via API
+      // 2. Save Invitation via API under Client/Admin Token
       try {
         await fetch(`${API_URL}/api/invites`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${user.token}`
+            'Authorization': `Bearer ${clientToken || user.token}`
           },
           body: JSON.stringify(payload)
         })
@@ -948,9 +984,12 @@ export default function AdminDashboard() {
 
       const liveUrl = customClientData.customRoute 
         ? `${window.location.origin}${customClientData.customRoute}`
-        : `${window.location.origin}/templates/${customClientData.templateId}/${cleanCode}`
+        : `${window.location.origin}/template/${customClientData.templateId}/${cleanCode}/1`
 
-      const editUrl = `${window.location.origin}/builder/${customClientData.templateId}?code=${cleanCode}`
+      const editUrl = customClientData.customRoute 
+        ? `${window.location.origin}${customClientData.customRoute}/edit`
+        : `${window.location.origin}/template/${customClientData.templateId}/${cleanCode}/edit`
+
       const rsvpUrl = `${window.location.origin}/templates/${customClientData.templateId}/${cleanCode}/RSVP`
       const accountUrl = `${window.location.origin}/login`
 

@@ -739,7 +739,7 @@ function OurStorySection({ data, isDesktop }) {
           variants={lineAnim}
           style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 18 }}
         >
-          {data.paragraphs.map((para, i) => (
+          {(Array.isArray(data.paragraphs) ? data.paragraphs : [data.paragraphs || data.message].filter(Boolean)).map((para, i) => (
             <p
               key={i}
               style={{
@@ -1971,6 +1971,30 @@ export default function CustomMidnightWaltzPavitraSri() {
 
     const currentCode = codeParam || dynamicSource.code || 'PAVITRASRI'
 
+    // Dynamic Story Mapping
+    const storySectionLabel = dynamicSource.storySectionLabel || dynamicSource.story?.sectionLabel || dynamicSource.storyData?.sectionLabel || dynamicSource.invitationData?.storySectionLabel || base.story.sectionLabel || "Our Story"
+    const storyHeading = dynamicSource.storyHeading || dynamicSource.story?.heading || dynamicSource.storyData?.heading || dynamicSource.invitationData?.storyHeading || dynamicSource.invitationData?.customSectionTitle || base.story.heading || "From A Chance Encounter to Forever"
+    
+    let storyParagraphs = []
+    if (dynamicSource.storyParagraph1 || dynamicSource.storyParagraph2) {
+      if (dynamicSource.storyParagraph1) storyParagraphs.push(dynamicSource.storyParagraph1)
+      if (dynamicSource.storyParagraph2) storyParagraphs.push(dynamicSource.storyParagraph2)
+    } else if (Array.isArray(dynamicSource.storyParagraphs) && dynamicSource.storyParagraphs.length > 0) {
+      storyParagraphs = dynamicSource.storyParagraphs
+    } else if (Array.isArray(dynamicSource.storyData?.paragraphs) && dynamicSource.storyData.paragraphs.length > 0) {
+      storyParagraphs = dynamicSource.storyData.paragraphs
+    } else if (Array.isArray(dynamicSource.story?.paragraphs) && dynamicSource.story.paragraphs.length > 0) {
+      storyParagraphs = dynamicSource.story.paragraphs
+    } else if (dynamicSource.storyMessage) {
+      storyParagraphs = dynamicSource.storyMessage.split('\n\n').filter(Boolean)
+    } else if (dynamicSource.customSectionContent) {
+      storyParagraphs = dynamicSource.customSectionContent.split('\n\n').filter(Boolean)
+    } else {
+      storyParagraphs = base.story.paragraphs || []
+    }
+
+    const storyQuote = dynamicSource.storyQuote || dynamicSource.story?.quote || dynamicSource.storyData?.quote || dynamicSource.invitationData?.storyQuote || dynamicSource.invitationData?.customSectionSubtitle || dynamicSource.customSectionSubtitle || base.story.quote
+
     return {
       ...base,
       hero: {
@@ -1985,8 +2009,10 @@ export default function CustomMidnightWaltzPavitraSri() {
       },
       story: {
         ...base.story,
-        quote: dynamicSource.storyQuote || dynamicSource.customSectionSubtitle || base.story.quote,
-        message: dynamicSource.storyMessage || dynamicSource.customSectionContent || base.story.message,
+        sectionLabel: storySectionLabel,
+        heading: storyHeading,
+        paragraphs: storyParagraphs,
+        quote: storyQuote,
       },
       moments: {
         ...base.moments,
