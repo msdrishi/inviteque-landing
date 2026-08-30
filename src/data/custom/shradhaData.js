@@ -1,86 +1,79 @@
 /**
- * Custom Client Data: Shradha
+ * Custom Client Data: Shradha & Gagan
  * Base Template: Everlasting Vows
  * Celebration: Rajasthani Roka & Engagement Ceremony
- * 
- * Traditional Rajasthani cultural theme celebrating the auspicious Roka followed by Engagement (Sagai).
  */
 
 export const shradhaData = {
   hero: {
-    groomName: "Aayush",
+    groomName: "Gagan",
     brideName: "Shradha",
-    dateLine: "18 December 2026",
-    dayOfWeek: "Friday",
-    weddingTime: "10:00 AM onwards",
-    venueName: "The Royal Rajputana Palace",
-    venueCity: "Jaipur, Rajasthan",
+    brideFamily: "Soin’s",
+    groomFamily: "Vashishth’s",
+    welcomeHeading: "Welcome You All",
+    welcomeMessage: "We warmly welcome you all and would love to have your gracious presence to celebrate our new beginning.",
+    dateLine: "20 October 2026",
+    dayOfWeek: "Tuesday",
+    weddingTime: "11:00 AM onwards",
+    venueName: "Hotel Delite Grand, Faridabad",
+    venueCity: "Faridabad, Haryana",
     addressParts: {
       desktop: [
-        "The Royal Rajputana Palace & Heritage Lawns",
-        "Amer Road, Jaipur, Rajasthan 302002"
+        "Hotel Delite Grand, Faridabad",
+        "A-5/B, Neelam Bata Road, Shahid Bhagat Singh Marg, NIT, Faridabad, Haryana 121001"
       ],
       mobile: [
-        "The Royal Rajputana Palace",
-        "Amer Road, Jaipur, Rajasthan"
+        "Hotel Delite Grand, Faridabad",
+        "Neelam Bata Road, NIT, Faridabad"
       ]
     },
-    hashtag: "#ShradhaKiSagai",
-    monogram: "S & A",
-    location: "Jaipur, Rajasthan",
-    subtitle: "Roka & Engagement Ceremony",
-    topTag: "Padharo Mhare Des • Shubh Vivah Purv",
-    invitationNote: "With the divine blessings of our elders and the grace of God, we joyfully invite you to celebrate our auspicious Roka & Engagement ceremony."
+    hashtag: "#ShradhaWedsGagan",
+    monogram: "S & G",
+    location: "Faridabad, Haryana",
+    subtitle: "Together with their families",
+    topTag: "पधारो सा • Khamma Ghani",
+    invitationNote: "We warmly welcome you all and would love to have your gracious presence to celebrate our auspicious Roka & Engagement."
   },
 
-  // Removed Photo Moments and Welcome Section as per requirements
+  // Removed Photo Moments, Welcome, and RSVP sections as per requirements
   showGallery: false,
   showWelcome: false,
+  showRsvp: false,
 
   // Multi-Event Schedule: Roka followed by Engagement
   events: [
     {
       id: "roka-ceremony",
-      sectionLabel: "Auspicious Beginning",
-      eventName: "Traditional Roka Ceremony",
-      venueName: "The Heritage Darbar Courtyard",
-      dateTimeLine: "Friday, 18 December 2026 • 10:30 AM onwards",
-      venueLine1: "The Heritage Darbar Courtyard, Rajputana Palace",
-      venueLine2: "Amer Road, Jaipur, Rajasthan 302002",
-      dressCode: "Traditional Rajasthani / Bandhani & Royal Ethnic",
-      description: "The sacred shagun ceremony, tilak rituals, exchange of auspicious tokens, and heartfelt blessings from elders marking the official union of two families.",
-      mapUrl: "https://maps.google.com/?q=Jaipur+Rajasthan",
-      bgDesktop: "/assets/templates/everlasting-vows/photo-desktop.webp",
-      bgMobile: "/assets/templates/everlasting-vows/photo-mobile.webp",
+      sectionLabel: "Shubh Shuruwaat",
+      eventName: "Roka Ceremony",
+      dateTimeLine: "Tuesday, 20 October 2026 • 11:00 AM Onwards",
+      description: "The sacred shagun ceremony, tilak rituals, exchange of auspicious tokens, and heartfelt blessings from elders.",
+      bgDesktop: "/assets/templates/everlasting-vows/roka-event-desktop.webp",
+      bgMobile: "/assets/templates/everlasting-vows/roka-event-mobile.webp",
     },
     {
       id: "engagement-ceremony",
-      sectionLabel: "Ring Ceremony & Sangeet",
-      eventName: "Engagement & Royal Sagai Celebration",
-      venueName: "The Grand Royal Sheesh Lawns",
-      dateTimeLine: "Friday, 18 December 2026 • 06:30 PM onwards",
-      venueLine1: "The Grand Royal Sheesh Lawns, Rajputana Palace",
-      venueLine2: "Amer Road, Jaipur, Rajasthan 302002",
-      dressCode: "Royal Festive & Indo-Western Glamour",
-      description: "Exchange of rings celebrating eternal commitment, followed by folk musical performances, Rajasthani cultural night, and a lavish royal banquet.",
-      mapUrl: "https://maps.google.com/?q=Jaipur+Rajasthan",
-      bgDesktop: "/assets/templates/everlasting-vows/venue-desktop.webp",
-      bgMobile: "/assets/templates/everlasting-vows/venue-mobile.webp",
+      sectionLabel: "Ring Ceremony",
+      eventName: "Engagement",
+      dateTimeLine: "Tuesday, 20 October 2026 • Followed by Engagement",
+      description: "Followed after the Roka ceremony with ring exchange, celebratory music, and royal feast.",
+      bgDesktop: "/assets/templates/everlasting-vows/engagement-desktop.webp",
+      bgMobile: "/assets/templates/everlasting-vows/engagement-mobile.webp",
     },
   ],
 
   venue: {
     sectionLabel: "Celebration Venue",
-    venueName: "The Royal Rajputana Palace",
-    venueLine1: "The Royal Rajputana Palace & Heritage Lawns",
-    venueLine2: "Amer Road, Jaipur, Rajasthan 302002",
-    dateTime: "Friday, 18 December 2026",
-    mapUrl: "https://maps.google.com/?q=Jaipur+Rajasthan",
+    venueName: "Hotel Delite Grand, Faridabad",
+    venueLine1: "A-5/B, Neelam Bata Road, Shahid Bhagat Singh Marg",
+    venueLine2: "New Industrial Township, Faridabad, Haryana 121001",
+    dateTime: "Tuesday, 20 October 2026",
+    mapUrl: "https://maps.app.goo.gl/c5nfTwpDkq7cerDR8?g_st=ic",
   },
 
   countdown: {
     headerTop: "COUNTING DOWN TO THE AUSPICIOUS CEREMONY",
-    targetDateTimeISO: "2026-12-18T10:30:00.000Z",
+    targetDateTimeISO: "2026-10-20T11:00:00.000Z",
     labels: {
       days: "Days",
       hours: "Hours",
@@ -89,29 +82,12 @@ export const shradhaData = {
     },
   },
 
-  celebrate: {
-    sectionLabel: "Celebrate & Bless Us",
-    heading: "RSVP & Warm Wishes",
-    subtitle: "Your warm presence, love, and blessings are the greatest gift as we begin this cherished chapter. Kindly grace us with your esteemed presence.",
-    rsvp: {
-      enabled: true,
-      title: "RSVP For Roka & Engagement",
-      description: "Please let us know if you will be gracing our celebration by December 05, 2026.",
-      buttonLabel: "Confirm Attendance",
-      url: "https://forms.google.com",
-    },
-    registry: {
-      enabled: false,
-      title: "Blessings & Wishes",
-      description: "Only your auspicious blessings and gracious presence are requested.",
-      url: "",
-    }
-  },
-
   footer: {
-    closingText: "With Warm Regards & Best Compliments",
-    familyNames: "The Sharma & Singhania Families",
-    coupleNames: "Shradha & Aayush",
-    footnote: "Padharo Mhare Des • We look forward to celebrating together!"
+    closingText: "Warmly Invited & With Best Compliments From",
+    familyNames: "Soin’s & Vashishth’s",
+    brideFamily: "Soin’s Family",
+    groomFamily: "Vashishth’s Family",
+    coupleNames: "Shradha & Gagan",
+    footnote: "पधारो सा • We look forward to your gracious presence!"
   }
 }

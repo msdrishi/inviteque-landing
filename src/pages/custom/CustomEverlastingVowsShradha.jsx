@@ -1,30 +1,65 @@
 import { useMemo, useState, useEffect } from 'react'
-import { useLocation, useNavigate, useParams, Link } from 'react-router-dom'
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion'
+import { useLocation, useParams } from 'react-router-dom'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { shradhaData } from '../../data/custom/shradhaData.js'
-import { weddingData as staticData } from '../../weddingData.js'
 import Countdown from '../../components/Countdown.jsx'
-import Events from '../../components/Events.jsx'
-import Footer from '../../components/Footer.jsx'
 import Venue from '../../components/Venue.jsx'
-import InviteQRSVP from '../../components/InviteQRSVP.jsx'
+import Footer from '../../components/Footer.jsx'
 import SplashScreen from '../../components/SplashScreen.jsx'
-import { API_URL } from '../../config.js'
 import cMapping from '../../everlastingVowsCloudinaryMapping.json'
 
 // Background & Puppet WebP assets
 const desktopBg = cMapping['hero_desktop.png'] || "/assets/templates/everlasting-vows/hero-desktop.webp"
 const smartphoneBg = cMapping['hero_mobile.png'] || "/assets/templates/everlasting-vows/hero-mobile.webp"
-const photoBgDesktop = cMapping['photo_desktop.png'] || "/assets/templates/everlasting-vows/photo-desktop.webp"
-const photoBgMobile = cMapping['photo_mobile.png'] || "/assets/templates/everlasting-vows/photo-mobile.webp"
 const locationBgDesktop = cMapping['venue_desktop.png'] || "/assets/templates/everlasting-vows/venue-desktop.webp"
 const locationBgMobile = cMapping['venue_mobile.png'] || "/assets/templates/everlasting-vows/venue-mobile.webp"
 const countdownBgDesktop = cMapping['countdown_desktop.png'] || "/assets/templates/everlasting-vows/countdown-desktop.webp"
 const countdownBgMobile = cMapping['countdown_mobile.png'] || "/assets/templates/everlasting-vows/countdown-mobile.webp"
 
+// Dedicated WebP backgrounds for Roka and Engagement events
+const rokaDesktopBg = "/assets/templates/everlasting-vows/roka-event-desktop.webp"
+const rokaMobileBg = "/assets/templates/everlasting-vows/roka-event-mobile.webp"
+const engagementDesktopBg = "/assets/templates/everlasting-vows/engagement-desktop.webp"
+const engagementMobileBg = "/assets/templates/everlasting-vows/engagement-mobile.webp"
+
 const puppetBgWebp = "/assets/templates/everlasting-vows/puppet-background.webp"
 const puppetLeftWebp = "/assets/templates/everlasting-vows/puppet-left.webp"
 const puppetRightWebp = "/assets/templates/everlasting-vows/puppet-right.webp"
+
+// ── Venue Matching Animation Variants ────────────────────────────────────────
+const letterContainer = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } }
+}
+
+const letterAnim = {
+  hidden: { opacity: 0, y: 15 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } }
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } }
+}
+
+function AnimatedTitle({ text, className, style }) {
+  return (
+    <motion.h2
+      variants={letterContainer}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: false, amount: 0.1 }}
+      className={className}
+      style={style}
+    >
+      {text.split('').map((char, index) => (
+        <motion.span key={index} variants={letterAnim} style={{ display: 'inline-block' }}>
+          {char === ' ' ? '\u00A0' : char}
+        </motion.span>
+      ))}
+    </motion.h2>
+  )
+}
 
 // ── Falling Gold Petals ──────────────────────────────────────────────────────────
 const petalConfig = Array.from({ length: 18 }).map((_, i) => {
@@ -74,79 +109,212 @@ function FallingPetals() {
   )
 }
 
-// ── Interactive Puppet Splash Screen ────────────────────────────────────────────
-function PuppetSplashScreen({ isOpened, onOpen }) {
+// ── Rajasthani Bandhani Mandala / Rangoli SVG Component ───────────────────────
+function BandhaniMandalaSVG({ size = 'clamp(280px, 80vw, 540px)', opacity = 1 }) {
+  return (
+    <div className="relative pointer-events-none flex items-center justify-center" style={{ opacity }}>
+      {/* Outer Glow Halo */}
+      <div 
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: size,
+          height: size,
+          background: 'radial-gradient(circle, rgba(212,175,55,0.18) 0%, rgba(245,214,124,0.08) 45%, rgba(253,246,226,0) 70%)',
+          filter: 'blur(16px)',
+        }}
+      />
+
+      {/* Main Rotating Bandhani Mandala SVG */}
+      <motion.div
+        className="relative"
+        style={{ width: size, height: size }}
+        animate={{ rotate: 360, scale: [1, 1.02, 1] }}
+        transition={{
+          rotate: { repeat: Infinity, duration: 45, ease: 'linear' },
+          scale: { repeat: Infinity, duration: 6, ease: 'easeInOut' }
+        }}
+      >
+        <svg
+          viewBox="0 0 600 600"
+          className="w-full h-full drop-shadow-[0_2px_8px_rgba(138,110,30,0.12)]"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="300" cy="300" r="285" stroke="#8A6E1E" strokeWidth="2.5" strokeDasharray="3 8" strokeOpacity="0.55" />
+          <circle cx="300" cy="300" r="275" stroke="#B8860B" strokeWidth="3" strokeDasharray="6 7" strokeOpacity="0.75" />
+          <circle cx="300" cy="300" r="263" stroke="#8A6E1E" strokeWidth="2" strokeOpacity="0.6" />
+          <circle cx="300" cy="300" r="255" stroke="#D4AF37" strokeWidth="2" strokeDasharray="2 6" strokeOpacity="0.7" />
+
+          {/* Outer Bandhani Dotted Chevrons */}
+          {Array.from({ length: 16 }).map((_, i) => {
+            const angle = (i * 360) / 16
+            return (
+              <g key={`outer-tri-${i}`} transform={`rotate(${angle} 300 300)`}>
+                <path
+                  d="M 300 45 L 340 100 L 260 100 Z"
+                  stroke="#8A6E1E"
+                  strokeWidth="2"
+                  strokeDasharray="3 4.5"
+                  fill="rgba(212,175,55,0.08)"
+                />
+                <circle cx="300" cy="68" r="3.2" fill="#8A6E1E" fillOpacity="0.85" />
+                <circle cx="286" cy="85" r="2.6" fill="#B8860B" fillOpacity="0.8" />
+                <circle cx="314" cy="85" r="2.6" fill="#B8860B" fillOpacity="0.8" />
+                <circle cx="300" cy="88" r="3" fill="#8A6E1E" fillOpacity="0.9" />
+                <circle cx="292" cy="76" r="1.8" fill="#D4AF37" />
+                <circle cx="308" cy="76" r="1.8" fill="#D4AF37" />
+              </g>
+            )
+          })}
+
+          <circle cx="300" cy="300" r="200" stroke="#8A6E1E" strokeWidth="2.5" strokeOpacity="0.7" />
+          <circle cx="300" cy="300" r="192" stroke="#B8860B" strokeWidth="3" strokeDasharray="4 6" strokeOpacity="0.8" />
+          <circle cx="300" cy="300" r="184" stroke="#8A6E1E" strokeWidth="1.8" strokeOpacity="0.6" />
+
+          {/* Middle Bandhani Lotus Petals */}
+          {Array.from({ length: 12 }).map((_, i) => {
+            const angle = (i * 360) / 12
+            return (
+              <g key={`mid-petal-${i}`} transform={`rotate(${angle} 300 300)`}>
+                <path
+                  d="M 255 184 C 270 120, 330 120, 345 184"
+                  stroke="#8A6E1E"
+                  strokeWidth="2.8"
+                  strokeDasharray="3.5 5"
+                  fill="none"
+                />
+                <path
+                  d="M 270 184 C 282 140, 318 140, 330 184"
+                  stroke="#B8860B"
+                  strokeWidth="2.5"
+                  strokeDasharray="2.5 4"
+                  fill="rgba(212,175,55,0.12)"
+                />
+                <circle cx="300" cy="142" r="3.4" fill="#8A6E1E" />
+                <circle cx="290" cy="155" r="2.6" fill="#B8860B" />
+                <circle cx="310" cy="155" r="2.6" fill="#B8860B" />
+                <circle cx="300" cy="168" r="3" fill="#8A6E1E" />
+                <circle cx="282" cy="172" r="2" fill="#D4AF37" />
+                <circle cx="318" cy="172" r="2" fill="#D4AF37" />
+              </g>
+            )
+          })}
+
+          <circle cx="300" cy="300" r="116" stroke="#8A6E1E" strokeWidth="2.5" strokeOpacity="0.75" />
+          <circle cx="300" cy="300" r="108" stroke="#B8860B" strokeWidth="3" strokeDasharray="3.5 5" strokeOpacity="0.85" />
+          <circle cx="300" cy="300" r="100" stroke="#8A6E1E" strokeWidth="2" strokeOpacity="0.65" />
+
+          {/* Center 8-Petal Rosette */}
+          {Array.from({ length: 8 }).map((_, i) => {
+            const angle = (i * 360) / 8
+            return (
+              <g key={`inner-petal-${i}`} transform={`rotate(${angle} 300 300)`}>
+                <path
+                  d="M 278 245 C 285 210, 315 210, 322 245 C 315 260, 285 260, 278 245 Z"
+                  stroke="#8A6E1E"
+                  strokeWidth="2.4"
+                  strokeDasharray="2.8 4"
+                  fill="rgba(212,175,55,0.18)"
+                />
+                <circle cx="300" cy="230" r="3" fill="#8A6E1E" />
+                <circle cx="292" cy="242" r="2.2" fill="#B8860B" />
+                <circle cx="308" cy="242" r="2.2" fill="#B8860B" />
+              </g>
+            )
+          })}
+
+          <circle cx="300" cy="300" r="42" fill="rgba(212,175,55,0.25)" stroke="#8A6E1E" strokeWidth="2" />
+          <circle cx="300" cy="300" r="34" stroke="#B8860B" strokeWidth="2.5" strokeDasharray="3 4.5" />
+          <circle cx="300" cy="300" r="24" stroke="#8A6E1E" strokeWidth="1.8" />
+          <circle cx="300" cy="300" r="15" fill="#8A6E1E" fillOpacity="0.9" />
+          <circle cx="300" cy="300" r="5" fill="#FFFDF2" />
+        </svg>
+      </motion.div>
+    </div>
+  )
+}
+
+// ── Correctly Centered Bandhani Rangoli in Middle of Screen ───────────────────
+function BandhaniRangoli({ isOpened }) {
+  return (
+    <div className="absolute inset-0 pointer-events-none z-[12] flex items-center justify-center">
+      <motion.div
+        animate={
+          isOpened
+            ? { opacity: [1, 1, 0.7, 0], scale: [1, 1.03, 1.12, 1.25] }
+            : { opacity: 1, scale: 1 }
+        }
+        transition={{ 
+          duration: 3.4, 
+          ease: [0.25, 0.1, 0.25, 1], 
+          times: [0, 0.65, 0.85, 1],
+          delay: 0 
+        }}
+      >
+        <BandhaniMandalaSVG size="clamp(280px, 78vw, 540px)" opacity={1} />
+      </motion.div>
+    </div>
+  )
+}
+
+// ── Interactive Puppet Splash Screen with Opaque Backdrop Until Full Puppet Exit ──
+function PuppetSplashScreen({ isOpened, onOpen, data }) {
+  const bride = data?.brideName || "Shradha"
+  const groom = data?.groomName || "Gagan"
+
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      animate={{ 
-        opacity: isOpened ? 0 : 1, 
-        pointerEvents: isOpened ? 'none' : 'auto',
-      }}
+      animate={
+        isOpened
+          ? { opacity: [1, 1, 0], pointerEvents: 'none' }
+          : { opacity: 1, pointerEvents: 'auto' }
+      }
       transition={{ 
-        duration: 4.0, 
-        ease: [0.33, 1, 0.68, 1], 
-        delay: isOpened ? 0.2 : 0 
+        duration: 3.5, 
+        ease: "easeInOut",
+        times: [0, 0.75, 1], // Stays 100% opaque until 2.6s (75% of 3.5s) while puppets exit
+        delay: 0 
       }}
       onClick={onOpen}
       className="fixed inset-0 z-[9999] flex flex-col justify-between items-center cursor-pointer select-none overflow-hidden bg-[#FDF6E2]"
     >
-      {/* Background Yellow Floral Texture with subtle zoom on reveal */}
+      {/* Background Image: Stays 100% opaque until puppets leave completely */}
       <motion.img
         src={puppetBgWebp}
         alt=""
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
-        animate={isOpened ? { scale: 1.05, opacity: 0 } : { scale: 1, opacity: 1 }}
-        transition={{ duration: 4.0, ease: [0.33, 1, 0.68, 1] }}
+        animate={
+          isOpened
+            ? { scale: [1, 1.02, 1.06], opacity: [1, 1, 0] }
+            : { scale: 1, opacity: 1 }
+        }
+        transition={{ 
+          duration: 3.5, 
+          ease: "easeInOut",
+          times: [0, 0.75, 1],
+          delay: 0
+        }}
       />
 
-      {/* Falling Gold Petals / Flowers */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-[8]"
+        style={{
+          background: 'linear-gradient(105deg, rgba(255,255,255,0.25) 0%, rgba(255,253,242,0.05) 50%, rgba(0,0,0,0.02) 100%)'
+        }}
+      />
+
       <FallingPetals />
+      
+      {/* Centered Rangoli in the middle of the screen */}
+      <BandhaniRangoli isOpened={isOpened} />
 
-      {/* Top Header Tag */}
-      <motion.div 
-        animate={isOpened ? { opacity: 0, y: -25 } : { opacity: 1, y: 0 }}
-        transition={{ duration: 2.2, ease: "easeOut" }}
-        className="relative z-10 text-center px-4 pt-10 sm:pt-14 max-w-lg"
-      >
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.2 }}
-          className="text-[#8A6E1E] uppercase tracking-[0.3em] text-[11px] sm:text-xs font-bold"
-          style={{ fontFamily: "'Cinzel', serif" }}
-        >
-          Padharo Mhare Des
-        </motion.p>
-        <motion.h2
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.4, delay: 0.4 }}
-          className="text-[#705915] text-2xl sm:text-3xl md:text-4xl font-bold tracking-[0.12em] mt-1 uppercase"
-          style={{
-            fontFamily: "'Cinzel', serif",
-            textShadow: '0 2px 14px rgba(255,253,242,0.95)'
-          }}
-        >
-          Roka &amp; Engagement
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, delay: 0.6 }}
-          className="text-[#8A6E1E]/90 text-[11px] sm:text-xs tracking-[0.22em] uppercase mt-1 font-bold"
-          style={{ fontFamily: "'Cinzel', serif" }}
-        >
-          Shradha &amp; Aayush
-        </motion.p>
-      </motion.div>
-
-      {/* Left Puppet (Groom - 4.0s cinematic exit) */}
+      {/* Left Puppet (Groom) - Fully visible while gliding completely off-screen */}
       <motion.div
         className="absolute z-20 pointer-events-none origin-top-left flex items-center justify-start"
         style={{
-          top: '11svh',
+          top: '9svh',
           left: '-4%',
           width: 'clamp(210px, 52vw, 320px)',
           height: '63svh',
@@ -154,12 +322,23 @@ function PuppetSplashScreen({ isOpened, onOpen }) {
         }}
         animate={
           isOpened
-            ? { x: '-180%', y: '-15%', rotate: -25, opacity: 0 }
+            ? {
+                x: [0, '3%', '-8%', '-60%', '-230%'],
+                y: [0, '-18px', '2px', '-8vh', '-26vh'],
+                rotate: [-2, 3, -4, -12, -20],
+                scale: [1, 1.04, 1.02, 0.98, 0.94],
+                opacity: [1, 1, 1, 1, 0],
+              }
             : { rotate: [-2.2, 2.8, -2.2], y: [0, 12, 0], x: [0, 4, 0] }
         }
         transition={
           isOpened
-            ? { duration: 4.0, ease: [0.25, 1, 0.35, 1] }
+            ? { 
+                duration: 2.7, 
+                ease: [0.25, 0.1, 0.25, 1], 
+                times: [0, 0.15, 0.35, 0.7, 1],
+                delay: 0 
+              }
             : { repeat: Infinity, duration: 4.8, ease: "easeInOut" }
         }
       >
@@ -168,17 +347,17 @@ function PuppetSplashScreen({ isOpened, onOpen }) {
           alt="Rajasthani Groom Puppet"
           className="w-full h-full object-contain"
           style={{
-            filter: 'drop-shadow(0 20px 28px rgba(0,0,0,0.45)) drop-shadow(0 6px 14px rgba(138,110,30,0.32))'
+            filter: 'drop-shadow(5px 4px 8px rgba(0,0,0,0.18)) drop-shadow(2px 2px 4px rgba(138,110,30,0.12))'
           }}
           loading="eager"
         />
       </motion.div>
 
-      {/* Right Puppet (Bride - 4.0s cinematic exit) */}
+      {/* Right Puppet (Bride) - Fully visible while gliding completely off-screen */}
       <motion.div
         className="absolute z-20 pointer-events-none origin-top-right flex items-center justify-end"
         style={{
-          top: '11svh',
+          top: '9svh',
           right: '-4%',
           width: 'clamp(210px, 52vw, 320px)',
           height: '63svh',
@@ -186,12 +365,23 @@ function PuppetSplashScreen({ isOpened, onOpen }) {
         }}
         animate={
           isOpened
-            ? { x: '180%', y: '-15%', rotate: 25, opacity: 0 }
+            ? {
+                x: [0, '-3%', '8%', '60%', '230%'],
+                y: [0, '-18px', '2px', '-8vh', '-26vh'],
+                rotate: [2, -3, 4, 12, 20],
+                scale: [1, 1.04, 1.02, 0.98, 0.94],
+                opacity: [1, 1, 1, 1, 0],
+              }
             : { rotate: [2.8, -2.2, 2.8], y: [8, -4, 8], x: [0, -4, 0] }
         }
         transition={
           isOpened
-            ? { duration: 4.0, ease: [0.25, 1, 0.35, 1], delay: 0.08 }
+            ? { 
+                duration: 2.7, 
+                ease: [0.25, 0.1, 0.25, 1], 
+                times: [0, 0.15, 0.35, 0.7, 1],
+                delay: 0.02 
+              }
             : { repeat: Infinity, duration: 5.2, ease: "easeInOut", delay: 0.25 }
         }
       >
@@ -200,19 +390,58 @@ function PuppetSplashScreen({ isOpened, onOpen }) {
           alt="Rajasthani Bride Puppet"
           className="w-full h-full object-contain"
           style={{
-            filter: 'drop-shadow(0 20px 28px rgba(0,0,0,0.45)) drop-shadow(0 6px 14px rgba(138,110,30,0.32))'
+            filter: 'drop-shadow(6px 4px 8px rgba(0,0,0,0.18)) drop-shadow(2px 2px 4px rgba(138,110,30,0.12))'
           }}
           loading="eager"
         />
       </motion.div>
 
-      {/* Bottom Area: Animated "Tap to Open" Button */}
+      <div className="w-full pt-4" />
+
+      {/* Bottom Area: Text & Tap to Open (Fades out immediately on tap) */}
       <motion.div
-        className="relative z-30 flex flex-col items-center pb-8 sm:pb-12 pt-4"
+        className="relative z-30 flex flex-col items-center text-center px-4 pb-8 sm:pb-12 max-w-lg w-full"
         initial={{ opacity: 0, y: 20 }}
-        animate={isOpened ? { opacity: 0, y: 30, scale: 0.95 } : { opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 1.8, ease: "easeOut" }}
+        animate={isOpened ? { opacity: 0, y: 15, scale: 0.96 } : { opacity: 1, y: 0, scale: 1 }}
+        transition={{ 
+          duration: isOpened ? 0.6 : 1.2, 
+          ease: "easeOut",
+          delay: 0
+        }}
       >
+        <div className="mb-4 sm:mb-5">
+          <motion.p
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, delay: 0.2 }}
+            className="text-[#8A6E1E] uppercase tracking-[0.3em] text-[11px] sm:text-xs font-bold"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            पधारो सा • Padharo Sa
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.35 }}
+            className="text-[#705915] text-2xl sm:text-3xl md:text-4xl font-bold tracking-[0.12em] my-1 uppercase"
+            style={{
+              fontFamily: "'Cinzel', serif",
+              textShadow: '0 2px 14px rgba(255,253,242,0.95)'
+            }}
+          >
+            Roka &amp; Engagement
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.0, delay: 0.5 }}
+            className="text-[#8A6E1E]/95 text-xs sm:text-sm tracking-[0.25em] uppercase font-bold"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            {bride} &amp; {groom}
+          </motion.p>
+        </div>
+
         <motion.div
           animate={{
             scale: [1, 1.05, 1],
@@ -252,66 +481,30 @@ function PuppetSplashScreen({ isOpened, onOpen }) {
   )
 }
 
-// ── Hero Section for Shradha (Everlasting Vows Clone) ───────────────────────────
+// ── Hero Section (Revealed Only After Splash Screen Completes Exit) ───────────
 function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
   const { scrollY } = useScroll()
   const rawY = useTransform(scrollY, [0, 800], ['0%', '-4%'])
   const bgY = useSpring(rawY, { stiffness: 55, damping: 18 })
 
-  // Animation variants
-  const fadeInSlow = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { duration: 2.2, ease: "easeOut" } }
-  }
-
-  const nameContainerVariant = {
-    hidden: {},
-    show: {
-      transition: {
-        staggerChildren: 0.14,
-      }
-    }
-  }
-
-  const letterAnimVariant = {
-    hidden: { opacity: 0, y: 15, filter: 'blur(2px)' },
-    show: {
-      opacity: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      transition: {
-        duration: 1.8,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    }
-  }
-
-  const dateParts = useMemo(() => {
-    const parts = String(data.dateLine || '').trim().split(/\s+/)
-    if (parts.length >= 3) {
-      return {
-        day: parts[0],
-        month: parts[1],
-        year: parts[2]
-      }
-    }
-    return { day: '18', month: 'December', year: '2026' }
-  }, [data.dateLine])
+  const brideName = data?.brideName || "Shradha"
+  const groomName = data?.groomName || "Gagan"
+  const welcomeText = data?.welcomeMessage || "We warmly welcome you all and would love to have your gracious presence to celebrate our new beginning."
 
   return (
     <section
       className={`relative overflow-hidden flex flex-col items-center text-center select-none ${
         isDesktop
-          ? 'h-screen w-full justify-start pt-[10vh] pb-16 px-8'
-          : 'h-[100svh] w-full justify-start pt-[6svh] sm:pt-[8svh] pb-8 px-6'
+          ? 'min-h-screen w-full justify-start pt-[20vh] sm:pt-[22vh] pb-16 px-8'
+          : 'min-h-[100svh] w-full justify-start pt-[18svh] sm:pt-[20svh] pb-12 px-6'
       }`}
     >
-      {/* Parallax background with smooth landing */}
+      {/* Parallax background: Stays hidden until splash screen animation completes, then smoothly reveals */}
       <motion.div
         className="absolute inset-0 z-0 will-change-transform"
         style={{ y: bgY, scale: 1.05, transformOrigin: 'center' }}
-        animate={isOpened ? { opacity: 1, filter: 'blur(0px)' } : { opacity: 0.88, filter: 'blur(3px)' }}
-        transition={{ duration: 1.8, ease: "easeOut" }}
+        animate={isOpened ? { opacity: 1, filter: 'blur(0px)' } : { opacity: 0, filter: 'blur(4px)' }}
+        transition={{ duration: 1.2, delay: 2.6, ease: "easeOut" }}
       >
         <img
           src={isDesktop ? desktopBg : smartphoneBg}
@@ -323,59 +516,52 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
         />
       </motion.div>
 
-      {/* Falling Gold Petals */}
       <FallingPetals />
 
-      {/* Hero Content Panel with smooth staggered landing */}
+      {/* Hero Content Panel positioned comfortably down inside palace arch window */}
       <motion.div
         initial="hidden"
         animate={isOpened ? "show" : "hidden"}
         variants={{
-          hidden: { opacity: 0, y: 15 },
+          hidden: { opacity: 0, y: 22, scale: 0.98 },
           show: { 
             opacity: 1, 
             y: 0, 
-            transition: { staggerChildren: 0.3, duration: 1.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 } 
+            scale: 1,
+            transition: { staggerChildren: 0.16, duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 2.7 } 
           }
         }}
-        className="relative z-20 flex flex-col items-center max-w-xl md:translate-y-0"
+        className="relative z-20 flex flex-col items-center max-w-xl"
       >
-        {/* Top Monogram Ornament */}
-        <motion.div variants={fadeInSlow} className="mb-2">
-          <svg viewBox="0 0 40 24" width="32" height="20" fill="none" className="stroke-[#8A6E1E] opacity-90">
-            <path d="M20 2 L20 18" strokeWidth="1.6" strokeLinecap="round" />
-            <path d="M12 10 Q20 4 28 10" strokeWidth="1.6" strokeLinecap="round" />
-            <path d="M14 14 Q20 10 26 14" strokeWidth="1.2" strokeLinecap="round" />
-            <circle cx="20" cy="20" r="1.8" fill="#8A6E1E" />
-          </svg>
-        </motion.div>
-
         {/* Top Tag */}
-        <motion.p
-          variants={fadeInSlow}
-          className="text-[10px] sm:text-xs tracking-[0.3em] uppercase text-[#8A6E1E] font-bold mb-2.5"
-          style={{ fontFamily: "'Cinzel', serif" }}
-        >
-          {data.topTag || "Padharo Mhare Des • Save the Date"}
-        </motion.p>
+        <motion.div variants={fadeUp} className="flex items-center gap-2 mb-1.5">
+          <span className="text-xs text-[#8A6E1E]">✦</span>
+          <p
+            className="text-[11px] sm:text-xs tracking-[0.35em] uppercase text-[#8A6E1E] font-bold"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            {data?.topTag || "पधारो सा • Khamma Ghani"}
+          </p>
+          <span className="text-xs text-[#8A6E1E]">✦</span>
+        </motion.div>
 
         {/* Couple Names with Gold Glare Animation */}
         <motion.h1
-          variants={nameContainerVariant}
-          className="text-[#8A6E1E] uppercase tracking-[0.1em] select-none font-bold mb-3"
+          variants={letterContainer}
+          className="text-[#8A6E1E] uppercase tracking-[0.1em] select-none font-bold my-1 sm:my-2"
           style={{
             fontFamily: "'Cinzel', serif",
-            lineHeight: '1.2',
-            fontSize: isDesktop ? 'clamp(2.2rem, 3.8vw, 3.4rem)' : 'clamp(1.8rem, 6.5vw, 2.5rem)'
+            lineHeight: '1.18',
+            fontSize: isDesktop ? 'clamp(2.3rem, 4.0vw, 3.5rem)' : 'clamp(1.85rem, 7.0vw, 2.5rem)'
           }}
         >
-          {/* Bride Name First for Shradha */}
-          <span className="block mb-0.5 sm:mb-1 relative" style={{ display: 'block', position: 'relative' }}>
+          {/* Bride Name */}
+          <span className="block mb-0.5 relative" style={{ display: 'block', position: 'relative' }}>
             <span style={{ position: 'relative', zIndex: 1 }}>
-              {(data.brideName || 'Shradha').split('').map((char, index) => (
+              {brideName.split('').map((char, index) => (
                 <motion.span
                   key={`bride-${index}`}
-                  variants={letterAnimVariant}
+                  variants={letterAnim}
                   style={{ display: 'inline-block' }}
                 >
                   {char === ' ' ? '\u00A0' : char}
@@ -406,7 +592,7 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
               }}
               aria-hidden="true"
             >
-              {(data.brideName || 'Shradha').split('').map((char, index) => (
+              {brideName.split('').map((char, index) => (
                 <span key={`bride-glare-${index}`} style={{ display: 'inline-block' }}>
                   {char === ' ' ? '\u00A0' : char}
                 </span>
@@ -415,19 +601,19 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
           </span>
 
           <motion.span
-            variants={fadeInSlow}
+            variants={fadeUp}
             className="block my-0.5 text-2xl sm:text-3xl font-medium lowercase italic font-serif text-[#8A6E1E]/90"
           >
             &amp;
           </motion.span>
 
           {/* Groom Name */}
-          <span className="block mt-0.5 sm:mt-1 relative" style={{ display: 'block', position: 'relative' }}>
+          <span className="block mt-0.5 relative" style={{ display: 'block', position: 'relative' }}>
             <span style={{ position: 'relative', zIndex: 1 }}>
-              {(data.groomName || 'Aayush').split('').map((char, index) => (
+              {groomName.split('').map((char, index) => (
                 <motion.span
                   key={`groom-${index}`}
-                  variants={letterAnimVariant}
+                  variants={letterAnim}
                   style={{ display: 'inline-block' }}
                 >
                   {char === ' ' ? '\u00A0' : char}
@@ -458,7 +644,7 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
               }}
               aria-hidden="true"
             >
-              {(data.groomName || 'Aayush').split('').map((char, index) => (
+              {groomName.split('').map((char, index) => (
                 <span key={`groom-glare-${index}`} style={{ display: 'inline-block' }}>
                   {char === ' ' ? '\u00A0' : char}
                 </span>
@@ -467,97 +653,33 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
           </span>
         </motion.h1>
 
-        {/* Ceremony Subtitle: Roka & Engagement (No Wedding Text) */}
+        {/* Family Affiliation Subtitle */}
         <motion.p
-          variants={fadeInSlow}
-          className="text-[11px] sm:text-xs tracking-[0.25em] uppercase text-[#8A6E1E] font-bold mb-2"
+          variants={fadeUp}
+          className="text-xs sm:text-sm tracking-[0.2em] uppercase text-[#705915] font-bold mt-1 mb-1.5"
           style={{ fontFamily: "'Cinzel', serif" }}
         >
-          {data.subtitle || "Roka & Engagement Ceremony"}
+          Together with the Soin &amp; Vashishth Families
         </motion.p>
 
-        {/* Custom Divider Line */}
+        {/* Traditional Ornamental Divider */}
         <motion.div
-          variants={fadeInSlow}
-          className="flex items-center gap-3 w-32 my-1 opacity-60"
+          variants={fadeUp}
+          className="flex items-center gap-3 w-36 my-1.5 opacity-70"
         >
-          <div className="h-[0.9px] bg-[#8A6E1E] flex-1" />
-          <span className="text-[#8A6E1E] text-[8px]">♥</span>
-          <div className="h-[0.9px] bg-[#8A6E1E] flex-1" />
+          <div className="h-[1px] bg-[#8A6E1E] flex-1" />
+          <span className="text-[#8A6E1E] text-xs">✦</span>
+          <div className="h-[1px] bg-[#8A6E1E] flex-1" />
         </motion.div>
 
-        {/* Date Row */}
-        <motion.div
-          variants={fadeInSlow}
-          className={`text-[#8A6E1E] tracking-[0.12em] flex items-center justify-center my-1.5 font-bold ${
-            isDesktop ? 'text-2xl md:text-3xl gap-3' : 'text-base sm:text-lg gap-1.5'
-          }`}
-          style={{ fontFamily: "'Cinzel', serif" }}
-        >
-          <span>{dateParts.day}</span>
-          <span className="text-[#8A6E1E]/40 font-bold text-lg sm:text-xl">|</span>
-          <span>{dateParts.month}</span>
-          <span className="text-[#8A6E1E]/40 font-bold text-lg sm:text-xl">|</span>
-          <span>{dateParts.year}</span>
-        </motion.div>
-
-        {/* Day of Week */}
+        {/* Clean Minimal Welcoming Text */}
         <motion.p
-          variants={fadeInSlow}
-          className="text-[11px] sm:text-xs tracking-[0.25em] uppercase text-[#8A6E1E] font-bold mb-1.5"
-          style={{ fontFamily: "'Cinzel', serif" }}
+          variants={fadeUp}
+          className="text-xs sm:text-sm text-[#8A6E1E] leading-relaxed italic max-w-md mt-1.5 px-2"
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
         >
-          {data.dayOfWeek || 'Friday'}
+          &ldquo;{welcomeText}&rdquo;
         </motion.p>
-
-        {/* Time of Ceremony */}
-        <motion.p
-          variants={fadeInSlow}
-          className="text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-[#8A6E1E]/90 font-bold mb-3"
-          style={{ fontFamily: "'Cinzel', serif" }}
-        >
-          {data.weddingTime || '10:00 AM onwards'}
-        </motion.p>
-
-        {/* Venue details */}
-        <motion.div variants={fadeInSlow} className="flex flex-col items-center">
-          <div className="mb-2">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#8A6E1E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="opacity-90">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3.2" />
-            </svg>
-          </div>
-          {data.addressParts && data.addressParts.length > 0 ? (
-            <div className="flex flex-col items-center gap-0.5">
-              {data.addressParts.map((part, index) => (
-                <p
-                  key={index}
-                  className="text-[#8A6E1E] tracking-[0.18em] uppercase font-bold text-center leading-relaxed"
-                  style={{
-                    fontFamily: "'Cinzel', serif",
-                    fontSize: isDesktop
-                      ? (index === 0 ? 'clamp(14px, 1.4vw, 17px)' : 'clamp(11px, 1.0vw, 13px)')
-                      : (index === 0 ? 'clamp(11px, 1.5svh, 13px)' : 'clamp(9px, 1.2svh, 10.5px)'),
-                    opacity: index === 0 ? 1 : 0.95
-                  }}
-                >
-                  {part}
-                </p>
-              ))}
-            </div>
-          ) : (
-            <p
-              className="text-[#8A6E1E] tracking-[0.18em] uppercase font-bold text-center leading-relaxed"
-              style={{
-                fontFamily: "'Cinzel', serif",
-                fontSize: isDesktop ? 'clamp(14px, 1.4vw, 17px)' : 'clamp(11px, 1.5svh, 13px)'
-              }}
-            >
-              {data.venueName}
-              <span className="block mt-0.5 text-[#8A6E1E]/90 font-semibold tracking-[0.15em]" style={{ fontSize: isDesktop ? 'clamp(11px, 1.0vw, 13px)' : 'clamp(9px, 1.2svh, 10.5px)' }}>{data.venueCity}</span>
-            </p>
-          )}
-        </motion.div>
       </motion.div>
 
       {/* Scroll Down Indicator */}
@@ -568,17 +690,17 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
         }}
         aria-label="Scroll down"
         className="absolute z-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        style={{ bottom: 'clamp(20px, 4vh, 40px)' }}
+        style={{ bottom: 'clamp(14px, 2.5vh, 28px)' }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 3.0 }}
+        transition={{ delay: 3.8 }}
       >
         <motion.div
           animate={{ y: [0, 5, 0] }}
           transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
           style={{
-            width: 38,
-            height: 38,
+            width: 36,
+            height: 36,
             borderRadius: '50%',
             border: '1.5px solid rgba(138,110,30,0.3)',
             background: 'rgba(255,253,242,0.65)',
@@ -588,7 +710,7 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
             justifyContent: 'center',
           }}
         >
-          <svg viewBox="0 0 18 11" width="13" height="8" fill="none" aria-hidden="true">
+          <svg viewBox="0 0 18 11" width="12" height="7" fill="none" aria-hidden="true">
             <path d="M1 1.5 L9 9.5 L17 1.5"
               stroke="#8A6E1E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
               opacity="0.8"
@@ -600,119 +722,204 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
   )
 }
 
-// ── Multi-Event Showcase Component (Roka followed by Engagement) ────────────────
-function RokaEngagementEvents({ events = [], isDesktop = false }) {
-  if (!events || events.length === 0) return null
+// ── Fullscreen Individual Event Section with Venue-Matching Typography & Animations ──
+function FullscreenEventSection({ event, index, isDesktop }) {
+  if (!event) return null
+  const isRoka = index === 0
+  
+  // Dedicated background images without any overlay filter or opacity
+  const bgImg = isRoka 
+    ? (isDesktop ? rokaDesktopBg : rokaMobileBg)
+    : (isDesktop ? engagementDesktopBg : engagementMobileBg)
+
+  // Title: "Roka Ceremony" or "Engagement"
+  const titleText = isRoka ? "Roka Ceremony" : "Engagement"
 
   return (
-    <section className="relative w-full py-16 px-4 md:px-8 bg-[#FFFDF2]/90 overflow-hidden">
-      {/* Background Petal Accents */}
-      <div className="max-w-4xl mx-auto flex flex-col items-center">
-        
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <p className="text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#8A6E1E] font-bold mb-2" style={{ fontFamily: "'Cinzel', serif" }}>
-            Auspicious Ceremonies
-          </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl text-[#705915] font-bold tracking-[0.1em] uppercase" style={{ fontFamily: "'Cinzel', serif" }}>
-            Roka &amp; Engagement Schedule
-          </h2>
-          <div className="flex items-center justify-center gap-3 w-36 mx-auto my-3 opacity-70">
-            <div className="h-[1px] bg-[#8A6E1E] flex-1" />
-            <span className="text-[#8A6E1E] text-xs">✦</span>
-            <div className="h-[1px] bg-[#8A6E1E] flex-1" />
-          </div>
-          <p className="text-xs sm:text-sm text-[#8A6E1E]/80 max-w-lg mx-auto italic font-serif">
-            Padharo Mhare Des — Join us as we perform the sacred rituals and rejoice in the joy of our coming together.
-          </p>
-        </div>
-
-        {/* Event Cards Grid */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
-          {events.map((event, index) => (
-            <motion.div
-              key={event.id || index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="relative rounded-2xl border border-[#8A6E1E]/25 bg-[#FFFDF2] p-6 sm:p-8 shadow-[0_8px_30px_rgba(138,110,30,0.08)] flex flex-col justify-between hover:shadow-[0_12px_40px_rgba(138,110,30,0.14)] transition-all duration-300"
-            >
-              {/* Card Corner Ornament */}
-              <div className="absolute top-3 right-3 text-[#8A6E1E]/40 font-serif text-sm font-bold">
-                0{index + 1}
-              </div>
-
-              <div>
-                <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase bg-[#8A6E1E]/10 text-[#8A6E1E] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>
-                  {event.sectionLabel || (index === 0 ? "Ceremony 1" : "Ceremony 2")}
-                </span>
-
-                <h3 className="text-xl sm:text-2xl font-bold text-[#705915] mb-2 leading-snug" style={{ fontFamily: "'Cinzel', serif" }}>
-                  {event.eventName}
-                </h3>
-
-                {/* Date & Time */}
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-[#8A6E1E] font-semibold mb-3">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
-                  <span>{event.dateTimeLine}</span>
-                </div>
-
-                {/* Venue Details */}
-                <div className="text-xs text-[#8A6E1E]/90 leading-relaxed mb-4">
-                  <p className="font-bold text-[#705915]">{event.venueName || event.venueLine1}</p>
-                  <p>{event.venueLine2}</p>
-                </div>
-
-                {/* Description / Ritual note */}
-                {event.description && (
-                  <p className="text-xs text-[#8A6E1E]/80 italic mb-4 leading-relaxed font-serif">
-                    &ldquo;{event.description}&rdquo;
-                  </p>
-                )}
-
-                {/* Dress Code */}
-                {event.dressCode && (
-                  <div className="text-[11px] text-[#8A6E1E] bg-[#FFF8E7] px-3 py-2 rounded-lg border border-[#8A6E1E]/15 mb-4">
-                    <span className="font-bold uppercase tracking-wider">Attire: </span>
-                    <span>{event.dressCode}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Map Link */}
-              {event.mapUrl && (
-                <a
-                  href={event.mapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-[#8A6E1E]/30 bg-white/80 hover:bg-[#8A6E1E] text-[#8A6E1E] hover:text-white text-xs font-bold tracking-[0.15em] uppercase transition-all duration-300 shadow-sm"
-                  style={{ fontFamily: "'Cinzel', serif" }}
-                >
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                  Get Directions
-                </a>
-              )}
-            </motion.div>
-          ))}
-        </div>
-
+    <section className="relative w-full min-h-[100svh] md:h-screen flex flex-col justify-start pt-[22svh] sm:pt-[25svh] md:pt-[24vh] items-center text-center px-6 md:px-12 pb-16 overflow-hidden select-none">
+      {/* Background Image pure and crisp without any overlay filter or opacity */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <img
+          src={bgImg}
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-cover object-center"
+        />
       </div>
+
+      {/* Clean Typography Content positioned down in the clear area */}
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: false, amount: 0.15 }}
+        variants={{
+          hidden: { opacity: 0, y: 15 },
+          show: { 
+            opacity: 1, 
+            y: 0, 
+            transition: { staggerChildren: 0.15, duration: 1.0, ease: [0.22, 1, 0.36, 1] } 
+          }
+        }}
+        className="relative z-10 max-w-xl flex flex-col items-center"
+      >
+        {/* Top Tag */}
+        <motion.div variants={fadeUp} className="flex items-center gap-2 mb-1.5">
+          <span className="text-xs text-[#8A6E1E]">✦</span>
+          <p className="text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#8A6E1E] font-bold" style={{ fontFamily: "'Cinzel', serif" }}>
+            {isRoka ? "पधारो सा • Shubh Shuruwaat" : "पधारो सा • Ring Ceremony"}
+          </p>
+          <span className="text-xs text-[#8A6E1E]">✦</span>
+        </motion.div>
+
+        {/* Ceremony Name with Venue-style AnimatedTitle letter animation */}
+        <AnimatedTitle
+          text={titleText}
+          className="font-semibold uppercase tracking-[0.14em] my-1"
+          style={{
+            fontFamily: "'Cinzel', serif",
+            fontSize: isDesktop ? 'clamp(28px, 3.2vw, 38px)' : 'clamp(24px, 6.5vw, 30px)',
+            fontWeight: 600,
+            color: '#8A6E1E',
+            textShadow: '0 4px 16px rgba(255, 253, 242, 0.8)'
+          }}
+        />
+
+        {/* Ornamental Divider matching Venue style */}
+        <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 w-36 my-2 opacity-70">
+          <div className="h-[1px] bg-[#8A6E1E] flex-1" />
+          <span className="text-[#8A6E1E] text-xs">✦</span>
+          <div className="h-[1px] bg-[#8A6E1E] flex-1" />
+        </motion.div>
+
+        {/* Timing & Date Line - Clean Inline Layout using Montserrat matching Venue details */}
+        <motion.div 
+          variants={fadeUp} 
+          className="flex items-center justify-center gap-2 text-xs sm:text-sm text-[#705915] font-semibold tracking-[0.08em] uppercase my-2 max-w-sm sm:max-w-md mx-auto"
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
+        >
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 text-[#8A6E1E]">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span className="leading-snug">{event.dateTimeLine}</span>
+        </motion.div>
+
+        {/* Ritual Description matching Venue font */}
+        {event.description && (
+          <motion.p 
+            variants={fadeUp} 
+            className="text-xs sm:text-sm text-[#705915]/90 italic leading-relaxed max-w-md my-1.5 px-4"
+            style={{ fontFamily: "'Montserrat', sans-serif" }}
+          >
+            &ldquo;{event.description}&rdquo;
+          </motion.p>
+        )}
+      </motion.div>
     </section>
   )
 }
 
-// ── MAIN CUSTOM TEMPLATE COMPONENT (Shradha Roka & Engagement) ──────────────────
+// ── Plain Fullscreen Family Closing Section (#FAE9C3 Background with Centered Content & Top Semi-Circular Rangoli) ──
+function FullscreenFamilyClosingSection() {
+  return (
+    <section 
+      className="relative w-full min-h-[100svh] md:h-screen flex flex-col justify-center items-center text-center px-6 md:px-12 py-16 overflow-hidden select-none"
+      style={{ backgroundColor: '#FAE9C3' }}
+    >
+      {/* Semi-circular Rotating Bandhani Mandala Rangoli hanging gracefully from the top edge */}
+      <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none z-0" style={{ transform: 'translateY(-50%)' }}>
+        <BandhaniMandalaSVG size="clamp(320px, 90vw, 580px)" opacity={0.6} />
+      </div>
+
+      {/* Family Welcome Contents positioned in the exact center/middle of the section */}
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: false, amount: 0.15 }}
+        variants={{
+          hidden: { opacity: 0, y: 15 },
+          show: { 
+            opacity: 1, 
+            y: 0, 
+            transition: { staggerChildren: 0.15, duration: 1.0, ease: [0.22, 1, 0.36, 1] } 
+          }
+        }}
+        className="relative z-10 max-w-xl flex flex-col items-center my-auto"
+      >
+        {/* Traditional Slang Greeting */}
+        <motion.h2
+          variants={fadeUp}
+          className="text-3xl sm:text-4xl md:text-5xl text-[#8A6E1E] font-bold tracking-[0.2em] mb-2 uppercase"
+          style={{ fontFamily: "'Cinzel', serif" }}
+        >
+          “ पधारो सा ”
+        </motion.h2>
+
+        {/* Ornamental Divider */}
+        <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 w-36 my-2 opacity-70">
+          <div className="h-[1px] bg-[#8A6E1E] flex-1" />
+          <span className="text-[#8A6E1E] text-xs">✦</span>
+          <div className="h-[1px] bg-[#8A6E1E] flex-1" />
+        </motion.div>
+
+        <motion.p
+          variants={fadeUp}
+          className="text-xs sm:text-sm text-[#705915] tracking-[0.25em] uppercase font-semibold my-2"
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
+        >
+          Warmly Invited &amp; With Best Compliments From
+        </motion.p>
+
+        {/* Both Family Names with AnimatedTitle - Wrapped to prevent trailing 'S' breaking off */}
+        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 my-2 max-w-full">
+          <span className="whitespace-nowrap inline-block">
+            <AnimatedTitle
+              text="SOIN’S"
+              className="font-semibold uppercase tracking-[0.12em] inline-block"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontSize: 'clamp(20px, 4.2vw, 36px)',
+                fontWeight: 700,
+                color: '#705915',
+              }}
+            />
+          </span>
+          <span 
+            className="text-[#8A6E1E] text-2xl sm:text-3xl font-serif font-normal italic lowercase px-1 inline-block"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            &amp;
+          </span>
+          <span className="whitespace-nowrap inline-block">
+            <AnimatedTitle
+              text="VASHISHTH’S"
+              className="font-semibold uppercase tracking-[0.12em] inline-block"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontSize: 'clamp(20px, 4.2vw, 36px)',
+                fontWeight: 700,
+                color: '#705915',
+              }}
+            />
+          </span>
+        </div>
+
+        <motion.p 
+          variants={fadeUp} 
+          className="text-xs sm:text-sm text-[#705915]/95 italic max-w-md my-3 leading-relaxed px-4"
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
+        >
+          The Soin Family &amp; The Vashishth Family joyfully look forward to celebrating this blessed union with you and your family.
+        </motion.p>
+      </motion.div>
+    </section>
+  )
+}
+
+// ── MAIN CUSTOM TEMPLATE COMPONENT (Shradha & Gagan Roka & Engagement) ────────
 export default function CustomEverlastingVowsShradha() {
   const location = useLocation()
   const { variant = '1' } = useParams()
-  const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const [isOpened, setIsOpened] = useState(false)
   const [showBrandSplash, setShowBrandSplash] = useState(!isPreview)
@@ -737,7 +944,7 @@ export default function CustomEverlastingVowsShradha() {
   }, [isPreview])
 
   // Load custom editor changes from localStorage or fallback to default shradhaData
-  const [customData, setCustomData] = useState(() => {
+  const [customData] = useState(() => {
     try {
       const saved = localStorage.getItem(`inviteque_custom_data_everlastingvows_Shradha_v${variant}`)
       if (saved) return JSON.parse(saved)
@@ -764,12 +971,9 @@ export default function CustomEverlastingVowsShradha() {
         weddingMonth: customData.weddingMonth || base.hero.weddingMonth,
         weddingYear: customData.weddingYear || base.hero.weddingYear,
         weddingTime: customData.weddingTime || base.hero.weddingTime,
-        dateLine: customData.weddingDate && customData.weddingMonth && customData.weddingYear 
-          ? `${customData.weddingDate} ${customData.weddingMonth} ${customData.weddingYear}` 
-          : base.hero.dateLine,
         venueName: customData.venueName || base.hero.venueName,
         venueCity: customData.venueCity || base.hero.venueCity,
-        subtitle: customData.heroSubtitle || base.hero.subtitle,
+        welcomeMessage: customData.welcomeMessage || base.hero.welcomeMessage,
       },
       events: Array.isArray(customData.events) && customData.events.length > 0
         ? customData.events
@@ -784,19 +988,18 @@ export default function CustomEverlastingVowsShradha() {
       countdown: {
         ...base.countdown,
         targetDateTimeISO: customData.countdownTargetDate 
-          ? `${customData.countdownTargetDate}T10:30:00.000Z` 
+          ? `${customData.countdownTargetDate}T11:00:00.000Z` 
           : base.countdown.targetDateTimeISO,
-      },
-      celebrate: {
-        ...base.celebrate,
-        rsvp: {
-          ...base.celebrate.rsvp,
-          title: customData.rsvpTitle || base.celebrate.rsvp.title,
-          description: customData.rsvpDescription || base.celebrate.rsvp.description,
-        }
       }
     }
   }, [customData])
+
+  // Watermark status (shown for preview unless paid)
+  const isPaid = customData && (
+    String(customData.status).toUpperCase() === 'PAID' ||
+    customData.isPaid === true
+  )
+  const showWatermark = !isPaid
 
   return (
     <div className="w-full min-h-screen bg-[#FFFDF2] text-[#8A6E1E] font-sans antialiased selection:bg-[#8A6E1E]/20 relative overflow-x-hidden">
@@ -805,46 +1008,62 @@ export default function CustomEverlastingVowsShradha() {
       <SplashScreen loading={showBrandSplash} />
 
       {/* Interactive Puppet Tap-To-Open Splash Screen */}
-      <PuppetSplashScreen isOpened={isOpened} onOpen={() => setIsOpened(true)} />
+      <PuppetSplashScreen isOpened={isOpened} onOpen={() => setIsOpened(true)} data={mergedData.hero} />
 
-      {/* Floating Edit Button for Quick Customization */}
-      <div className="fixed top-4 right-4 z-40 flex items-center gap-2">
-        <Link
-          to={`/template/everlastingvows/Shradha/edit`}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#8A6E1E]/40 bg-white/90 backdrop-blur-md text-[#8A6E1E] text-xs font-bold uppercase tracking-wider shadow-lg hover:scale-105 active:scale-95 transition-all"
-          style={{ fontFamily: "'Cinzel', serif" }}
-        >
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 20h9" />
-            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-          </svg>
-          Customize
-        </Link>
-      </div>
+      {/* Fixed Watermark Layer (Visible on Puppet Splash page and throughout the invitation) */}
+      {showWatermark && (
+        <>
+          {/* Mobile Watermark */}
+          <div className="md:hidden pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[10000] opacity-[0.35] select-none text-[#8A6E1E]">
+            <span className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
+            </span>
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
+            </span>
+            <span className="absolute bottom-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
+            </span>
+          </div>
+
+          {/* Desktop Watermark */}
+          <div className="hidden md:flex pointer-events-none fixed inset-0 z-[10000] opacity-[0.22] select-none flex-col justify-around items-center text-[#8A6E1E]">
+            <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
+            </span>
+            <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
+            </span>
+          </div>
+        </>
+      )}
 
       {/* MOBILE VIEW */}
       <div className="md:hidden w-full min-h-screen bg-[#FFFDF2] relative">
         <div className="w-full">
+          {/* 1. Hero Section (Lowered into Arch Window) */}
           <EverlastingVowsHero data={mergedData.hero} isDesktop={false} isOpened={isOpened} />
           
-          {/* Multi-Events: Roka followed by Engagement */}
-          <RokaEngagementEvents events={mergedData.events} isDesktop={false} />
+          {/* 2. Fullscreen Roka Ceremony Section */}
+          {mergedData.events?.[0] && (
+            <FullscreenEventSection event={mergedData.events[0]} index={0} isDesktop={false} />
+          )}
 
-          {/* Venue Card */}
+          {/* 3. Fullscreen Engagement Ceremony Section */}
+          {mergedData.events?.[1] && (
+            <FullscreenEventSection event={mergedData.events[1]} index={1} isDesktop={false} />
+          )}
+
+          {/* 4. Venue Details (With updated Google Maps link) */}
           <Venue data={mergedData.venue} bgImage={locationBgMobile} theme="gold" isDesktop={false} />
 
-          {/* RSVP */}
-          <InviteQRSVP
-            weddingCode="SHRADHA"
-            isPreview={true}
-            theme="everlasting"
-            config={mergedData.celebrate?.rsvp}
-          />
-
-          {/* Countdown */}
+          {/* 5. Countdown (20th October 2026) */}
           <Countdown data={mergedData.countdown} bgImage={countdownBgMobile} theme="gold" isDesktop={false} />
 
-          {/* Footer */}
+          {/* 6. Plain #FAE9C3 Background Family Closing Section with Center Contents & Top Semi-Circular Rangoli */}
+          <FullscreenFamilyClosingSection />
+
+          {/* 7. Footer */}
           <Footer data={mergedData.footer} theme="gold" />
         </div>
       </div>
@@ -852,35 +1071,40 @@ export default function CustomEverlastingVowsShradha() {
       {/* DESKTOP VIEW */}
       <div className="hidden md:block w-full min-h-screen bg-[#FFFDF2] relative">
         <div className="w-full">
+          {/* 1. Hero Section (Lowered into Arch Window) */}
           <EverlastingVowsHero data={mergedData.hero} isDesktop={true} isOpened={isOpened} />
         </div>
         
-        {/* Multi-Events: Roka followed by Engagement */}
-        <div className="w-full">
-          <RokaEngagementEvents events={mergedData.events} isDesktop={true} />
-        </div>
+        {/* 2. Fullscreen Roka Ceremony Section */}
+        {mergedData.events?.[0] && (
+          <div className="w-full">
+            <FullscreenEventSection event={mergedData.events[0]} index={0} isDesktop={true} />
+          </div>
+        )}
 
-        {/* Venue Card */}
+        {/* 3. Fullscreen Engagement Ceremony Section */}
+        {mergedData.events?.[1] && (
+          <div className="w-full">
+            <FullscreenEventSection event={mergedData.events[1]} index={1} isDesktop={true} />
+          </div>
+        )}
+
+        {/* 4. Venue Details (With updated Google Maps link) */}
         <div className="w-full">
           <Venue data={mergedData.venue} isDesktop={true} bgImage={locationBgDesktop} theme="gold" />
         </div>
 
-        {/* RSVP */}
-        <div className="w-full">
-          <InviteQRSVP
-            weddingCode="SHRADHA"
-            isPreview={true}
-            theme="everlasting"
-            config={mergedData.celebrate?.rsvp}
-          />
-        </div>
-
-        {/* Countdown */}
+        {/* 5. Countdown (20th October 2026) */}
         <div className="w-full">
           <Countdown data={mergedData.countdown} isDesktop={true} bgImage={countdownBgDesktop} theme="gold" />
         </div>
 
-        {/* Footer */}
+        {/* 6. Plain #FAE9C3 Background Family Closing Section with Center Contents & Top Semi-Circular Rangoli */}
+        <div className="w-full">
+          <FullscreenFamilyClosingSection />
+        </div>
+
+        {/* 7. Footer */}
         <div className="w-full">
           <Footer data={mergedData.footer} isDesktop={true} theme="gold" />
         </div>
