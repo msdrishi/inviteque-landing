@@ -1275,12 +1275,8 @@ export default function CustomEverlastingVowsShradha() {
     }
   }, [customData])
 
-  // Watermark status (shown for preview unless paid)
-  const isPaid = customData && (
-    String(customData.status).toUpperCase() === 'PAID' ||
-    customData.isPaid === true
-  )
-  const showWatermark = !isPaid
+  // Watermark status: Disabled for Shradha custom template
+  const showWatermark = false
 
   return (
     <div className="w-full min-h-screen bg-[#FFFDF2] text-[#8A6E1E] font-sans antialiased selection:bg-[#8A6E1E]/20 relative overflow-x-hidden">
