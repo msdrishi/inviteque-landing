@@ -139,6 +139,16 @@ export default function Footer({ data, theme }) {
     bg: '#0A1128',
     bgSvg: `rgba(197, 168, 128, 0.06)`,
     bgSvgSecondary: `rgba(197, 168, 128, 0.04)`
+  } : theme === 'royal' || theme === 'heirloom' ? {
+    primary: '#4A2810',
+    primaryDark: '#331B0B',
+    primaryLight: 'rgba(74, 40, 16, 0.75)',
+    border: 'rgba(140, 93, 56, 0.3)',
+    borderHover: 'rgba(140, 93, 56, 0.6)',
+    bgHover: 'rgba(140, 93, 56, 0.08)',
+    bg: '#ECE3D1',
+    bgSvg: 'rgba(74, 40, 16, 0.05)',
+    bgSvgSecondary: 'rgba(74, 40, 16, 0.03)'
   } : theme === 'traditional' ? {
     primary: '#2B3B25',
     primaryDark: '#1E2B18',

@@ -8,6 +8,7 @@ import TemplateEverlastingVows from './TemplateEverlastingVows.jsx'
 import TemplateSunflowersFields from './TemplateSunflowersFields.jsx'
 import TemplateModernHearth from './TemplateModernHearth.jsx'
 import TemplateMidnightWaltz from './TemplateMidnightWaltz.jsx'
+import TemplateRoyalHeirloom from './TemplateRoyalHeirloom.jsx'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 
@@ -37,9 +38,17 @@ const TEMPLATE_MAP = {
   'house-warming-1': TemplateModernHearth,
   'modern-hearth': TemplateModernHearth,
   'midnight-waltz': TemplateMidnightWaltz,
+  'royal-heirloom': TemplateRoyalHeirloom,
+  'royal-heritage': TemplateRoyalHeirloom,
 }
 
 const TEMPLATE_ASSETS = {
+  'royal-heirloom': [
+    "/assets/templates/royal-heirloom/hero-bg-mobile.webp",
+  ],
+  'royal-heritage': [
+    "/assets/templates/royal-heirloom/hero-bg-mobile.webp",
+  ],
   'midnight-waltz': [
     "/assets/templates/midnight-waltz/hero-desktop.webp",
     "/assets/templates/midnight-waltz/hero-mobile.webp",
