@@ -2080,10 +2080,47 @@ export default function CustomMidnightWaltzPavitraSri() {
     hasRsvp: true,
   }
 
+  // Watermark status: Shown for preview / non-paid custom invites
+  const isPaid = (
+    liveInvite?.status?.toUpperCase?.() === 'PAID' ||
+    liveInvite?.isPaid === true ||
+    draftData?.status?.toUpperCase?.() === 'PAID' ||
+    draftData?.isPaid === true
+  )
+  const showWatermark = !isPaid
+
   return (
     <div className="relative min-h-screen bg-[#FDFBF7] text-[#4A3E20]">
       {/* Luxury Splash Screen overlay (Identical to other templates) */}
       <SplashScreen loading={showSplash} />
+
+      {/* ── Fixed Preview Watermark Layer ── */}
+      {showWatermark && (
+        <>
+          {/* Mobile Watermark */}
+          <div className="lg:hidden pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[10000] opacity-[0.32] select-none text-[#4A3E20]">
+            <span className="absolute top-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
+            </span>
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
+            </span>
+            <span className="absolute bottom-[8%] left-1/2 -translate-x-1/2 text-[18px] font-medium tracking-[0.2em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
+            </span>
+          </div>
+
+          {/* Desktop Watermark */}
+          <div className="hidden lg:flex pointer-events-none fixed inset-0 z-[10000] opacity-[0.20] select-none flex-col justify-around items-center text-[#4A3E20]">
+            <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
+            </span>
+            <span className="text-[32px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              preview-inviteque
+            </span>
+          </div>
+        </>
+      )}
 
       {/* ── MOBILE VIEW ── */}
       <div className="lg:hidden flex justify-center items-start min-h-screen bg-[#F0E8D8]">
