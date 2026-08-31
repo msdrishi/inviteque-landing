@@ -95,6 +95,79 @@ export default function AdminDashboard() {
   const [error, setError] = useState('')
   const [selectedPurchase, setSelectedPurchase] = useState(null)
 
+  // Custom Client Orders (synced with ExpenseTracker & localStorage)
+  const [customOrders, setCustomOrders] = useState(() => {
+    try {
+      const saved = localStorage.getItem('iq_admin_client_orders_v7')
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
+  })
+
+  const refreshCustomOrders = () => {
+    try {
+      const saved = localStorage.getItem('iq_admin_client_orders_v7')
+      if (saved) {
+        setCustomOrders(JSON.parse(saved))
+      }
+    } catch (e) {}
+  }
+
+  useEffect(() => {
+    refreshCustomOrders()
+    const handleOrdersUpdated = () => {
+      refreshCustomOrders()
+    }
+    window.addEventListener('iq_client_orders_updated', handleOrdersUpdated)
+    window.addEventListener('storage', handleOrdersUpdated)
+    return () => {
+      window.removeEventListener('iq_client_orders_updated', handleOrdersUpdated)
+      window.removeEventListener('storage', handleOrdersUpdated)
+    }
+  }, [])
+
+  // Combined Purchases (Standard Purchases + Customized Client Orders)
+  const allPurchases = useMemo(() => {
+    const direct = purchases.map(p => ({
+      ...p,
+      isCustom: false,
+      sortTime: p.paidAt ? new Date(p.paidAt).getTime() : 0
+    }))
+
+    const custom = customOrders.map(c => {
+      const total = Number(c.totalCharge) || 0
+      const adv = Number(c.advancePaid) || 0
+      const bal = Math.max(0, total - adv)
+      const primaryUrl = c.deliverableUrl || (c.deliverableUrls && c.deliverableUrls.length > 0 ? c.deliverableUrls[0] : '')
+      const dateStr = c.advanceDate || c.deliveryDate || '2026-08-24'
+
+      return {
+        inviteId: c.id,
+        code: `CUST-${(c.clientName || 'ORDER').toUpperCase().replace(/\s+/g, '')}`,
+        templateId: c.serviceName || 'Customized Template',
+        amountPaid: adv > 0 ? adv : total,
+        totalCharge: total,
+        remainingBalance: bal,
+        paidAt: dateStr,
+        sortTime: new Date(dateStr).getTime() || 0,
+        userName: c.clientName || 'Custom Client',
+        userEmail: c.email || c.phone || 'Custom Contact',
+        phone: c.phone,
+        source: c.source || 'Direct',
+        couponCode: null,
+        razorpayPaymentId: `CUSTOM-UPI (${c.source || 'Direct'})`,
+        status: c.status === 'Completed' ? 'Completed' : (adv >= total ? 'Paid' : 'In Progress'),
+        isCustom: true,
+        deliverableUrl: primaryUrl,
+        deliverableUrls: c.deliverableUrls || (primaryUrl ? [primaryUrl] : []),
+        notes: c.notes
+      }
+    })
+
+    return [...direct, ...custom].sort((a, b) => (b.sortTime || 0) - (a.sortTime || 0))
+  }, [purchases, customOrders])
+
   // Search, pagination & sorting states
   const [txSearch, setTxSearch] = useState('')
   const [txStatusFilter, setTxStatusFilter] = useState('ALL')
@@ -411,24 +484,37 @@ export default function AdminDashboard() {
   }
 
   // Persistent Invite Views resolver (stored in localStorage cache and logs)
-  const getInviteViews = (code) => {
-    if (!code) return 0
-    const upperCode = code.toUpperCase().trim()
+  const getInviteViews = (code, rawPath = null) => {
+    if (!code && !rawPath) return 0
+    const upperCode = (code || '').toUpperCase().trim()
+    const cleanPath = (rawPath || '').toLowerCase().trim()
+
     const logCount = visitors.filter(v => {
-      if (v.inviteCode && v.inviteCode.toUpperCase() === upperCode) return true
-      if (v.path && v.path.toUpperCase().includes('/' + upperCode)) return true
+      if (!v) return false
+      if (upperCode && v.inviteCode && v.inviteCode.toUpperCase() === upperCode) return true
+      if (upperCode && v.path && v.path.toUpperCase().includes(upperCode)) return true
+      if (cleanPath && v.path && v.path.toLowerCase().includes(cleanPath)) return true
       return false
     }).length
     
     let stored = 0
     try {
-      stored = parseInt(localStorage.getItem(`iq_views_${upperCode}`) || '0', 10)
+      if (upperCode) {
+        stored = Math.max(stored, parseInt(localStorage.getItem(`iq_views_${upperCode}`) || '0', 10))
+      }
+      if (cleanPath) {
+        stored = Math.max(stored, parseInt(localStorage.getItem(`iq_views_path_${cleanPath}`) || '0', 10))
+        const slug = cleanPath.split('/').filter(Boolean).pop()
+        if (slug) {
+          stored = Math.max(stored, parseInt(localStorage.getItem(`iq_views_${slug.toUpperCase()}`) || '0', 10))
+        }
+      }
     } catch (e) {}
     
-    const count = Math.max(logCount, stored, 1) // A purchased active template has at least 1 view
+    const count = Math.max(logCount, stored, 1) // A purchased/custom template has at least 1 view
     
     try {
-      if (count > stored) {
+      if (upperCode && count > stored) {
         localStorage.setItem(`iq_views_${upperCode}`, String(count))
       }
     } catch (e) {}
@@ -705,21 +791,28 @@ export default function AdminDashboard() {
     return Object.values(roiMap).sort((a, b) => b.netRevenue - a.netRevenue)
   }, [coupons, purchases])
 
-  // Filter & Search recent transactions
+  // Filter & Search recent transactions (Direct + Custom Orders)
   const filteredPurchases = useMemo(() => {
-    return purchases.filter(p => {
+    return allPurchases.filter(p => {
       const matchesSearch = 
         p.code?.toLowerCase().includes(txSearch.toLowerCase()) ||
         p.userName?.toLowerCase().includes(txSearch.toLowerCase()) ||
         p.userEmail?.toLowerCase().includes(txSearch.toLowerCase()) ||
+        p.templateId?.toLowerCase().includes(txSearch.toLowerCase()) ||
+        p.deliverableUrl?.toLowerCase().includes(txSearch.toLowerCase()) ||
         p.razorpayPaymentId?.toLowerCase().includes(txSearch.toLowerCase())
 
-      const matchesStatus = txStatusFilter === 'ALL' || (p.amountPaid > 0 && txStatusFilter === 'PAID')
-      const matchesTemplate = txTemplateFilter === 'ALL' || p.templateId === txTemplateFilter
+      const matchesStatus = txStatusFilter === 'ALL' || 
+        (txStatusFilter === 'PAID' && (p.amountPaid > 0 || p.status === 'Completed')) ||
+        (txStatusFilter === 'CUSTOM' && p.isCustom)
+
+      const matchesTemplate = txTemplateFilter === 'ALL' || 
+        p.templateId === txTemplateFilter ||
+        (txTemplateFilter === 'CUSTOM' && p.isCustom)
 
       return matchesSearch && matchesStatus && matchesTemplate
     })
-  }, [purchases, txSearch, txStatusFilter, txTemplateFilter])
+  }, [allPurchases, txSearch, txStatusFilter, txTemplateFilter])
 
   // Paginated Transactions
   const paginatedPurchases = useMemo(() => {
@@ -864,17 +957,17 @@ export default function AdminDashboard() {
   }
 
   const exportTransactionsCsv = () => {
-    if (purchases.length === 0) return
-    let csv = 'Order ID,Customer Name,Email,Template ID,Amount Paid,Coupon,Status,Date\n'
-    purchases.forEach(p => {
-      csv += `"${p.code || p.inviteId}","${p.userName || 'Unknown'}","${p.userEmail || 'Unknown'}","${p.templateId || 'Not set'}",${p.amountPaid || 0},"${p.couponCode || 'None'}","Paid","${p.paidAt ? new Date(p.paidAt).toLocaleDateString() : 'N/A'}"\n`
+    if (allPurchases.length === 0) return
+    let csv = 'Order ID,Customer Name,Email/Contact,Template/Scope,Amount Paid,Total Charge,Remaining Balance,Type,Deliverable Link,Status,Date\n'
+    allPurchases.forEach(p => {
+      csv += `"${p.code || p.inviteId}","${p.userName || 'Unknown'}","${p.userEmail || 'Unknown'}","${p.templateId || 'Not set'}",${p.amountPaid || 0},${p.totalCharge || p.amountPaid || 0},${p.remainingBalance || 0},"${p.isCustom ? 'Custom Order' : 'Standard Purchase'}","${p.deliverableUrl || ''}","${p.status || 'Paid'}","${p.paidAt ? new Date(p.paidAt).toLocaleDateString() : 'N/A'}"\n`
     })
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement("a")
     const url = URL.createObjectURL(blob)
     link.setAttribute("href", url)
-    link.setAttribute("download", "recent_transactions.csv")
+    link.setAttribute("download", "transactions_and_custom_orders.csv")
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -1199,7 +1292,14 @@ Inviteque Team ❤️`
 
           {/* TAB: EXPENSES & OPERATIONS SUITE */}
           {activeTab === 'expenses' && (
-            <ExpenseTracker dbPurchases={purchases} />
+            <ExpenseTracker 
+              dbPurchases={purchases} 
+              visitorLogs={visitors}
+              onOrdersUpdated={() => {
+                refreshCustomOrders()
+                fetchData(true)
+              }}
+            />
           )}
 
           {/* TAB 1: OVERVIEW */}
@@ -1627,32 +1727,59 @@ Inviteque Team ❤️`
                 <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-sm font-bold text-slate-800">Recent Purchases</h3>
-                      <p className="text-[10px] text-slate-400">Latest platform order activities</p>
+                      <h3 className="text-sm font-bold text-slate-800">Recent Purchases &amp; Custom Orders</h3>
+                      <p className="text-[10px] text-slate-400">Latest online payments and customized client bookings</p>
                     </div>
                     <button onClick={() => setActiveTab('transactions')} className="text-xs font-bold text-slate-500 hover:text-slate-900">
                       View All
                     </button>
                   </div>
                   <div className="divide-y divide-slate-100 overflow-hidden">
-                    {purchases.slice(0, 4).map((p, idx) => (
-                      <div 
-                        key={idx} 
-                        onClick={() => setSelectedPurchase(p)}
-                        className="flex items-center justify-between py-3 cursor-pointer hover:bg-slate-50 px-2 rounded-xl transition-all duration-200"
-                      >
-                        <div>
-                          <p className="text-xs font-bold text-slate-800">{p.userName || 'Customer'}</p>
-                          <p className="text-[10px] text-slate-400">{p.code || p.inviteId}</p>
+                    {allPurchases.slice(0, 5).map((p, idx) => {
+                      const views = getInviteViews(p.code, p.deliverableUrl)
+                      return (
+                        <div 
+                          key={idx} 
+                          onClick={() => setSelectedPurchase(p)}
+                          className="flex items-center justify-between py-3 cursor-pointer hover:bg-slate-50 px-2.5 rounded-xl transition-all duration-200"
+                        >
+                          <div className="space-y-0.5 max-w-[60%]">
+                            <div className="flex items-center gap-1.5">
+                              <p className="text-xs font-bold text-slate-800 truncate">{p.userName || 'Customer'}</p>
+                              {p.isCustom ? (
+                                <span className="rounded-full bg-purple-50 text-purple-700 border border-purple-200 px-1.5 py-0.2 text-[8px] font-bold">
+                                  Custom Order
+                                </span>
+                              ) : (
+                                <span className="rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.2 text-[8px] font-bold">
+                                  Web Order
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 text-[10px] text-slate-400">
+                              <span className="font-mono">{p.code || p.inviteId}</span>
+                              {views > 0 && (
+                                <span className="text-blue-600 font-semibold flex items-center gap-0.5">
+                                  👁️ {views} {views === 1 ? 'view' : 'views'}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-right flex flex-col items-end gap-1">
+                            <p className="text-xs font-bold text-slate-800 font-mono">₹{(p.amountPaid || 0).toLocaleString('en-IN')}</p>
+                            <span className={`rounded-full px-2 py-0.2 text-[9px] font-bold ${
+                              p.status === 'Completed' || p.status === 'Paid'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : 'bg-amber-50 text-amber-700 border border-amber-200'
+                            }`}>
+                              {p.status || 'Paid'}
+                            </span>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-xs font-bold text-slate-800 font-mono">₹{(p.amountPaid || 0).toLocaleString()}</p>
-                          <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[9px] font-bold text-emerald-600">Paid</span>
-                        </div>
-                      </div>
-                    ))}
-                    {purchases.length === 0 && (
-                      <div className="py-6 text-center text-xs text-slate-400">No purchases found.</div>
+                      )
+                    })}
+                    {allPurchases.length === 0 && (
+                      <div className="py-6 text-center text-xs text-slate-400">No purchases or custom orders found.</div>
                     )}
                   </div>
                 </div>
@@ -1770,7 +1897,7 @@ Inviteque Team ❤️`
                     type="text"
                     value={txSearch}
                     onChange={(e) => { setTxSearch(e.target.value); setTxPage(1); }}
-                    placeholder="Search Order ID, Customer, Email..."
+                    placeholder="Search Order ID, Customer, Email, Link..."
                     className="w-full max-w-xs rounded-xl border border-slate-200 px-4 py-2.5 text-xs outline-none focus:border-slate-900 transition-colors"
                   />
                   <select
@@ -1778,7 +1905,8 @@ Inviteque Team ❤️`
                     onChange={(e) => { setTxTemplateFilter(e.target.value); setTxPage(1); }}
                     className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs outline-none font-bold"
                   >
-                    <option value="ALL">All Templates</option>
+                    <option value="ALL">All Types &amp; Templates</option>
+                    <option value="CUSTOM">🎨 Custom Client Orders</option>
                     {templates.map(t => (
                       <option key={t.id} value={t.id}>{t.name}</option>
                     ))}
@@ -1788,9 +1916,9 @@ Inviteque Team ❤️`
                 {/* Export button */}
                 <button
                   onClick={exportTransactionsCsv}
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-800 shadow-sm hover:bg-slate-50 transition"
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-800 shadow-sm hover:bg-slate-50 transition flex items-center gap-1.5"
                 >
-                  📥 Export CSV
+                  <span>📥</span> Export CSV
                 </button>
               </div>
 
@@ -1799,40 +1927,98 @@ Inviteque Team ❤️`
                 <table className="w-full border-collapse text-left text-xs text-slate-500">
                   <thead className="border-b border-slate-100 bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                     <tr>
-                      <th className="px-6 py-4">Order ID</th>
-                      <th className="px-6 py-4">Customer Name</th>
-                      <th className="px-6 py-4">Email</th>
-                      <th className="px-6 py-4">Template</th>
-                      <th className="px-6 py-4">Amount</th>
-                      <th className="px-6 py-4">Coupon</th>
-                      <th className="px-6 py-4">Payment Status</th>
-                      <th className="px-6 py-4">Payment Method</th>
+                      <th className="px-6 py-4">Order ID &amp; Type</th>
+                      <th className="px-6 py-4">Customer &amp; Live Link</th>
+                      <th className="px-6 py-4">Email / Contact</th>
+                      <th className="px-6 py-4">Template / Scope</th>
+                      <th className="px-6 py-4">Amount Paid</th>
+                      <th className="px-6 py-4">Source / Coupon</th>
+                      <th className="px-6 py-4">Status</th>
+                      <th className="px-6 py-4">Method</th>
                       <th className="px-6 py-4">Date</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {paginatedPurchases.map((p, idx) => (
-                      <tr 
-                        key={idx} 
-                        onClick={() => setSelectedPurchase(p)}
-                        className="hover:bg-slate-50 transition-colors cursor-pointer"
-                      >
-                        <td className="px-6 py-4 font-bold text-slate-900 truncate max-w-[120px] font-mono">{p.code || p.inviteId}</td>
-                        <td className="px-6 py-4 font-semibold text-slate-800">{p.userName || 'Customer'}</td>
-                        <td className="px-6 py-4">{p.userEmail || 'N/A'}</td>
-                        <td className="px-6 py-4 font-medium text-slate-600 capitalize">{p.templateId ? p.templateId.replace(/-/g, ' ') : 'N/A'}</td>
-                        <td className="px-6 py-4 font-bold text-slate-900 font-mono">₹{(p.amountPaid || 0).toLocaleString()}</td>
-                        <td className="px-6 py-4"><span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-mono text-slate-500">{p.couponCode || 'None'}</span></td>
-                        <td className="px-6 py-4">
-                          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600">Paid</span>
-                        </td>
-                        <td className="px-6 py-4 font-semibold">Razorpay</td>
-                        <td className="px-6 py-4">{p.paidAt ? new Date(p.paidAt).toLocaleDateString() : 'N/A'}</td>
-                      </tr>
-                    ))}
+                    {paginatedPurchases.map((p, idx) => {
+                      const views = getInviteViews(p.code, p.deliverableUrl)
+                      return (
+                        <tr 
+                          key={idx} 
+                          onClick={() => setSelectedPurchase(p)}
+                          className="hover:bg-slate-50 transition-colors cursor-pointer"
+                        >
+                          <td className="px-6 py-4">
+                            <div className="flex flex-col gap-1">
+                              <span className="font-bold text-slate-900 font-mono truncate max-w-[130px]">{p.code || p.inviteId}</span>
+                              {p.isCustom ? (
+                                <span className="inline-block rounded-full bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.2 text-[8px] font-bold w-fit">
+                                  Custom Order
+                                </span>
+                              ) : (
+                                <span className="inline-block rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.2 text-[8px] font-bold w-fit">
+                                  Web Purchase
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="font-semibold text-slate-800 block">{p.userName || 'Customer'}</span>
+                            {p.deliverableUrl ? (
+                              <div className="flex items-center gap-1.5 mt-0.5" onClick={(e) => e.stopPropagation()}>
+                                <a
+                                  href={p.deliverableUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[10px] text-indigo-600 hover:underline font-mono truncate max-w-[160px]"
+                                >
+                                  🔗 {p.deliverableUrl}
+                                </a>
+                                <span className="text-[9px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-1.5 rounded-full shrink-0">
+                                  👁️ {views}
+                                </span>
+                              </div>
+                            ) : views > 0 ? (
+                              <span className="text-[9px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-1.5 rounded-full mt-0.5 inline-block">
+                                👁️ {views} views
+                              </span>
+                            ) : null}
+                          </td>
+                          <td className="px-6 py-4">{p.userEmail || p.phone || 'N/A'}</td>
+                          <td className="px-6 py-4 font-medium text-slate-700 capitalize max-w-[180px] truncate">
+                            {p.templateId ? p.templateId.replace(/-/g, ' ') : 'N/A'}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="font-bold text-slate-900 font-mono block">₹{(p.amountPaid || 0).toLocaleString('en-IN')}</span>
+                            {p.remainingBalance > 0 && (
+                              <span className="text-[9px] text-amber-600 font-bold block">Due: ₹{p.remainingBalance.toLocaleString('en-IN')}</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4">
+                            {p.couponCode ? (
+                              <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-mono text-slate-600 font-bold">{p.couponCode}</span>
+                            ) : (
+                              <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600">{p.source || 'Direct'}</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+                              p.status === 'Completed' || p.status === 'Paid'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : 'bg-amber-50 text-amber-700 border border-amber-200'
+                            }`}>
+                              {p.status || 'Paid'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 font-semibold text-[11px] truncate max-w-[120px]">
+                            {p.isCustom ? (p.razorpayPaymentId || 'UPI / Direct') : 'Razorpay'}
+                          </td>
+                          <td className="px-6 py-4">{p.paidAt ? new Date(p.paidAt).toLocaleDateString() : 'N/A'}</td>
+                        </tr>
+                      )
+                    })}
                     {filteredPurchases.length === 0 && (
                       <tr>
-                        <td colSpan="9" className="py-10 text-center text-xs text-slate-400">No transactions recorded.</td>
+                        <td colSpan="9" className="py-10 text-center text-xs text-slate-400">No transactions or custom orders recorded.</td>
                       </tr>
                     )}
                   </tbody>
@@ -1841,59 +2027,87 @@ Inviteque Team ❤️`
 
               {/* Mobile/Tablet Card View */}
               <div className="grid grid-cols-1 gap-4 md:hidden">
-                {paginatedPurchases.map((p, idx) => (
-                  <div 
-                    key={idx} 
-                    onClick={() => setSelectedPurchase(p)}
-                    className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3 cursor-pointer hover:bg-slate-50 transition-all duration-200"
-                  >
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                      <div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Order ID</span>
-                        <p className="text-xs font-bold text-slate-900 font-mono truncate">{p.code || p.inviteId}</p>
+                {paginatedPurchases.map((p, idx) => {
+                  const views = getInviteViews(p.code, p.deliverableUrl)
+                  return (
+                    <div 
+                      key={idx} 
+                      onClick={() => setSelectedPurchase(p)}
+                      className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3 cursor-pointer hover:bg-slate-50 transition-all duration-200"
+                    >
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Order ID:</span>
+                            <span className="text-xs font-bold text-slate-900 font-mono truncate">{p.code || p.inviteId}</span>
+                          </div>
+                          {p.isCustom ? (
+                            <span className="inline-block rounded-full bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.2 text-[8px] font-bold mt-0.5">
+                              Custom Order
+                            </span>
+                          ) : (
+                            <span className="inline-block rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.2 text-[8px] font-bold mt-0.5">
+                              Web Purchase
+                            </span>
+                          )}
+                        </div>
+                        <span className={`rounded-full px-2.5 py-1 text-[10px] font-extrabold ${
+                          p.status === 'Completed' || p.status === 'Paid'
+                            ? 'bg-emerald-50 text-emerald-600'
+                            : 'bg-amber-50 text-amber-600'
+                        }`}>
+                          {p.status || 'Paid'}
+                        </span>
                       </div>
-                      <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-extrabold text-emerald-600">
-                        Paid
-                      </span>
+                      
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Customer</span>
+                          <span className="font-bold text-slate-800">{p.userName || 'Customer'}</span>
+                          {views > 0 && (
+                            <span className="text-[9px] font-bold text-blue-600 block mt-0.5">👁️ {views} views</span>
+                          )}
+                        </div>
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Email / Contact</span>
+                          <span className="text-slate-600 break-all">{p.userEmail || p.phone || 'N/A'}</span>
+                        </div>
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Template / Scope</span>
+                          <span className="font-semibold text-slate-700 capitalize truncate block">
+                            {p.templateId ? p.templateId.replace(/-/g, ' ') : 'N/A'}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Amount Paid</span>
+                          <span className="font-bold text-slate-900 font-mono">₹{(p.amountPaid || 0).toLocaleString('en-IN')}</span>
+                          {p.remainingBalance > 0 && (
+                            <span className="text-[9px] text-amber-600 block font-semibold">Bal: ₹{p.remainingBalance}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {p.deliverableUrl && (
+                        <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]" onClick={(e) => e.stopPropagation()}>
+                          <span className="font-mono text-indigo-600 font-semibold truncate max-w-[70%]">
+                            🔗 {p.deliverableUrl}
+                          </span>
+                          <a
+                            href={p.deliverableUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded bg-indigo-600 text-white px-2 py-0.5 font-bold text-[10px]"
+                          >
+                            Open ↗
+                          </a>
+                        </div>
+                      )}
                     </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Customer</span>
-                        <span className="font-bold text-slate-800">{p.userName || 'Customer'}</span>
-                      </div>
-                      <div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Email</span>
-                        <span className="text-slate-600 break-all">{p.userEmail || 'N/A'}</span>
-                      </div>
-                      <div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Template</span>
-                        <span className="font-semibold text-slate-700 capitalize">
-                          {p.templateId ? p.templateId.replace(/-/g, ' ') : 'N/A'}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Amount</span>
-                        <span className="font-bold text-slate-900 font-mono">₹{(p.amountPaid || 0).toLocaleString()}</span>
-                      </div>
-                      <div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Coupon</span>
-                        <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-mono text-slate-500 font-bold">
-                          {p.couponCode || 'None'}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Date</span>
-                        <span className="text-slate-600">
-                          {p.paidAt ? new Date(p.paidAt).toLocaleDateString() : 'N/A'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
                 {filteredPurchases.length === 0 && (
                   <div className="rounded-2xl border border-dashed border-slate-200 py-10 text-center text-xs text-slate-400">
-                    No transactions recorded.
+                    No transactions or custom orders recorded.
                   </div>
                 )}
               </div>
@@ -2422,21 +2636,49 @@ Inviteque Team ❤️`
                   <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
                     <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Invite Views</span>
                     <span className="text-xl font-extrabold text-slate-950 font-mono">
-                      {getInviteViews(selectedPurchase.code || selectedPurchase.inviteId).toLocaleString()}
+                      {getInviteViews(selectedPurchase.code || selectedPurchase.inviteId, selectedPurchase.deliverableUrl).toLocaleString()}
                     </span>
                     <span className="text-[9px] text-slate-400 block mt-0.5">guest page views</span>
                   </div>
 
                   <div className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
                     <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Amount Paid</span>
-                    <span className="text-xl font-extrabold text-slate-950 font-mono">₹{(selectedPurchase.amountPaid || 999).toLocaleString()}</span>
-                    <span className="text-[9px] text-slate-400 block mt-0.5">standard tier</span>
+                    <span className="text-xl font-extrabold text-slate-950 font-mono">₹{(selectedPurchase.amountPaid || 0).toLocaleString('en-IN')}</span>
+                    {selectedPurchase.remainingBalance > 0 ? (
+                      <span className="text-[9px] text-amber-600 font-bold block mt-0.5">
+                        Due: ₹{selectedPurchase.remainingBalance.toLocaleString('en-IN')}
+                      </span>
+                    ) : (
+                      <span className="text-[9px] text-emerald-600 font-bold block mt-0.5">Fully Paid</span>
+                    )}
                   </div>
                 </div>
 
+                {/* Deliverable URLs if custom order */}
+                {selectedPurchase.deliverableUrl && (
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Live Deliverable Links</h4>
+                    <div className="space-y-1.5">
+                      {(selectedPurchase.deliverableUrls || [selectedPurchase.deliverableUrl]).map((url, uidx) => (
+                        <div key={uidx} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                          <span className="font-mono text-indigo-700 font-semibold truncate max-w-[70%]">{url}</span>
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg bg-slate-900 text-white px-2.5 py-1 text-[10px] font-bold shadow-2xs hover:bg-slate-800"
+                          >
+                            Open ↗
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Order Details */}
                 <div className="space-y-4">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Transaction & Billing</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Transaction &amp; Billing</h4>
                   
                   <div className="rounded-2xl border border-slate-100 divide-y divide-slate-100 overflow-hidden text-xs">
                     <div className="flex justify-between p-4 bg-slate-50/30">
@@ -2445,27 +2687,29 @@ Inviteque Team ❤️`
                     </div>
 
                     <div className="flex justify-between p-4 bg-slate-50/30">
-                      <span className="font-semibold text-slate-500">Email Address</span>
-                      <span className="font-semibold text-slate-800 break-all">{selectedPurchase.userEmail || 'N/A'}</span>
+                      <span className="font-semibold text-slate-500">Contact / Email</span>
+                      <span className="font-semibold text-slate-800 break-all">{selectedPurchase.userEmail || selectedPurchase.phone || 'N/A'}</span>
                     </div>
 
                     <div className="flex justify-between p-4 bg-slate-50/30">
-                      <span className="font-semibold text-slate-500">Transaction ID</span>
+                      <span className="font-semibold text-slate-500">Payment ID / Source</span>
                       <span className="font-mono font-bold text-slate-900 truncate max-w-[180px]">
-                        {selectedPurchase.razorpayPaymentId || 'N/A'}
+                        {selectedPurchase.razorpayPaymentId || selectedPurchase.source || 'N/A'}
                       </span>
                     </div>
 
-                    <div className="flex justify-between p-4 bg-slate-50/30">
-                      <span className="font-semibold text-slate-500">Coupon Used</span>
-                      <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-slate-600">
-                        {selectedPurchase.couponCode || 'NONE'}
-                      </span>
-                    </div>
+                    {selectedPurchase.couponCode && (
+                      <div className="flex justify-between p-4 bg-slate-50/30">
+                        <span className="font-semibold text-slate-500">Coupon Used</span>
+                        <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-slate-600">
+                          {selectedPurchase.couponCode}
+                        </span>
+                      </div>
+                    )}
 
                     <div className="flex justify-between p-4 bg-slate-50/30">
                       <span className="font-semibold text-slate-500">Amount Paid</span>
-                      <span className="font-bold text-emerald-600 font-mono">₹{(selectedPurchase.amountPaid || 0).toLocaleString()}</span>
+                      <span className="font-bold text-emerald-600 font-mono">₹{(selectedPurchase.amountPaid || 0).toLocaleString('en-IN')}</span>
                     </div>
 
                     <div className="flex justify-between p-4 bg-slate-50/30">
@@ -2484,7 +2728,7 @@ Inviteque Team ❤️`
               {/* Footer Actions */}
               <div className="border-t border-slate-100 p-6 flex gap-3">
                 <a
-                  href={`/templates/${selectedPurchase.templateId}/${selectedPurchase.code || selectedPurchase.inviteId}`}
+                  href={selectedPurchase.deliverableUrl || `/templates/${selectedPurchase.templateId}/${selectedPurchase.code || selectedPurchase.inviteId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 rounded-xl bg-slate-900 py-3 text-center text-xs font-bold text-white shadow hover:opacity-90 transition active:scale-[0.98]"

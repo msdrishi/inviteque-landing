@@ -74,6 +74,7 @@ const SEED_CLIENT_ORDERS = [
     id: 'ord-1',
     clientName: 'Pavitra',
     phone: '+919876543210',
+    email: 'pavitra@gmail.com',
     source: 'Instagram',
     serviceName: 'Customized Wedding Template (2 Links / Custom Variants)',
     totalCharge: 2500,
@@ -83,12 +84,17 @@ const SEED_CLIENT_ORDERS = [
     deliveryDate: '2026-09-07',
     status: 'In Progress',
     deliverableUrl: '/template/midnight-waltz/Pavitra-Sri',
+    deliverableUrls: [
+      '/template/midnight-waltz/Pavitra-Sri/1',
+      '/template/midnight-waltz/Pavitra-Sri/2'
+    ],
     notes: 'Client wants little modification over the existing template and needs two links.'
   },
   {
     id: 'ord-2',
     clientName: 'Shradha',
     phone: '+919123456789',
+    email: 'shradha@gmail.com',
     source: 'WhatsApp',
     serviceName: 'Customized Wedding Template + Custom Splash Screen',
     totalCharge: 2000,
@@ -97,7 +103,10 @@ const SEED_CLIENT_ORDERS = [
     clientDeadline: '2026-09-20',
     deliveryDate: '2026-09-20',
     status: 'In Progress',
-    deliverableUrl: '',
+    deliverableUrl: '/template/everlastingvows/Shradha',
+    deliverableUrls: [
+      '/template/everlastingvows/Shradha'
+    ],
     notes: 'Client wants custom splash screen on existing template page.'
   }
 ]
@@ -205,7 +214,7 @@ const SOURCE_ICONS = {
   'Mail': { icon: '✉️', label: 'Email / Web', bg: 'bg-blue-50 text-blue-700 border-blue-200' }
 }
 
-export default function ExpenseTracker({ dbPurchases = [] }) {
+export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onOrdersUpdated }) {
   // Global Period Selector
   const [selectedMonth, setSelectedMonth] = useState('ALL')
 
@@ -262,7 +271,7 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
     }
   })
 
-  // Sync to LocalStorage
+  // Sync to LocalStorage & Dispatch Global Updates
   useEffect(() => {
     try { localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses)) } catch (e) {}
   }, [expenses])
@@ -272,7 +281,10 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
   }, [settlements])
 
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEYS.CLIENT_ORDERS, JSON.stringify(clientOrders)) } catch (e) {}
+    try { 
+      localStorage.setItem(STORAGE_KEYS.CLIENT_ORDERS, JSON.stringify(clientOrders))
+      window.dispatchEvent(new Event('iq_client_orders_updated'))
+    } catch (e) {}
   }, [clientOrders])
 
   useEffect(() => {
@@ -308,11 +320,35 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
     notes: ''
   })
 
+  // 1. Receivables Payment Settlement Modal State
+  const [showSettleReceivableModal, setShowSettleReceivableModal] = useState(false)
+  const [settleTargetOrder, setSettleTargetOrder] = useState(null)
+  const [settleForm, setSettleForm] = useState({
+    amount: '',
+    paymentMethod: 'UPI - GPay',
+    date: new Date().toISOString().split('T')[0],
+    notes: '',
+    markCompleted: false
+  })
+
+  // 2. Custom Order Completion Deliverables Modal State
+  const [showCompleteOrderModal, setShowCompleteOrderModal] = useState(false)
+  const [completingOrder, setCompletingOrder] = useState(null)
+  const [completeForm, setCompleteForm] = useState({
+    deliverableUrl: '',
+    deliverableUrls: [''],
+    clientEmail: '',
+    settleRemaining: false,
+    paymentMethod: 'UPI - GPay',
+    notes: ''
+  })
+
   const [showClientModal, setShowClientModal] = useState(false)
   const [editingClient, setEditingClient] = useState(null)
   const [clientForm, setClientForm] = useState({
     clientName: '',
     phone: '',
+    email: '',
     source: 'Instagram',
     serviceName: '',
     totalCharge: '',
@@ -322,11 +358,59 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
     deliveryDate: new Date().toISOString().split('T')[0],
     status: 'In Progress',
     deliverableUrl: '',
+    deliverableUrls: [''],
     notes: ''
   })
 
   // Selected Client for Deep-Dive Details Popup
   const [selectedClientDetail, setSelectedClientDetail] = useState(null)
+
+  // Calculate live visitor count across deliverable URLs of an order
+  const getOrderViews = (order) => {
+    if (!order) return 0
+    const urls = []
+    if (order.deliverableUrl) urls.push(order.deliverableUrl)
+    if (Array.isArray(order.deliverableUrls)) {
+      order.deliverableUrls.forEach(u => {
+        if (u && typeof u === 'string' && !urls.includes(u.trim())) {
+          urls.push(u.trim())
+        }
+      })
+    }
+    if (urls.length === 0) return (order.status === 'Completed' || order.status === 'Delivered') ? 1 : 0
+
+    let totalViews = 0
+    urls.forEach(rawUrl => {
+      if (!rawUrl) return
+      const urlClean = rawUrl.trim().toLowerCase()
+      const parts = urlClean.split('/').filter(Boolean)
+      const slug = parts[parts.length - 1] || ''
+      const parentSlug = parts.length > 2 ? parts[parts.length - 2] : ''
+      const upperSlug = slug.toUpperCase()
+
+      // 1. Check visitor logs from backend
+      const logViews = (visitorLogs || []).filter(v => {
+        if (!v) return false
+        const vPath = (v.path || '').toLowerCase()
+        const vCode = (v.inviteCode || '').toUpperCase()
+        if (vPath.includes(urlClean) || (slug && vPath.includes(slug)) || (parentSlug && vPath.includes(parentSlug))) return true
+        if (upperSlug && (vCode === upperSlug || vCode.includes(upperSlug))) return true
+        return false
+      }).length
+
+      // 2. Check localStorage counters
+      let localViews = 0
+      try {
+        const bySlug = parseInt(localStorage.getItem(`iq_views_${upperSlug}`) || '0', 10)
+        const byPath = parseInt(localStorage.getItem(`iq_views_path_${rawUrl}`) || '0', 10)
+        localViews = Math.max(bySlug, byPath)
+      } catch (e) {}
+
+      totalViews += Math.max(logViews, localViews, 1)
+    })
+
+    return totalViews
+  }
 
   // Lead Modal & Form
   const [showLeadModal, setShowLeadModal] = useState(false)
@@ -668,16 +752,207 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
     }
   }
 
+  // Handlers for Receivables Settlement Modal
+  const handleOpenSettleReceivable = (order) => {
+    if (!order) return
+    const total = Number(order.totalCharge) || 0
+    const adv = Number(order.advancePaid) || 0
+    const pendingBalance = Math.max(0, total - adv)
+
+    setSettleTargetOrder(order)
+    setSettleForm({
+      amount: pendingBalance > 0 ? String(pendingBalance) : '',
+      paymentMethod: 'UPI - GPay',
+      date: new Date().toISOString().split('T')[0],
+      notes: `Payment for ${order.clientName} (${order.serviceName})`,
+      markCompleted: true
+    })
+    setShowSettleReceivableModal(true)
+  }
+
+  const handleSaveReceivableSettlement = (e) => {
+    e.preventDefault()
+    if (!settleTargetOrder || !settleForm.amount) {
+      alert('Please specify the payment amount.')
+      return
+    }
+
+    const payAmount = Number(settleForm.amount) || 0
+    if (payAmount <= 0) {
+      alert('Payment amount must be greater than 0.')
+      return
+    }
+
+    const prevAdvance = Number(settleTargetOrder.advancePaid) || 0
+    const newAdvance = prevAdvance + payAmount
+    const totalFee = Number(settleTargetOrder.totalCharge) || 0
+    const isFullyPaid = newAdvance >= totalFee
+
+    // 1. Update Client Order advance and optional status
+    const updatedOrders = clientOrders.map(o => {
+      if (o.id === settleTargetOrder.id) {
+        return {
+          ...o,
+          advancePaid: newAdvance,
+          status: (settleForm.markCompleted || isFullyPaid) ? (o.status === 'In Progress' ? 'Completed' : o.status) : o.status
+        }
+      }
+      return o
+    })
+    setClientOrders(updatedOrders)
+
+    // 2. Create Settlement Inflow Record
+    const newSettlement = {
+      id: `set-${Date.now()}`,
+      clientName: settleTargetOrder.clientName,
+      serviceType: `${settleTargetOrder.serviceName} (${isFullyPaid ? 'Final Settlement' : 'Payment Received'})`,
+      amount: payAmount,
+      paymentMethod: settleForm.paymentMethod || 'UPI - GPay',
+      date: settleForm.date || new Date().toISOString().split('T')[0],
+      status: 'Settled',
+      notes: settleForm.notes || `Settlement from ${settleTargetOrder.clientName}`
+    }
+    setSettlements(prev => [newSettlement, ...prev])
+
+    // 3. Update selected client detail if open
+    if (selectedClientDetail?.id === settleTargetOrder.id) {
+      setSelectedClientDetail({
+        ...selectedClientDetail,
+        advancePaid: newAdvance,
+        status: (settleForm.markCompleted || isFullyPaid) ? 'Completed' : selectedClientDetail.status
+      })
+    }
+
+    setShowSettleReceivableModal(false)
+    setSettleTargetOrder(null)
+
+    // Trigger parent callback if provided
+    if (typeof onOrdersUpdated === 'function') {
+      onOrdersUpdated()
+    }
+  }
+
+  // Handlers for Custom Order Completion & Deliverables Modal
+  const handleOpenCompleteModal = (order) => {
+    if (!order) return
+    const total = Number(order.totalCharge) || 0
+    const adv = Number(order.advancePaid) || 0
+    const pendingBalance = Math.max(0, total - adv)
+
+    const existingUrls = []
+    if (order.deliverableUrl) existingUrls.push(order.deliverableUrl)
+    if (Array.isArray(order.deliverableUrls)) {
+      order.deliverableUrls.forEach(u => {
+        if (u && !existingUrls.includes(u)) existingUrls.push(u)
+      })
+    }
+
+    setCompletingOrder(order)
+    setCompleteForm({
+      deliverableUrl: existingUrls[0] || `/template/midnight-waltz/${order.clientName.replace(/\s+/g, '-')}`,
+      deliverableUrls: existingUrls.length > 0 ? existingUrls : [`/template/midnight-waltz/${order.clientName.replace(/\s+/g, '-')}`],
+      clientEmail: order.email || '',
+      settleRemaining: pendingBalance > 0,
+      paymentMethod: 'UPI - GPay',
+      notes: order.notes || ''
+    })
+    setShowCompleteOrderModal(true)
+  }
+
+  const handleSaveCompletedOrder = (e) => {
+    e.preventDefault()
+    if (!completingOrder) return
+
+    const primaryUrl = completeForm.deliverableUrl?.trim() || completeForm.deliverableUrls?.[0]?.trim() || ''
+    const cleanUrls = (completeForm.deliverableUrls || [])
+      .map(u => (typeof u === 'string' ? u.trim() : ''))
+      .filter(Boolean)
+    if (primaryUrl && !cleanUrls.includes(primaryUrl)) {
+      cleanUrls.unshift(primaryUrl)
+    }
+
+    const total = Number(completingOrder.totalCharge) || 0
+    const currentAdv = Number(completingOrder.advancePaid) || 0
+    const pendingBalance = Math.max(0, total - currentAdv)
+
+    let finalAdv = currentAdv
+
+    // If admin checked settleRemaining and there's pending balance
+    if (completeForm.settleRemaining && pendingBalance > 0) {
+      finalAdv = total
+      const newSettlement = {
+        id: `set-${Date.now()}`,
+        clientName: completingOrder.clientName,
+        serviceType: `${completingOrder.serviceName} (Final Settlement upon Completion)`,
+        amount: pendingBalance,
+        paymentMethod: completeForm.paymentMethod || 'UPI - GPay',
+        date: new Date().toISOString().split('T')[0],
+        status: 'Settled',
+        notes: `Final settlement on completion for ${completingOrder.clientName}`
+      }
+      setSettlements(prev => [newSettlement, ...prev])
+    }
+
+    const updatedOrders = clientOrders.map(o => {
+      if (o.id === completingOrder.id) {
+        return {
+          ...o,
+          status: 'Completed',
+          deliverableUrl: primaryUrl,
+          deliverableUrls: cleanUrls.length > 0 ? cleanUrls : [primaryUrl],
+          email: completeForm.clientEmail || o.email,
+          advancePaid: finalAdv,
+          deliveryDate: new Date().toISOString().split('T')[0]
+        }
+      }
+      return o
+    })
+
+    setClientOrders(updatedOrders)
+
+    if (selectedClientDetail?.id === completingOrder.id) {
+      setSelectedClientDetail({
+        ...selectedClientDetail,
+        status: 'Completed',
+        deliverableUrl: primaryUrl,
+        deliverableUrls: cleanUrls.length > 0 ? cleanUrls : [primaryUrl],
+        email: completeForm.clientEmail || selectedClientDetail.email,
+        advancePaid: finalAdv,
+        deliveryDate: new Date().toISOString().split('T')[0]
+      })
+    }
+
+    setShowCompleteOrderModal(false)
+    setCompletingOrder(null)
+
+    if (typeof onOrdersUpdated === 'function') {
+      onOrdersUpdated()
+    }
+  }
+
   // Handlers for Client Orders
   const handleOpenClientModal = (client = null, defaultDeliveryDate = '') => {
     if (client) {
       setEditingClient(client)
-      setClientForm({ ...client })
+      const existingUrls = []
+      if (client.deliverableUrl) existingUrls.push(client.deliverableUrl)
+      if (Array.isArray(client.deliverableUrls)) {
+        client.deliverableUrls.forEach(u => {
+          if (u && !existingUrls.includes(u)) existingUrls.push(u)
+        })
+      }
+
+      setClientForm({
+        ...client,
+        email: client.email || '',
+        deliverableUrls: existingUrls.length > 0 ? existingUrls : ['']
+      })
     } else {
       setEditingClient(null)
       setClientForm({
         clientName: '',
         phone: '',
+        email: '',
         source: 'Instagram',
         serviceName: '',
         totalCharge: '',
@@ -687,6 +962,7 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
         deliveryDate: defaultDeliveryDate || '2026-09-10',
         status: 'In Progress',
         deliverableUrl: '',
+        deliverableUrls: [''],
         notes: ''
       })
     }
@@ -700,10 +976,19 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
       return
     }
 
+    const cleanUrls = (clientForm.deliverableUrls || [])
+      .map(u => (typeof u === 'string' ? u.trim() : ''))
+      .filter(Boolean)
+    if (clientForm.deliverableUrl?.trim() && !cleanUrls.includes(clientForm.deliverableUrl.trim())) {
+      cleanUrls.unshift(clientForm.deliverableUrl.trim())
+    }
+
     const payload = {
       ...clientForm,
       totalCharge: Number(clientForm.totalCharge) || 0,
       advancePaid: Number(clientForm.advancePaid) || 0,
+      deliverableUrl: cleanUrls[0] || clientForm.deliverableUrl || '',
+      deliverableUrls: cleanUrls.length > 0 ? cleanUrls : (clientForm.deliverableUrl ? [clientForm.deliverableUrl] : []),
       id: editingClient ? editingClient.id : `ord-${Date.now()}`
     }
 
@@ -727,11 +1012,25 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
       }
     }
     setShowClientModal(false)
+
+    // If client was set to Completed and had no deliverable URLs, open completion modal
+    if (payload.status === 'Completed' && (!payload.deliverableUrl || payload.deliverableUrls.length === 0)) {
+      setTimeout(() => {
+        handleOpenCompleteModal(payload)
+      }, 200)
+    }
+
+    if (typeof onOrdersUpdated === 'function') {
+      onOrdersUpdated()
+    }
   }
 
   const handleDeleteClientOrder = (id) => {
     if (window.confirm('Delete this client project?')) {
       setClientOrders(prev => prev.filter(o => o.id !== id))
+      if (typeof onOrdersUpdated === 'function') {
+        onOrdersUpdated()
+      }
     }
   }
 
@@ -980,53 +1279,113 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
               const adv = Number(client.advancePaid) || 0
               const bal = Math.max(0, total - adv)
               const src = SOURCE_ICONS[client.source] || { icon: '💬', label: client.source || 'Direct' }
+              const views = getOrderViews(client)
+              const hasLinks = client.deliverableUrl || (client.deliverableUrls && client.deliverableUrls.length > 0)
+              const primaryUrl = client.deliverableUrl || (client.deliverableUrls ? client.deliverableUrls[0] : '')
 
               return (
                 <div
                   key={client.id}
                   onClick={() => setSelectedClientDetail(client)}
-                  className="rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 space-y-3 cursor-pointer hover:bg-slate-100/70 transition"
+                  className="rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 space-y-3 cursor-pointer hover:bg-slate-100/70 transition shadow-2xs"
                 >
                   <div className="flex justify-between items-start">
                     <div>
-                      <span className="font-bold text-slate-900 text-sm block">{client.clientName}</span>
-                      <span className="text-[10px] text-slate-400">{client.phone || 'No phone'}</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-slate-900 text-sm block">{client.clientName}</span>
+                        {views > 0 && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 px-2 py-0.2 text-[9px] font-bold">
+                            👁️ {views} {views === 1 ? 'view' : 'views'}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-slate-400">{client.phone || client.email || 'No contact'}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <span className="rounded-md bg-white border border-slate-200 px-1.5 py-0.5 text-[9px] font-bold text-slate-600">
                         {src.icon} {src.label}
                       </span>
-                      <span className="rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 text-[9px] font-bold">
-                        {client.status}
+                      <span className={`rounded-full border px-2 py-0.5 text-[9px] font-bold ${
+                        client.status === 'Completed'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                      }`}>
+                        {client.status === 'Completed' ? '✅ Completed' : client.status}
                       </span>
                     </div>
                   </div>
 
                   <p className="text-[11px] text-slate-700 font-medium line-clamp-2">{client.serviceName}</p>
 
+                  {/* Deliverable Link Preview if available */}
+                  {hasLinks && (
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-indigo-50/50 border border-indigo-100/80 text-[10px]" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center gap-1.5 truncate max-w-[70%]">
+                        <span className="text-indigo-600 font-bold">🔗</span>
+                        <a 
+                          href={primaryUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="font-mono text-indigo-700 font-bold hover:underline truncate"
+                        >
+                          {primaryUrl}
+                        </a>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span className="text-slate-500 font-semibold">👁️ {views}</span>
+                        <a
+                          href={primaryUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-0.5 font-bold text-[9px] shadow-xs"
+                        >
+                          Open ↗
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-3 gap-2 text-center bg-white p-2 rounded-lg border border-slate-200/60 text-[10px]">
                     <div>
                       <span className="text-slate-400 block">Total</span>
-                      <span className="font-bold text-slate-900">₹{total}</span>
+                      <span className="font-bold text-slate-900">₹{total.toLocaleString('en-IN')}</span>
                     </div>
                     <div>
                       <span className="text-emerald-600 block">Advance</span>
-                      <span className="font-bold text-emerald-600">₹{adv}</span>
+                      <span className="font-bold text-emerald-600">₹{adv.toLocaleString('en-IN')}</span>
                     </div>
                     <div>
                       <span className="text-amber-600 block">Pending</span>
-                      <span className="font-bold text-amber-600">₹{bal}</span>
+                      <span className="font-bold text-amber-600">₹{bal.toLocaleString('en-IN')}</span>
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center text-[10px] pt-1 border-t border-slate-200/50">
+                  <div className="flex flex-wrap justify-between items-center text-[10px] pt-1 border-t border-slate-200/50 gap-2">
                     <span className="text-slate-500">Target: <b className="text-slate-800">{client.deliveryDate}</b></span>
-                    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                      {bal > 0 && (
+                        <button
+                          onClick={() => handleOpenSettleReceivable(client)}
+                          className="rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold px-2 py-1 text-[10px] shadow-2xs transition"
+                          title="Record Payment / Settle Balance"
+                        >
+                          💸 Settle ₹{bal}
+                        </button>
+                      )}
+                      {client.status !== 'Completed' && (
+                        <button
+                          onClick={() => handleOpenCompleteModal(client)}
+                          className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2 py-1 text-[10px] shadow-2xs transition"
+                          title="Mark Complete & Add Links"
+                        >
+                          ✅ Complete
+                        </button>
+                      )}
                       <button
                         onClick={() => setSelectedClientDetail(client)}
-                        className="rounded-md bg-slate-200 px-2 py-1 font-bold text-slate-700 text-[10px]"
+                        className="rounded-md bg-slate-200 hover:bg-slate-300 px-2 py-1 font-bold text-slate-700 text-[10px]"
                       >
-                        Timeline 🔍
+                        🔍
                       </button>
                       <button
                         onClick={() => handleOpenClientModal(client)}
@@ -1053,7 +1412,7 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
             <thead>
               <tr className="border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 <th className="py-3 px-3">Client & Source</th>
-                <th className="py-3 px-3">Customization Scope</th>
+                <th className="py-3 px-3">Customization Scope & Deliverables</th>
                 <th className="py-3 px-3">Advance Paid</th>
                 <th className="py-3 px-3">Pending Balance</th>
                 <th className="py-3 px-3">Total Fee</th>
@@ -1070,6 +1429,9 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
                   const adv = Number(client.advancePaid) || 0
                   const bal = Math.max(0, total - adv)
                   const src = SOURCE_ICONS[client.source] || { icon: '💬', label: client.source || 'Direct' }
+                  const views = getOrderViews(client)
+                  const hasLinks = client.deliverableUrl || (client.deliverableUrls && client.deliverableUrls.length > 0)
+                  const primaryUrl = client.deliverableUrl || (client.deliverableUrls ? client.deliverableUrls[0] : '')
 
                   return (
                     <tr
@@ -1088,17 +1450,50 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
                         </div>
                         {client.phone && <p className="text-[10px] text-slate-400 mt-0.5">{client.phone}</p>}
                       </td>
-                      <td className="py-3.5 px-3 max-w-[280px]">
+                      <td className="py-3.5 px-3 max-w-[300px]">
                         <p className="text-slate-800 font-semibold truncate">{client.serviceName}</p>
-                        <p className="text-[10px] text-slate-500 truncate mt-0.5">{client.notes}</p>
+                        {hasLinks ? (
+                          <div className="flex items-center gap-2 mt-1" onClick={(e) => e.stopPropagation()}>
+                            <a 
+                              href={primaryUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-mono text-[10px] text-indigo-600 hover:text-indigo-800 hover:underline flex items-center gap-1 font-bold truncate max-w-[200px]"
+                            >
+                              <span>🔗</span>
+                              <span className="truncate">{primaryUrl}</span>
+                            </a>
+                            <span className="rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[9px] font-bold px-1.5 py-0.2 shrink-0">
+                              👁️ {views} views
+                            </span>
+                          </div>
+                        ) : (
+                          <p className="text-[10px] text-slate-500 truncate mt-0.5">{client.notes || 'No link added yet'}</p>
+                        )}
                       </td>
                       <td className="py-3.5 px-3 font-bold text-emerald-600">
                         ₹{adv.toLocaleString('en-IN')}
                         {client.advanceDate && <span className="block text-[9px] text-slate-400 font-normal">Paid {client.advanceDate}</span>}
                       </td>
                       <td className="py-3.5 px-3 font-bold text-amber-600">
-                        ₹{bal.toLocaleString('en-IN')}
-                        <span className="block text-[9px] text-slate-400 font-normal">Due on delivery</span>
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <span>₹{bal.toLocaleString('en-IN')}</span>
+                            <span className="block text-[9px] text-slate-400 font-normal">{bal === 0 ? 'Fully Paid' : 'Due on delivery'}</span>
+                          </div>
+                          {bal > 0 && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleOpenSettleReceivable(client)
+                              }}
+                              className="rounded-md bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-0.5 text-[10px] font-bold transition shadow-2xs"
+                              title="Update Receivables / Record Payment"
+                            >
+                              💸 Settle
+                            </button>
+                          )}
+                        </div>
                       </td>
                       <td className="py-3.5 px-3 font-bold text-slate-900">
                         ₹{total.toLocaleString('en-IN')}
@@ -1108,17 +1503,43 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
                         <span className="text-[9px] text-slate-400">Target: {client.clientDeadline || client.deliveryDate}</span>
                       </td>
                       <td className="py-3.5 px-3 text-center">
-                        <span className="inline-block whitespace-nowrap rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1 text-[11px] font-bold">
-                          {client.status}
-                        </span>
+                        <div className="flex flex-col items-center gap-1">
+                          <span className={`inline-block whitespace-nowrap rounded-full border px-3 py-1 text-[11px] font-bold ${
+                            client.status === 'Completed'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                          }`}>
+                            {client.status === 'Completed' ? '✅ Completed' : client.status}
+                          </span>
+                          {client.status !== 'Completed' && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleOpenCompleteModal(client)
+                              }}
+                              className="text-[10px] font-bold text-emerald-600 hover:text-emerald-800 hover:underline"
+                            >
+                              Complete ↗
+                            </button>
+                          )}
+                        </div>
                       </td>
                       <td className="py-3.5 px-3 text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-1.5">
+                          {bal > 0 && (
+                            <button
+                              onClick={() => handleOpenSettleReceivable(client)}
+                              className="rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 px-2 py-1 text-[10px] font-bold transition"
+                              title="Receive Payment"
+                            >
+                              💸 Settle
+                            </button>
+                          )}
                           <button
                             onClick={() => setSelectedClientDetail(client)}
                             className="rounded-lg bg-slate-100 hover:bg-slate-200 px-2.5 py-1 text-[11px] font-bold text-slate-700 transition"
                           >
-                            Timeline 🔍
+                            Details 🔍
                           </button>
                           <button
                             onClick={() => handleOpenClientModal(client)}
@@ -1977,98 +2398,547 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
         </div>
       )}
 
-      {/* CLIENT DEEP-DIVE MODAL WITH VISUAL TIMELINE */}
-      {selectedClientDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-3 sm:p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-4 sm:p-6 shadow-2xl space-y-4 sm:space-y-5 border border-slate-200 max-h-[90vh] overflow-y-auto font-saas min-w-0">
-            <div className="flex justify-between items-start border-b border-slate-100 pb-3 sm:pb-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-slate-900">{selectedClientDetail.clientName}</h3>
-                  <span className="rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-[9px] sm:text-[10px] font-bold px-2.5 py-0.5">
-                    {selectedClientDetail.status}
+      {/* CLIENT DEEP-DIVE MODAL WITH VISUAL TIMELINE & LIVE LINKS */}
+      {selectedClientDetail && (() => {
+        const total = Number(selectedClientDetail.totalCharge) || 0
+        const adv = Number(selectedClientDetail.advancePaid) || 0
+        const bal = Math.max(0, total - adv)
+        const views = getOrderViews(selectedClientDetail)
+        const urls = []
+        if (selectedClientDetail.deliverableUrl) urls.push(selectedClientDetail.deliverableUrl)
+        if (Array.isArray(selectedClientDetail.deliverableUrls)) {
+          selectedClientDetail.deliverableUrls.forEach(u => {
+            if (u && typeof u === 'string' && !urls.includes(u.trim())) urls.push(u.trim())
+          })
+        }
+
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-3 sm:p-4">
+            <div className="w-full max-w-lg rounded-2xl bg-white p-4 sm:p-6 shadow-2xl space-y-4 sm:space-y-5 border border-slate-200 max-h-[90vh] overflow-y-auto font-saas min-w-0">
+              <div className="flex justify-between items-start border-b border-slate-100 pb-3 sm:pb-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-slate-900">{selectedClientDetail.clientName}</h3>
+                    <span className={`rounded-full border text-[9px] sm:text-[10px] font-bold px-2.5 py-0.5 ${
+                      selectedClientDetail.status === 'Completed'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                    }`}>
+                      {selectedClientDetail.status === 'Completed' ? '✅ Completed' : selectedClientDetail.status}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">{selectedClientDetail.serviceName}</p>
+                </div>
+                <button
+                  onClick={() => setSelectedClientDetail(null)}
+                  className="rounded-full h-7 w-7 sm:h-8 sm:w-8 hover:bg-slate-100 text-slate-400 font-bold flex items-center justify-center"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Financial Status Grid */}
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
+                <div className="rounded-xl bg-slate-50 p-2.5 sm:p-3 border border-slate-100">
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400 block">Total Fee</span>
+                  <span className="text-sm sm:text-base font-bold text-slate-900">₹{total.toLocaleString('en-IN')}</span>
+                </div>
+                <div className="rounded-xl bg-emerald-50/60 p-2.5 sm:p-3 border border-emerald-100">
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase text-emerald-700 block">Amount Paid</span>
+                  <span className="text-sm sm:text-base font-bold text-emerald-700">₹{adv.toLocaleString('en-IN')}</span>
+                </div>
+                <div className="rounded-xl bg-amber-50/60 p-2.5 sm:p-3 border border-amber-100">
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase text-amber-700 block">Receivables</span>
+                  <span className="text-sm sm:text-base font-bold text-amber-700">
+                    ₹{bal.toLocaleString('en-IN')}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 mt-0.5">{selectedClientDetail.serviceName}</p>
-              </div>
-              <button
-                onClick={() => setSelectedClientDetail(null)}
-                className="rounded-full h-7 w-7 sm:h-8 sm:w-8 hover:bg-slate-100 text-slate-400 font-bold flex items-center justify-center"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
-              <div className="rounded-xl bg-slate-50 p-2.5 sm:p-3 border border-slate-100">
-                <span className="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400 block">Total</span>
-                <span className="text-sm sm:text-base font-bold text-slate-900">₹{selectedClientDetail.totalCharge}</span>
-              </div>
-              <div className="rounded-xl bg-emerald-50/60 p-2.5 sm:p-3 border border-emerald-100">
-                <span className="text-[9px] sm:text-[10px] font-bold uppercase text-emerald-700 block">Advance</span>
-                <span className="text-sm sm:text-base font-bold text-emerald-700">₹{selectedClientDetail.advancePaid}</span>
-              </div>
-              <div className="rounded-xl bg-amber-50/60 p-2.5 sm:p-3 border border-amber-100">
-                <span className="text-[9px] sm:text-[10px] font-bold uppercase text-amber-700 block">Balance</span>
-                <span className="text-sm sm:text-base font-bold text-amber-700">
-                  ₹{Math.max(0, selectedClientDetail.totalCharge - selectedClientDetail.advancePaid)}
-                </span>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-3.5 sm:p-4 space-y-2.5 sm:space-y-3">
-              <div className="flex justify-between items-center text-[11px] sm:text-xs font-bold text-slate-800">
-                <span>Timeline Window</span>
-                <span className="text-indigo-700">
-                  {selectedClientDetail.advanceDate || '2026-08-24'} ➔ {selectedClientDetail.deliveryDate}
-                </span>
               </div>
 
-              <div className="space-y-1">
-                <div className="h-2.5 sm:h-3 w-full bg-slate-200 rounded-full overflow-hidden flex">
-                  <div className="bg-indigo-600 h-full rounded-full w-[45%]" />
+              {/* Live Traffic / Visitor Count Card */}
+              <div className="rounded-2xl border border-blue-100 bg-blue-50/40 p-3.5 sm:p-4 space-y-2">
+                <div className="flex justify-between items-center text-[11px] sm:text-xs font-bold text-slate-800">
+                  <span className="flex items-center gap-1.5 text-blue-900">
+                    <span>👁️</span> Live Visitor Traffic
+                  </span>
+                  <span className="rounded-full bg-blue-100 border border-blue-200 text-blue-800 px-2.5 py-0.5 text-[10px] font-bold">
+                    {views} Total {views === 1 ? 'Page View' : 'Page Views'}
+                  </span>
                 </div>
-                <div className="flex justify-between text-[9px] sm:text-[10px] text-slate-500 font-medium">
-                  <span>Start: {selectedClientDetail.advanceDate || '24 Aug 2026'}</span>
-                  <span>Delivery: {selectedClientDetail.deliveryDate}</span>
+                <p className="text-[10px] text-slate-500">
+                  Total visitor hits recorded for this client's unique invitation link(s).
+                </p>
+              </div>
+
+              {/* Deliverable Link(s) */}
+              <div className="space-y-1.5">
+                <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">Deliverable Links</span>
+                {urls.length === 0 ? (
+                  <div className="p-3 rounded-xl bg-slate-50 border border-dashed border-slate-200 text-center text-[11px] text-slate-500">
+                    No deliverable links recorded yet.
+                    {selectedClientDetail.status !== 'Completed' && (
+                      <button
+                        onClick={() => {
+                          const c = selectedClientDetail
+                          setSelectedClientDetail(null)
+                          handleOpenCompleteModal(c)
+                        }}
+                        className="block mx-auto mt-1 font-bold text-indigo-600 hover:underline text-xs"
+                      >
+                        + Add Deliverable Links & Complete Order
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-1.5">
+                    {urls.map((url, uidx) => (
+                      <div key={uidx} className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                        <div className="flex items-center gap-2 truncate max-w-[70%]">
+                          <span className="text-indigo-600 font-bold">🔗</span>
+                          <span className="font-mono text-[11px] text-slate-800 font-semibold truncate">{url}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          <button
+                            onClick={() => {
+                              const full = url.startsWith('http') ? url : `${window.location.origin}${url}`
+                              navigator.clipboard.writeText(full)
+                              alert('Link copied to clipboard: ' + full)
+                            }}
+                            className="rounded-lg bg-white border border-slate-200 px-2 py-1 text-[10px] font-bold text-slate-700 hover:bg-slate-50 shadow-2xs"
+                            title="Copy Full Link"
+                          >
+                            📋 Copy
+                          </button>
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg bg-slate-900 text-white px-2.5 py-1 text-[10px] font-bold hover:bg-slate-800 shadow-2xs flex items-center gap-1"
+                          >
+                            Open ↗
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Timeline Window */}
+              <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-3.5 space-y-2">
+                <div className="flex justify-between items-center text-[11px] font-bold text-slate-800">
+                  <span>Timeline Schedule</span>
+                  <span className="text-slate-600">
+                    {selectedClientDetail.advanceDate || '2026-08-24'} ➔ {selectedClientDetail.deliveryDate}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden flex">
+                    <div className={`h-full rounded-full ${selectedClientDetail.status === 'Completed' ? 'bg-emerald-500 w-full' : 'bg-indigo-600 w-[60%]'}`} />
+                  </div>
+                  <div className="flex justify-between text-[9px] text-slate-500 font-medium">
+                    <span>Initiated: {selectedClientDetail.advanceDate || '24 Aug 2026'}</span>
+                    <span>Target Delivery: {selectedClientDetail.deliveryDate}</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="space-y-1 text-xs">
-              <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">Client Scope & Notes</span>
-              <div className="rounded-xl bg-slate-50 p-3 sm:p-3.5 border border-slate-200 text-slate-700 leading-relaxed font-medium text-[11px] sm:text-xs">
-                {selectedClientDetail.notes || 'No extra notes provided.'}
+              {/* Scope & Notes */}
+              <div className="space-y-1 text-xs">
+                <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">Client Scope & Notes</span>
+                <div className="rounded-xl bg-slate-50 p-3 border border-slate-200 text-slate-700 leading-relaxed font-medium text-[11px]">
+                  {selectedClientDetail.notes || 'No extra notes provided.'}
+                </div>
               </div>
-            </div>
 
-            {selectedClientDetail.phone && (
-              <a
-                href={`https://wa.me/${selectedClientDetail.phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(selectedClientDetail.clientName)},%20this%20is%20Inviteque%20regarding%20your%20wedding%20template%20timeline.`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 sm:py-3 text-xs font-bold shadow-xs transition"
-              >
-                💬 Open WhatsApp Chat with {selectedClientDetail.clientName}
-              </a>
-            )}
+              {/* Action Buttons */}
+              <div className="space-y-2 pt-1">
+                {bal > 0 && (
+                  <button
+                    onClick={() => {
+                      const c = selectedClientDetail
+                      setSelectedClientDetail(null)
+                      handleOpenSettleReceivable(c)
+                    }}
+                    className="w-full rounded-xl bg-amber-500 hover:bg-amber-600 text-white py-2.5 text-xs font-bold shadow-xs transition flex items-center justify-center gap-1.5"
+                  >
+                    <span>💸</span> Settle / Update Receivable (Pending: ₹{bal.toLocaleString('en-IN')})
+                  </button>
+                )}
 
-            <div className="flex gap-2 sm:gap-3 pt-1">
-              <button
-                onClick={() => {
-                  handleOpenClientModal(selectedClientDetail)
-                  setSelectedClientDetail(null)
-                }}
-                className="flex-1 rounded-xl bg-slate-900 text-white py-2.5 text-xs font-bold hover:bg-slate-800 transition"
-              >
-                ✏️ Edit Client Project
-              </button>
+                {selectedClientDetail.status !== 'Completed' && (
+                  <button
+                    onClick={() => {
+                      const c = selectedClientDetail
+                      setSelectedClientDetail(null)
+                      handleOpenCompleteModal(c)
+                    }}
+                    className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 text-xs font-bold shadow-xs transition flex items-center justify-center gap-1.5"
+                  >
+                    <span>✅</span> Complete Custom Order & Add Deliverable Links
+                  </button>
+                )}
+
+                <div className="flex gap-2">
+                  {selectedClientDetail.phone && (
+                    <a
+                      href={`https://wa.me/${selectedClientDetail.phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(selectedClientDetail.clientName)},%20this%20is%20Inviteque%20regarding%20your%20wedding%20template%20invitation.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 py-2.5 text-xs font-bold transition"
+                    >
+                      💬 WhatsApp
+                    </a>
+                  )}
+                  <button
+                    onClick={() => {
+                      handleOpenClientModal(selectedClientDetail)
+                      setSelectedClientDetail(null)
+                    }}
+                    className="flex-1 rounded-xl bg-slate-900 text-white py-2.5 text-xs font-bold hover:bg-slate-800 transition"
+                  >
+                    ✏️ Edit Order
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
 
-      {/* MODALS: ADD / EDIT CLIENT ORDER, EXPENSE, SETTLEMENT, LEAD */}
+      {/* MODAL 1: SETTLE RECEIVABLES / RECORD PAYMENT */}
+      {showSettleReceivableModal && settleTargetOrder && (() => {
+        const total = Number(settleTargetOrder.totalCharge) || 0
+        const currentAdv = Number(settleTargetOrder.advancePaid) || 0
+        const pendingBal = Math.max(0, total - currentAdv)
+        const enteredAmount = Number(settleForm.amount) || 0
+        const resultingBal = Math.max(0, pendingBal - enteredAmount)
+
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-3 sm:p-4">
+            <div className="w-full max-w-md rounded-2xl bg-white p-4 sm:p-6 shadow-2xl space-y-4 border border-slate-200 text-xs font-saas">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div>
+                  <h3 className="font-heading text-lg font-bold text-slate-900">
+                    Record Payment / Settle Receivable
+                  </h3>
+                  <p className="text-[11px] text-slate-500">Client: <b className="text-slate-800">{settleTargetOrder.clientName}</b></p>
+                </div>
+                <button onClick={() => setShowSettleReceivableModal(false)} className="text-slate-400 hover:text-slate-700 font-bold">✕</button>
+              </div>
+
+              {/* Status banner */}
+              <div className="grid grid-cols-3 gap-2 text-center p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-slate-400 block">Total Fee</span>
+                  <span className="font-bold text-slate-900 text-xs">₹{total.toLocaleString('en-IN')}</span>
+                </div>
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-emerald-700 block">Paid So Far</span>
+                  <span className="font-bold text-emerald-700 text-xs">₹{currentAdv.toLocaleString('en-IN')}</span>
+                </div>
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-amber-700 block">Current Balance</span>
+                  <span className="font-bold text-amber-700 text-xs">₹{pendingBal.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+
+              <form onSubmit={handleSaveReceivableSettlement} className="space-y-3">
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Payment Amount (₹) *</label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      required
+                      min={1}
+                      max={pendingBal > 0 ? pendingBal : undefined}
+                      value={settleForm.amount}
+                      onChange={(e) => setSettleForm({ ...settleForm, amount: e.target.value })}
+                      placeholder="e.g. 2000"
+                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 outline-none focus:border-slate-900 font-bold text-sm text-emerald-700"
+                    />
+                    {pendingBal > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setSettleForm({ ...settleForm, amount: String(pendingBal) })}
+                        className="absolute right-2 top-2 rounded-lg bg-slate-100 hover:bg-slate-200 px-2 py-1 text-[10px] font-bold text-slate-700"
+                      >
+                        Settle Full (₹{pendingBal})
+                      </button>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-slate-400 block">
+                    Remaining balance after this payment: <b className="text-slate-800">₹{resultingBal.toLocaleString('en-IN')}</b>
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Payment Method</label>
+                    <select
+                      value={settleForm.paymentMethod}
+                      onChange={(e) => setSettleForm({ ...settleForm, paymentMethod: e.target.value })}
+                      className="w-full rounded-xl border border-slate-200 px-3 py-2 outline-none font-semibold"
+                    >
+                      <option value="UPI - GPay">UPI - Google Pay</option>
+                      <option value="UPI - PhonePe">UPI - PhonePe</option>
+                      <option value="UPI - Paytm">UPI - Paytm</option>
+                      <option value="Bank Transfer">Bank Transfer / NEFT</option>
+                      <option value="Cash">Cash</option>
+                      <option value="Debit / Credit Card">Card</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Payment Date</label>
+                    <input
+                      type="date"
+                      value={settleForm.date}
+                      onChange={(e) => setSettleForm({ ...settleForm, date: e.target.value })}
+                      className="w-full rounded-xl border border-slate-200 px-3 py-2 outline-none font-bold"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Notes & Reference</label>
+                  <input
+                    type="text"
+                    value={settleForm.notes}
+                    onChange={(e) => setSettleForm({ ...settleForm, notes: e.target.value })}
+                    placeholder="e.g. Final settlement via UPI"
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 outline-none"
+                  />
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="markCompletedOnPay"
+                    checked={settleForm.markCompleted}
+                    onChange={(e) => setSettleForm({ ...settleForm, markCompleted: e.target.checked })}
+                    className="h-4 w-4 rounded text-slate-900"
+                  />
+                  <label htmlFor="markCompletedOnPay" className="text-[11px] text-slate-700 font-semibold cursor-pointer">
+                    Mark order as <b>Completed</b> if fully paid
+                  </label>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowSettleReceivableModal(false)}
+                    className="flex-1 rounded-xl border border-slate-200 py-2.5 font-bold text-slate-600 hover:bg-slate-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 rounded-xl bg-slate-900 hover:bg-slate-800 py-2.5 font-bold text-white shadow-xs"
+                  >
+                    Save & Record Payment
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* MODAL 2: COMPLETE ORDER & DELIVERABLE LINKS */}
+      {showCompleteOrderModal && completingOrder && (() => {
+        const total = Number(completingOrder.totalCharge) || 0
+        const adv = Number(completingOrder.advancePaid) || 0
+        const pendingBal = Math.max(0, total - adv)
+
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-3 sm:p-4">
+            <div className="w-full max-w-lg rounded-2xl bg-white p-4 sm:p-6 shadow-2xl space-y-4 border border-slate-200 text-xs font-saas max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🎉</span>
+                    <h3 className="font-heading text-lg font-bold text-slate-900">
+                      Complete Order: Deliverables & Links
+                    </h3>
+                  </div>
+                  <p className="text-[11px] text-slate-500">Record final links for <b className="text-slate-800">{completingOrder.clientName}</b></p>
+                </div>
+                <button onClick={() => setShowCompleteOrderModal(false)} className="text-slate-400 hover:text-slate-700 font-bold">✕</button>
+              </div>
+
+              <form onSubmit={handleSaveCompletedOrder} className="space-y-3.5">
+                {/* Deliverable Link Inputs */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">
+                      Live Invitation Links / URLs *
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCompleteForm({
+                          ...completeForm,
+                          deliverableUrls: [...(completeForm.deliverableUrls || []), '']
+                        })
+                      }}
+                      className="text-[10px] font-bold text-indigo-600 hover:underline"
+                    >
+                      + Add Another Variant Link
+                    </button>
+                  </div>
+
+                  {(completeForm.deliverableUrls || ['']).map((url, idx) => (
+                    <div key={idx} className="flex gap-2 items-center">
+                      <span className="text-slate-400 font-mono text-[10px] w-5 text-right">{idx + 1}.</span>
+                      <input
+                        type="text"
+                        required={idx === 0}
+                        value={url}
+                        onChange={(e) => {
+                          const updated = [...(completeForm.deliverableUrls || [''])]
+                          updated[idx] = e.target.value
+                          setCompleteForm({
+                            ...completeForm,
+                            deliverableUrl: idx === 0 ? e.target.value : (completeForm.deliverableUrl || e.target.value),
+                            deliverableUrls: updated
+                          })
+                        }}
+                        placeholder={idx === 0 ? "/template/midnight-waltz/Pavitra-Sri" : `/template/midnight-waltz/Pavitra-Sri/${idx + 1}`}
+                        className="flex-1 rounded-xl border border-slate-200 px-3.5 py-2 font-mono text-xs outline-none focus:border-slate-900"
+                      />
+                      {(completeForm.deliverableUrls || []).length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = (completeForm.deliverableUrls || []).filter((_, i) => i !== idx)
+                            setCompleteForm({
+                              ...completeForm,
+                              deliverableUrl: updated[0] || '',
+                              deliverableUrls: updated
+                            })
+                          }}
+                          className="text-rose-500 font-bold p-1 hover:bg-rose-50 rounded"
+                          title="Remove variant"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  ))}
+
+                  <div className="flex gap-1.5 flex-wrap pt-1">
+                    <span className="text-[10px] text-slate-400">Quick suggestions:</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const slug = completingOrder.clientName.replace(/\s+/g, '-')
+                        setCompleteForm({
+                          ...completeForm,
+                          deliverableUrl: `/template/midnight-waltz/${slug}`,
+                          deliverableUrls: [`/template/midnight-waltz/${slug}`]
+                        })
+                      }}
+                      className="rounded bg-slate-100 hover:bg-slate-200 px-2 py-0.5 text-[9px] font-mono text-slate-700"
+                    >
+                      /template/midnight-waltz/{completingOrder.clientName.replace(/\s+/g, '-')}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const slug = completingOrder.clientName.replace(/\s+/g, '')
+                        setCompleteForm({
+                          ...completeForm,
+                          deliverableUrl: `/template/everlastingvows/${slug}`,
+                          deliverableUrls: [`/template/everlastingvows/${slug}`]
+                        })
+                      }}
+                      className="rounded bg-slate-100 hover:bg-slate-200 px-2 py-0.5 text-[9px] font-mono text-slate-700"
+                    >
+                      /template/everlastingvows/{completingOrder.clientName.replace(/\s+/g, '')}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Client Email / Credentials */}
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Client Email (Optional)</label>
+                  <input
+                    type="email"
+                    value={completeForm.clientEmail}
+                    onChange={(e) => setCompleteForm({ ...completeForm, clientEmail: e.target.value })}
+                    placeholder="client@gmail.com"
+                    className="w-full rounded-xl border border-slate-200 px-3.5 py-2 outline-none focus:border-slate-900"
+                  />
+                </div>
+
+                {/* Settle remaining balance on completion */}
+                {pendingBal > 0 && (
+                  <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-200 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="settleRemainingBalance"
+                        checked={completeForm.settleRemaining}
+                        onChange={(e) => setCompleteForm({ ...completeForm, settleRemaining: e.target.checked })}
+                        className="h-4 w-4 text-amber-600 rounded"
+                      />
+                      <label htmlFor="settleRemainingBalance" className="text-xs font-bold text-amber-900 cursor-pointer">
+                        Settle pending balance of ₹{pendingBal.toLocaleString('en-IN')} now
+                      </label>
+                    </div>
+                    {completeForm.settleRemaining && (
+                      <div className="flex gap-2 items-center pt-1">
+                        <span className="text-[10px] text-slate-500 font-bold">Via:</span>
+                        <select
+                          value={completeForm.paymentMethod}
+                          onChange={(e) => setCompleteForm({ ...completeForm, paymentMethod: e.target.value })}
+                          className="rounded-lg border border-amber-200 bg-white px-2 py-1 text-xs font-semibold"
+                        >
+                          <option value="UPI - GPay">UPI - Google Pay</option>
+                          <option value="UPI - PhonePe">UPI - PhonePe</option>
+                          <option value="UPI - Paytm">UPI - Paytm</option>
+                          <option value="Bank Transfer">Bank Transfer / NEFT</option>
+                          <option value="Cash">Cash</option>
+                        </select>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Completion Notes</label>
+                  <textarea
+                    rows={2}
+                    value={completeForm.notes}
+                    onChange={(e) => setCompleteForm({ ...completeForm, notes: e.target.value })}
+                    placeholder="Notes regarding delivery..."
+                    className="w-full rounded-xl border border-slate-200 p-2.5 outline-none resize-none"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowCompleteOrderModal(false)}
+                    className="flex-1 rounded-xl border border-slate-200 py-2.5 font-bold text-slate-600 hover:bg-slate-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 py-2.5 font-bold text-white shadow-xs"
+                  >
+                    Save & Mark Completed ✅
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* MODAL 3: ADD / EDIT CLIENT ORDER */}
       {showClientModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-3 sm:p-4">
           <div className="w-full max-w-lg rounded-2xl bg-white p-4 sm:p-6 shadow-2xl space-y-3.5 sm:space-y-4 border border-slate-200 max-h-[90vh] overflow-y-auto text-xs font-saas">
@@ -2106,6 +2976,16 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
+                  <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Email Address</label>
+                  <input
+                    type="email"
+                    value={clientForm.email}
+                    onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })}
+                    placeholder="client@gmail.com"
+                    className="w-full rounded-xl border border-slate-200 px-3.5 py-2 outline-none focus:border-slate-900"
+                  />
+                </div>
+                <div className="space-y-1">
                   <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Communication Source</label>
                   <select
                     value={clientForm.source}
@@ -2116,6 +2996,20 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
                     <option value="WhatsApp">💬 WhatsApp</option>
                     <option value="Mail">✉️ Email / Website</option>
                   </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Customization Scope *</label>
+                  <input
+                    type="text"
+                    required
+                    value={clientForm.serviceName}
+                    onChange={(e) => setClientForm({ ...clientForm, serviceName: e.target.value })}
+                    placeholder="e.g. 2 Links / Splash Screen"
+                    className="w-full rounded-xl border border-slate-200 px-3.5 py-2 outline-none focus:border-slate-900 font-semibold"
+                  />
                 </div>
                 <div className="space-y-1">
                   <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Status</label>
@@ -2132,16 +3026,58 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Customization Scope *</label>
-                <input
-                  type="text"
-                  required
-                  value={clientForm.serviceName}
-                  onChange={(e) => setClientForm({ ...clientForm, serviceName: e.target.value })}
-                  placeholder="e.g. 2 Links / Splash Screen / Custom Audio"
-                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2 outline-none focus:border-slate-900 font-semibold"
-                />
+              {/* Deliverable URLs */}
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center">
+                  <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Deliverable Links / URLs</label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setClientForm({
+                        ...clientForm,
+                        deliverableUrls: [...(clientForm.deliverableUrls || ['']), '']
+                      })
+                    }}
+                    className="text-[10px] font-bold text-indigo-600 hover:underline"
+                  >
+                    + Add Link
+                  </button>
+                </div>
+                {(clientForm.deliverableUrls || ['']).map((url, idx) => (
+                  <div key={idx} className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      value={url}
+                      onChange={(e) => {
+                        const updated = [...(clientForm.deliverableUrls || [''])]
+                        updated[idx] = e.target.value
+                        setClientForm({
+                          ...clientForm,
+                          deliverableUrl: idx === 0 ? e.target.value : clientForm.deliverableUrl,
+                          deliverableUrls: updated
+                        })
+                      }}
+                      placeholder="/template/midnight-waltz/Pavitra-Sri"
+                      className="flex-1 rounded-xl border border-slate-200 px-3.5 py-1.5 font-mono text-xs outline-none focus:border-slate-900"
+                    />
+                    {(clientForm.deliverableUrls || []).length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = (clientForm.deliverableUrls || []).filter((_, i) => i !== idx)
+                          setClientForm({
+                            ...clientForm,
+                            deliverableUrl: updated[0] || '',
+                            deliverableUrls: updated
+                          })
+                        }}
+                        className="text-rose-500 font-bold p-1"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -2158,7 +3094,7 @@ export default function ExpenseTracker({ dbPurchases = [] }) {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Advance Paid (₹)</label>
+                  <label className="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Advance / Amount Paid (₹)</label>
                   <input
                     type="number"
                     min={0}

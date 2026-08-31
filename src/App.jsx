@@ -40,28 +40,37 @@ function AnalyticsTracker() {
         let templateId = null
         let inviteCode = null
         
-        // Parse /templates/:templateId or /templates/:templateId/:code
-        const pathParts = location.pathname.split('/')
-        if (pathParts[1] === 'templates' && pathParts[2]) {
-          templateId = pathParts[2]
-          if (pathParts[3]) {
-            inviteCode = pathParts[3].toUpperCase()
+        // Parse /template/:templateId or /templates/:templateId or custom routes
+        const pathParts = location.pathname.split('/').filter(Boolean)
+        if (pathParts[0] === 'templates' || pathParts[0] === 'template') {
+          if (pathParts[1]) {
+            templateId = pathParts[1]
           }
-        }
-        // Parse /builder/:templateId
-        if (pathParts[1] === 'builder' && pathParts[2]) {
-          templateId = pathParts[2]
+          if (pathParts[2]) {
+            // Slug or code (e.g. 'Pavitra-Sri', 'Shradha', 'DEMO123')
+            inviteCode = pathParts[2].toUpperCase()
+            if (pathParts[3] && !['edit', 'rsvp', 'RSVP'].includes(pathParts[3])) {
+              // Variant attached e.g. 'Pavitra-Sri-1'
+              inviteCode = `${pathParts[2]}-${pathParts[3]}`.toUpperCase()
+            }
+          }
+        } else if (pathParts[0] === 'builder' && pathParts[1]) {
+          templateId = pathParts[1]
         }
 
-        // Increment persistent local counter for invite views
+        // Increment persistent local counter for invite views by code and pathname
         if (inviteCode) {
           try {
             const currentViews = parseInt(localStorage.getItem(`iq_views_${inviteCode}`) || '0', 10)
             localStorage.setItem(`iq_views_${inviteCode}`, String(currentViews + 1))
           } catch (e) {
-            // Ignore localStorage errors in private browsing
+            // Ignore localStorage errors
           }
         }
+        try {
+          const currentPathViews = parseInt(localStorage.getItem(`iq_views_path_${location.pathname}`) || '0', 10)
+          localStorage.setItem(`iq_views_path_${location.pathname}`, String(currentPathViews + 1))
+        } catch (e) {}
         
         await fetch(`${API_URL}/api/public/analytics/visit`, {
           method: 'POST',
