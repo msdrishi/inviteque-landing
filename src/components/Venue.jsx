@@ -243,7 +243,7 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
 
 
 
-            {(data.venueLine1 || data.venueLine2 || addressTextPretty) && (
+            {(data.venueName || data.venueLine1 || data.venueLine2 || addressTextPretty) && (
               <motion.address
                 initial="hidden"
                 whileInView="show"
@@ -259,6 +259,21 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
                   fontStyle: 'normal',
                 }}
               >
+                {data.venueName && (
+                  <span
+                    style={{
+                      fontFamily: "'Cinzel', serif",
+                      fontWeight: 700,
+                      fontSize: 'clamp(18px, 2.2vw, 24px)',
+                      letterSpacing: '0.08em',
+                      color: colors.primary,
+                      marginBottom: '6px',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {data.venueName}
+                  </span>
+                )}
                 {data.venueLine1 || data.venueLine2 ? (
                   <>
                     {data.venueLine1 && (
@@ -443,6 +458,21 @@ export default function Venue({ data, isDesktop, bgImage, theme }) {
                 textAlign: 'center',
               }}
             >
+              {data.venueName && (
+                <span
+                  style={{
+                    fontFamily: "'Cinzel', serif",
+                    fontWeight: 700,
+                    fontSize: 'clamp(16px, 4vw, 20px)',
+                    letterSpacing: '0.08em',
+                    color: colors.primary,
+                    marginBottom: '4px',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {data.venueName}
+                </span>
+              )}
               {data.venueLine1 || data.venueLine2 ? (
                 <>
                   {data.venueLine1 && (

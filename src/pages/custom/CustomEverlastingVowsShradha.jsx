@@ -1,6 +1,7 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import confetti from 'canvas-confetti'
 import { shradhaData } from '../../data/custom/shradhaData.js'
 import Countdown from '../../components/Countdown.jsx'
 import Venue from '../../components/Venue.jsx'
@@ -61,6 +62,48 @@ function AnimatedTitle({ text, className, style }) {
   )
 }
 
+// ── Realistic Multi-Stage Paper Popper / Cracker Burst ───────────────────────
+function triggerPaperCrackers() {
+  const count = 190
+  const defaults = {
+    origin: { y: 0.75 },
+    colors: ['#D4AF37', '#FFD700', '#E53E3E', '#DD6B20', '#C53030', '#FFFDF2', '#F6E05E', '#9B2C2C', '#38A169']
+  }
+
+  function fire(particleRatio, opts) {
+    confetti({
+      ...defaults,
+      ...opts,
+      particleCount: Math.floor(count * particleRatio)
+    })
+  }
+
+  // Realistic multi-stage paper popper explosion
+  fire(0.25, { spread: 35, startVelocity: 58 })
+  fire(0.2, { spread: 70 })
+  fire(0.35, { spread: 110, decay: 0.91, scalar: 1.25 })
+  fire(0.1, { spread: 140, startVelocity: 32, decay: 0.92, scalar: 1.4 })
+  fire(0.1, { spread: 140, startVelocity: 48 })
+
+  // Left & Right celebratory streamer cannons
+  setTimeout(() => {
+    confetti({
+      particleCount: 50,
+      angle: 60,
+      spread: 65,
+      origin: { x: 0.12, y: 0.75 },
+      colors: ['#D4AF37', '#E53E3E', '#FFD700', '#FFFDF2', '#DD6B20']
+    })
+    confetti({
+      particleCount: 50,
+      angle: 120,
+      spread: 65,
+      origin: { x: 0.88, y: 0.75 },
+      colors: ['#D4AF37', '#E53E3E', '#FFD700', '#FFFDF2', '#DD6B20']
+    })
+  }, 200)
+}
+
 // ── Falling Gold Petals ──────────────────────────────────────────────────────────
 const petalConfig = Array.from({ length: 18 }).map((_, i) => {
   const isLeft = i % 2 === 0
@@ -113,7 +156,6 @@ function FallingPetals() {
 function BandhaniMandalaSVG({ size = 'clamp(280px, 80vw, 540px)', opacity = 1 }) {
   return (
     <div className="relative pointer-events-none flex items-center justify-center" style={{ opacity }}>
-      {/* Outer Glow Halo */}
       <div 
         className="absolute rounded-full pointer-events-none"
         style={{
@@ -124,7 +166,6 @@ function BandhaniMandalaSVG({ size = 'clamp(280px, 80vw, 540px)', opacity = 1 })
         }}
       />
 
-      {/* Main Rotating Bandhani Mandala SVG */}
       <motion.div
         className="relative"
         style={{ width: size, height: size }}
@@ -145,7 +186,6 @@ function BandhaniMandalaSVG({ size = 'clamp(280px, 80vw, 540px)', opacity = 1 })
           <circle cx="300" cy="300" r="263" stroke="#8A6E1E" strokeWidth="2" strokeOpacity="0.6" />
           <circle cx="300" cy="300" r="255" stroke="#D4AF37" strokeWidth="2" strokeDasharray="2 6" strokeOpacity="0.7" />
 
-          {/* Outer Bandhani Dotted Chevrons */}
           {Array.from({ length: 16 }).map((_, i) => {
             const angle = (i * 360) / 16
             return (
@@ -171,7 +211,6 @@ function BandhaniMandalaSVG({ size = 'clamp(280px, 80vw, 540px)', opacity = 1 })
           <circle cx="300" cy="300" r="192" stroke="#B8860B" strokeWidth="3" strokeDasharray="4 6" strokeOpacity="0.8" />
           <circle cx="300" cy="300" r="184" stroke="#8A6E1E" strokeWidth="1.8" strokeOpacity="0.6" />
 
-          {/* Middle Bandhani Lotus Petals */}
           {Array.from({ length: 12 }).map((_, i) => {
             const angle = (i * 360) / 12
             return (
@@ -204,7 +243,6 @@ function BandhaniMandalaSVG({ size = 'clamp(280px, 80vw, 540px)', opacity = 1 })
           <circle cx="300" cy="300" r="108" stroke="#B8860B" strokeWidth="3" strokeDasharray="3.5 5" strokeOpacity="0.85" />
           <circle cx="300" cy="300" r="100" stroke="#8A6E1E" strokeWidth="2" strokeOpacity="0.65" />
 
-          {/* Center 8-Petal Rosette */}
           {Array.from({ length: 8 }).map((_, i) => {
             const angle = (i * 360) / 8
             return (
@@ -273,13 +311,13 @@ function PuppetSplashScreen({ isOpened, onOpen, data }) {
       transition={{ 
         duration: 3.5, 
         ease: "easeInOut",
-        times: [0, 0.75, 1], // Stays 100% opaque until 2.6s (75% of 3.5s) while puppets exit
+        times: [0, 0.75, 1],
         delay: 0 
       }}
       onClick={onOpen}
       className="fixed inset-0 z-[9999] flex flex-col justify-between items-center cursor-pointer select-none overflow-hidden bg-[#FDF6E2]"
     >
-      {/* Background Image: Stays 100% opaque until puppets leave completely */}
+      {/* Background Image */}
       <motion.img
         src={puppetBgWebp}
         alt=""
@@ -310,7 +348,7 @@ function PuppetSplashScreen({ isOpened, onOpen, data }) {
       {/* Centered Rangoli in the middle of the screen */}
       <BandhaniRangoli isOpened={isOpened} />
 
-      {/* Left Puppet (Groom) - Fully visible while gliding completely off-screen */}
+      {/* Left Puppet (Groom) */}
       <motion.div
         className="absolute z-20 pointer-events-none origin-top-left flex items-center justify-start"
         style={{
@@ -353,7 +391,7 @@ function PuppetSplashScreen({ isOpened, onOpen, data }) {
         />
       </motion.div>
 
-      {/* Right Puppet (Bride) - Fully visible while gliding completely off-screen */}
+      {/* Right Puppet (Bride) */}
       <motion.div
         className="absolute z-20 pointer-events-none origin-top-right flex items-center justify-end"
         style={{
@@ -398,7 +436,7 @@ function PuppetSplashScreen({ isOpened, onOpen, data }) {
 
       <div className="w-full pt-4" />
 
-      {/* Bottom Area: Text & Tap to Open (Fades out immediately on tap) */}
+      {/* Bottom Area: Single Hindi Slang & Tap to Open */}
       <motion.div
         className="relative z-30 flex flex-col items-center text-center px-4 pb-8 sm:pb-12 max-w-lg w-full"
         initial={{ opacity: 0, y: 20 }}
@@ -414,10 +452,10 @@ function PuppetSplashScreen({ isOpened, onOpen, data }) {
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0, delay: 0.2 }}
-            className="text-[#8A6E1E] uppercase tracking-[0.3em] text-[11px] sm:text-xs font-bold"
+            className="text-[#8A6E1E] tracking-[0.28em] text-sm sm:text-base font-bold"
             style={{ fontFamily: "'Cinzel', serif" }}
           >
-            पधारो सा • Padharo Sa
+            “ पधारो सा ”
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, scale: 0.96 }}
@@ -481,7 +519,229 @@ function PuppetSplashScreen({ isOpened, onOpen, data }) {
   )
 }
 
-// ── Hero Section (Revealed Only After Splash Screen Completes Exit) ───────────
+// ── Realistic Royal Gold Scratch Card with Paper Cracker Poppers ──────────────
+function DateScratchCard({ dateText = "20th October 2026", timeText = "Tuesday • 11:00 AM Onwards", venueText = "Grand Delite Faridabad" }) {
+  const canvasRef = useRef(null)
+  const [isRevealed, setIsRevealed] = useState(false)
+  const isDrawing = useRef(false)
+  const lastPos = useRef(null)
+  const hasTriggeredConfetti = useRef(false)
+
+  const drawGoldFoil = () => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    const width = canvas.width
+    const height = canvas.height
+
+    ctx.globalCompositeOperation = 'source-over'
+    ctx.clearRect(0, 0, width, height)
+
+    // Realistic brushed metallic gold foil gradient
+    const grad = ctx.createLinearGradient(0, 0, width, height)
+    grad.addColorStop(0, '#D4AF37')
+    grad.addColorStop(0.18, '#F6E29C')
+    grad.addColorStop(0.4, '#C59A27')
+    grad.addColorStop(0.65, '#F9E9BE')
+    grad.addColorStop(0.85, '#AA7C11')
+    grad.addColorStop(1, '#8A6E1E')
+    ctx.fillStyle = grad
+    ctx.fillRect(0, 0, width, height)
+
+    // Diagonal metallic sheen streaks
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.32)'
+    for (let i = -height; i < width; i += 28) {
+      ctx.beginPath()
+      ctx.moveTo(i, 0)
+      ctx.lineTo(i + 14, 0)
+      ctx.lineTo(i + 14 + height, height)
+      ctx.lineTo(i + height, height)
+      ctx.closePath()
+      ctx.fill()
+    }
+
+    // Sparkle specks pattern
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.65)'
+    for (let i = 0; i < 35; i++) {
+      const x = (i * 37 + 11) % width
+      const y = (i * 23 + 7) % height
+      ctx.beginPath()
+      ctx.arc(x, y, (i % 2) + 0.9, 0, Math.PI * 2)
+      ctx.fill()
+    }
+
+    // Double Royal Filigree Border
+    ctx.strokeStyle = 'rgba(112, 89, 21, 0.6)'
+    ctx.lineWidth = 1.5
+    ctx.strokeRect(5, 5, width - 10, height - 10)
+
+    ctx.strokeStyle = 'rgba(255, 253, 242, 0.65)'
+    ctx.lineWidth = 1
+    ctx.strokeRect(8, 8, width - 16, height - 16)
+
+    // Clear and Clean Text: Only "✦ SCRATCH TO REVEAL ✦"
+    ctx.fillStyle = '#423106'
+    ctx.font = 'bold 13px "Cinzel", serif'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText('✦ SCRATCH TO REVEAL ✦', width / 2, height / 2)
+  }
+
+  useEffect(() => {
+    drawGoldFoil()
+  }, [])
+
+  const checkScratchPercentage = () => {
+    if (isRevealed) return
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    const width = canvas.width
+    const height = canvas.height
+
+    try {
+      const imgData = ctx.getImageData(0, 0, width, height)
+      let transparentPixels = 0
+      const totalPixels = imgData.data.length / 4
+      for (let i = 3; i < imgData.data.length; i += 16) {
+        if (imgData.data[i] === 0) transparentPixels++
+      }
+      const ratio = transparentPixels / (totalPixels / 4)
+      
+      if (ratio > 0.35 && !hasTriggeredConfetti.current) {
+        hasTriggeredConfetti.current = true
+        setIsRevealed(true)
+        triggerPaperCrackers()
+      }
+    } catch (e) {
+      // Fallback
+    }
+  }
+
+  const scratch = (clientX, clientY) => {
+    if (isRevealed) return
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const rect = canvas.getBoundingClientRect()
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+    const x = (clientX - rect.left) * scaleX
+    const y = (clientY - rect.top) * scaleY
+
+    const ctx = canvas.getContext('2d')
+    ctx.globalCompositeOperation = 'destination-out'
+
+    if (lastPos.current) {
+      ctx.beginPath()
+      ctx.moveTo(lastPos.current.x, lastPos.current.y)
+      ctx.lineTo(x, y)
+      ctx.lineWidth = 40
+      ctx.lineCap = 'round'
+      ctx.lineJoin = 'round'
+      ctx.stroke()
+    }
+
+    ctx.beginPath()
+    ctx.arc(x, y, 20, 0, Math.PI * 2)
+    ctx.fill()
+
+    lastPos.current = { x, y }
+    checkScratchPercentage()
+  }
+
+  const handlePointerDown = (e) => {
+    isDrawing.current = true
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY
+    lastPos.current = null
+    scratch(clientX, clientY)
+  }
+
+  const handlePointerMove = (e) => {
+    if (!isDrawing.current) return
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY
+    scratch(clientX, clientY)
+  }
+
+  const handlePointerUp = () => {
+    isDrawing.current = false
+    lastPos.current = null
+  }
+
+  return (
+    <motion.div
+      variants={fadeUp}
+      className="relative w-full max-w-[310px] sm:max-w-[340px] mt-3 sm:mt-5 mb-1 select-none"
+    >
+      {/* Outer Golden Glow & Border Card Frame */}
+      <div 
+        className="relative overflow-hidden rounded-2xl p-[2px] shadow-[0_8px_28px_rgba(138,110,30,0.22)]"
+        style={{
+          background: 'linear-gradient(135deg, #D4AF37 0%, #FAE9C3 50%, #8A6E1E 100%)'
+        }}
+      >
+        <div className="relative rounded-[14px] bg-[#FFFDF2] overflow-hidden">
+          
+          {/* 1. Underlying Revealed Content Layer */}
+          <div className="relative z-0 flex flex-col items-center justify-center text-center px-4 py-3 min-h-[92px] sm:min-h-[96px] bg-[#FFFDF2]">
+            <span
+              className="text-[10px] sm:text-[11px] tracking-[0.28em] text-[#8A6E1E] uppercase font-bold mb-0.5"
+              style={{ fontFamily: "'Cinzel', serif" }}
+            >
+              ✦ Save The Date ✦
+            </span>
+
+            {/* Revealed Date in Bold Gold Typography */}
+            <h3
+              className="text-lg sm:text-xl font-bold tracking-[0.1em] text-[#705915] uppercase my-0.5"
+              style={{
+                fontFamily: "'Cinzel', serif",
+                textShadow: '0 1px 8px rgba(212,175,55,0.35)'
+              }}
+            >
+              {dateText}
+            </h3>
+
+            <p
+              className="text-[11px] sm:text-xs text-[#8A6E1E] tracking-[0.06em] font-semibold"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              {timeText}
+            </p>
+
+            <span
+              className="text-[10px] sm:text-[11px] text-[#705915]/85 italic mt-0.5"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              {venueText}
+            </span>
+          </div>
+
+          {/* 2. Top Realistic Gold Scratch Surface (HTML5 Canvas) */}
+          <canvas
+            ref={canvasRef}
+            width={340}
+            height={96}
+            onMouseDown={handlePointerDown}
+            onMouseMove={handlePointerMove}
+            onMouseUp={handlePointerUp}
+            onMouseLeave={handlePointerUp}
+            onTouchStart={handlePointerDown}
+            onTouchMove={handlePointerMove}
+            onTouchEnd={handlePointerUp}
+            className={`absolute inset-0 w-full h-full z-10 cursor-pointer touch-none transition-opacity duration-700 ${
+              isRevealed ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            }`}
+          />
+
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// ── Hero Section (Scratch Card Placed in the Middle of the Hero Section) ───────
 function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
   const { scrollY } = useScroll()
   const rawY = useTransform(scrollY, [0, 800], ['0%', '-4%'])
@@ -495,11 +755,11 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
     <section
       className={`relative overflow-hidden flex flex-col items-center text-center select-none ${
         isDesktop
-          ? 'min-h-screen w-full justify-start pt-[20vh] sm:pt-[22vh] pb-16 px-8'
-          : 'min-h-[100svh] w-full justify-start pt-[18svh] sm:pt-[20svh] pb-12 px-6'
+          ? 'min-h-screen w-full justify-start pt-[13vh] sm:pt-[15vh] pb-14 px-8'
+          : 'min-h-[100svh] w-full justify-start pt-[11svh] sm:pt-[13svh] pb-10 px-6'
       }`}
     >
-      {/* Parallax background: Stays hidden until splash screen animation completes, then smoothly reveals */}
+      {/* Parallax background */}
       <motion.div
         className="absolute inset-0 z-0 will-change-transform"
         style={{ y: bgY, scale: 1.05, transformOrigin: 'center' }}
@@ -518,7 +778,7 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
 
       <FallingPetals />
 
-      {/* Hero Content Panel positioned comfortably down inside palace arch window */}
+      {/* MIDDLE: Hero Content Panel inside palace arch window positioned higher up */}
       <motion.div
         initial="hidden"
         animate={isOpened ? "show" : "hidden"}
@@ -531,28 +791,28 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
             transition: { staggerChildren: 0.16, duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 2.7 } 
           }
         }}
-        className="relative z-20 flex flex-col items-center max-w-xl"
+        className="relative z-20 flex flex-col items-center max-w-xl mt-0 sm:mt-1"
       >
-        {/* Top Tag */}
-        <motion.div variants={fadeUp} className="flex items-center gap-2 mb-1.5">
+        {/* Top Single Hindi Slang Tag */}
+        <motion.div variants={fadeUp} className="flex items-center gap-2 mb-1">
           <span className="text-xs text-[#8A6E1E]">✦</span>
           <p
-            className="text-[11px] sm:text-xs tracking-[0.35em] uppercase text-[#8A6E1E] font-bold"
+            className="text-xs sm:text-sm tracking-[0.25em] text-[#8A6E1E] font-bold"
             style={{ fontFamily: "'Cinzel', serif" }}
           >
-            {data?.topTag || "पधारो सा • Khamma Ghani"}
+            “ पधारो सा ”
           </p>
           <span className="text-xs text-[#8A6E1E]">✦</span>
         </motion.div>
 
-        {/* Couple Names with Gold Glare Animation */}
+        {/* Couple Names with Gold Glare Animation and Smooth Letter Stagger */}
         <motion.h1
           variants={letterContainer}
-          className="text-[#8A6E1E] uppercase tracking-[0.1em] select-none font-bold my-1 sm:my-2"
+          className="text-[#8A6E1E] uppercase tracking-[0.1em] select-none font-bold my-0.5 sm:my-1"
           style={{
             fontFamily: "'Cinzel', serif",
-            lineHeight: '1.18',
-            fontSize: isDesktop ? 'clamp(2.3rem, 4.0vw, 3.5rem)' : 'clamp(1.85rem, 7.0vw, 2.5rem)'
+            lineHeight: '1.16',
+            fontSize: isDesktop ? 'clamp(2.2rem, 3.8vw, 3.3rem)' : 'clamp(1.8rem, 6.8vw, 2.4rem)'
           }}
         >
           {/* Bride Name */}
@@ -602,7 +862,7 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
 
           <motion.span
             variants={fadeUp}
-            className="block my-0.5 text-2xl sm:text-3xl font-medium lowercase italic font-serif text-[#8A6E1E]/90"
+            className="block my-0.5 text-xl sm:text-2xl font-medium lowercase italic font-serif text-[#8A6E1E]/90"
           >
             &amp;
           </motion.span>
@@ -653,33 +913,31 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
           </span>
         </motion.h1>
 
-        {/* Family Affiliation Subtitle */}
-        <motion.p
-          variants={fadeUp}
-          className="text-xs sm:text-sm tracking-[0.2em] uppercase text-[#705915] font-bold mt-1 mb-1.5"
-          style={{ fontFamily: "'Cinzel', serif" }}
-        >
-          Together with the Soin &amp; Vashishth Families
-        </motion.p>
-
         {/* Traditional Ornamental Divider */}
         <motion.div
           variants={fadeUp}
-          className="flex items-center gap-3 w-36 my-1.5 opacity-70"
+          className="flex items-center gap-3 w-32 my-1 opacity-70"
         >
           <div className="h-[1px] bg-[#8A6E1E] flex-1" />
           <span className="text-[#8A6E1E] text-xs">✦</span>
           <div className="h-[1px] bg-[#8A6E1E] flex-1" />
         </motion.div>
 
-        {/* Clean Minimal Welcoming Text */}
+        {/* Clean Welcoming Text */}
         <motion.p
           variants={fadeUp}
-          className="text-xs sm:text-sm text-[#8A6E1E] leading-relaxed italic max-w-md mt-1.5 px-2"
+          className="text-xs sm:text-sm text-[#8A6E1E] leading-relaxed italic max-w-md my-1 px-2"
           style={{ fontFamily: "'Montserrat', sans-serif" }}
         >
           &ldquo;{welcomeText}&rdquo;
         </motion.p>
+
+        {/* Interactive Royal Scratch Card in the Middle of the Hero Section (5px more below) */}
+        <DateScratchCard
+          dateText="20th October 2026"
+          timeText="Tuesday • 11:00 AM Onwards"
+          venueText="Grand Delite Faridabad"
+        />
       </motion.div>
 
       {/* Scroll Down Indicator */}
@@ -699,8 +957,8 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
           animate={{ y: [0, 5, 0] }}
           transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
           style={{
-            width: 36,
-            height: 36,
+            width: 34,
+            height: 34,
             borderRadius: '50%',
             border: '1.5px solid rgba(138,110,30,0.3)',
             background: 'rgba(255,253,242,0.65)',
@@ -722,21 +980,23 @@ function EverlastingVowsHero({ data, isDesktop, isOpened = true }) {
   )
 }
 
-// ── Fullscreen Individual Event Section with Venue-Matching Typography & Animations ──
+// ── Fullscreen Individual Event Section with 3-Line Formatted Balanced Width ──
 function FullscreenEventSection({ event, index, isDesktop }) {
   if (!event) return null
-  const isRoka = index === 0
   
-  // Dedicated background images without any overlay filter or opacity
-  const bgImg = isRoka 
-    ? (isDesktop ? rokaDesktopBg : rokaMobileBg)
-    : (isDesktop ? engagementDesktopBg : engagementMobileBg)
+  const isEngagement = event.id?.includes('engagement') || event.eventName?.toLowerCase().includes('engagement')
+  const bgImg = isEngagement
+    ? (isDesktop ? engagementDesktopBg : engagementMobileBg)
+    : (isDesktop ? rokaDesktopBg : rokaMobileBg)
 
-  // Title: "Roka Ceremony" or "Engagement"
-  const titleText = isRoka ? "Roka Ceremony" : "Engagement"
+  const topTag = `✦ ${event.sectionLabel || (isEngagement ? "Ring Ceremony" : "Shubh Shuruwaat")} ✦`
+  const titleText = event.eventName || (isEngagement ? "Engagement" : "Roka Ceremony")
 
   return (
-    <section className="relative w-full min-h-[100svh] md:h-screen flex flex-col justify-start pt-[22svh] sm:pt-[25svh] md:pt-[24vh] items-center text-center px-6 md:px-12 pb-16 overflow-hidden select-none">
+    <section 
+      className="relative w-full min-h-[100svh] md:h-screen flex flex-col justify-start pt-[22svh] sm:pt-[25svh] md:pt-[24vh] items-center text-center px-6 md:px-12 pb-16 overflow-hidden select-none bg-[#FDF6E2]"
+      style={{ margin: 0 }}
+    >
       {/* Background Image pure and crisp without any overlay filter or opacity */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img
@@ -747,7 +1007,10 @@ function FullscreenEventSection({ event, index, isDesktop }) {
         />
       </div>
 
-      {/* Clean Typography Content positioned down in the clear area */}
+      {/* Flower / Petal Falling Animation */}
+      <FallingPetals />
+
+      {/* Clean Typography Content */}
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -764,11 +1027,9 @@ function FullscreenEventSection({ event, index, isDesktop }) {
       >
         {/* Top Tag */}
         <motion.div variants={fadeUp} className="flex items-center gap-2 mb-1.5">
-          <span className="text-xs text-[#8A6E1E]">✦</span>
           <p className="text-[11px] sm:text-xs tracking-[0.3em] uppercase text-[#8A6E1E] font-bold" style={{ fontFamily: "'Cinzel', serif" }}>
-            {isRoka ? "पधारो सा • Shubh Shuruwaat" : "पधारो सा • Ring Ceremony"}
+            {topTag}
           </p>
-          <span className="text-xs text-[#8A6E1E]">✦</span>
         </motion.div>
 
         {/* Ceremony Name with Venue-style AnimatedTitle letter animation */}
@@ -791,10 +1052,10 @@ function FullscreenEventSection({ event, index, isDesktop }) {
           <div className="h-[1px] bg-[#8A6E1E] flex-1" />
         </motion.div>
 
-        {/* Timing & Date Line - Clean Inline Layout using Montserrat matching Venue details */}
+        {/* Timing & Date Line - Reduced width so text naturally breaks into 3 balanced lines */}
         <motion.div 
           variants={fadeUp} 
-          className="flex items-center justify-center gap-2 text-xs sm:text-sm text-[#705915] font-semibold tracking-[0.08em] uppercase my-2 max-w-sm sm:max-w-md mx-auto"
+          className="flex items-center justify-center gap-2 text-xs sm:text-sm text-[#705915] font-semibold tracking-[0.06em] uppercase my-2 max-w-[260px] sm:max-w-[290px] mx-auto text-center"
           style={{ fontFamily: "'Montserrat', sans-serif" }}
         >
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 text-[#8A6E1E]">
@@ -804,11 +1065,11 @@ function FullscreenEventSection({ event, index, isDesktop }) {
           <span className="leading-snug">{event.dateTimeLine}</span>
         </motion.div>
 
-        {/* Ritual Description matching Venue font */}
+        {/* Ritual Description - Reduced width so text wraps into 3 balanced lines */}
         {event.description && (
           <motion.p 
             variants={fadeUp} 
-            className="text-xs sm:text-sm text-[#705915]/90 italic leading-relaxed max-w-md my-1.5 px-4"
+            className="text-xs sm:text-sm text-[#705915]/90 italic leading-relaxed max-w-[270px] sm:max-w-[310px] my-1.5 px-1 text-center"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             &ldquo;{event.description}&rdquo;
@@ -824,7 +1085,7 @@ function FullscreenFamilyClosingSection() {
   return (
     <section 
       className="relative w-full min-h-[100svh] md:h-screen flex flex-col justify-center items-center text-center px-6 md:px-12 py-16 overflow-hidden select-none"
-      style={{ backgroundColor: '#FAE9C3' }}
+      style={{ backgroundColor: '#FAE9C3', margin: 0 }}
     >
       {/* Semi-circular Rotating Bandhani Mandala Rangoli hanging gracefully from the top edge */}
       <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none z-0" style={{ transform: 'translateY(-50%)' }}>
@@ -870,7 +1131,7 @@ function FullscreenFamilyClosingSection() {
           Warmly Invited &amp; With Best Compliments From
         </motion.p>
 
-        {/* Both Family Names with AnimatedTitle - Wrapped to prevent trailing 'S' breaking off */}
+        {/* Both Family Names with AnimatedTitle */}
         <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 my-2 max-w-full">
           <span className="whitespace-nowrap inline-block">
             <AnimatedTitle
@@ -924,6 +1185,14 @@ export default function CustomEverlastingVowsShradha() {
   const [isOpened, setIsOpened] = useState(false)
   const [showBrandSplash, setShowBrandSplash] = useState(!isPreview)
 
+  // Force scroll restoration to top so page always lands at the top Hero Section
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+    window.scrollTo(0, 0)
+  }, [])
+
   useEffect(() => {
     let isMounted = true
     const img1 = new Image()
@@ -942,6 +1211,18 @@ export default function CustomEverlastingVowsShradha() {
       clearTimeout(timer)
     }
   }, [isPreview])
+
+  // Guaranteed top position when opening invitation from splash page
+  const handleOpenInvitation = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    setIsOpened(true)
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0)
+    })
+    setTimeout(() => {
+      window.scrollTo(0, 0)
+    }, 150)
+  }
 
   // Load custom editor changes from localStorage or fallback to default shradhaData
   const [customData] = useState(() => {
@@ -1008,9 +1289,9 @@ export default function CustomEverlastingVowsShradha() {
       <SplashScreen loading={showBrandSplash} />
 
       {/* Interactive Puppet Tap-To-Open Splash Screen */}
-      <PuppetSplashScreen isOpened={isOpened} onOpen={() => setIsOpened(true)} data={mergedData.hero} />
+      <PuppetSplashScreen isOpened={isOpened} onOpen={handleOpenInvitation} data={mergedData.hero} />
 
-      {/* Fixed Watermark Layer (Visible on Puppet Splash page and throughout the invitation) */}
+      {/* Fixed Watermark Layer */}
       {showWatermark && (
         <>
           {/* Mobile Watermark */}
@@ -1041,20 +1322,20 @@ export default function CustomEverlastingVowsShradha() {
       {/* MOBILE VIEW */}
       <div className="md:hidden w-full min-h-screen bg-[#FFFDF2] relative">
         <div className="w-full">
-          {/* 1. Hero Section (Lowered into Arch Window) */}
+          {/* 1. Hero Section with Center Scratch Card */}
           <EverlastingVowsHero data={mergedData.hero} isDesktop={false} isOpened={isOpened} />
           
-          {/* 2. Fullscreen Roka Ceremony Section */}
+          {/* 2. Fullscreen First Event (Roka Ceremony - 11 AM Onwards) */}
           {mergedData.events?.[0] && (
             <FullscreenEventSection event={mergedData.events[0]} index={0} isDesktop={false} />
           )}
 
-          {/* 3. Fullscreen Engagement Ceremony Section */}
+          {/* 3. Fullscreen Second Event (Engagement - Followed by Roka) */}
           {mergedData.events?.[1] && (
             <FullscreenEventSection event={mergedData.events[1]} index={1} isDesktop={false} />
           )}
 
-          {/* 4. Venue Details (With updated Google Maps link) */}
+          {/* 4. Venue Details (Prominently displaying Grand Delite Faridabad) */}
           <Venue data={mergedData.venue} bgImage={locationBgMobile} theme="gold" isDesktop={false} />
 
           {/* 5. Countdown (20th October 2026) */}
@@ -1071,25 +1352,25 @@ export default function CustomEverlastingVowsShradha() {
       {/* DESKTOP VIEW */}
       <div className="hidden md:block w-full min-h-screen bg-[#FFFDF2] relative">
         <div className="w-full">
-          {/* 1. Hero Section (Lowered into Arch Window) */}
+          {/* 1. Hero Section with Center Scratch Card */}
           <EverlastingVowsHero data={mergedData.hero} isDesktop={true} isOpened={isOpened} />
         </div>
         
-        {/* 2. Fullscreen Roka Ceremony Section */}
+        {/* 2. Fullscreen First Event (Roka Ceremony - 11 AM Onwards) */}
         {mergedData.events?.[0] && (
           <div className="w-full">
             <FullscreenEventSection event={mergedData.events[0]} index={0} isDesktop={true} />
           </div>
         )}
 
-        {/* 3. Fullscreen Engagement Ceremony Section */}
+        {/* 3. Fullscreen Second Event (Engagement - Followed by Roka) */}
         {mergedData.events?.[1] && (
           <div className="w-full">
             <FullscreenEventSection event={mergedData.events[1]} index={1} isDesktop={true} />
           </div>
         )}
 
-        {/* 4. Venue Details (With updated Google Maps link) */}
+        {/* 4. Venue Details (Prominently displaying Grand Delite Faridabad) */}
         <div className="w-full">
           <Venue data={mergedData.venue} isDesktop={true} bgImage={locationBgDesktop} theme="gold" />
         </div>

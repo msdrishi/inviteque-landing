@@ -15,32 +15,31 @@ export const shradhaData = {
     dateLine: "20 October 2026",
     dayOfWeek: "Tuesday",
     weddingTime: "11:00 AM onwards",
-    venueName: "Hotel Delite Grand, Faridabad",
+    venueName: "Grand Delite Faridabad",
     venueCity: "Faridabad, Haryana",
     addressParts: {
       desktop: [
-        "Hotel Delite Grand, Faridabad",
+        "Grand Delite Faridabad",
         "A-5/B, Neelam Bata Road, Shahid Bhagat Singh Marg, NIT, Faridabad, Haryana 121001"
       ],
       mobile: [
-        "Hotel Delite Grand, Faridabad",
+        "Grand Delite Faridabad",
         "Neelam Bata Road, NIT, Faridabad"
       ]
     },
     hashtag: "#ShradhaWedsGagan",
     monogram: "S & G",
     location: "Faridabad, Haryana",
-    subtitle: "Together with their families",
-    topTag: "पधारो सा • Khamma Ghani",
+    subtitle: "",
+    topTag: "पधारो सा",
     invitationNote: "We warmly welcome you all and would love to have your gracious presence to celebrate our auspicious Roka & Engagement."
   },
 
-  // Removed Photo Moments, Welcome, and RSVP sections as per requirements
   showGallery: false,
   showWelcome: false,
   showRsvp: false,
 
-  // Multi-Event Schedule: Roka followed by Engagement
+  // Multi-Event Schedule: Roka Ceremony first (11:00 AM onwards) followed by Engagement
   events: [
     {
       id: "roka-ceremony",
@@ -55,8 +54,8 @@ export const shradhaData = {
       id: "engagement-ceremony",
       sectionLabel: "Ring Ceremony",
       eventName: "Engagement",
-      dateTimeLine: "Tuesday, 20 October 2026 • Followed by Engagement",
-      description: "Followed after the Roka ceremony with ring exchange, celebratory music, and royal feast.",
+      dateTimeLine: "Tuesday, 20 October 2026 • Followed by Roka",
+      description: "Followed with ring exchange ceremony, celebratory music, traditional shagun, and royal feast.",
       bgDesktop: "/assets/templates/everlasting-vows/engagement-desktop.webp",
       bgMobile: "/assets/templates/everlasting-vows/engagement-mobile.webp",
     },
@@ -64,7 +63,7 @@ export const shradhaData = {
 
   venue: {
     sectionLabel: "Celebration Venue",
-    venueName: "Hotel Delite Grand, Faridabad",
+    venueName: "Grand Delite Faridabad",
     venueLine1: "A-5/B, Neelam Bata Road, Shahid Bhagat Singh Marg",
     venueLine2: "New Industrial Township, Faridabad, Haryana 121001",
     dateTime: "Tuesday, 20 October 2026",
@@ -88,6 +87,6 @@ export const shradhaData = {
     brideFamily: "Soin’s Family",
     groomFamily: "Vashishth’s Family",
     coupleNames: "Shradha & Gagan",
-    footnote: "पधारो सा • We look forward to your gracious presence!"
+    footnote: "We look forward to your gracious presence!"
   }
 }
