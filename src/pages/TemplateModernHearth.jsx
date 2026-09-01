@@ -807,7 +807,7 @@ function HW1Events({ data, isDesktop, bgImage, noOverlay }) {
 
 // 2. HW1FamilySection (Optional Welcoming Section with Water Reveal Animation)
 function HW1FamilySection({ message, photo, isDesktop, bgImage }) {
-  const defaultPhoto = "/backgrounds/House Warming/family picture.png"
+  const defaultPhoto = "/backgrounds/House Warming/family picture.webp"
   const photoUrl = photo || defaultPhoto
   const displayMessage = message && message.trim() 
     ? message 

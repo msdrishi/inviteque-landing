@@ -133,7 +133,7 @@ export default function InviteDetails() {
   const isModernHearth = invite?.templateId === 'template-modernhearth' || invite?.templateId === 'modernhearth' || invite?.templateId === 'modern-hearth'
   const isMidnightWaltz = invite?.templateId === 'midnight-waltz'
   const coverImage = isSunflower
-    ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.png")
+    ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.webp")
     : isTwilight 
       ? "/assets/templates/twilight-serenade/hero-desktop.webp" 
       : isEverlasting

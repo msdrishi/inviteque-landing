@@ -85,10 +85,10 @@ function FallingLeaves({ theme }) {
 const zeroParts = { days: 0, hours: 0, minutes: 0, seconds: 0 }
 
 export default function Countdown({ data, isDesktop, bgImage, theme, centerText, position }) {
-  const targetDateTimeISO = data?.targetDateTimeISO
+  const targetDateTimeISO = data?.targetDateTimeISO || data?.targetDate
 
   const targetDate = useMemo(() => {
-    const fallback = '1970-01-01T00:00:00.000Z'
+    const fallback = '2026-11-12T09:00:00.000Z'
     const parsed = new Date(targetDateTimeISO || fallback)
     return Number.isNaN(parsed.getTime()) ? new Date(fallback) : parsed
   }, [targetDateTimeISO])

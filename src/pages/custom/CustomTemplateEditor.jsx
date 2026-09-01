@@ -17,6 +17,9 @@ import RsvpRegistryTab from '../../components/customEditor/RsvpRegistryTab.jsx'
 import SectionTogglesTab from '../../components/customEditor/SectionTogglesTab.jsx'
 import SplashScreen from '../../components/SplashScreen.jsx'
 
+import { compressImageToWebP } from '../../utils/imageCompressor.js'
+import { setPersistentItem, getPersistentItem } from '../../utils/indexedDb.js'
+
 const logo = "/assets/logo/inviteq-logo.png"
 
 export default function CustomTemplateEditor() {
@@ -25,6 +28,7 @@ export default function CustomTemplateEditor() {
   const navigate = useNavigate()
   const location = useLocation()
   const [showSplash, setShowSplash] = useState(true)
+  const [uploadingIndex, setUploadingIndex] = useState(null)
 
   const isShradha = customSlug?.toLowerCase() === 'shradha' || templateId?.toLowerCase() === 'everlastingvows'
   const activeBaseData = isShradha ? shradhaData : pavitraSriData
@@ -75,9 +79,9 @@ export default function CustomTemplateEditor() {
       // Couple & Hero
       groomName: saved?.groomName || activeBaseData.hero.groomName || (isShradha ? 'Aayush' : 'Sri'),
       brideName: saved?.brideName || activeBaseData.hero.brideName || (isShradha ? 'Shradha' : 'Pavitra'),
-      weddingDate: saved?.weddingDate || activeBaseData.hero.weddingDate || (isShradha ? '18' : '15'),
-      weddingMonth: saved?.weddingMonth || activeBaseData.hero.weddingMonth || (isShradha ? 'December' : 'July'),
-      weddingYear: saved?.weddingYear || activeBaseData.hero.weddingYear || '2026',
+      weddingDate: saved?.weddingDate || activeBaseData.hero.weddingDate || (isShradha ? '18' : '12'),
+      weddingMonth: saved?.weddingMonth || activeBaseData.hero.weddingMonth || (isShradha ? 'December' : 'November'),
+      weddingYear: (saved?.weddingYear && parseInt(saved.weddingYear) >= 2000 && parseInt(saved.weddingYear) <= 2100) ? String(saved.weddingYear) : (activeBaseData.hero.weddingYear || '2026'),
       weddingTime: saved?.weddingTime || activeBaseData.hero.weddingTime || (isShradha ? '10:00 AM onwards' : '09:00 AM - 10:30 AM'),
       heroSubtitle: saved?.heroSubtitle || activeBaseData.hero.subtitle || (isShradha ? 'Roka & Engagement Ceremony' : 'Are Getting Married'),
 
@@ -91,7 +95,7 @@ export default function CustomTemplateEditor() {
       // Photo Moments (3 Photos)
       photos: (saved?.photos && Array.isArray(saved.photos) && saved.photos.length >= 3)
         ? saved.photos
-        : (activeBaseData.moments?.photos?.map(p => p.image) || []),
+        : (activeBaseData.moments?.photos?.map(p => (typeof p === 'object' ? (p.image || p.url) : p)) || []),
 
       // Welcome Message
       welcomeLabel: saved?.welcomeLabel || activeBaseData.welcome?.label || 'Welcome',
@@ -101,11 +105,15 @@ export default function CustomTemplateEditor() {
 
       // Multi-Event Ceremonies
       events: (saved?.events && Array.isArray(saved.events) && saved.events.length > 0)
-        ? saved.events
+        ? saved.events.map((ev, i) => ({
+            ...ev,
+            bgDesktop: ev.bgDesktop?.replace(/\.(png|jpg|jpeg)$/i, '.webp') || defaultEvents[i]?.bgDesktop,
+            bgMobile: ev.bgMobile?.replace(/\.(png|jpg|jpeg)$/i, '.webp') || defaultEvents[i]?.bgMobile,
+          }))
         : defaultEvents,
 
       // Countdown
-      countdownTargetDate: saved?.countdownTargetDate || (isShradha ? '2026-12-18' : '2026-07-15'),
+      countdownTargetDate: saved?.countdownTargetDate || (isShradha ? '2026-12-18' : '2026-11-12'),
 
       // RSVP & Registry
       rsvpTitle: saved?.rsvpTitle || activeBaseData.celebrate?.rsvp?.title || (isShradha ? 'RSVP For Roka & Engagement' : 'RSVP'),
@@ -134,38 +142,30 @@ export default function CustomTemplateEditor() {
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
-  const [unauthorized, setUnauthorized] = useState(false)
-
-  // 1. Authentication Guard & DB Preload
+  // 1. Authentication & DB Preload
   useEffect(() => {
-    if (!authLoading && user) {
-      const timer = setTimeout(() => setShowSplash(false), 900)
+    if (!authLoading) {
+      const timer = setTimeout(() => setShowSplash(false), 600)
       return () => clearTimeout(timer)
     }
-  }, [user, authLoading])
+  }, [authLoading])
 
   useEffect(() => {
     const fetchDbData = async () => {
-      if (!user?.token) return
       try {
-        const res = await fetch(`${API_URL}/api/invites/PAVITRASRI`, {
-          headers: { 'Authorization': `Bearer ${user.token}` }
-        })
-        if (res.status === 403) {
-          const isAdmin = user.roles?.includes('ADMIN') || user.role === 'ADMIN'
-          if (!isAdmin) {
-            setUnauthorized(true)
-            return
-          }
-        }
+        const headers = user?.token ? { 'Authorization': `Bearer ${user.token}` } : {}
+        const codeToFetch = isShradha ? 'SHRADHA' : 'PAVITRASRI'
+        const res = await fetch(`${API_URL}/api/invites/${codeToFetch}`, { headers })
+        
         if (res.ok) {
           const inv = await res.json()
           if (inv) {
             const groom = inv.groomName || inv.coupleData?.groomName
             const bride = inv.brideName || inv.coupleData?.brideName
-            const day = inv.weddingDate || inv.heroData?.weddingDate
-            const month = inv.weddingMonth || inv.heroData?.weddingMonth
-            const year = inv.weddingYear || inv.heroData?.weddingYear
+            const day = (typeof inv.weddingDate === 'object' && inv.weddingDate ? inv.weddingDate.day : (typeof inv.weddingDate === 'string' ? inv.weddingDate : null)) || inv.heroData?.weddingDate
+            const month = (typeof inv.weddingDate === 'object' && inv.weddingDate ? inv.weddingDate.month : null) || inv.heroData?.weddingMonth
+            const rawYear = (typeof inv.weddingDate === 'object' && inv.weddingDate ? inv.weddingDate.year : null) || inv.heroData?.weddingYear
+            const cleanYear = (rawYear && parseInt(rawYear) >= 2000 && parseInt(rawYear) <= 2100) ? String(rawYear) : undefined
             const time = inv.weddingTime || inv.heroData?.weddingTime
             const photos = inv.photos || inv.storyData?.photos
             const schedule = inv.eventSchedule || inv.scheduleData?.items
@@ -182,28 +182,38 @@ export default function CustomTemplateEditor() {
               brideName: bride || prev.brideName,
               weddingDate: day || prev.weddingDate,
               weddingMonth: month || prev.weddingMonth,
-              weddingYear: year || prev.weddingYear,
+              weddingYear: cleanYear || (prev.weddingYear && parseInt(prev.weddingYear) >= 2000 && parseInt(prev.weddingYear) <= 2100 ? prev.weddingYear : '2026'),
               weddingTime: time || prev.weddingTime,
+              heroSubtitle: inv.heroData?.heroSubtitle || prev.heroSubtitle,
               photos: photos && Array.isArray(photos) && photos.filter(Boolean).length >= 3 ? photos : prev.photos,
               storySectionLabel: storySectionLabel || prev.storySectionLabel,
               storyHeading: storyHeading || prev.storyHeading,
               storyParagraph1: storyPara1 || prev.storyParagraph1,
               storyParagraph2: storyPara2 || prev.storyParagraph2,
               storyQuote: storyQuote || prev.storyQuote,
-              welcomeMessage: inv.invitationData?.familyMessage || inv.familyMessage || prev.welcomeMessage,
+              welcomeLabel: inv.invitationData?.welcomeLabel || prev.welcomeLabel,
+              welcomeHeading1: inv.invitationData?.welcomeHeadingLine1 || prev.welcomeHeading1,
+              welcomeHeading2: inv.invitationData?.welcomeHeadingLine2 || prev.welcomeHeading2,
+              welcomeMessage: inv.invitationData?.welcomeMessage || inv.invitationData?.familyMessage || inv.familyMessage || prev.welcomeMessage,
               events: (schedule && Array.isArray(schedule) && schedule.length > 0)
-                ? (variant === '2' ? schedule.slice(schedule.length - 1) : schedule).map((ev, i) => ({
-                    id: `evt-${i + 1}`,
-                    label: ev.title || 'Ceremony',
-                    eventName: ev.title || 'Ceremony',
-                    date: `${day || prev.weddingDate} ${month || prev.weddingMonth} ${year || prev.weddingYear}`,
-                    time: ev.time || time || '04:00 PM',
-                    venueName: inv.mahalName || inv.venueData?.mahalName || prev.events[0]?.venueName,
-                    venueLine1: inv.venueAddress || inv.venueData?.venueAddress || prev.events[0]?.venueLine1,
-                    venueLine2: inv.venueCity || inv.venueData?.venueCity || prev.events[0]?.venueLine2,
-                    mapUrl: inv.mapLink || inv.venueData?.mapLink || prev.events[0]?.mapUrl,
-                    isWeddingOnly: i === 0
-                  }))
+                ? (variant === '2' ? schedule.filter(e => e.isWeddingOnly || (e.title && e.title.toLowerCase().includes('wedding')) || (e.eventName && e.eventName.toLowerCase().includes('wedding'))) : schedule).map((ev, i) => {
+                    const fallbackEv = prev.events[i] || prev.events[prev.events.length - 1]
+                    return {
+                      id: ev.id || fallbackEv?.id || `evt-${i + 1}`,
+                      label: ev.eventName || ev.label || ev.title || fallbackEv?.label || 'Ceremony',
+                      sectionLabel: ev.sectionLabel || ev.label || fallbackEv?.sectionLabel || 'Our Venue',
+                      eventName: ev.eventName || ev.title || fallbackEv?.eventName || 'Ceremony',
+                      date: ev.date || fallbackEv?.date || `${day || prev.weddingDate} ${month || prev.weddingMonth} ${year || prev.weddingYear}`,
+                      time: ev.time || fallbackEv?.time || time || '10:00 AM onwards',
+                      venueName: ev.venueName || inv.mahalName || inv.venueData?.mahalName || fallbackEv?.venueName || prev.events[0]?.venueName,
+                      venueLine1: ev.venueLine1 || inv.venueAddress || inv.venueData?.venueAddress || fallbackEv?.venueLine1 || prev.events[0]?.venueLine1,
+                      venueLine2: ev.venueLine2 || inv.venueCity || inv.venueData?.venueCity || fallbackEv?.venueLine2 || prev.events[0]?.venueLine2,
+                      mapUrl: ev.mapUrl || inv.mapLink || inv.venueData?.mapLink || fallbackEv?.mapUrl || prev.events[0]?.mapUrl,
+                      bgDesktop: ev.bgDesktop?.replace(/\.(png|jpg|jpeg)$/i, '.webp') || fallbackEv?.bgDesktop,
+                      bgMobile: ev.bgMobile?.replace(/\.(png|jpg|jpeg)$/i, '.webp') || fallbackEv?.bgMobile,
+                      isWeddingOnly: ev.isWeddingOnly ?? (variant === '2' || i === schedule.length - 1 || (ev.eventName && ev.eventName.toLowerCase().includes('wedding')))
+                    }
+                  })
                 : prev.events
             }))
           }
@@ -214,7 +224,7 @@ export default function CustomTemplateEditor() {
     }
 
     fetchDbData()
-  }, [user, variant])
+  }, [user, variant, isShradha])
 
   const handleFieldChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -230,25 +240,72 @@ export default function CustomTemplateEditor() {
     }))
   }
 
-  const handlePhotoUpload = (index, e) => {
+  const compressImageToBase64 = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const img = new Image()
+        img.onload = () => {
+          const maxDimension = 1000
+          let { width, height } = img
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height = Math.round((height * maxDimension) / width)
+              width = maxDimension
+            } else {
+              width = Math.round((width * maxDimension) / height)
+              height = maxDimension
+            }
+          }
+          const canvas = document.createElement('canvas')
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+          resolve(canvas.toDataURL('image/jpeg', 0.8))
+        }
+        img.onerror = () => resolve(e.target.result)
+        img.src = e.target.result
+      }
+      reader.onerror = () => resolve(null)
+      reader.readAsDataURL(file)
+    })
+  }
+
+  const handlePhotoUpload = async (index, e) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (file.size > 10 * 1024 * 1024) {
-      alert('Photo must be under 10MB')
-      return
-    }
+    setUploadingIndex(index)
 
-    const previewUrl = URL.createObjectURL(file)
-    const newPhotos = [...formData.photos]
-    newPhotos[index] = previewUrl
-    setFormData(prev => ({ ...prev, photos: newPhotos }))
+    try {
+      // Compress ANY input image size into WebP (< 300KB - 500KB)
+      const webpDataUrl = await compressImageToWebP(file, 1400, 400 * 1024)
+      if (webpDataUrl) {
+        setFormData(prev => {
+          const newPhotos = [...(prev.photos || [])]
+          newPhotos[index] = webpDataUrl
+          return { ...prev, photos: newPhotos }
+        })
+      }
+    } catch (err) {
+      console.error('Photo upload error:', err)
+      alert('Failed to process image. Please try another photo.')
+    } finally {
+      setUploadingIndex(null)
+    }
   }
 
-  // Multi-Event Handlers
   const handleEventChange = (index, field, value) => {
     const updatedEvents = [...formData.events]
-    updatedEvents[index] = { ...updatedEvents[index], [field]: value }
+    const updatedEv = { ...updatedEvents[index], [field]: value }
+    const evDate = field === 'date' ? value : (updatedEv.date || '')
+    const evTime = field === 'time' ? value : (updatedEv.time || '')
+    updatedEv.dateTimeLine = (evDate && evTime) ? `${evDate} • ${evTime}` : (evDate || evTime || '')
+    if (field === 'eventName') {
+      updatedEv.label = value
+    }
+    updatedEvents[index] = updatedEv
     setFormData(prev => ({ ...prev, events: updatedEvents }))
   }
 
@@ -259,10 +316,10 @@ export default function CustomTemplateEditor() {
       eventName: 'New Ceremony Event',
       date: `${formData.weddingDate} ${formData.weddingMonth} ${formData.weddingYear}`,
       time: '04:00 PM - 06:00 PM',
-      venueName: formData.events[0]?.venueName || 'The Leela Palace',
-      venueLine1: formData.events[0]?.venueLine1 || '23 Old Airport Road',
-      venueLine2: formData.events[0]?.venueLine2 || 'Bangalore, Karnataka',
-      mapUrl: formData.events[0]?.mapUrl || 'https://maps.google.com',
+      venueName: formData.events[0]?.venueName || 'Sri Venkateswara Royal Mandapam',
+      venueLine1: formData.events[0]?.venueLine1 || 'Palace Road, Vasanth Nagar',
+      venueLine2: formData.events[0]?.venueLine2 || 'Bengaluru, Karnataka',
+      mapUrl: formData.events[0]?.mapUrl || 'https://maps.google.com/?q=Sri+Venkateswara+Royal+Mandapam+Palace+Road+Vasanth+Nagar+Bengaluru',
       isWeddingOnly: variant === '2',
     }
     setFormData(prev => ({ ...prev, events: [...prev.events, newEvent] }))
@@ -299,74 +356,150 @@ export default function CustomTemplateEditor() {
     setSaveSuccess(false)
 
     try {
-      // 1. Save locally for instant live reflection for this specific variant
-      localStorage.setItem(storageKey, JSON.stringify(formData))
-      localStorage.setItem(`inviteque_custom_data_${templateId}_${customSlug}`, JSON.stringify(formData))
+      // 1. Save to persistent IndexedDB (unlimited storage) + localStorage fallback
+      await setPersistentItem(storageKey, formData)
+      await setPersistentItem(`inviteque_custom_data_${templateId}_${customSlug}`, formData)
+      await setPersistentItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}`, formData)
+      await setPersistentItem(`inviteque_custom_data_${templateId}_${customSlug}_v1`, formData)
+      await setPersistentItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}_v1`, formData)
+      await setPersistentItem(`inviteque_custom_data_${templateId}_${customSlug}_v2`, formData)
+      await setPersistentItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}_v2`, formData)
+      await setPersistentItem(`inviteque_custom_data_${isShradha ? 'SHRADHA' : 'PAVITRASRI'}`, formData)
+
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(formData))
+        localStorage.setItem(`inviteque_custom_data_${templateId}_${customSlug}`, JSON.stringify(formData))
+        localStorage.setItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}`, JSON.stringify(formData))
+        localStorage.setItem(`inviteque_custom_data_${templateId}_${customSlug}_v1`, JSON.stringify(formData))
+        localStorage.setItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}_v1`, JSON.stringify(formData))
+        localStorage.setItem(`inviteque_custom_data_${templateId}_${customSlug}_v2`, JSON.stringify(formData))
+        localStorage.setItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}_v2`, JSON.stringify(formData))
+      } catch (lsErr) {
+        console.warn('LocalStorage notice (saved safely in IndexedDB):', lsErr)
+      }
 
       // 2. Persist to backend database gracefully
-      if (user?.token && saveInvitation) {
-        try {
-          const payload = {
-            templateId,
-            code: isShradha ? 'SHRADHA' : 'PAVITRASRI',
-            coupleNames: `${formData.groomName || ''} & ${formData.brideName || ''}`.trim(),
+      try {
+        const weddingEvt = formData.events.find(e => e.isWeddingOnly || (e.eventName && e.eventName.toLowerCase().includes('wedding')) || e.id === 'wedding') || formData.events[formData.events.length - 1]
+        const payload = {
+          templateId,
+          code: isShradha ? 'SHRADHA' : 'PAVITRASRI',
+          coupleNames: `${formData.groomName || ''} & ${formData.brideName || ''}`.trim(),
+          groomName: formData.groomName,
+          brideName: formData.brideName,
+          weddingDate: {
+            day: formData.weddingDate,
+            month: formData.weddingMonth,
+            year: formData.weddingYear
+          },
+          weddingTime: formData.weddingTime,
+          heroSubtitle: formData.heroSubtitle,
+          mahalName: weddingEvt?.venueName || formData.events[0]?.venueName,
+          venueAddress: weddingEvt?.venueLine1 || formData.events[0]?.venueLine1,
+          venueCity: weddingEvt?.venueLine2 || formData.events[0]?.venueLine2,
+          venueName: weddingEvt?.venueName || formData.events[0]?.venueName,
+          mapLink: weddingEvt?.mapUrl || formData.events[0]?.mapUrl,
+          photos: formData.photos,
+          eventSchedule: formData.events.map(ev => ({
+            id: ev.id,
+            time: ev.time,
+            title: ev.eventName,
+            eventName: ev.eventName,
+            date: ev.date,
+            venueName: ev.venueName,
+            venueLine1: ev.venueLine1,
+            venueLine2: ev.venueLine2,
+            mapUrl: ev.mapUrl,
+            bgDesktop: ev.bgDesktop,
+            bgMobile: ev.bgMobile,
+            isWeddingOnly: ev.isWeddingOnly
+          })),
+          status: 'PAID',
+          hasRsvp: Boolean(formData.sections.hasRsvp),
+          heroData: {
             groomName: formData.groomName,
             brideName: formData.brideName,
-            weddingDate: {
-              day: formData.weddingDate,
-              month: formData.weddingMonth,
-              year: formData.weddingYear
-            },
+            weddingDate: formData.weddingDate,
+            weddingMonth: formData.weddingMonth,
+            weddingYear: formData.weddingYear,
             weddingTime: formData.weddingTime,
-            mahalName: formData.events[0]?.venueName,
-            venueAddress: formData.events[0]?.venueLine1,
-            venueCity: formData.events[0]?.venueLine2,
-            venueName: formData.events[0]?.venueName,
-            mapLink: formData.events[0]?.mapUrl,
-            photos: formData.photos,
-            eventSchedule: formData.events.map(ev => ({ time: ev.time, title: ev.eventName })),
-            status: 'PAID',
+            heroSubtitle: formData.heroSubtitle,
+          },
+          coupleData: {
+            groomName: formData.groomName,
+            brideName: formData.brideName,
+          },
+          scheduleData: {
+            showSchedule: formData.sections.showVenue,
+            showGallery: formData.sections.showGallery,
+            items: formData.events.map(ev => ({
+              id: ev.id,
+              label: ev.eventName,
+              eventName: ev.eventName,
+              title: ev.eventName,
+              date: ev.date,
+              time: ev.time,
+              venueName: ev.venueName,
+              venueLine1: ev.venueLine1,
+              venueLine2: ev.venueLine2,
+              mapUrl: ev.mapUrl,
+              bgDesktop: ev.bgDesktop,
+              bgMobile: ev.bgMobile,
+              isWeddingOnly: ev.isWeddingOnly
+            }))
+          },
+          storyData: {
+            sectionLabel: formData.storySectionLabel,
+            heading: formData.storyHeading,
+            paragraph1: formData.storyParagraph1,
+            paragraph2: formData.storyParagraph2,
+            paragraphs: [formData.storyParagraph1, formData.storyParagraph2].filter(Boolean),
+            quote: formData.storyQuote,
+            photos: formData.photos
+          },
+          invitationData: {
+            showGallery: formData.sections.showGallery,
+            showSchedule: formData.sections.showVenue,
             hasRsvp: Boolean(formData.sections.hasRsvp),
-            scheduleData: {
-              showSchedule: formData.sections.showVenue,
-              showGallery: formData.sections.showGallery,
-              items: formData.events.map(ev => ({ time: ev.time, title: ev.eventName }))
-            },
-            storyData: {
-              sectionLabel: formData.storySectionLabel,
-              heading: formData.storyHeading,
-              paragraph1: formData.storyParagraph1,
-              paragraph2: formData.storyParagraph2,
-              paragraphs: [formData.storyParagraph1, formData.storyParagraph2].filter(Boolean),
-              quote: formData.storyQuote,
-              photos: formData.photos
-            },
-            invitationData: {
-              showGallery: formData.sections.showGallery,
-              showSchedule: formData.sections.showVenue,
-              hasRsvp: Boolean(formData.sections.hasRsvp),
-              familyMessage: formData.welcomeMessage,
-              storySectionLabel: formData.storySectionLabel,
-              storyHeading: formData.storyHeading,
-              storyParagraph1: formData.storyParagraph1,
-              storyParagraph2: formData.storyParagraph2,
-              customSectionTitle: formData.storyHeading,
-              customSectionSubtitle: formData.storyQuote,
-              customSectionContent: [formData.storyParagraph1, formData.storyParagraph2].filter(Boolean).join('\n\n'),
-            },
-            rsvpData: {
-              enabled: Boolean(formData.sections.hasRsvp),
-              allowGuestCount: true,
-              allowEventSelection: true,
-              allowMessage: true,
-              allowMaybe: false,
-            }
+            welcomeLabel: formData.welcomeLabel,
+            welcomeHeadingLine1: formData.welcomeHeading1,
+            welcomeHeadingLine2: formData.welcomeHeading2,
+            welcomeMessage: formData.welcomeMessage,
+            familyMessage: formData.welcomeMessage,
+            storySectionLabel: formData.storySectionLabel,
+            storyHeading: formData.storyHeading,
+            storyParagraph1: formData.storyParagraph1,
+            storyParagraph2: formData.storyParagraph2,
+            customSectionTitle: formData.storyHeading,
+            customSectionSubtitle: formData.storyQuote,
+            customSectionContent: [formData.storyParagraph1, formData.storyParagraph2].filter(Boolean).join('\n\n'),
+          },
+          rsvpData: {
+            enabled: Boolean(formData.sections.hasRsvp),
+            allowGuestCount: true,
+            rsvpTitle: formData.rsvpTitle,
+            rsvpDescription: formData.rsvpDescription,
+            rsvpUrl: formData.rsvpUrl,
+            hasRsvp: Boolean(formData.sections.hasRsvp),
+            registryTitle: formData.registryTitle,
+            registryDescription: formData.registryDescription,
+            registryUrl: formData.registryUrl,
+            hasRegistry: Boolean(formData.hasRegistry)
           }
-
-          await saveInvitation(payload)
-        } catch (dbErr) {
-          console.warn('Backend DB sync note:', dbErr.message)
         }
+
+        if (user?.token && saveInvitation) {
+          await saveInvitation(payload)
+        } else {
+          // Send unauthenticated payload to backend
+          await fetch(`${API_URL}/api/invites`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          }).catch(() => {})
+        }
+      } catch (dbErr) {
+        console.warn('Backend save notice:', dbErr.message)
       }
 
       setSaveSuccess(true)
@@ -377,45 +510,6 @@ export default function CustomTemplateEditor() {
     } finally {
       setSaving(false)
     }
-  }
-
-  // Route protection: Must be logged in
-  if (authLoading) {
-    return <SplashScreen loading={true} />
-  }
-
-  if (!user) {
-    return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname)}`} replace />
-  }
-
-  if (unauthorized) {
-    return (
-      <div className="min-h-screen bg-[#FDFCFB] flex flex-col items-center justify-center p-6 text-center font-saas">
-        <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-4">
-          <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center mx-auto text-xl font-bold">
-            🔒
-          </div>
-          <h2 className="text-xl font-bold text-slate-900">Access Restricted</h2>
-          <p className="text-sm text-slate-500">
-            You are logged in as <strong>{user.email}</strong>, but this bespoke invitation editor is reserved for the assigned client account or administrator.
-          </p>
-          <div className="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
-            <Link
-              to={`/login?redirect=${encodeURIComponent(location.pathname)}`}
-              className="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition"
-            >
-              Log in with Client Account
-            </Link>
-            <Link
-              to="/account"
-              className="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 transition"
-            >
-              My Dashboard
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   const liveUrl = isShradha 
@@ -634,7 +728,7 @@ export default function CustomTemplateEditor() {
           )}
 
           {activeTab === 'photos' && (
-            <PhotoMomentsTab formData={formData} handlePhotoUpload={handlePhotoUpload} />
+            <PhotoMomentsTab formData={formData} handlePhotoUpload={handlePhotoUpload} uploadingIndex={uploadingIndex} />
           )}
 
           {activeTab === 'welcome' && (

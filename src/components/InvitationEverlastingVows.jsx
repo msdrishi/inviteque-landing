@@ -102,8 +102,8 @@ export default function InvitationEverlastingVows({ data, isDesktop }) {
   const blurOpacity = useSpring(rawBlurOpacity, { stiffness: 35, damping: 15 })
 
   const bgImage = isDesktop
-    ? "/backgrounds/everlasting/welcome-desktop-everlasting.png"
-    : "/backgrounds/everlasting/welcome-mobile-everlasting.png"
+    ? "/backgrounds/everlasting/welcome-desktop-everlasting.webp"
+    : "/backgrounds/everlasting/welcome-mobile-everlasting.webp"
 
   return (
     <section
@@ -190,7 +190,7 @@ export default function InvitationEverlastingVows({ data, isDesktop }) {
         }}
       >
         <img
-          src="/backgrounds/everlasting/welcome-board-everlasting.png"
+          src="/backgrounds/everlasting/welcome-board-everlasting.webp"
           alt="Everlasting Vows Welcome Board"
           aria-hidden="true"
           className="w-auto h-auto max-h-[62svh] sm:max-h-[66svh] md:max-h-[70svh] max-w-[90vw] sm:max-w-[500px] md:max-w-[440px] object-contain object-bottom drop-shadow-[0_22px_48px_rgba(40,25,10,0.28)]"

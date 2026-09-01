@@ -49,7 +49,7 @@ export default function Payment() {
   const isModernHearth = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
   const isMidnightWaltz = templateId === 'midnight-waltz'
   const coverImage = isSunflower
-    ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.png")
+    ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.webp")
     : isTwilight 
       ? "/assets/templates/twilight-serenade/hero-desktop.webp" 
       : isEverlasting

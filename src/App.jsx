@@ -111,6 +111,10 @@ export default function App() {
           <Route path="/template/midnight-waltz/Pavitra-Sri/edit" element={<CustomTemplateEditor />} />
           <Route path="/templates/midnight-waltz/Pavitra-Sri/:variant/edit" element={<CustomTemplateEditor />} />
           <Route path="/templates/midnight-waltz/Pavitra-Sri/edit" element={<CustomTemplateEditor />} />
+          <Route path="/template/midnight-waltz/pavitra-sri/:variant/edit" element={<CustomTemplateEditor />} />
+          <Route path="/template/midnight-waltz/pavitra-sri/edit" element={<CustomTemplateEditor />} />
+          <Route path="/templates/midnight-waltz/pavitra-sri/:variant/edit" element={<CustomTemplateEditor />} />
+          <Route path="/templates/midnight-waltz/pavitra-sri/edit" element={<CustomTemplateEditor />} />
           <Route path="/template/:templateId/:customSlug/:variant/edit" element={<CustomTemplateEditor />} />
           <Route path="/template/:templateId/:customSlug/edit" element={<CustomTemplateEditor />} />
           <Route path="/templates/:templateId/:customSlug/:variant/edit" element={<CustomTemplateEditor />} />
@@ -119,6 +123,10 @@ export default function App() {
           <Route path="/template/midnight-waltz/Pavitra-Sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
           <Route path="/templates/midnight-waltz/Pavitra-Sri" element={<CustomMidnightWaltzPavitraSri />} />
           <Route path="/templates/midnight-waltz/Pavitra-Sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
+          <Route path="/template/midnight-waltz/pavitra-sri" element={<CustomMidnightWaltzPavitraSri />} />
+          <Route path="/template/midnight-waltz/pavitra-sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
+          <Route path="/templates/midnight-waltz/pavitra-sri" element={<CustomMidnightWaltzPavitraSri />} />
+          <Route path="/templates/midnight-waltz/pavitra-sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
 
           {/* Custom Client Template Routes (Shradha - Everlasting Vows Roka & Engagement) */}
           <Route path="/template/everlastingvows/Shradha" element={<CustomEverlastingVowsShradha />} />
