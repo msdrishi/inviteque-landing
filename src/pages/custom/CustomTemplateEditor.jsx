@@ -18,7 +18,7 @@ import SectionTogglesTab from '../../components/customEditor/SectionTogglesTab.j
 import SplashScreen from '../../components/SplashScreen.jsx'
 
 import { compressImageToWebP } from '../../utils/imageCompressor.js'
-import { setPersistentItem, getPersistentItem } from '../../utils/indexedDb.js'
+
 
 const logo = "/assets/logo/inviteq-logo.png"
 
@@ -154,12 +154,23 @@ export default function CustomTemplateEditor() {
     const fetchDbData = async () => {
       try {
         const headers = user?.token ? { 'Authorization': `Bearer ${user.token}` } : {}
-        const codeToFetch = isShradha ? 'SHRADHA' : 'PAVITRASRI'
-        const res = await fetch(`${API_URL}/api/invites/${codeToFetch}`, { headers })
+        // Always fetch by slug — backend now supports case-insensitive slug lookup
+        const slug = isShradha ? 'Shradha' : customSlug
         
-        if (res.ok) {
-          const inv = await res.json()
-          if (inv) {
+        let inv = null
+        try {
+          const res = await fetch(`${API_URL}/api/invites/${slug}`, { headers })
+          if (res.ok) {
+            const data = await res.json()
+            if (data && (data.groomName || data.coupleData || data.heroData || data.slug || data.code)) {
+              inv = data
+            }
+          }
+        } catch (e) {
+          console.warn('DB fetch failed for slug', slug, e)
+        }
+        
+        if (inv) {
             const groom = inv.groomName || inv.coupleData?.groomName
             const bride = inv.brideName || inv.coupleData?.brideName
             const day = (typeof inv.weddingDate === 'object' && inv.weddingDate ? inv.weddingDate.day : (typeof inv.weddingDate === 'string' ? inv.weddingDate : null)) || inv.heroData?.weddingDate
@@ -217,7 +228,6 @@ export default function CustomTemplateEditor() {
                 : prev.events
             }))
           }
-        }
       } catch (err) {
         console.warn('Initial DB fetch notice:', err)
       }
@@ -356,34 +366,14 @@ export default function CustomTemplateEditor() {
     setSaveSuccess(false)
 
     try {
-      // 1. Save to persistent IndexedDB (unlimited storage) + localStorage fallback
-      await setPersistentItem(storageKey, formData)
-      await setPersistentItem(`inviteque_custom_data_${templateId}_${customSlug}`, formData)
-      await setPersistentItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}`, formData)
-      await setPersistentItem(`inviteque_custom_data_${templateId}_${customSlug}_v1`, formData)
-      await setPersistentItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}_v1`, formData)
-      await setPersistentItem(`inviteque_custom_data_${templateId}_${customSlug}_v2`, formData)
-      await setPersistentItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}_v2`, formData)
-      await setPersistentItem(`inviteque_custom_data_${isShradha ? 'SHRADHA' : 'PAVITRASRI'}`, formData)
+      // Save to backend database — this is the single source of truth
+      const weddingEvt = formData.events.find(e => e.isWeddingOnly || (e.eventName && e.eventName.toLowerCase().includes('wedding')) || e.id === 'wedding') || formData.events[formData.events.length - 1]
+      const slug = isShradha ? 'Shradha' : customSlug
 
       try {
-        localStorage.setItem(storageKey, JSON.stringify(formData))
-        localStorage.setItem(`inviteque_custom_data_${templateId}_${customSlug}`, JSON.stringify(formData))
-        localStorage.setItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}`, JSON.stringify(formData))
-        localStorage.setItem(`inviteque_custom_data_${templateId}_${customSlug}_v1`, JSON.stringify(formData))
-        localStorage.setItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}_v1`, JSON.stringify(formData))
-        localStorage.setItem(`inviteque_custom_data_${templateId}_${customSlug}_v2`, JSON.stringify(formData))
-        localStorage.setItem(`inviteque_custom_data_${templateId.toLowerCase()}_${customSlug.toLowerCase()}_v2`, JSON.stringify(formData))
-      } catch (lsErr) {
-        console.warn('LocalStorage notice (saved safely in IndexedDB):', lsErr)
-      }
-
-      // 2. Persist to backend database gracefully
-      try {
-        const weddingEvt = formData.events.find(e => e.isWeddingOnly || (e.eventName && e.eventName.toLowerCase().includes('wedding')) || e.id === 'wedding') || formData.events[formData.events.length - 1]
         const payload = {
           templateId,
-          code: isShradha ? 'SHRADHA' : 'PAVITRASRI',
+          slug,  // Backend does slug-based upsert (find-or-create by slug)
           coupleNames: `${formData.groomName || ''} & ${formData.brideName || ''}`.trim(),
           groomName: formData.groomName,
           brideName: formData.brideName,
@@ -395,16 +385,18 @@ export default function CustomTemplateEditor() {
           weddingTime: formData.weddingTime,
           heroSubtitle: formData.heroSubtitle,
           mahalName: weddingEvt?.venueName || formData.events[0]?.venueName,
+          venueName: weddingEvt?.venueName || formData.events[0]?.venueName,
           venueAddress: weddingEvt?.venueLine1 || formData.events[0]?.venueLine1,
           venueCity: weddingEvt?.venueLine2 || formData.events[0]?.venueLine2,
-          venueName: weddingEvt?.venueName || formData.events[0]?.venueName,
           mapLink: weddingEvt?.mapUrl || formData.events[0]?.mapUrl,
+          state: formData.state || '',
           photos: formData.photos,
           eventSchedule: formData.events.map(ev => ({
             id: ev.id,
             time: ev.time,
             title: ev.eventName,
             eventName: ev.eventName,
+            label: ev.eventName,
             date: ev.date,
             venueName: ev.venueName,
             venueLine1: ev.venueLine1,
@@ -415,39 +407,6 @@ export default function CustomTemplateEditor() {
             isWeddingOnly: ev.isWeddingOnly
           })),
           status: 'PAID',
-          hasRsvp: Boolean(formData.sections.hasRsvp),
-          heroData: {
-            groomName: formData.groomName,
-            brideName: formData.brideName,
-            weddingDate: formData.weddingDate,
-            weddingMonth: formData.weddingMonth,
-            weddingYear: formData.weddingYear,
-            weddingTime: formData.weddingTime,
-            heroSubtitle: formData.heroSubtitle,
-          },
-          coupleData: {
-            groomName: formData.groomName,
-            brideName: formData.brideName,
-          },
-          scheduleData: {
-            showSchedule: formData.sections.showVenue,
-            showGallery: formData.sections.showGallery,
-            items: formData.events.map(ev => ({
-              id: ev.id,
-              label: ev.eventName,
-              eventName: ev.eventName,
-              title: ev.eventName,
-              date: ev.date,
-              time: ev.time,
-              venueName: ev.venueName,
-              venueLine1: ev.venueLine1,
-              venueLine2: ev.venueLine2,
-              mapUrl: ev.mapUrl,
-              bgDesktop: ev.bgDesktop,
-              bgMobile: ev.bgMobile,
-              isWeddingOnly: ev.isWeddingOnly
-            }))
-          },
           storyData: {
             sectionLabel: formData.storySectionLabel,
             heading: formData.storyHeading,
@@ -458,9 +417,9 @@ export default function CustomTemplateEditor() {
             photos: formData.photos
           },
           invitationData: {
-            showGallery: formData.sections.showGallery,
-            showSchedule: formData.sections.showVenue,
-            hasRsvp: Boolean(formData.sections.hasRsvp),
+            showGallery: formData.sections?.showGallery ?? true,
+            showSchedule: formData.sections?.showVenue ?? true,
+            hasRsvp: Boolean(formData.sections?.hasRsvp),
             welcomeLabel: formData.welcomeLabel,
             welcomeHeadingLine1: formData.welcomeHeading1,
             welcomeHeadingLine2: formData.welcomeHeading2,
@@ -470,17 +429,18 @@ export default function CustomTemplateEditor() {
             storyHeading: formData.storyHeading,
             storyParagraph1: formData.storyParagraph1,
             storyParagraph2: formData.storyParagraph2,
+            storyQuote: formData.storyQuote,
             customSectionTitle: formData.storyHeading,
             customSectionSubtitle: formData.storyQuote,
             customSectionContent: [formData.storyParagraph1, formData.storyParagraph2].filter(Boolean).join('\n\n'),
           },
           rsvpData: {
-            enabled: Boolean(formData.sections.hasRsvp),
+            enabled: Boolean(formData.sections?.hasRsvp),
             allowGuestCount: true,
             rsvpTitle: formData.rsvpTitle,
             rsvpDescription: formData.rsvpDescription,
             rsvpUrl: formData.rsvpUrl,
-            hasRsvp: Boolean(formData.sections.hasRsvp),
+            hasRsvp: Boolean(formData.sections?.hasRsvp),
             registryTitle: formData.registryTitle,
             registryDescription: formData.registryDescription,
             registryUrl: formData.registryUrl,
@@ -488,25 +448,32 @@ export default function CustomTemplateEditor() {
           }
         }
 
-        if (user?.token && saveInvitation) {
-          await saveInvitation(payload)
-        } else {
-          // Send unauthenticated payload to backend
-          await fetch(`${API_URL}/api/invites`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          }).catch(() => {})
+        const headers = { 'Content-Type': 'application/json' }
+        if (user?.token) headers['Authorization'] = `Bearer ${user.token}`
+
+        const res = await fetch(`${API_URL}/api/invites`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(payload)
+        })
+
+        if (!res.ok) {
+          const errText = await res.text()
+          throw new Error(`Save failed (${res.status}): ${errText}`)
         }
+
+        const saved = await res.json()
+        console.log('✅ Saved to DB with slug:', saved.slug, 'code:', saved.code)
       } catch (dbErr) {
-        console.warn('Backend save notice:', dbErr.message)
+        console.error('Backend save error:', dbErr.message)
+        throw dbErr
       }
 
       setSaveSuccess(true)
       setTimeout(() => setSaveSuccess(false), 4000)
     } catch (err) {
       console.error('Save error:', err)
-      alert(err.message || 'Failed to save changes.')
+      alert(err.message || 'Failed to save changes. Please check your connection.')
     } finally {
       setSaving(false)
     }

@@ -8,7 +8,6 @@ import Footer from '../../components/Footer.jsx'
 import { useDraft } from '../../context/DraftContext.jsx'
 import { API_URL } from '../../config.js'
 import SplashScreen from '../../components/SplashScreen.jsx'
-import { getPersistentItem } from '../../utils/indexedDb.js'
 
 // ── Background asset URLs (local Vercel CDN) ────────────────────────────────────────
 const desktopHeroBg = "/assets/templates/midnight-waltz/hero-desktop.webp"
@@ -1920,10 +1919,8 @@ export default function CustomMidnightWaltzPavitraSri() {
   const { variant } = useParams()
   const [searchParams] = useSearchParams()
   const isPreview = searchParams.get('preview') === 'true'
-  const codeParam = searchParams.get('code') || (!['1', '2', 'full', 'wedding'].includes(variant) ? variant : null) || 'PAVITRASRI'
   const { draftData } = useDraft()
   const [liveInvite, setLiveInvite] = useState(null)
-  const [persistentData, setPersistentData] = useState(null)
   const [showSplash, setShowSplash] = useState(!isPreview)
 
   useEffect(() => {
@@ -1933,54 +1930,35 @@ export default function CustomMidnightWaltzPavitraSri() {
     }
   }, [isPreview])
 
-  // 1. Fetch from persistent IndexedDB store
+  // Fetch from Backend Database by slug (single source of truth)
   useEffect(() => {
-    const loadIndexed = async () => {
-      const varKey = variant || '1'
-      const idbData = await getPersistentItem(`inviteque_custom_data_midnight-waltz_Pavitra-Sri_v${varKey}`) ||
-                      await getPersistentItem(`inviteque_custom_data_midnight-waltz_pavitra-sri_v${varKey}`) ||
-                      await getPersistentItem('inviteque_custom_data_midnight-waltz_Pavitra-Sri') ||
-                      await getPersistentItem('inviteque_custom_data_midnight-waltz_pavitra-sri') ||
-                      await getPersistentItem('inviteque_custom_data_PAVITRASRI')
-      if (idbData) {
-        setPersistentData(idbData)
+    if (!isPreview) {
+      const tryFetch = async () => {
+        try {
+          // Fetch by slug — backend resolves Pavitra-Sri via slug column (case-insensitive)
+          const res = await fetch(`${API_URL}/api/invites/Pavitra-Sri`)
+          if (res.ok) {
+            const dbData = await res.json()
+            if (dbData && (dbData.groomName || dbData.coupleData || dbData.heroData || dbData.slug || dbData.code)) {
+              setLiveInvite(dbData)
+            }
+          }
+        } catch (e) {
+          console.warn('Template DB fetch error:', e)
+        }
       }
+      tryFetch()
     }
-    loadIndexed()
-  }, [variant])
+  }, [isPreview])
 
-  // 2. Fetch from Backend Database by unique code or slug
-  useEffect(() => {
-    if (codeParam && !isPreview) {
-      fetch(`${API_URL}/api/invites/${codeParam}`)
-        .then(res => res.ok ? res.json() : null)
-        .then(data => {
-          if (data) setLiveInvite(data)
-        })
-        .catch(() => {})
-    }
-  }, [codeParam, isPreview])
 
   // Merge live data, IndexedDB data, custom editor data, or draft data with base pavitraSriData
   const data = useMemo(() => {
-    let customLocal = null
-    const varKey = variant || '1'
-    try {
-      const savedVar = localStorage.getItem(`inviteque_custom_data_midnight-waltz_Pavitra-Sri_v${varKey}`) ||
-                       localStorage.getItem(`inviteque_custom_data_midnight-waltz_pavitra-sri_v${varKey}`)
-      if (savedVar) {
-        customLocal = JSON.parse(savedVar)
-      } else {
-        const savedFallback = localStorage.getItem('inviteque_custom_data_midnight-waltz_Pavitra-Sri') ||
-                              localStorage.getItem('inviteque_custom_data_midnight-waltz_pavitra-sri')
-        if (savedFallback) customLocal = JSON.parse(savedFallback)
-      }
-    } catch (e) {}
-
     const base = pavitraSriData
+    // DB (liveInvite) always wins, then draftData, then base defaults
     const dynamicSource = isPreview 
       ? draftData 
-      : (persistentData || customLocal || liveInvite || (draftData?.code === codeParam ? draftData : null))
+      : (liveInvite || (draftData?.slug === 'Pavitra-Sri' ? draftData : null))
 
     if (!dynamicSource) return base
 
@@ -2098,11 +2076,11 @@ export default function CustomMidnightWaltzPavitraSri() {
       }
     }
 
-    const currentCode = codeParam || dynamicSource.code || 'PAVITRASRI'
+    const currentCode = dynamicSource.slug || dynamicSource.code || 'Pavitra-Sri'
 
     // Dynamic Story Mapping
-    const storySectionLabel = dynamicSource.storySectionLabel || dynamicSource.story?.sectionLabel || dynamicSource.storyData?.sectionLabel || dynamicSource.invitationData?.storySectionLabel || base.story.sectionLabel || "Our Story"
-    const storyHeading = dynamicSource.storyHeading || dynamicSource.story?.heading || dynamicSource.storyData?.heading || dynamicSource.invitationData?.storyHeading || dynamicSource.invitationData?.customSectionTitle || base.story.heading || "From A Chance Encounter to Forever"
+    const storySectionLabel = dynamicSource.storySectionLabel || dynamicSource.invitationData?.storySectionLabel || dynamicSource.storyData?.sectionLabel || dynamicSource.story?.sectionLabel || base.story.sectionLabel || "Our Story"
+    const storyHeading = dynamicSource.storyHeading || dynamicSource.invitationData?.storyHeading || dynamicSource.invitationData?.customSectionTitle || dynamicSource.storyData?.heading || dynamicSource.story?.heading || base.story.heading || "From A Chance Encounter to Forever"
     
     let storyParagraphs = []
     if (dynamicSource.storyParagraph1 || dynamicSource.storyParagraph2) {
@@ -2122,7 +2100,13 @@ export default function CustomMidnightWaltzPavitraSri() {
       storyParagraphs = base.story.paragraphs || []
     }
 
-    const storyQuote = dynamicSource.storyQuote || dynamicSource.story?.quote || dynamicSource.storyData?.quote || dynamicSource.invitationData?.storyQuote || dynamicSource.invitationData?.customSectionSubtitle || dynamicSource.customSectionSubtitle || base.story.quote
+    const storyQuote = dynamicSource.storyQuote || dynamicSource.invitationData?.storyQuote || dynamicSource.invitationData?.customSectionSubtitle || dynamicSource.storyData?.quote || dynamicSource.story?.quote || dynamicSource.customSectionSubtitle || base.story.quote
+
+    // Welcome message — reads from invitationData (where editor saves it)
+    const welcomeLabel = dynamicSource.welcomeLabel || dynamicSource.invitationData?.welcomeLabel || base.welcome.label
+    const welcomeHeading1 = dynamicSource.welcomeHeading1 || dynamicSource.invitationData?.welcomeHeadingLine1 || base.welcome.headingLine1
+    const welcomeHeading2 = dynamicSource.welcomeHeading2 || dynamicSource.invitationData?.welcomeHeadingLine2 || base.welcome.headingLine2
+    const welcomeMessage = dynamicSource.welcomeMessage || dynamicSource.invitationData?.welcomeMessage || dynamicSource.invitationData?.familyMessage || dynamicSource.familyMessage || base.welcome.message
 
     // Convert wedding date into a valid ISO string for countdown (e.g. 2026-11-12T09:00:00.000Z)
     let countdownISO = "2026-11-12T09:00:00.000Z"
@@ -2184,10 +2168,10 @@ export default function CustomMidnightWaltzPavitraSri() {
       },
       welcome: {
         ...base.welcome,
-        label: dynamicSource.welcomeLabel || base.welcome.label,
-        headingLine1: dynamicSource.welcomeHeading1 || base.welcome.headingLine1,
-        headingLine2: dynamicSource.welcomeHeading2 || base.welcome.headingLine2,
-        message: dynamicSource.welcomeMessage || dynamicSource.familyMessage || dynamicSource.invitationData?.familyMessage || base.welcome.message,
+        label: welcomeLabel,
+        headingLine1: welcomeHeading1,
+        headingLine2: welcomeHeading2,
+        message: welcomeMessage,
       },
       events: mappedEvents,
       countdown: {
@@ -2223,7 +2207,8 @@ export default function CustomMidnightWaltzPavitraSri() {
         hasRsvp: dynamicSource.hasRsvp !== undefined ? dynamicSource.hasRsvp : true,
       }
     }
-  }, [variant, codeParam, isPreview, draftData, liveInvite])
+  }, [variant, isPreview, draftData, liveInvite])
+
 
   // Filter events based on variant:
   // Variant "2" = Wedding ceremony venue only
