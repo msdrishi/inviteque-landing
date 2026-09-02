@@ -44,9 +44,11 @@ const TEMPLATE_MAP = {
 
 const TEMPLATE_ASSETS = {
   'royal-heirloom': [
+    "/assets/templates/royal-heirloom/cover-first-frame.webp",
     "/assets/templates/royal-heirloom/hero-bg-mobile.webp",
   ],
   'royal-heritage': [
+    "/assets/templates/royal-heirloom/cover-first-frame.webp",
     "/assets/templates/royal-heirloom/hero-bg-mobile.webp",
   ],
   'midnight-waltz': [
