@@ -141,6 +141,7 @@ export default function CustomTemplateEditor() {
 
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
+  const [saveError, setSaveError] = useState(null)
 
   // 1. Authentication & DB Preload
   useEffect(() => {
@@ -362,8 +363,17 @@ export default function CustomTemplateEditor() {
 
   const handleSave = async (e) => {
     if (e) e.preventDefault()
+
+    // Must be logged in to save
+    if (!user?.token) {
+      const returnUrl = encodeURIComponent(window.location.pathname)
+      navigate(`/login?redirect=${returnUrl}`)
+      return
+    }
+
     setSaving(true)
     setSaveSuccess(false)
+    setSaveError(null)
 
     try {
       // Save to backend database — this is the single source of truth
@@ -448,32 +458,32 @@ export default function CustomTemplateEditor() {
           }
         }
 
-        const headers = { 'Content-Type': 'application/json' }
-        if (user?.token) headers['Authorization'] = `Bearer ${user.token}`
-
-        const res = await fetch(`${API_URL}/api/invites`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(payload)
-        })
-
-        if (!res.ok) {
-          const errText = await res.text()
-          throw new Error(`Save failed (${res.status}): ${errText}`)
+        // Use saveInvitation from AuthContext — it handles JWT tokens and 401 auto-logout
+        if (!user?.token) {
+          throw new Error('You need to be logged in to save changes. Please log in and try again.')
         }
 
-        const saved = await res.json()
-        console.log('✅ Saved to DB with slug:', saved.slug, 'code:', saved.code)
+        const saved = await saveInvitation(payload)
+        console.log('✅ Saved to DB with slug:', saved?.slug, 'code:', saved?.code)
       } catch (dbErr) {
         console.error('Backend save error:', dbErr.message)
         throw dbErr
       }
 
       setSaveSuccess(true)
+      setSaveError(null)
       setTimeout(() => setSaveSuccess(false), 4000)
     } catch (err) {
       console.error('Save error:', err)
-      alert(err.message || 'Failed to save changes. Please check your connection.')
+      const msg = err.message || 'Failed to save changes.'
+      setSaveError(msg)
+      // If auth error, redirect to login after a short delay
+      if (msg.toLowerCase().includes('session') || msg.toLowerCase().includes('login')) {
+        setTimeout(() => {
+          const returnUrl = encodeURIComponent(window.location.pathname)
+          navigate(`/login?redirect=${returnUrl}`)
+        }, 1500)
+      }
     } finally {
       setSaving(false)
     }
@@ -539,11 +549,44 @@ export default function CustomTemplateEditor() {
               disabled={saving}
               className="rounded-xl bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 text-xs font-bold transition shadow-md flex items-center gap-1.5 disabled:opacity-50 active:scale-98"
             >
-              {saving ? 'Saving...' : '💾 Save Changes'}
+              {saving ? (
+                <><span className="animate-spin">⟳</span> Saving...</>
+              ) : saveSuccess ? (
+                <><span>✅</span> Saved!</>
+              ) : (
+                <>💾 Save Changes</>
+              )}
             </button>
           </div>
         </div>
       </header>
+
+      {/* Not-logged-in banner */}
+      {!authLoading && !user && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-3">
+          <div className="mx-auto max-w-6xl flex items-center justify-between gap-4">
+            <p className="text-sm text-amber-800 font-medium">
+              🔒 You need to be <strong>logged in</strong> to save changes to this template.
+            </p>
+            <Link
+              to={`/login?redirect=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : '')}`}
+              className="shrink-0 rounded-lg bg-amber-600 hover:bg-amber-700 text-white px-4 py-1.5 text-xs font-bold transition"
+            >
+              Log In
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Save error banner */}
+      {saveError && (
+        <div className="bg-red-50 border-b border-red-200 px-4 py-3">
+          <div className="mx-auto max-w-6xl flex items-center justify-between gap-4">
+            <p className="text-sm text-red-700 font-medium">⚠️ {saveError}</p>
+            <button onClick={() => setSaveError(null)} className="text-red-400 hover:text-red-600 text-lg leading-none">✕</button>
+          </div>
+        </div>
+      )}
 
       {/* Main Form Area */}
       <main className="flex-1 mx-auto w-full max-w-4xl px-4 sm:px-6 py-6 sm:py-8 space-y-6 overflow-x-hidden">
