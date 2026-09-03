@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { SectionHeader } from './RoyalHeirloomShared.jsx'
 
 export default function RoyalHeirloomSchedule({ scheduleItems, weddingDate, weddingMonth, weddingYear }) {
-  // 5 events matching the user icons and reference timeline structure
+  // 5 events with icons directly used matching user reference
   const events = [
     {
       time: "10:30 AM",
@@ -36,67 +36,68 @@ export default function RoyalHeirloomSchedule({ scheduleItems, weddingDate, wedd
     }
   ]
 
+  const textureImg = "/assets/templates/royal-heirloom/texture.png"
+
   return (
     <section 
-      className="relative w-full min-h-[100svh] flex flex-col items-center justify-between px-4 py-12 bg-[#422719] border-t border-[#6B422D] overflow-hidden"
-      style={{
-        background: 'radial-gradient(ellipse at 50% 35%, #563321 0%, #3F2417 65%, #2E1A10 100%)',
-      }}
+      className="relative w-full min-h-[100svh] flex flex-col items-center justify-between px-4 py-12 bg-[#B58A6E] border-t border-[#A4795E] overflow-hidden"
     >
-      {/* Header */}
+      {/* Texture image on top of background as requested: without color overlay */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center pointer-events-none"
+        style={{
+          backgroundImage: `url(${textureImg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+
+      {/* Header matching royal heirloom palette */}
       <div className="relative z-10 w-full flex flex-col items-center text-center pt-2">
         <SectionHeader 
           subtitle="TIMELINE OF EVENTS"
           title="WEDDING SCHEDULE"
           description="Follow the rhythm of our sacred moments and festivities."
-          light={true}
+          light={false}
         />
       </div>
 
-      {/* Sinuous S-Curve Line Timeline Matching User Reference */}
-      <div className="relative z-10 w-full max-w-[420px] my-auto py-6">
+      {/* Sinuous Curved Line Timeline Matching User Reference */}
+      <div className="relative z-10 w-full max-w-[440px] my-auto py-6">
         
-        {/* Continuous S-Path Line with Deep Wine / Rose Hearts along the curves */}
+        {/* Continuous Solid S-Path Line in regal warm umber/gold */}
         <svg 
-          viewBox="0 0 380 720" 
+          viewBox="0 0 400 820" 
           className="absolute inset-0 w-full h-full pointer-events-none z-0"
           fill="none"
           preserveAspectRatio="none"
         >
           <defs>
-            <linearGradient id="scheduleWarmCurve" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#D9B48F" stopOpacity="0.35" />
-              <stop offset="25%" stopColor="#E6C8A6" stopOpacity="0.85" />
-              <stop offset="50%" stopColor="#FAF0E6" stopOpacity="0.95" />
-              <stop offset="75%" stopColor="#E6C8A6" stopOpacity="0.85" />
-              <stop offset="100%" stopColor="#D9B48F" stopOpacity="0.35" />
+            <linearGradient id="scheduleRegalGoldCurve" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#8C5329" stopOpacity="0.4" />
+              <stop offset="25%" stopColor="#5A2E14" stopOpacity="0.9" />
+              <stop offset="50%" stopColor="#8C5329" stopOpacity="0.95" />
+              <stop offset="75%" stopColor="#5A2E14" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#8C5329" stopOpacity="0.4" />
             </linearGradient>
           </defs>
 
-          {/* S-curve running from top across and down through each item */}
+          {/* S-curve: full solid line, accentuated curves weaving dynamically between cards */}
           <path
-            d="M 280 20 
-               C 100 80, 70 160, 200 230 
-               C 330 300, 310 380, 180 450 
-               C 50 520, 90 610, 280 690"
-            stroke="url(#scheduleWarmCurve)"
-            strokeWidth="1.8"
+            d="M 240 10 
+               C 340 80, 310 150, 200 210 
+               C 90 270, 70 340, 200 410 
+               C 330 480, 310 550, 200 620 
+               C 90 690, 110 760, 220 810"
+            stroke="url(#scheduleRegalGoldCurve)"
+            strokeWidth="2.2"
             strokeLinecap="round"
           />
 
-          {/* Heart markers along curve nodes matching reference */}
-          <path 
-            d="M 255 75 C 255 71 251 68 247 71 C 243 68 239 71 239 75 C 239 81 247 87 247 87 C 247 87 255 81 255 75 Z" 
-            fill="#8B263E" 
-            stroke="#E8C5BE" 
-            strokeWidth="0.8" 
-          />
-          <path 
-            d="M 125 390 C 125 386 121 383 117 386 C 113 383 109 386 109 390 C 109 396 117 402 117 402 C 117 402 125 396 125 390 Z" 
-            fill="#8B263E" 
-            stroke="#E8C5BE" 
-            strokeWidth="0.8" 
-          />
+          {/* Interactive trajectory node dots */}
+          <circle cx="200" cy="210" r="3.5" fill="#5A2E14" />
+          <circle cx="200" cy="410" r="3.5" fill="#5A2E14" />
+          <circle cx="200" cy="620" r="3.5" fill="#5A2E14" />
         </svg>
 
         {/* 5 Milestone Items Alternating in Left / Right Harmony */}
@@ -106,43 +107,53 @@ export default function RoyalHeirloomSchedule({ scheduleItems, weddingDate, wedd
             return (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 22 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.25 }}
-                transition={{ duration: 0.8, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.85, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className={`relative flex items-center w-full min-h-[90px] ${
-                  isLeft ? 'justify-start pl-4 sm:pl-8' : 'justify-end pr-4 sm:pr-8'
+                  isLeft ? 'justify-start pl-2 sm:pl-4' : 'justify-end pr-2 sm:pr-4'
                 }`}
               >
-                <div className="flex flex-col items-center text-center max-w-[175px] select-none">
-                  {/* Original Transparent PNG Icon on delicate ivory parchment badge */}
-                  <div className="mb-2 flex items-center justify-center w-14 h-14 rounded-full bg-[#FAF5EB] border border-[#D5C6AC] shadow-[0_4px_14px_rgba(0,0,0,0.25)] p-2">
+                <div className="flex flex-col items-center text-center w-[150px] sm:w-[165px] select-none">
+                  
+                  {/* Floating Micro-Animated Icon with Circular Warm Parchment Badge */}
+                  <motion.div 
+                    animate={{ 
+                      y: [0, -5, 0],
+                      rotate: isLeft ? [-2, 2, -2] : [2, -2, 2]
+                    }}
+                    transition={{
+                      duration: 3.2 + (idx % 3) * 0.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: idx * 0.35,
+                    }}
+                    className="mb-1.5 flex items-center justify-center w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-[#FAF5EB]/95 border border-[#CBB89D] shadow-[0_5px_15px_rgba(70,35,15,0.18)] p-2 cursor-pointer hover:scale-105 transition-transform"
+                  >
                     <img 
                       src={evt.iconSrc} 
                       alt={evt.title} 
                       className="w-full h-full object-contain" 
                     />
-                  </div>
+                  </motion.div>
 
-                  {/* Elegant High-Waisted Serif Time Typography matching reference */}
+                  {/* Refined Time Typography in warm espresso */}
                   <div 
-                    className="font-['Cormorant_Garamond',_serif] text-[25px] sm:text-[27px] font-light tracking-wide text-[#FDF8F2] leading-none mb-1"
-                    style={{
-                      textShadow: '0 1px 2px rgba(0,0,0,0.4)',
-                    }}
+                    className="font-['Cinzel'] text-[14px] sm:text-[15px] font-bold tracking-[0.08em] text-[#4A2810] leading-none mb-1"
                   >
                     {evt.time}
                   </div>
 
-                  {/* Event Name in Refined Classical Script Typography */}
+                  {/* Elegant Event Title in Cinzel matching theme */}
                   <h4 
-                    className="font-['Cinzel',_serif] text-[11.5px] sm:text-[12px] font-bold tracking-[0.12em] text-[#EBD7C1] leading-snug uppercase mb-0.5"
+                    className="font-['Cinzel'] text-[9.5px] sm:text-[10px] font-semibold tracking-[0.16em] text-[#6B401D] leading-snug uppercase mb-0.5"
                   >
                     {evt.title}
                   </h4>
 
-                  {/* Date & Subtitle */}
-                  <span className="font-['Cinzel'] text-[8.5px] tracking-widest uppercase text-[#CBB29C] opacity-90">
+                  {/* Date indicator in soft terracotta */}
+                  <span className="font-['Cinzel'] text-[7.5px] sm:text-[8px] tracking-[0.14em] uppercase text-[#8C5D38] font-semibold opacity-90">
                     {evt.dateStr}
                   </span>
                 </div>

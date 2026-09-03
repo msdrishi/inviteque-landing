@@ -44,8 +44,10 @@ export default function RoyalHeirloomCover({
             <video
               ref={videoRef}
               src={coverVideoSrc}
+              poster={coverPosterSrc}
               playsInline
               webkit-playsinline="true"
+              x5-playsinline="true"
               preload="auto"
               muted
               controls={false}
@@ -60,6 +62,9 @@ export default function RoyalHeirloomCover({
                 <motion.img
                   key="floating-poster"
                   src={coverPosterSrc}
+                  onError={(e) => {
+                    e.currentTarget.src = "/assets/templates/royal-heirloom/cover-first-frame.jpg"
+                  }}
                   alt="Wedding Invitation Cover"
                   initial={{ opacity: 1 }}
                   exit={{ opacity: 0 }}

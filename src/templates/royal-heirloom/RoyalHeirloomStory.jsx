@@ -14,8 +14,8 @@ export default function RoyalHeirloomStory({
   weddingYear,
 }) {
   return (
-    <section className="relative w-full min-h-[100svh] flex flex-col items-center justify-between px-4 py-8 bg-[#ECE3D1] border-t border-[#D5C6AC] overflow-hidden">
-      {/* Background image without any filter or overlay */}
+    <section className="relative w-full min-h-[100svh] flex flex-col items-center justify-between px-4 py-8 bg-[#D4BAAC] border-t border-[#C3A697] overflow-hidden">
+      {/* Background illustration without any overlay */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center pointer-events-none"
         style={{
@@ -30,21 +30,22 @@ export default function RoyalHeirloomStory({
           subtitle="CHAPTERS OF LOVE"
           title="OUR STORY"
           description="Cherished moments from our pre-wedding journey."
+          light={false}
         />
       </div>
 
       {/* 3 Cascading Polaroid Cards Overlapping & Filling the Section Naturally */}
       <div className="relative z-10 w-full max-w-[430px] my-auto py-2 px-3">
         
-        {/* Ambient Romantic Handwritten Lettering & Stamp Backdrop (matching reference mood) */}
+        {/* Ambient Romantic Handwritten Lettering & Stamp Backdrop */}
         <div className="absolute inset-0 pointer-events-none select-none z-0 overflow-hidden flex flex-col justify-between py-2 px-1">
-          <div className="font-['Parisienne',_'Allura',_cursive] text-[24px] sm:text-[27px] text-[#A64B2A]/25 leading-[1.35] tracking-wide -rotate-6 pl-2">
+          <div className="font-['Parisienne',_'Allura',_cursive] text-[24px] sm:text-[27px] text-[#5A321E]/18 leading-[1.35] tracking-wide -rotate-6 pl-2">
             i love you • i love you • i love you • i love you • i love you • i love you • i love you
           </div>
-          <div className="font-['Parisienne',_'Allura',_cursive] text-[24px] sm:text-[27px] text-[#A64B2A]/20 leading-[1.35] tracking-wide rotate-3 pr-2 text-right">
+          <div className="font-['Parisienne',_'Allura',_cursive] text-[24px] sm:text-[27px] text-[#5A321E]/14 leading-[1.35] tracking-wide rotate-3 pr-2 text-right">
             forever &amp; always • my whole heart • eternal devotion • soulmates
           </div>
-          <div className="font-['Parisienne',_'Allura',_cursive] text-[22px] sm:text-[25px] text-[#A64B2A]/25 leading-[1.35] tracking-wide -rotate-3 pl-4">
+          <div className="font-['Parisienne',_'Allura',_cursive] text-[22px] sm:text-[25px] text-[#5A321E]/18 leading-[1.35] tracking-wide -rotate-3 pl-4">
             i love you • i love you • i love you • i love you • i love you
           </div>
         </div>
@@ -60,7 +61,7 @@ export default function RoyalHeirloomStory({
               viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ scale: 1.05, rotate: 0, zIndex: 40 }}
-              className="w-[195px] sm:w-[215px] bg-[#FAF6EE] p-2.5 pb-4 rounded-[4px] shadow-[0_14px_34px_rgba(60,30,15,0.22)] border border-[#E2D5C3] cursor-pointer select-none transition-shadow relative"
+              className="w-[195px] sm:w-[215px] bg-[#FAF6EE] p-2.5 pb-4 rounded-[4px] shadow-[0_14px_34px_rgba(0,0,0,0.22)] border border-[#E2D5C3] cursor-pointer select-none transition-shadow relative"
             >
               {/* Top Washi tape */}
               <div 
@@ -95,7 +96,7 @@ export default function RoyalHeirloomStory({
               viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.85, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ scale: 1.05, rotate: 0, zIndex: 40 }}
-              className="w-[200px] sm:w-[220px] bg-[#FAF6EE] p-2.5 pb-4 rounded-[4px] shadow-[0_18px_40px_rgba(60,30,15,0.26)] border border-[#E2D5C3] cursor-pointer select-none transition-shadow relative"
+              className="w-[200px] sm:w-[220px] bg-[#FAF6EE] p-2.5 pb-4 rounded-[4px] shadow-[0_18px_40px_rgba(0,0,0,0.24)] border border-[#E2D5C3] cursor-pointer select-none transition-shadow relative"
             >
               {/* Top Washi tape */}
               <div 
@@ -130,7 +131,7 @@ export default function RoyalHeirloomStory({
               viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.85, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ scale: 1.05, rotate: 0, zIndex: 40 }}
-              className="w-[195px] sm:w-[215px] bg-[#FAF6EE] p-2.5 pb-4 rounded-[4px] shadow-[0_16px_38px_rgba(60,30,15,0.24)] border border-[#E2D5C3] cursor-pointer select-none transition-shadow relative"
+              className="w-[195px] sm:w-[215px] bg-[#FAF6EE] p-2.5 pb-4 rounded-[4px] shadow-[0_16px_38px_rgba(0,0,0,0.22)] border border-[#E2D5C3] cursor-pointer select-none transition-shadow relative"
             >
               {/* Top Washi tape */}
               <div 
@@ -160,7 +161,7 @@ export default function RoyalHeirloomStory({
         </div>
 
         {/* Bottom Accent Signature */}
-        <div className="w-full flex items-center justify-between mt-3 px-2 text-[#683C1A] select-none opacity-80">
+        <div className="w-full flex items-center justify-between mt-3 px-2 text-[#5A321E] select-none">
           <span className="font-['Parisienne',_'Allura',_cursive] text-[20px]">
             Forever in Love
           </span>

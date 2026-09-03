@@ -1,15 +1,64 @@
 import { motion } from 'framer-motion'
 import { SectionHeader } from './RoyalHeirloomShared.jsx'
 
-export default function RoyalHeirloomCalendar({ calendarData, fullAddress }) {
+export default function RoyalHeirloomCalendar({ calendarData, fullAddress, calendarBgMobile }) {
+  const bgImg = calendarBgMobile || "/assets/templates/royal-heirloom/photo-cards-bg.png"
+  const aeroplaneImg = "/assets/templates/royal-heirloom/aeroplane-savethedate.png"
+
   return (
-    <section className="relative w-full min-h-[100svh] flex flex-col items-center justify-between px-5 py-12 bg-[#ECE3D1] border-t border-[#D5C6AC] overflow-hidden">
-      <div className="relative z-10 w-full flex flex-col items-center text-center">
+    <section className="relative w-full min-h-[100svh] flex flex-col items-center justify-between px-5 py-10 bg-[#ECE3D1] border-t border-[#D5C6AC] overflow-hidden">
+      {/* Background illustration without any overlay using photo-cards-bg.png */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center pointer-events-none"
+        style={{
+          backgroundImage: `url(${bgImg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+
+      {/* Title Content */}
+      <div className="relative z-10 w-full flex flex-col items-center text-center pt-2">
         <SectionHeader 
           subtitle="MARK YOUR CALENDAR"
           title="THE DATE"
           description="Save the auspicious date and celebrate our sacred matrimony."
         />
+      </div>
+
+      {/* Aeroplane Animation: positioned cleanly BELOW the title and ABOVE the calendar */}
+      <div className="relative z-20 w-full h-14 -my-1 pointer-events-none overflow-hidden select-none">
+        <motion.div
+          animate={{
+            x: ['-55%', '135%'],
+            y: [0, -4, 2, -3, 0],
+            rotate: [1, -2, 2, -1, 1],
+          }}
+          transition={{
+            x: {
+              duration: 9.5,
+              repeat: Infinity,
+              ease: "linear",
+            },
+            y: {
+              duration: 3.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+            rotate: {
+              duration: 3.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }
+          }}
+          className="absolute top-0 w-[145px] sm:w-[165px] drop-shadow-[0_4px_10px_rgba(70,35,15,0.22)] select-none"
+        >
+          <img
+            src={aeroplaneImg}
+            alt="Save the Date Aeroplane"
+            className="w-full h-auto object-contain pointer-events-none"
+          />
+        </motion.div>
       </div>
 
       {/* Monthly Calendar Card Container */}
@@ -84,7 +133,7 @@ export default function RoyalHeirloomCalendar({ calendarData, fullAddress }) {
         </div>
       </motion.div>
 
-      <div className="h-4" />
+      <div className="h-2" />
     </section>
   )
 }

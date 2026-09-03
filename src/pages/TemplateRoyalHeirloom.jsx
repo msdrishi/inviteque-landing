@@ -18,7 +18,8 @@ import RoyalHeirloomRsvp from '../templates/royal-heirloom/RoyalHeirloomRsvp.jsx
 const coverPosterSrc = "/assets/templates/royal-heirloom/cover-first-frame.webp"
 const coverVideoSrc = "/assets/templates/royal-heirloom/cover-opening-video.MP4"
 const heroBgMobile = "/assets/templates/royal-heirloom/hero-bg-mobile.webp"
-const ourPhotoBgMobile = "/assets/templates/royal-heirloom/our-photo.webp"
+const storyBgMobile = "/assets/templates/royal-heirloom/our-photo.webp"
+const calendarBgMobile = "/assets/templates/royal-heirloom/photo-cards-bg.png"
 const ourVenueBgMobile = "/assets/templates/royal-heirloom/our-venue-mobile.webp"
 const countdownBgMobile = "/assets/templates/royal-heirloom/countdown-mobile.webp"
 
@@ -61,16 +62,16 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const brideName = data?.couple?.brideName || "Ananya"
   const groomName = data?.couple?.groomName || "Rohan"
 
-  const rawDate = data?.eventDetails?.date || "2026-09-03"
+  const rawDate = data?.eventDetails?.date || "2026-11-28"
   const eventDateObj = useMemo(() => new Date(rawDate), [rawDate])
-  const weddingDayNum = isNaN(eventDateObj.getDate()) ? 3 : eventDateObj.getDate()
+  const weddingDayNum = isNaN(eventDateObj.getDate()) ? 28 : eventDateObj.getDate()
   const weddingDate = String(weddingDayNum)
   const weddingMonth = isNaN(eventDateObj.getTime())
-    ? "September"
+    ? "November"
     : eventDateObj.toLocaleString('en-US', { month: 'long' })
   const weddingYear = isNaN(eventDateObj.getFullYear()) ? "2026" : String(eventDateObj.getFullYear())
   const dayOfWeek = isNaN(eventDateObj.getTime())
-    ? "Thursday"
+    ? "Saturday"
     : eventDateObj.toLocaleString('en-US', { weekday: 'long' })
 
   const rawTime = data?.eventDetails?.time || "09:00"
@@ -272,6 +273,12 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
           setHasOpened(true)
         })
       }
+      // Failsafe timeout for mobile devices (video duration is ~3.5s)
+      setTimeout(() => {
+        setHasOpened(true)
+        setHasTriggeredHeroBg(true)
+        setHasTriggeredHeroText(true)
+      }, 5500)
     } else {
       setHasTriggeredHeroText(true)
       setHasTriggeredHeroBg(true)
@@ -280,7 +287,15 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   }
 
   const handleTimeUpdate = () => {
-    // Video plays cleanly with no text distraction
+    // Robust mobile safeguard: trigger landing if video reaches near end (>= duration - 0.25s)
+    const vid = videoRef.current
+    if (vid && vid.duration && vid.currentTime >= vid.duration - 0.25) {
+      if (!hasOpened) {
+        setHasOpened(true)
+        setHasTriggeredHeroBg(true)
+        setHasTriggeredHeroText(true)
+      }
+    }
   }
 
   const handleVideoEnded = () => {
@@ -334,7 +349,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
 
         {/* ── SECTION 2: OUR STORY ── */}
         <RoyalHeirloomStory 
-          ourPhotoBgMobile={ourPhotoBgMobile}
+          ourPhotoBgMobile={storyBgMobile}
           storyPhotos={storyPhotos}
           defaultPhoto1={defaultPhoto1}
           defaultPhoto2={defaultPhoto2}
@@ -367,6 +382,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
         <RoyalHeirloomCalendar 
           calendarData={calendarData}
           fullAddress={fullAddress}
+          calendarBgMobile={calendarBgMobile}
         />
 
         {/* ── SECTION 6: COUNTDOWN ── */}
@@ -377,7 +393,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
 
         {/* ── SECTION 7: THEMED ROYAL RSVP ── */}
         <RoyalHeirloomRsvp 
-          ourPhotoBgMobile={ourPhotoBgMobile}
+          rsvpBgMobile="/assets/templates/royal-heirloom/texture.png"
           rsvpSubmitted={rsvpSubmitted}
           rsvpGuestName={rsvpGuestName}
           rsvpAttending={rsvpAttending}

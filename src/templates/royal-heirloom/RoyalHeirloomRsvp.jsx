@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { SectionHeader } from './RoyalHeirloomShared.jsx'
 
 export default function RoyalHeirloomRsvp({
-  ourPhotoBgMobile,
+  rsvpBgMobile,
   rsvpSubmitted,
   rsvpGuestName,
   rsvpAttending,
@@ -15,20 +15,19 @@ export default function RoyalHeirloomRsvp({
   setRsvpWishes,
   handleRsvpSubmit,
 }) {
+  const bgImg = rsvpBgMobile || "/assets/templates/royal-heirloom/texture.png"
+
   return (
     <section 
-      className="relative w-full min-h-[100svh] flex flex-col items-center justify-center px-5 py-14 bg-[#23140C] border-t border-[#4A2E1C] overflow-hidden"
-      style={{
-        backgroundImage: `radial-gradient(circle at 50% 30%, rgba(140, 93, 56, 0.18) 0%, transparent 70%), url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z' fill='none' stroke='rgba(217, 194, 167, 0.05)' stroke-width='1'/%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(217, 194, 167, 0.08)'/%3E%3C/svg%3E")`,
-        backgroundSize: '100% 100%, 60px 60px',
-      }}
+      className="relative w-full min-h-[100svh] flex flex-col items-center justify-center px-5 py-14 bg-[#B58A6E] border-t border-[#A4795E] overflow-hidden"
     >
-      {/* Subtle floral texture overlay */}
+      {/* Texture background rendered as it is without any overlay color */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center pointer-events-none opacity-10 mix-blend-screen"
+        className="absolute inset-0 z-0 bg-cover bg-center pointer-events-none"
         style={{
-          backgroundImage: `url(${ourPhotoBgMobile})`,
+          backgroundImage: `url(${bgImg})`,
           backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       />
 
@@ -37,7 +36,7 @@ export default function RoyalHeirloomRsvp({
           subtitle="PLEASE RESPOND"
           title="RSVP"
           description="Kindly confirm your gracious presence to help us prepare for your arrival."
-          light={true}
+          light={false}
         />
       </div>
 
@@ -46,7 +45,7 @@ export default function RoyalHeirloomRsvp({
         whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         viewport={{ once: false, amount: 0.2 }}
         transition={{ duration: 1.0 }}
-        className="relative z-10 w-full max-w-[380px] bg-[#FAF5EB]/95 backdrop-blur-md border border-[#CBB89D] rounded-[20px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex flex-col my-2"
+        className="relative z-10 w-full max-w-[380px] bg-[#FAF5EB]/95 backdrop-blur-md border border-[#CBB89D] rounded-[20px] p-6 shadow-[0_20px_50px_rgba(70,35,15,0.22)] flex flex-col my-2"
       >
         {rsvpSubmitted ? (
           <div className="flex flex-col items-center text-center py-8">
