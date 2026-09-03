@@ -209,7 +209,7 @@ export default function RoyalHeirloomHero({
         {/* Couple Names in signature calligraphy with super slow majestic reveal */}
         <div className="flex flex-col items-center justify-center w-full my-3 overflow-visible">
           <AnimatedCoupleName 
-            name={brideName} 
+            name={groomName} 
             isTriggered={hasTriggeredHeroText || hasOpened}
             delay={0.3} 
             fontSizeClass="text-[48px] sm:text-[56px]" 
@@ -233,7 +233,7 @@ export default function RoyalHeirloomHero({
           </motion.div>
 
           <AnimatedCoupleName 
-            name={groomName} 
+            name={brideName} 
             isTriggered={hasTriggeredHeroText || hasOpened}
             delay={1.2} 
             fontSizeClass="text-[48px] sm:text-[56px]" 

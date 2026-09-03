@@ -38,13 +38,13 @@ export const SectionHeader = ({ subtitle, title, description, light = false }) =
       className="flex flex-col items-center text-center px-4 mb-3"
     >
       {subtitle && (
-        <span className={`font-['Cinzel'] text-[10.5px] sm:text-[11.5px] tracking-[0.34em] uppercase font-bold mb-0.5 ${light ? 'text-[#D4AF37]' : 'text-[#8C5D38]'}`}>
+        <span className={`font-['Cinzel'] text-[12.5px] sm:text-[13.5px] tracking-[0.34em] uppercase font-bold mb-0.5 ${light ? 'text-[#D4AF37]' : 'text-[#8C5D38]'}`}>
           {subtitle}
         </span>
       )}
 
       {/* Letter-by-letter animation for every section title */}
-      <h2 className={`font-['Cinzel_Decorative',_'Cinzel',_serif] text-[25px] sm:text-[28px] font-bold tracking-wider leading-tight mb-1 select-none flex items-center justify-center flex-wrap ${light ? 'text-[#FAF5EB]' : 'text-[#4A2810]'}`}>
+      <h2 className={`font-['Cinzel_Decorative',_'Cinzel',_serif] text-[28px] sm:text-[32px] font-bold tracking-wider leading-tight mb-1 select-none flex items-center justify-center flex-wrap ${light ? 'text-[#FAF5EB]' : 'text-[#4A2810]'}`}>
         {titleLetters.map((char, i) => (
           <motion.span
             key={i}
@@ -68,7 +68,7 @@ export const SectionHeader = ({ subtitle, title, description, light = false }) =
 
       <LotusDivider />
       {description && (
-        <p className={`font-['Cormorant_Garamond'] italic text-[14.5px] max-w-[320px] leading-snug mt-0.5 ${light ? 'text-[#E0D1BA]' : 'text-[#6B4734]'}`}>
+        <p className={`font-['Cormorant_Garamond'] italic text-[17px] sm:text-[18px] max-w-[320px] leading-snug mt-0.5 ${light ? 'text-[#E0D1BA]' : 'text-[#6B4734]'}`}>
           {description}
         </p>
       )}

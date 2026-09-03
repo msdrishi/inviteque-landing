@@ -1,6 +1,16 @@
 import { motion } from 'framer-motion'
 import { SectionHeader } from './RoyalHeirloomShared.jsx'
 
+// Golden sparkles floating upon entering the section
+const sparkleParticles = [
+  { top: '18%', left: '12%', size: 10, delay: 0.2 },
+  { top: '22%', right: '14%', size: 12, delay: 0.5 },
+  { top: '46%', left: '8%', size: 8, delay: 0.8 },
+  { top: '50%', right: '10%', size: 11, delay: 0.3 },
+  { top: '72%', left: '15%', size: 9, delay: 0.6 },
+  { top: '78%', right: '16%', size: 10, delay: 0.9 },
+]
+
 export default function RoyalHeirloomStory({
   ourPhotoBgMobile,
   storyPhotos,
@@ -25,10 +35,43 @@ export default function RoyalHeirloomStory({
         }}
       />
 
+      {/* Golden Sparkle Particles on entry */}
+      <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+        {sparkleParticles.map((s, idx) => (
+          <motion.span
+            key={idx}
+            initial={{ opacity: 0, scale: 0 }}
+            whileInView={{
+              opacity: [0, 0.9, 0],
+              scale: [0.3, 1.25, 0.3],
+              y: [0, -18, -32],
+            }}
+            viewport={{ once: false, amount: 0.25 }}
+            transition={{
+              duration: 3.2,
+              repeat: Infinity,
+              delay: s.delay,
+              ease: "easeInOut",
+            }}
+            style={{
+              position: 'absolute',
+              top: s.top,
+              left: s.left,
+              right: s.right,
+              fontSize: s.size,
+              color: '#D4AF37',
+              filter: 'drop-shadow(0 0 6px rgba(212,175,55,0.75))',
+            }}
+          >
+            ✦
+          </motion.span>
+        ))}
+      </div>
+
       <div className="relative z-10 w-full flex flex-col items-center pt-2">
         <SectionHeader 
           subtitle="CHAPTERS OF LOVE"
-          title="OUR STORY"
+          title="OUR MOMENTS"
           description="Cherished moments from our pre-wedding journey."
           light={false}
         />
@@ -56,19 +99,13 @@ export default function RoyalHeirloomStory({
           {/* ── CARD 1: TOP (Shifted Left, Slanted Left -5deg) ── */}
           <div className="w-full flex justify-start pl-1 sm:pl-4 z-10">
             <motion.div
-              initial={{ opacity: 0, x: -30, rotate: -10, scale: 0.9 }}
+              initial={{ opacity: 0, x: -24, rotate: -8, scale: 0.94 }}
               whileInView={{ opacity: 1, x: 0, rotate: -5, scale: 1 }}
               viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ scale: 1.05, rotate: 0, zIndex: 40 }}
+              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ scale: 1.04, rotate: 0, zIndex: 40 }}
               className="w-[195px] sm:w-[215px] bg-[#FAF6EE] p-2.5 pb-4 rounded-[4px] shadow-[0_14px_34px_rgba(0,0,0,0.22)] border border-[#E2D5C3] cursor-pointer select-none transition-shadow relative"
             >
-              {/* Top Washi tape */}
-              <div 
-                className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 bg-[#FAF1DF]/90 border-l border-r border-[#D9C4A8]/60 shadow-[0_1px_3px_rgba(0,0,0,0.1)] -rotate-3 pointer-events-none z-20"
-                style={{ backdropFilter: 'blur(2px)' }}
-              />
-
               <div className="w-full aspect-[4/4.3] overflow-hidden rounded-[2px] bg-[#E8DDD0]">
                 <img
                   src={storyPhotos[0] || defaultPhoto1}
@@ -91,19 +128,13 @@ export default function RoyalHeirloomStory({
           {/* ── CARD 2: CENTER (Below & Overlapping Card 1, Shifted Right, Slanted Right +6deg) ── */}
           <div className="w-full flex justify-end pr-1 sm:pr-4 -mt-10 sm:-mt-12 z-20">
             <motion.div
-              initial={{ opacity: 0, x: 30, rotate: 12, scale: 0.9 }}
+              initial={{ opacity: 0, x: 24, rotate: 10, scale: 0.94 }}
               whileInView={{ opacity: 1, x: 0, rotate: 6, scale: 1 }}
               viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.85, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ scale: 1.05, rotate: 0, zIndex: 40 }}
+              transition={{ duration: 1.4, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ scale: 1.04, rotate: 0, zIndex: 40 }}
               className="w-[200px] sm:w-[220px] bg-[#FAF6EE] p-2.5 pb-4 rounded-[4px] shadow-[0_18px_40px_rgba(0,0,0,0.24)] border border-[#E2D5C3] cursor-pointer select-none transition-shadow relative"
             >
-              {/* Top Washi tape */}
-              <div 
-                className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 bg-[#FAF1DF]/90 border-l border-r border-[#D9C4A8]/60 shadow-[0_1px_3px_rgba(0,0,0,0.1)] rotate-4 pointer-events-none z-20"
-                style={{ backdropFilter: 'blur(2px)' }}
-              />
-
               <div className="w-full aspect-[4/4.3] overflow-hidden rounded-[2px] bg-[#E8DDD0]">
                 <img
                   src={storyPhotos[1] || defaultPhoto2}
@@ -126,19 +157,13 @@ export default function RoyalHeirloomStory({
           {/* ── CARD 3: BOTTOM (Below & Overlapping Card 2, Shifted Left, Slanted Left -4deg) ── */}
           <div className="w-full flex justify-start pl-3 sm:pl-7 -mt-10 sm:-mt-12 z-30">
             <motion.div
-              initial={{ opacity: 0, y: 35, rotate: -10, scale: 0.9 }}
+              initial={{ opacity: 0, y: 28, rotate: -8, scale: 0.94 }}
               whileInView={{ opacity: 1, y: 0, rotate: -4, scale: 1 }}
               viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.85, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ scale: 1.05, rotate: 0, zIndex: 40 }}
+              transition={{ duration: 1.4, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ scale: 1.04, rotate: 0, zIndex: 40 }}
               className="w-[195px] sm:w-[215px] bg-[#FAF6EE] p-2.5 pb-4 rounded-[4px] shadow-[0_16px_38px_rgba(0,0,0,0.22)] border border-[#E2D5C3] cursor-pointer select-none transition-shadow relative"
             >
-              {/* Top Washi tape */}
-              <div 
-                className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 bg-[#FAF1DF]/90 border-l border-r border-[#D9C4A8]/60 shadow-[0_1px_3px_rgba(0,0,0,0.1)] -rotate-4 pointer-events-none z-20"
-                style={{ backdropFilter: 'blur(2px)' }}
-              />
-
               <div className="w-full aspect-[4/4.3] overflow-hidden rounded-[2px] bg-[#E8DDD0]">
                 <img
                   src={storyPhotos[2] || defaultPhoto3}

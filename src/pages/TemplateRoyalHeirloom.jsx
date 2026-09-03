@@ -8,6 +8,7 @@ import Footer from '../components/Footer.jsx'
 import RoyalHeirloomCover from '../templates/royal-heirloom/RoyalHeirloomCover.jsx'
 import RoyalHeirloomHero from '../templates/royal-heirloom/RoyalHeirloomHero.jsx'
 import RoyalHeirloomStory from '../templates/royal-heirloom/RoyalHeirloomStory.jsx'
+import RoyalHeirloomStoryText from '../templates/royal-heirloom/RoyalHeirloomStoryText.jsx'
 import RoyalHeirloomVenue from '../templates/royal-heirloom/RoyalHeirloomVenue.jsx'
 import RoyalHeirloomSchedule from '../templates/royal-heirloom/RoyalHeirloomSchedule.jsx'
 import RoyalHeirloomCalendar from '../templates/royal-heirloom/RoyalHeirloomCalendar.jsx'
@@ -19,8 +20,8 @@ const coverPosterSrc = "/assets/templates/royal-heirloom/cover-first-frame.webp"
 const coverVideoSrc = "/assets/templates/royal-heirloom/cover-opening-video.MP4"
 const heroBgMobile = "/assets/templates/royal-heirloom/hero-bg-mobile.webp"
 const storyBgMobile = "/assets/templates/royal-heirloom/our-photo.webp"
-const calendarBgMobile = "/assets/templates/royal-heirloom/photo-cards-bg.png"
-const ourVenueBgMobile = "/assets/templates/royal-heirloom/our-venue-mobile.webp"
+const calendarBgMobile = "/assets/templates/royal-heirloom/photo-cards-bg.webp"
+const ourVenueBgMobile = "/assets/templates/royal-heirloom/location-bg.webp"
 const countdownBgMobile = "/assets/templates/royal-heirloom/countdown-mobile.webp"
 
 // Pre-wedding shoot photos
@@ -89,8 +90,8 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   }, [rawTime])
 
   const venueTitle = data?.venue?.name || "The Taj Mahal Palace"
-  const fullAddress = data?.venue?.address || "The Taj Mahal Palace, Apollo Bunder, Colaba, Mumbai"
-  const mapUrl = data?.venue?.mapUrl || `https://maps.google.com/?q=${encodeURIComponent(fullAddress)}`
+  const fullAddress = data?.venue?.address || "Apollo Bunder, Colaba, Mumbai, Maharashtra 400001"
+  const mapUrl = data?.venue?.mapUrl || `https://maps.google.com/?q=${encodeURIComponent("The Taj Mahal Palace, Apollo Bunder, Colaba, Mumbai, Maharashtra 400001")}`
 
   // Story Photos
   const storyPhotos = useMemo(() => {
@@ -347,7 +348,13 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
           fullAddress={fullAddress}
         />
 
-        {/* ── SECTION 2: OUR STORY ── */}
+        {/* ── SECTION 2: OUR STORY (NEW NARRATIVE SECTION) ── */}
+        <RoyalHeirloomStoryText 
+          brideName={brideName}
+          groomName={groomName}
+        />
+
+        {/* ── SECTION 3: OUR MOMENTS (PHOTO CARDS) ── */}
         <RoyalHeirloomStory 
           ourPhotoBgMobile={storyBgMobile}
           storyPhotos={storyPhotos}
@@ -361,7 +368,15 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
           weddingYear={weddingYear}
         />
 
-        {/* ── SECTION 3: OUR VENUE ── */}
+        {/* ── SECTION 4: WEDDING SCHEDULE (ABOVE OUR VENUE) ── */}
+        <RoyalHeirloomSchedule 
+          scheduleItems={scheduleItems}
+          weddingDate={weddingDate}
+          weddingMonth={weddingMonth}
+          weddingYear={weddingYear}
+        />
+
+        {/* ── SECTION 5: OUR VENUE ── */}
         <RoyalHeirloomVenue 
           ourVenueBgMobile={ourVenueBgMobile}
           venueTitle={venueTitle}
@@ -370,30 +385,10 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
           mapUrl={mapUrl}
         />
 
-        {/* ── SECTION 4: WEDDING SCHEDULE ── */}
-        <RoyalHeirloomSchedule 
-          scheduleItems={scheduleItems}
-          weddingDate={weddingDate}
-          weddingMonth={weddingMonth}
-          weddingYear={weddingYear}
-        />
-
-        {/* ── SECTION 5: WEDDING CALENDAR ── */}
+        {/* ── SECTION 6: WEDDING CALENDAR & RSVP (MERGED ON #F6EBD8) ── */}
         <RoyalHeirloomCalendar 
           calendarData={calendarData}
           fullAddress={fullAddress}
-          calendarBgMobile={calendarBgMobile}
-        />
-
-        {/* ── SECTION 6: COUNTDOWN ── */}
-        <RoyalHeirloomCountdown 
-          countdownBgMobile={countdownBgMobile}
-          timeLeft={timeLeft}
-        />
-
-        {/* ── SECTION 7: THEMED ROYAL RSVP ── */}
-        <RoyalHeirloomRsvp 
-          rsvpBgMobile="/assets/templates/royal-heirloom/texture.png"
           rsvpSubmitted={rsvpSubmitted}
           rsvpGuestName={rsvpGuestName}
           rsvpAttending={rsvpAttending}
@@ -405,6 +400,12 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
           setRsvpGuestsCount={setRsvpGuestsCount}
           setRsvpWishes={setRsvpWishes}
           handleRsvpSubmit={handleRsvpSubmit}
+        />
+
+        {/* ── SECTION 7: COUNTDOWN ── */}
+        <RoyalHeirloomCountdown 
+          countdownBgMobile={countdownBgMobile}
+          timeLeft={timeLeft}
         />
 
         {/* ── SECTION 8: THEMED ROYAL FOOTER ── */}

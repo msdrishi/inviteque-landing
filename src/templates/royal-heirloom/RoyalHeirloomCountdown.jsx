@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { SectionHeader } from './RoyalHeirloomShared.jsx'
+import { FallingRoyalFlowers } from './RoyalHeirloomHero.jsx'
 
 export default function RoyalHeirloomCountdown({ countdownBgMobile, timeLeft }) {
   return (
@@ -13,6 +14,8 @@ export default function RoyalHeirloomCountdown({ countdownBgMobile, timeLeft }) 
           backgroundPosition: 'center',
         }}
       />
+
+      <FallingRoyalFlowers />
 
       {/* Top Area: Pure Direct Clean Countdown with Sharp Elegant Typography */}
       <div className="relative z-10 w-full flex flex-col items-center text-center pt-2">
@@ -38,7 +41,7 @@ export default function RoyalHeirloomCountdown({ countdownBgMobile, timeLeft }) 
           ].map((unit, idx) => (
             <div key={idx} className="flex flex-col items-center">
               <span 
-                className="font-['Cormorant_Garamond'] text-[44px] sm:text-[50px] font-light italic text-[#3A1F10] leading-none tracking-tight"
+                className="font-['Cormorant_Garamond'] text-[50px] sm:text-[58px] font-light italic text-[#3A1F10] leading-none tracking-tight"
                 style={{
                   textShadow: '0 1px 2px rgba(255,255,255,0.7)',
                 }}
@@ -46,7 +49,7 @@ export default function RoyalHeirloomCountdown({ countdownBgMobile, timeLeft }) 
                 {String(unit.val).padStart(2, '0')}
               </span>
               <span 
-                className="font-['Cinzel'] text-[9.5px] sm:text-[10.5px] tracking-[0.24em] uppercase text-[#6B401D] font-bold mt-1.5"
+                className="font-['Cinzel'] text-[12px] sm:text-[13px] tracking-[0.24em] uppercase text-[#6B401D] font-bold mt-1.5"
               >
                 {unit.label}
               </span>
