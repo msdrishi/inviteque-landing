@@ -68,7 +68,7 @@ export default function RoyalHeirloomCover({
                   alt="Wedding Invitation Cover"
                   initial={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                   className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none scale-[1.04] z-10"
                 />
               )}
