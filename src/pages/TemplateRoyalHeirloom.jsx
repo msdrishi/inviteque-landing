@@ -78,6 +78,32 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     return () => clearTimeout(timer)
   }, [])
 
+  // Global iOS Audio Unlocker - Runs on the very first touch anywhere on the screen
+  useEffect(() => {
+    const unlockAudio = () => {
+      if (audioRef.current && audioRef.current.paused) {
+        // Silently play and immediately pause to unlock the audio context on iOS
+        audioRef.current.play().then(() => {
+          if (audioRef.current) {
+            audioRef.current.pause()
+            audioRef.current.currentTime = 0
+          }
+        }).catch(() => {})
+      }
+      document.removeEventListener('touchstart', unlockAudio, true)
+      document.removeEventListener('click', unlockAudio, true)
+    }
+    
+    // Use capture: true so it runs before React's synthetic events
+    document.addEventListener('touchstart', unlockAudio, { once: true, capture: true })
+    document.addEventListener('click', unlockAudio, { once: true, capture: true })
+    
+    return () => {
+      document.removeEventListener('touchstart', unlockAudio, true)
+      document.removeEventListener('click', unlockAudio, true)
+    }
+  }, [])
+
   // Lock scroll while splash is active, and enforce scroll to top when opened
   useEffect(() => {
     if (!hasOpened) {
