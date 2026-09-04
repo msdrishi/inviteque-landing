@@ -338,17 +338,20 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
 
     const vid = videoRef.current
     if (vid) {
-      // Removing vid.currentTime = 0 as it can interrupt the playPromise on some iOS devices
-      const playPromise = vid.play()
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.warn("Video play interrupted/prevented:", err)
-          // Fallback to opening immediately if video play is blocked (e.g. low power mode)
-          setHasTriggeredHeroText(true)
-          setHasTriggeredHeroBg(true)
-          setHasOpened(true)
-        })
-      }
+      // Stagger video play by 50ms to prevent iOS Safari from crashing/cancelling simultaneous media requests
+      setTimeout(() => {
+        const playPromise = vid.play()
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            console.warn("Video play interrupted/prevented:", err)
+            // Fallback to opening immediately if video play is blocked (e.g. low power mode)
+            setHasTriggeredHeroText(true)
+            setHasTriggeredHeroBg(true)
+            setHasOpened(true)
+          })
+        }
+      }, 50)
+      
       // Failsafe timeout for mobile devices (video duration is ~3.5s)
       setTimeout(() => {
         if (!hasOpened) {

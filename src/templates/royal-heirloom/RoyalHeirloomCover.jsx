@@ -31,7 +31,7 @@ export default function RoyalHeirloomCover({
               rotate: 0,
               scale: 1.04 
             }}
-            transition={!isPlaying ? { 
+            transition={!isVideoReady ? { 
               duration: 6.5, 
               repeat: Infinity, 
               ease: "easeInOut" 
@@ -76,39 +76,46 @@ export default function RoyalHeirloomCover({
             </AnimatePresence>
 
             {/* Restored exact original 6-star animation and styling */}
-            {!isPlaying && (
-              <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-20">
-                {[...Array(6)].map((_, idx) => (
-                  <motion.span
-                    key={idx}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ 
-                      opacity: [0, 0.8, 0],
-                      scale: [0.5, 1.2, 0.5],
-                      y: [0, -15 - idx * 5, -30],
-                      x: [(idx % 2 === 0 ? 1 : -1) * (10 + idx * 8)]
-                    }}
-                    transition={{
-                      duration: 2.5 + idx * 0.4,
-                      repeat: Infinity,
-                      delay: idx * 0.5,
-                      ease: "easeInOut"
-                    }}
-                    className="absolute text-[10px] text-[#F5D78E] drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]"
-                  >
-                    ✦
-                  </motion.span>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {!isVideoReady && (
+                <motion.div 
+                  initial={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="absolute inset-0 pointer-events-none flex items-center justify-center z-20"
+                >
+                  {[...Array(6)].map((_, idx) => (
+                    <motion.span
+                      key={idx}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ 
+                        opacity: [0, 0.8, 0],
+                        scale: [0.5, 1.2, 0.5],
+                        y: [0, -15 - idx * 5, -30],
+                        x: [(idx % 2 === 0 ? 1 : -1) * (10 + idx * 8)]
+                      }}
+                      transition={{
+                        duration: 2.5 + idx * 0.4,
+                        repeat: Infinity,
+                        delay: idx * 0.5,
+                        ease: "easeInOut"
+                      }}
+                      className="absolute text-[10px] text-[#F5D78E] drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]"
+                    >
+                      ✦
+                    </motion.span>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
 
           <AnimatePresence>
-            {!isPlaying && (
+            {!isVideoReady && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.8, ease: "easeOut" } }}
                 transition={{ duration: 0.8 }}
                 className="absolute top-[20%] inset-x-0 flex flex-col items-center pointer-events-none z-20 px-6 text-center"
               >
