@@ -94,12 +94,28 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     }
   }, [hasOpened])
 
-  // Ramp up background music volume when cover opens
+  // Handle background music autoplay gracefully
   useEffect(() => {
     if (hasOpened && audioRef.current && !isMusicMuted) {
       audioRef.current.muted = false
       audioRef.current.volume = 1
-      audioRef.current.play().catch(e => console.warn("Audio autoplay blocked by browser:", e))
+      const playPromise = audioRef.current.play()
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(e => {
+          console.warn("Audio autoplay blocked by browser, waiting for next interaction:", e)
+          // If iOS blocks the autoplay due to expired token, seamlessly wait for the user's very next interaction (like a scroll) to start the music!
+          const playOnInteraction = () => {
+             if (audioRef.current && !isMusicMuted) {
+                 audioRef.current.play().catch(()=>{});
+             }
+             document.removeEventListener('touchstart', playOnInteraction);
+             document.removeEventListener('click', playOnInteraction);
+          };
+          document.addEventListener('touchstart', playOnInteraction, { once: true });
+          document.addEventListener('click', playOnInteraction, { once: true });
+        })
+      }
     }
   }, [hasOpened, isMusicMuted])
 
