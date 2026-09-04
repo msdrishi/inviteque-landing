@@ -77,6 +77,20 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     return () => clearTimeout(timer)
   }, [])
 
+  // Lock scroll while splash is active, and enforce scroll to top when opened
+  useEffect(() => {
+    if (!hasOpened) {
+      window.scrollTo(0, 0)
+      document.body.style.overflow = 'hidden'
+    } else {
+      window.scrollTo(0, 0)
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [hasOpened])
+
   // Auto-play background music when cover opens
   useEffect(() => {
     if (hasOpened && audioRef.current && !isMusicMuted) {
@@ -313,6 +327,15 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const handleOpenCover = () => {
     if (hasOpened || isPlaying) return
     setIsPlaying(true)
+
+    // UNLOCK AUDIO: Browser policies require audio to be played within a user interaction event
+    if (audioRef.current && !isMusicMuted) {
+      audioRef.current.play().then(() => {
+        // Pause immediately; the actual play happens in the useEffect when hasOpened flips to true
+        audioRef.current.pause()
+      }).catch(e => console.warn("Audio unlock failed:", e))
+    }
+
     const vid = videoRef.current
     if (vid) {
       // Removing vid.currentTime = 0 as it can interrupt the playPromise on some iOS devices
