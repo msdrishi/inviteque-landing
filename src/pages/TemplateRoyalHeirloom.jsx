@@ -374,10 +374,11 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
       
       // Robust mobile safeguard: trigger landing if video reaches near end (>= duration - 0.25s)
       if (vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
-      if (!hasOpened) {
-        setHasOpened(true)
-        setHasTriggeredHeroBg(true)
-        setHasTriggeredHeroText(true)
+        if (!hasOpened) {
+          setHasOpened(true)
+          setHasTriggeredHeroBg(true)
+          setHasTriggeredHeroText(true)
+        }
       }
     }
   }
