@@ -357,13 +357,6 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
       setHasTriggeredHeroBg(true)
       setHasOpened(true)
     }
-
-    // UNLOCK AUDIO: Play synchronously with video, but strictly MUTED. 
-    // iOS respects `muted` but completely ignores `volume`, which is why the previous volume=0 attempt failed!
-    if (audioRef.current && !isMusicMuted) {
-      audioRef.current.muted = true
-      audioRef.current.play().catch(e => console.warn("Audio unlock failed:", e))
-    }
   }
 
   const handleTimeUpdate = () => {
