@@ -95,6 +95,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   // Ramp up background music volume when cover opens
   useEffect(() => {
     if (hasOpened && audioRef.current && !isMusicMuted) {
+      audioRef.current.muted = false
       audioRef.current.volume = 1
       audioRef.current.play().catch(e => console.warn("Audio autoplay blocked by browser:", e))
     }
@@ -330,28 +331,19 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     if (hasOpened || isPlaying) return
     setIsPlaying(true)
 
-    // UNLOCK AUDIO: Play with volume 0 synchronously during user tap
-    if (audioRef.current && !isMusicMuted) {
-      audioRef.current.volume = 0
-      audioRef.current.play().catch(e => console.warn("Audio unlock failed:", e))
-    }
-
     const vid = videoRef.current
     if (vid) {
-      // Stagger video play by 50ms to prevent iOS Safari from crashing/cancelling simultaneous media requests
-      setTimeout(() => {
-        const playPromise = vid.play()
-        if (playPromise !== undefined) {
-          playPromise.catch((err) => {
-            console.warn("Video play interrupted/prevented:", err)
-            // Fallback to opening immediately if video play is blocked (e.g. low power mode)
-            setHasTriggeredHeroText(true)
-            setHasTriggeredHeroBg(true)
-            setHasOpened(true)
-          })
-        }
-      }, 50)
-      
+      const playPromise = vid.play()
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn("Video play interrupted/prevented:", err)
+          // Fallback to opening immediately if video play is blocked (e.g. low power mode)
+          setHasTriggeredHeroText(true)
+          setHasTriggeredHeroBg(true)
+          setHasOpened(true)
+        })
+      }
+
       // Failsafe timeout for mobile devices (video duration is ~3.5s)
       setTimeout(() => {
         if (!hasOpened) {
@@ -364,6 +356,13 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
       setHasTriggeredHeroText(true)
       setHasTriggeredHeroBg(true)
       setHasOpened(true)
+    }
+
+    // UNLOCK AUDIO: Play synchronously with video, but strictly MUTED. 
+    // iOS respects `muted` but completely ignores `volume`, which is why the previous volume=0 attempt failed!
+    if (audioRef.current && !isMusicMuted) {
+      audioRef.current.muted = true
+      audioRef.current.play().catch(e => console.warn("Audio unlock failed:", e))
     }
   }
 
