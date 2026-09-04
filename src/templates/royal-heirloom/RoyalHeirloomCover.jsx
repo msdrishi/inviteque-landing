@@ -18,7 +18,7 @@ export default function RoyalHeirloomCover({
           key="cover-splash"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] } }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A1412] max-w-[480px] mx-auto overflow-hidden cursor-pointer"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A1412] max-w-[480px] md:max-w-[820px] mx-auto overflow-hidden cursor-pointer"
           onClick={handleOpenCover}
         >
           <motion.div

@@ -408,7 +408,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   return (
     <div className="relative min-h-screen bg-[#181311] text-[#4A3326] flex justify-center selection:bg-[#E8C29D]/40">
       {/* Mobile/Tablet Screen Constraint Wrapper with exact requested #ECE3D1 background */}
-      <main className="relative w-full max-w-[480px] bg-[#ECE3D1] shadow-[0_0_80px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col">
+      <main className="relative w-full max-w-[480px] md:max-w-[820px] mx-auto bg-[#ECE3D1] shadow-[0_0_80px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col">
         
         {/* ── 1. COVER OPENING / SPLASH SCREEN ── */}
         <RoyalHeirloomCover 
