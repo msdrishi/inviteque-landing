@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 export default function RoyalHeirloomCover({
   hasOpened,
   isPlaying,
+  isVideoReady,
   videoRef,
   coverVideoSrc,
   coverPosterSrc,
@@ -56,9 +57,9 @@ export default function RoyalHeirloomCover({
               className="w-full h-full object-cover select-none pointer-events-none scale-[1.04]"
             />
 
-            {/* First frame floating poster - removed immediately upon tap */}
+            {/* First frame floating poster - removed when video starts rendering */}
             <AnimatePresence>
-              {!isPlaying && (
+              {!isVideoReady && (
                 <motion.img
                   key="floating-poster"
                   src={coverPosterSrc}

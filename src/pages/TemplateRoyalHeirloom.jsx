@@ -59,6 +59,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const [hasOpened, setHasOpened] = useState(false)
   const [hasTriggeredHeroText, setHasTriggeredHeroText] = useState(false)
   const [hasTriggeredHeroBg, setHasTriggeredHeroBg] = useState(false)
+  const [isVideoReady, setIsVideoReady] = useState(false)
   const videoRef = useRef(null)
 
   // Music state
@@ -91,9 +92,10 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     }
   }, [hasOpened])
 
-  // Auto-play background music when cover opens
+  // Ramp up background music volume when cover opens
   useEffect(() => {
     if (hasOpened && audioRef.current && !isMusicMuted) {
+      audioRef.current.volume = 1
       audioRef.current.play().catch(e => console.warn("Audio autoplay blocked by browser:", e))
     }
   }, [hasOpened, isMusicMuted])
@@ -328,12 +330,10 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     if (hasOpened || isPlaying) return
     setIsPlaying(true)
 
-    // UNLOCK AUDIO: Browser policies require audio to be played within a user interaction event
+    // UNLOCK AUDIO: Play with volume 0 synchronously during user tap
     if (audioRef.current && !isMusicMuted) {
-      audioRef.current.play().then(() => {
-        // Pause immediately; the actual play happens in the useEffect when hasOpened flips to true
-        audioRef.current.pause()
-      }).catch(e => console.warn("Audio unlock failed:", e))
+      audioRef.current.volume = 0
+      audioRef.current.play().catch(e => console.warn("Audio unlock failed:", e))
     }
 
     const vid = videoRef.current
@@ -365,9 +365,15 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   }
 
   const handleTimeUpdate = () => {
-    // Robust mobile safeguard: trigger landing if video reaches near end (>= duration - 0.25s)
     const vid = videoRef.current
-    if (vid && vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
+    if (vid) {
+      // Remove poster only when video has started pushing frames
+      if (vid.currentTime > 0.1 && !isVideoReady) {
+        setIsVideoReady(true)
+      }
+      
+      // Robust mobile safeguard: trigger landing if video reaches near end (>= duration - 0.25s)
+      if (vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
       if (!hasOpened) {
         setHasOpened(true)
         setHasTriggeredHeroBg(true)
@@ -412,6 +418,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
         <RoyalHeirloomCover 
           hasOpened={hasOpened}
           isPlaying={isPlaying}
+          isVideoReady={isVideoReady}
           videoRef={videoRef}
           coverVideoSrc={coverVideoSrc}
           coverPosterSrc={coverPosterSrc}
