@@ -26,6 +26,7 @@ export default function RoyalHeirloomCover({
             <video
               ref={videoRef}
               src={coverVideoSrc}
+              poster={coverPosterSrc}
               playsInline
               webkit-playsinline="true"
               x5-playsinline="true"
