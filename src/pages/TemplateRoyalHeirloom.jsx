@@ -38,11 +38,24 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   // Cover opening & splash state
+  const [assetsLoaded, setAssetsLoaded] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasOpened, setHasOpened] = useState(false)
   const [hasTriggeredHeroText, setHasTriggeredHeroText] = useState(false)
   const [hasTriggeredHeroBg, setHasTriggeredHeroBg] = useState(false)
   const videoRef = useRef(null)
+
+  useEffect(() => {
+    // Preload critical cover poster to avoid blank screen
+    const img = new Image()
+    img.src = coverPosterSrc
+    img.onload = () => setAssetsLoaded(true)
+    img.onerror = () => setAssetsLoaded(true)
+    
+    // Failsafe timer if onload fails to fire
+    const timer = setTimeout(() => setAssetsLoaded(true), 2500)
+    return () => clearTimeout(timer)
+  }, [])
 
   // Interactive Story Photo Index
   const [activeStoryIdx, setActiveStoryIdx] = useState(0)
@@ -264,11 +277,12 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     setIsPlaying(true)
     const vid = videoRef.current
     if (vid) {
-      vid.currentTime = 0
+      // Removing vid.currentTime = 0 as it can interrupt the playPromise on some iOS devices
       const playPromise = vid.play()
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
           console.warn("Video play interrupted/prevented:", err)
+          // Fallback to opening immediately if video play is blocked (e.g. low power mode)
           setHasTriggeredHeroText(true)
           setHasTriggeredHeroBg(true)
           setHasOpened(true)
@@ -276,9 +290,11 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
       }
       // Failsafe timeout for mobile devices (video duration is ~3.5s)
       setTimeout(() => {
-        setHasOpened(true)
-        setHasTriggeredHeroBg(true)
-        setHasTriggeredHeroText(true)
+        if (!hasOpened) {
+          setHasOpened(true)
+          setHasTriggeredHeroBg(true)
+          setHasTriggeredHeroText(true)
+        }
       }, 5500)
     } else {
       setHasTriggeredHeroText(true)
@@ -290,7 +306,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const handleTimeUpdate = () => {
     // Robust mobile safeguard: trigger landing if video reaches near end (>= duration - 0.25s)
     const vid = videoRef.current
-    if (vid && vid.duration && vid.currentTime >= vid.duration - 0.25) {
+    if (vid && vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
       if (!hasOpened) {
         setHasOpened(true)
         setHasTriggeredHeroBg(true)
@@ -313,6 +329,17 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const handleRsvpSubmit = (e) => {
     e.preventDefault()
     setRsvpSubmitted(true)
+  }
+
+  if (!assetsLoaded) {
+    return (
+      <div className="min-h-screen bg-[#181311] flex flex-col items-center justify-center selection:bg-[#E8C29D]/40">
+        <div className="w-10 h-10 border-2 border-[#8C5D38]/30 border-t-[#8C5D38] rounded-full animate-spin"></div>
+        <p className="mt-6 text-[#8C5D38] font-['Cinzel'] tracking-[0.3em] text-xs uppercase animate-pulse">
+          Loading
+        </p>
+      </div>
+    )
   }
 
   return (

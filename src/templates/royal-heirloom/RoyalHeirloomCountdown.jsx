@@ -4,7 +4,7 @@ import { FallingRoyalFlowers } from './RoyalHeirloomHero.jsx'
 
 export default function RoyalHeirloomCountdown({ countdownBgMobile, timeLeft }) {
   return (
-    <section className="relative w-full min-h-[100svh] flex flex-col items-center justify-start px-6 pt-12 pb-16 bg-[#ECE3D1] border-t border-[#D5C6AC] overflow-hidden">
+    <section className="relative w-full min-h-[100svh] flex flex-col items-center justify-start px-6 pt-6 pb-16 bg-[#ECE3D1] border-t border-[#D5C6AC] overflow-hidden">
       {/* Custom Countdown Mobile Background Image */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center pointer-events-none opacity-90"
@@ -31,7 +31,7 @@ export default function RoyalHeirloomCountdown({ countdownBgMobile, timeLeft }) 
           whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: false, amount: 0.25 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center justify-center gap-5 sm:gap-7 w-full max-w-[360px] my-5 select-none"
+          className="flex items-center justify-center gap-3 sm:gap-5 w-full max-w-[360px] mt-2 mb-4 select-none"
         >
           {[
             { val: timeLeft.days, label: 'DAYS' },
@@ -41,7 +41,7 @@ export default function RoyalHeirloomCountdown({ countdownBgMobile, timeLeft }) 
           ].map((unit, idx) => (
             <div key={idx} className="flex flex-col items-center">
               <span 
-                className="font-['Cormorant_Garamond'] text-[50px] sm:text-[58px] font-light italic text-[#3A1F10] leading-none tracking-tight"
+                className="font-['Cormorant_Garamond'] text-[38px] sm:text-[44px] font-light italic text-[#3A1F10] leading-none tracking-tight"
                 style={{
                   textShadow: '0 1px 2px rgba(255,255,255,0.7)',
                 }}
@@ -49,7 +49,7 @@ export default function RoyalHeirloomCountdown({ countdownBgMobile, timeLeft }) 
                 {String(unit.val).padStart(2, '0')}
               </span>
               <span 
-                className="font-['Cinzel'] text-[12px] sm:text-[13px] tracking-[0.24em] uppercase text-[#6B401D] font-bold mt-1.5"
+                className="font-['Cinzel'] text-[9.5px] sm:text-[11px] tracking-[0.2em] uppercase text-[#6B401D] font-bold mt-1"
               >
                 {unit.label}
               </span>

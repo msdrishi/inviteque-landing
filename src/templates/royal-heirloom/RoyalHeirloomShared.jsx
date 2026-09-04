@@ -44,7 +44,7 @@ export const SectionHeader = ({ subtitle, title, description, light = false }) =
       )}
 
       {/* Letter-by-letter animation for every section title */}
-      <h2 className={`font-['Cinzel_Decorative',_'Cinzel',_serif] text-[28px] sm:text-[32px] font-bold tracking-wider leading-tight mb-1 select-none flex items-center justify-center flex-wrap ${light ? 'text-[#FAF5EB]' : 'text-[#4A2810]'}`}>
+      <h2 className={`font-['Cinzel_Decorative',_'Cinzel',_serif] text-[22px] min-[380px]:text-[25px] sm:text-[30px] font-bold tracking-wider leading-tight mb-1 select-none flex items-center justify-center flex-wrap ${light ? 'text-[#FAF5EB]' : 'text-[#4A2810]'}`}>
         {titleLetters.map((char, i) => (
           <motion.span
             key={i}
