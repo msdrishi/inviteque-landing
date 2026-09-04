@@ -21,26 +21,7 @@ export default function RoyalHeirloomCover({
           className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A1412] max-w-[480px] md:max-w-[820px] mx-auto overflow-hidden cursor-pointer"
           onClick={handleOpenCover}
         >
-          <motion.div
-            animate={!isPlaying ? { 
-              y: [0, 5, 0], 
-              rotate: [-0.5, 0.5, -0.5],
-              scale: [1.03, 1.05, 1.03]
-            } : { 
-              y: 0, 
-              rotate: 0,
-              scale: 1.04 
-            }}
-            transition={!isVideoReady ? { 
-              duration: 6.5, 
-              repeat: Infinity, 
-              ease: "easeInOut" 
-            } : { 
-              duration: 0.1 
-            }}
-            style={{ transformOrigin: "50% 0%" }}
-            className="w-full h-full relative overflow-hidden"
-          >
+          <div className="w-full h-full relative overflow-hidden">
             {/* Always mounted video element for immediate playback */}
             <video
               ref={videoRef}
@@ -107,7 +88,7 @@ export default function RoyalHeirloomCover({
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </div>
 
           <AnimatePresence>
             {!isPlaying && (

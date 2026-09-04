@@ -196,33 +196,33 @@ export default function RoyalHeirloomHero({
           initial={{ opacity: 0, y: 16, filter: 'blur(6px)' }}
           animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 16, filter: 'blur(6px)' }}
           transition={{ duration: 3.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center gap-0.5 mb-3"
+          className="flex flex-col items-center gap-0.5 mb-3 md:mb-5"
         >
-          <span className="font-['Cinzel'] text-[12px] md:text-[13px] tracking-[0.36em] uppercase text-[#6B4330] font-semibold leading-tight">
+          <span className="font-['Cinzel'] text-[12px] sm:text-[14px] md:text-[18px] tracking-[0.36em] uppercase text-[#6B4330] font-semibold leading-tight">
             WEDDING
           </span>
-          <span className="font-['Cinzel'] text-[12px] md:text-[13px] tracking-[0.36em] uppercase text-[#6B4330] font-semibold leading-tight">
+          <span className="font-['Cinzel'] text-[12px] sm:text-[14px] md:text-[18px] tracking-[0.36em] uppercase text-[#6B4330] font-semibold leading-tight">
             INVITATION
           </span>
         </motion.div>
 
         {/* Couple Names in signature calligraphy with super slow majestic reveal */}
-        <div className="flex flex-col items-center justify-center w-full my-3 overflow-visible">
+        <div className="flex flex-col items-center justify-center w-full my-3 md:my-6 overflow-visible">
           <AnimatedCoupleName 
             name={groomName} 
             isTriggered={hasTriggeredHeroText || hasOpened}
             delay={0.3} 
-            fontSizeClass="text-[48px] sm:text-[56px]" 
+            fontSizeClass="text-[48px] sm:text-[56px] md:text-[80px]" 
           />
 
           <motion.div
             initial={{ opacity: 0, scale: 0.7 }}
             animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.7 }}
             transition={{ duration: 3.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="my-[-6px] text-center"
+            className="my-[-6px] md:my-[-10px] text-center"
           >
             <span 
-              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[28px] sm:text-[34px] leading-none inline-block select-none font-normal"
+              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[28px] sm:text-[34px] md:text-[50px] leading-none inline-block select-none font-normal"
               style={{
                 color: '#6B401D',
                 filter: 'drop-shadow(0px 1px 2px rgba(90, 45, 15, 0.25))',
@@ -236,17 +236,17 @@ export default function RoyalHeirloomHero({
             name={brideName} 
             isTriggered={hasTriggeredHeroText || hasOpened}
             delay={1.2} 
-            fontSizeClass="text-[48px] sm:text-[56px]" 
+            fontSizeClass="text-[48px] sm:text-[56px] md:text-[80px]" 
           />
         </div>
 
         {/* Subtext, Date Module & Mumbai Address */}
-        <div className="flex flex-col items-center w-full max-w-[340px] px-2 gap-2 mt-3">
+        <div className="flex flex-col items-center w-full max-w-[340px] md:max-w-[500px] px-2 gap-2 md:gap-4 mt-3 md:mt-6">
           <motion.p 
             initial={{ opacity: 0, y: 14, filter: 'blur(5px)' }}
             animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(5px)' }}
             transition={{ duration: 3.6, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
-            className="font-['Cinzel'] text-[9.5px] sm:text-[10px] tracking-[0.22em] uppercase text-[#6B4734] font-medium leading-[1.55] max-w-[280px]"
+            className="font-['Cinzel'] text-[9.5px] sm:text-[10px] md:text-[14px] tracking-[0.22em] uppercase text-[#6B4734] font-medium leading-[1.55] max-w-[280px] md:max-w-[400px]"
           >
             TOGETHER WITH THEIR FAMILIES INVITE YOU TO THEIR WEDDING CELEBRATION
           </motion.p>
@@ -255,37 +255,37 @@ export default function RoyalHeirloomHero({
             initial={{ opacity: 0, y: 14, filter: 'blur(5px)' }}
             animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(5px)' }}
             transition={{ duration: 3.6, delay: 2.0, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center w-full max-w-[280px] pt-1 pb-1"
+            className="flex flex-col items-center w-full max-w-[280px] md:max-w-[400px] pt-1 pb-1"
           >
-            <span className="font-['Cinzel'] text-[11px] sm:text-[12px] tracking-[0.3em] uppercase text-[#543625] font-bold">
+            <span className="font-['Cinzel'] text-[11px] sm:text-[12px] md:text-[16px] tracking-[0.3em] uppercase text-[#543625] font-bold">
               {weddingMonth.toUpperCase()}
             </span>
 
-            <div className="flex items-center justify-between w-full my-1 gap-2">
+            <div className="flex items-center justify-between w-full my-1 md:my-3 gap-2">
               <div className="flex-1 flex flex-col justify-center">
-                <div className="h-[0.8px] w-full bg-[#8C6044]/70 mb-1" />
-                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-[#6B4330] font-semibold text-center">
+                <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mb-1 md:mb-2" />
+                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[13px] tracking-[0.2em] uppercase text-[#6B4330] font-semibold text-center">
                   {dayOfWeek}
                 </span>
-                <div className="h-[0.8px] w-full bg-[#8C6044]/70 mt-1" />
+                <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mt-1 md:mt-2" />
               </div>
 
-              <div className="px-2">
-                <span className="font-['Bodoni_Moda',_'Cinzel',_serif] text-[34px] sm:text-[38px] leading-none font-bold text-[#4F301D] tracking-tight">
+              <div className="px-2 md:px-4">
+                <span className="font-['Bodoni_Moda',_'Cinzel',_serif] text-[34px] sm:text-[38px] md:text-[54px] leading-none font-bold text-[#4F301D] tracking-tight">
                   {weddingDate}
                 </span>
               </div>
 
               <div className="flex-1 flex flex-col justify-center">
-                <div className="h-[0.8px] w-full bg-[#8C6044]/70 mb-1" />
-                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] tracking-[0.16em] uppercase text-[#6B4330] font-semibold text-center whitespace-nowrap">
+                <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mb-1 md:mb-2" />
+                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[13px] tracking-[0.16em] uppercase text-[#6B4330] font-semibold text-center whitespace-nowrap">
                   {formattedTime}
                 </span>
-                <div className="h-[0.8px] w-full bg-[#8C6044]/70 mt-1" />
+                <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mt-1 md:mt-2" />
               </div>
             </div>
 
-            <span className="font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.28em] text-[#543625] font-semibold">
+            <span className="font-['Cinzel'] text-[10px] sm:text-[11px] md:text-[15px] tracking-[0.28em] text-[#543625] font-semibold">
               {weddingYear}
             </span>
           </motion.div>
@@ -294,7 +294,7 @@ export default function RoyalHeirloomHero({
             initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
             animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(4px)' }}
             transition={{ duration: 3.6, delay: 2.3, ease: [0.16, 1, 0.3, 1] }}
-            className="font-['Cinzel'] text-[8.5px] sm:text-[9.5px] tracking-[0.2em] uppercase text-[#73503D] opacity-90 max-w-[270px] leading-[1.45]"
+            className="font-['Cinzel'] text-[8.5px] sm:text-[9.5px] md:text-[12.5px] tracking-[0.2em] uppercase text-[#73503D] opacity-90 max-w-[270px] md:max-w-[400px] leading-[1.45] md:leading-relaxed"
           >
             {fullAddress}
           </motion.div>
@@ -303,10 +303,10 @@ export default function RoyalHeirloomHero({
             initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
             animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(4px)' }}
             transition={{ duration: 3.6, delay: 2.6, ease: [0.16, 1, 0.3, 1] }}
-            className="pt-0.5"
+            className="pt-0.5 md:pt-3"
           >
             <span 
-              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[26px] sm:text-[30px] leading-none select-none"
+              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[26px] sm:text-[30px] md:text-[42px] leading-none select-none"
               style={{
                 color: '#6E4424',
                 filter: 'drop-shadow(0px 1px 1px rgba(90, 45, 15, 0.2))'
