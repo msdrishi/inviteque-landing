@@ -54,7 +54,6 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   // Cover opening & splash state
-  const [assetsLoaded, setAssetsLoaded] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasOpened, setHasOpened] = useState(false)
   const [hasTriggeredHeroText, setHasTriggeredHeroText] = useState(false)
@@ -65,18 +64,6 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   // Music state
   const [isMusicMuted, setIsMusicMuted] = useState(false)
   const audioRef = useRef(null)
-
-  useEffect(() => {
-    // Preload critical cover poster to avoid blank screen
-    const img = new Image()
-    img.src = coverPosterSrc
-    img.onload = () => setAssetsLoaded(true)
-    img.onerror = () => setAssetsLoaded(true)
-    
-    // Failsafe timer if onload fails to fire
-    const timer = setTimeout(() => setAssetsLoaded(true), 2500)
-    return () => clearTimeout(timer)
-  }, [])
 
 
 
@@ -406,21 +393,9 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   // QR Code URL for venue navigation
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(mapUrl)}&color=4A2810&bgcolor=ECE3D1`
 
-  // Handle RSVP Submit
   const handleRsvpSubmit = (e) => {
     e.preventDefault()
     setRsvpSubmitted(true)
-  }
-
-  if (!assetsLoaded) {
-    return (
-      <div className="min-h-screen bg-[#181311] flex flex-col items-center justify-center selection:bg-[#E8C29D]/40">
-        <div className="w-10 h-10 border-2 border-[#8C5D38]/30 border-t-[#8C5D38] rounded-full animate-spin"></div>
-        <p className="mt-6 text-[#8C5D38] font-['Cinzel'] tracking-[0.3em] text-xs uppercase animate-pulse">
-          Loading
-        </p>
-      </div>
-    )
   }
 
   return (
