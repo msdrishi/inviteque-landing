@@ -76,11 +76,11 @@ export default function RoyalHeirloomCover({
 
             {/* Restored exact original 6-star animation and styling */}
             <AnimatePresence>
-              {!isVideoReady && (
+              {!isPlaying && (
                 <motion.div 
                   initial={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                   className="absolute inset-0 pointer-events-none flex items-center justify-center z-20"
                 >
                   {[...Array(6)].map((_, idx) => (
@@ -110,11 +110,11 @@ export default function RoyalHeirloomCover({
           </motion.div>
 
           <AnimatePresence>
-            {!isVideoReady && (
+            {!isPlaying && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.8, ease: "easeOut" } }}
+                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.3, ease: "easeOut" } }}
                 transition={{ duration: 0.8 }}
                 className="absolute top-[20%] inset-x-0 flex flex-col items-center pointer-events-none z-20 px-6 text-center"
               >
