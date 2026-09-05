@@ -4,6 +4,7 @@ import { useDraft } from '../context/DraftContext.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import Footer from '../components/Footer.jsx'
 import InviteQRSVP from '../components/InviteQRSVP.jsx'
+import CustomSection from '../components/CustomSection.jsx'
 
 // Section Components
 import RoyalHeirloomCover from '../templates/royal-heirloom/RoyalHeirloomCover.jsx'
@@ -166,6 +167,8 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
         ? Boolean(savedData.invitationData.hasRsvp)
         : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp))
     : Boolean(draftData?.hasRsvp)
+
+  const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
   // Cover opening & splash state
   const [isPlaying, setIsPlaying] = useState(false)
@@ -457,6 +460,16 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
           fullAddress={fullAddress}
         />
         )}
+
+        {/* ── SECTION 1.5: CUSTOM SECTION ── */}
+        <CustomSection 
+          photoBgDesktop={storyBgMobile} 
+          photoBgMobile={storyBgMobile} 
+          data={customSectionData} 
+          titleFontClass="font-['Cinzel']"
+          bodyFontClass="font-['Cormorant_Garamond']"
+          accentColorClass="text-[#8C5D38]"
+        />
 
         {/* ── SECTION 2: OUR STORY (NEW NARRATIVE SECTION) ── */}
         {showWelcome && (
