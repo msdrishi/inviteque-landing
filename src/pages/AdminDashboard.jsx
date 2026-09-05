@@ -54,7 +54,7 @@ const TEMPLATE_DISPLAY_NAMES = {
   'royal-wedding': 'Royal Wedding',
   'blossom-whisper': 'Blossom Whisper',
   'template-5': 'Celestial Union',
-  'template-6': 'Infinite Journey',
+  'royal-heirloom': 'Royal Heirloom',
   'royal-heritage': 'Royal Heritage',
   'enchanted-forest': 'Enchanted Forest',
   'modern-muse': 'Modern Muse',

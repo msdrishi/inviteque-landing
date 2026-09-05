@@ -20,6 +20,13 @@ export default function TemplateRoyalWedding({ savedData, groupSlug: propGroupSl
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
+  const sections = savedData?.sections || draftData?.sections || {}
+  const showHero = sections.showHero !== false
+  const showStory = sections.showStory !== false
+  const showWelcome = sections.showWelcome !== false
+  const showVenue = sections.showVenue !== false
+  const showCountdown = sections.showCountdown !== false
+
   // Watermark is shown unless the invitation has been paid
   const isPaid = savedData && (
     String(savedData.status).toUpperCase() === 'PAID' ||
@@ -274,7 +281,9 @@ export default function TemplateRoyalWedding({ savedData, groupSlug: propGroupSl
           />
         )}
 
-        <Countdown data={data.countdown} />
+        {showCountdown && (
+  <Countdown data={data.countdown} />
+)}
 
         <Footer data={data.footer} />
       </div>

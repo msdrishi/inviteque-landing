@@ -434,6 +434,13 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
+  const sections = savedData?.sections || draftData?.sections || {}
+  const showHero = sections.showHero !== false
+  const showStory = sections.showStory !== false
+  const showWelcome = sections.showWelcome !== false
+  const showVenue = sections.showVenue !== false
+  const showCountdown = sections.showCountdown !== false
+
   // Watermark status
   const isPaid = savedData && (
     String(savedData.status).toUpperCase() === 'PAID' ||
@@ -714,8 +721,12 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
             </div>
           )}
 
-          <EverlastingVowsHero data={data.hero} isDesktop={false} />
-          <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
+          {showHero && (
+  <EverlastingVowsHero data={data.hero} isDesktop={false} />
+)}
+          {showStory && (
+  <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
+)}
           {showGallery && <Story data={data.story} bgImage={photoBgMobile} isDesktop={false} />}
           <Invitation data={data.invitation} isDesktop={false} bgImage={messageBgMobile} />
           <Venue data={data.venue} bgImage={locationBgMobile} theme="gold" isDesktop={false} />
@@ -729,7 +740,9 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
               config={savedData?.rsvpData}
             />
           )}
-          <Countdown data={data.countdown} bgImage={countdownBgMobile} theme="gold" isDesktop={false} />
+          {showCountdown && (
+  <Countdown data={data.countdown} bgImage={countdownBgMobile} theme="gold" isDesktop={false} />
+)}
           <Footer data={data.footer} theme="gold" />
         </div>
       </div>
@@ -765,10 +778,14 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
         )}
 
         <div className="w-full">
-          <EverlastingVowsHero data={data.hero} isDesktop={true} />
+          {showHero && (
+  <EverlastingVowsHero data={data.hero} isDesktop={true} />
+)}
         </div>
         <div className="w-full">
-          <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
+          {showStory && (
+  <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
+)}
         </div>
         {showGallery && (
           <div className="w-full">
@@ -798,7 +815,9 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
           </div>
         )}
         <div className="w-full">
-          <Countdown data={data.countdown} isDesktop={true} bgImage={countdownBgDesktop} theme="gold" />
+          {showCountdown && (
+  <Countdown data={data.countdown} isDesktop={true} bgImage={countdownBgDesktop} theme="gold" />
+)}
         </div>
         <div className="w-full">
           <Footer data={data.footer} isDesktop={true} theme="gold" />

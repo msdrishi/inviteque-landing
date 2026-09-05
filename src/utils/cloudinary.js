@@ -75,11 +75,11 @@ export async function uploadToCloudinary(file) {
 
   const formData = new FormData()
   formData.append('file', optimizedFile)
-  formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset)
 
   try {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
     const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`,
+      `${API_URL}/api/images/upload`,
       {
         method: 'POST',
         body: formData,
@@ -92,16 +92,19 @@ export async function uploadToCloudinary(file) {
 
     const data = await response.json()
     
+    // Ensure full URL
+    const imageUrl = data.secure_url.startsWith('http') ? data.secure_url : `${API_URL}${data.secure_url}`;
+    
     // Return optimized URL
     return {
-      url: data.secure_url,
+      url: imageUrl,
       publicId: data.public_id,
-      width: data.width,
-      height: data.height,
-      size: data.bytes,
+      width: data.width || 800,
+      height: data.height || 600,
+      size: data.bytes || 0,
     }
   } catch (error) {
-    console.error('Cloudinary upload error:', error)
+    console.error('Image upload error:', error)
     throw error
   }
 }

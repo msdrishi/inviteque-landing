@@ -400,7 +400,9 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
         </section>
 
         {/* Custom Section */}
-        <CustomSection photoBgDesktop={scheduleBgDesktop} photoBgMobile={scheduleBgMobile} data={customSectionData} />
+        {showStory && (
+  <CustomSection photoBgDesktop={scheduleBgDesktop} photoBgMobile={scheduleBgMobile} data={customSectionData} />
+)}
 
         {/* Family Section */}
         {showFamilySection && (

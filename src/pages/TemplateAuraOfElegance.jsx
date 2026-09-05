@@ -20,6 +20,13 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
+  const sections = savedData?.sections || draftData?.sections || {}
+  const showHero = sections.showHero !== false
+  const showStory = sections.showStory !== false
+  const showWelcome = sections.showWelcome !== false
+  const showVenue = sections.showVenue !== false
+  const showCountdown = sections.showCountdown !== false
+
   // Watermark is shown unless the invitation has been paid
   const isPaid = savedData && (
     String(savedData.status).toUpperCase() === 'PAID' ||
@@ -257,7 +264,9 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
               config={savedData?.rsvpData}
             />
           )}
-          <Countdown data={data.countdown} centerText={true} />
+          {showCountdown && (
+  <Countdown data={data.countdown} centerText={true} />
+)}
           <Footer data={data.footer} />
         </div>
       </div>
@@ -341,7 +350,9 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
 
         {/* 7) Forever / Countdown Section */}
         <div className="w-full">
-          <Countdown data={data.countdown} isDesktop={true} centerText={true} />
+          {showCountdown && (
+  <Countdown data={data.countdown} isDesktop={true} centerText={true} />
+)}
         </div>
 
         {/* Footer Section */}

@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDraft } from '../context/DraftContext.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import Footer from '../components/Footer.jsx'
+import InviteQRSVP from '../components/InviteQRSVP.jsx'
 
 // Section Components
 import RoyalHeirloomCover from '../templates/royal-heirloom/RoyalHeirloomCover.jsx'
@@ -13,7 +14,6 @@ import RoyalHeirloomVenue from '../templates/royal-heirloom/RoyalHeirloomVenue.j
 import RoyalHeirloomSchedule from '../templates/royal-heirloom/RoyalHeirloomSchedule.jsx'
 import RoyalHeirloomCalendar from '../templates/royal-heirloom/RoyalHeirloomCalendar.jsx'
 import RoyalHeirloomCountdown from '../templates/royal-heirloom/RoyalHeirloomCountdown.jsx'
-import RoyalHeirloomRsvp from '../templates/royal-heirloom/RoyalHeirloomRsvp.jsx'
 import bgMusicSrc from '../assets/audio/bg-music-a-thousand-years.mp3'
 
 // Simple SVG icon for Music On
@@ -53,6 +53,120 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
+  // ── Payment / Watermark ────────────────────────────────────────
+  const isPaid = savedData && (
+    String(savedData.status).toUpperCase() === 'PAID' ||
+    savedData.isPaid === true ||
+    (savedData.coupleData && savedData.coupleData.isPaid === true)
+  )
+  const showWatermark = !isPaid
+
+  // ── Data resolution (same pattern as MidnightWaltz) ────────────
+  const groomName = (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || 'Rohan'
+  const brideName = (savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName) || 'Ananya'
+
+  // Wedding date components
+  const weddingDateStr = (() => {
+    if (savedData?.heroData?.weddingDate) return savedData.heroData.weddingDate
+    if (draftData?.weddingDate) return draftData.weddingDate
+    return '28'
+  })()
+  const weddingMonth = (() => {
+    if (savedData?.heroData?.weddingMonth) return savedData.heroData.weddingMonth
+    if (draftData?.weddingMonth) return draftData.weddingMonth
+    return 'November'
+  })()
+  const weddingYear = (() => {
+    if (savedData?.heroData?.weddingYear) return savedData.heroData.weddingYear
+    if (draftData?.weddingYear) return draftData.weddingYear
+    return '2026'
+  })()
+  const weddingTime = (savedData ? (savedData.heroData?.weddingTime || savedData.weddingTime) : draftData?.weddingTime) || '09:00 AM - 10:30 AM'
+
+  // Derive computed values from date components
+  const eventDateObj = useMemo(() => {
+    const d = new Date(`${weddingMonth} ${weddingDateStr}, ${weddingYear}`)
+    return isNaN(d.getTime()) ? new Date('2026-11-28') : d
+  }, [weddingMonth, weddingDateStr, weddingYear])
+
+  const weddingDate = weddingDateStr
+  const dayOfWeek = useMemo(() => {
+    return eventDateObj.toLocaleString('en-US', { weekday: 'long' })
+  }, [eventDateObj])
+
+  const formattedTime = useMemo(() => {
+    // If the time already has AM/PM, return as-is
+    if (/[AaPp][Mm]/.test(weddingTime)) return weddingTime
+    try {
+      const [h, m] = weddingTime.split(':')
+      const hour = parseInt(h, 10)
+      if (isNaN(hour)) return "09:00 AM"
+      const ampm = hour >= 12 ? 'PM' : 'AM'
+      const h12 = hour % 12 || 12
+      return `${String(h12).padStart(2, '0')}:${m || '00'} ${ampm}`
+    } catch {
+      return "09:00 AM"
+    }
+  }, [weddingTime])
+
+  // Venue data
+  const venueTitle = (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || 'The Taj Mahal Palace'
+  const venueAddress = (savedData ? (savedData.venueData?.venueAddress || savedData.venueAddress) : draftData?.venueAddress) || 'Apollo Bunder, Colaba'
+  const venueCity = (savedData ? (savedData.venueData?.venueCity || savedData.venueCity) : draftData?.venueCity) || 'Mumbai'
+  const venueState = (savedData ? (savedData.venueData?.state || savedData.state) : draftData?.state) || 'Maharashtra 400001'
+  const fullAddress = [venueAddress, venueCity, venueState].filter(Boolean).join(', ')
+  const mapUrl = (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData?.mapLink) || `https://maps.google.com/?q=${encodeURIComponent(venueTitle + ', ' + fullAddress)}`
+
+  // Story Photos (dynamic from Builder)
+  const storyPhotos = useMemo(() => {
+    const photos = savedData
+      ? (savedData.storyData?.photos || savedData.photos || [])
+      : (draftData?.photos || [])
+    const active = photos.filter(Boolean)
+    return active.length > 0 ? active : [defaultPhoto1, defaultPhoto2, defaultPhoto3]
+  }, [savedData, draftData])
+
+  // Schedule Items (dynamic 1-6 events from Builder)
+  const scheduleItems = useMemo(() => {
+    const items = savedData
+      ? (savedData.scheduleData?.items || [])
+      : (Array.isArray(draftData?.scheduleItems) ? draftData.scheduleItems : [])
+    // If user provided schedule items, use them; otherwise fall back to defaults
+    if (items.length > 0) return items
+    return null // Let RoyalHeirloomSchedule use its built-in defaults
+  }, [savedData, draftData])
+
+  // Section visibility toggles
+  const sections = savedData?.sections || draftData?.sections || {}
+  const showHero = sections.showHero !== false
+  const showStory = sections.showStory !== false
+  const showWelcome = sections.showWelcome !== false
+  const showVenue = sections.showVenue !== false
+  const showCountdown = sections.showCountdown !== false
+
+  // Show/hide features
+  const showGallery = savedData
+    ? (savedData.invitationData?.showGallery !== undefined
+        ? Boolean(savedData.invitationData.showGallery)
+        : (savedData.scheduleData?.showGallery !== undefined
+            ? Boolean(savedData.scheduleData.showGallery)
+            : true))
+    : Boolean(draftData?.showGallery ?? true)
+
+  const showSchedule = savedData
+    ? (savedData.invitationData?.showSchedule !== undefined
+        ? Boolean(savedData.invitationData.showSchedule)
+        : (savedData.scheduleData?.showSchedule !== undefined
+            ? Boolean(savedData.scheduleData.showSchedule)
+            : true))
+    : Boolean(draftData?.showSchedule ?? true)
+
+  const showRsvp = savedData
+    ? (savedData.invitationData?.hasRsvp !== undefined
+        ? Boolean(savedData.invitationData.hasRsvp)
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp))
+    : Boolean(draftData?.hasRsvp)
+
   // Cover opening & splash state
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasOpened, setHasOpened] = useState(false)
@@ -64,8 +178,6 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   // Music state
   const [isMusicMuted, setIsMusicMuted] = useState(false)
   const audioRef = useRef(null)
-
-
 
   // Lock scroll while splash is active, and enforce scroll to top when opened
   useEffect(() => {
@@ -81,27 +193,17 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     }
   }, [hasOpened])
 
-  // Handle background music autoplay gracefully
+  // Handle background music: unmute after cover opens
+  // The audio is started muted during the tap gesture (handleOpenCover),
+  // so by the time hasOpened becomes true, the audio is already playing.
+  // We just need to unmute it here.
   useEffect(() => {
     if (hasOpened && audioRef.current && !isMusicMuted) {
       audioRef.current.muted = false
       audioRef.current.volume = 1
-      const playPromise = audioRef.current.play()
-      
-      if (playPromise !== undefined) {
-        playPromise.catch(e => {
-          console.warn("Audio autoplay blocked by browser, waiting for next interaction:", e)
-          // If iOS blocks the autoplay due to expired token, seamlessly wait for the user's very next interaction (like a scroll) to start the music!
-          const playOnInteraction = () => {
-             if (audioRef.current && !isMusicMuted) {
-                 audioRef.current.play().catch(()=>{});
-             }
-             document.removeEventListener('touchstart', playOnInteraction);
-             document.removeEventListener('click', playOnInteraction);
-          };
-          document.addEventListener('touchstart', playOnInteraction, { once: true });
-          document.addEventListener('click', playOnInteraction, { once: true });
-        })
+      // If audio isn't playing yet (edge case), try to play
+      if (audioRef.current.paused) {
+        audioRef.current.play().catch(() => {})
       }
     }
   }, [hasOpened, isMusicMuted])
@@ -110,7 +212,8 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     setIsMusicMuted(!isMusicMuted)
     if (audioRef.current) {
       if (isMusicMuted) {
-        audioRef.current.play()
+        audioRef.current.muted = false
+        audioRef.current.play().catch(() => {})
       } else {
         audioRef.current.pause()
       }
@@ -120,119 +223,12 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   // Interactive Story Photo Index
   const [activeStoryIdx, setActiveStoryIdx] = useState(0)
 
-  // RSVP State
-  const [rsvpGuestName, setRsvpGuestName] = useState('')
-  const [rsvpAttending, setRsvpAttending] = useState('yes')
-  const [rsvpGuestsCount, setRsvpGuestsCount] = useState('1')
-  const [rsvpWishes, setRsvpWishes] = useState('')
-  const [rsvpSubmitted, setRsvpSubmitted] = useState(false)
-
   // Countdown timer state
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
 
-  // Data resolution: Props -> DraftContext -> Static Mock Data
-  const data = savedData || draftData || staticData
-
-  const brideName = data?.couple?.brideName || "Ananya"
-  const groomName = data?.couple?.groomName || "Rohan"
-
-  const rawDate = data?.eventDetails?.date || "2026-11-28"
-  const eventDateObj = useMemo(() => new Date(rawDate), [rawDate])
-  const weddingDayNum = isNaN(eventDateObj.getDate()) ? 28 : eventDateObj.getDate()
-  const weddingDate = String(weddingDayNum)
-  const weddingMonth = isNaN(eventDateObj.getTime())
-    ? "November"
-    : eventDateObj.toLocaleString('en-US', { month: 'long' })
-  const weddingYear = isNaN(eventDateObj.getFullYear()) ? "2026" : String(eventDateObj.getFullYear())
-  const dayOfWeek = isNaN(eventDateObj.getTime())
-    ? "Saturday"
-    : eventDateObj.toLocaleString('en-US', { weekday: 'long' })
-
-  const rawTime = data?.eventDetails?.time || "09:00"
-  const formattedTime = useMemo(() => {
-    try {
-      const [h, m] = rawTime.split(':')
-      const hour = parseInt(h, 10)
-      if (isNaN(hour)) return "09:00 AM"
-      const ampm = hour >= 12 ? 'PM' : 'AM'
-      const h12 = hour % 12 || 12
-      return `${String(h12).padStart(2, '0')}:${m || '00'} ${ampm}`
-    } catch {
-      return "09:00 AM"
-    }
-  }, [rawTime])
-
-  const venueTitle = data?.venue?.name || "The Taj Mahal Palace"
-  const fullAddress = data?.venue?.address || "Apollo Bunder, Colaba, Mumbai, Maharashtra 400001"
-  const mapUrl = data?.venue?.mapUrl || `https://maps.google.com/?q=${encodeURIComponent("The Taj Mahal Palace, Apollo Bunder, Colaba, Mumbai, Maharashtra 400001")}`
-
-  // Story Photos
-  const storyPhotos = useMemo(() => {
-    if (data?.story?.photos && Array.isArray(data.story.photos) && data.story.photos.length > 0) {
-      return data.story.photos
-    }
-    return [defaultPhoto1, defaultPhoto2, defaultPhoto3]
-  }, [data?.story?.photos])
-
-  // Payment Watermark Check
-  const paymentConfirmed = savedData?.paymentStatus === 'PAID'
-  const isOwner = draftData?.invitationId && draftData?.invitationId === savedData?.invitationId
-  const showWatermark = !paymentConfirmed && !isPreview && !isOwner
-
-  // Wedding Schedule Items with Modern Elegant SVG Icons
-  const scheduleItems = useMemo(() => {
-    return [
-      {
-        time: "09:00 AM",
-        title: "Ganpati Pooja & Haldi",
-        desc: "Sacred invocation and turmeric blessings to commence festivities.",
-        icon: (
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
-          </svg>
-        )
-      },
-      {
-        time: "06:30 PM",
-        title: "Sangeet & Musical Night",
-        desc: "An evening of royal melodies, dance performances, and celebration.",
-        icon: (
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 18V5l12-2v13" />
-            <circle cx="6" cy="18" r="3" />
-            <circle cx="18" cy="16" r="3" />
-          </svg>
-        )
-      },
-      {
-        time: "10:30 AM",
-        title: "Baraat & Muhurtham",
-        desc: "The royal procession followed by the auspicious wedding vows.",
-        icon: (
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="9" cy="12" r="6" />
-            <circle cx="15" cy="12" r="6" />
-          </svg>
-        )
-      },
-      {
-        time: "07:30 PM",
-        title: "Grand Heirloom Reception",
-        desc: "A royal dinner feast and celebratory banquet with family and friends.",
-        icon: (
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8 22h8" />
-            <path d="M12 15v7" />
-            <path d="M17 3H7c0 4.5 2.5 7 5 7s5-2.5 5-7z" />
-          </svg>
-        )
-      }
-    ]
-  }, [])
-
   // Dynamic Calendar Calculation
   const calendarData = useMemo(() => {
-    const validDate = isNaN(eventDateObj.getTime()) ? new Date("2026-09-03") : eventDateObj
+    const validDate = isNaN(eventDateObj.getTime()) ? new Date("2026-11-28") : eventDateObj
     const year = validDate.getFullYear()
     const month = validDate.getMonth()
     const targetDay = validDate.getDate()
@@ -295,12 +291,11 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   // Countdown timer logic
   const targetDateISO = useMemo(() => {
     try {
-      const timeClean = rawTime.length === 5 ? `${rawTime}:00` : "09:00:00"
-      return new Date(`${rawDate}T${timeClean}`).getTime()
+      return eventDateObj.getTime()
     } catch {
-      return new Date("2026-09-03T09:00:00").getTime()
+      return new Date("2026-11-28T09:00:00").getTime()
     }
-  }, [rawDate, rawTime])
+  }, [eventDateObj])
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -331,10 +326,17 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     setActiveStoryIdx(prev => (prev === storyPhotos.length - 1 ? 0 : prev + 1))
   }
 
-  // Handle Cover Opening Tap
+  // Handle Cover Opening Tap — start audio MUTED during tap gesture for iOS autoplay
   const handleOpenCover = () => {
     if (hasOpened || isPlaying) return
     setIsPlaying(true)
+
+    // Start audio muted immediately during the user gesture
+    // This "reserves" the audio playback token on iOS/Android
+    if (audioRef.current) {
+      audioRef.current.muted = true
+      audioRef.current.play().catch(() => {})
+    }
 
     const vid = videoRef.current
     if (vid) {
@@ -342,7 +344,6 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
           console.warn("Video play interrupted/prevented:", err)
-          // Fallback to opening immediately if video play is blocked (e.g. low power mode)
           setHasTriggeredHeroText(true)
           setHasTriggeredHeroBg(true)
           setHasOpened(true)
@@ -367,12 +368,9 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const handleTimeUpdate = () => {
     const vid = videoRef.current
     if (vid) {
-      // Remove poster only when video has started pushing frames
       if (vid.currentTime > 0.1 && !isVideoReady) {
         setIsVideoReady(true)
       }
-      
-      // Robust mobile safeguard: trigger landing if video reaches near end (>= duration - 0.25s)
       if (vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
         if (!hasOpened) {
           setHasOpened(true)
@@ -384,7 +382,6 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   }
 
   const handleVideoEnded = () => {
-    // When video finishes, hero page lands and triggers the text & couple name letter animations
     setHasOpened(true)
     setHasTriggeredHeroBg(true)
     setHasTriggeredHeroText(true)
@@ -393,15 +390,42 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   // QR Code URL for venue navigation
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(mapUrl)}&color=4A2810&bgcolor=ECE3D1`
 
-  const handleRsvpSubmit = (e) => {
-    e.preventDefault()
-    setRsvpSubmitted(true)
-  }
+  // ── Watermark ─────────────────────────────────────────────────
+  const Watermark = () => showWatermark ? (
+    <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[100] opacity-[0.30] select-none">
+      {['8%', '50%', '92%'].map(top => (
+        <span
+          key={top}
+          className="absolute left-1/2 -translate-x-1/2 text-[17px] font-medium tracking-[0.2em] text-[#4A2810]"
+          style={{ top, fontFamily: "'Montserrat', sans-serif" }}
+        >
+          preview-inviteque
+        </span>
+      ))}
+    </div>
+  ) : null
+
+  // ── Preview Nav ───────────────────────────────────────────────
+  const PreviewNav = () => isPreview ? (
+    <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
+      <div className="flex gap-3">
+        <button onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })} className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#4A2810]/20 bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#4A2810] shadow-xl hover:scale-105 active:scale-95">
+          Back
+        </button>
+        <button onClick={() => navigate('/payment', { state: { draftData, templateId } })} className="flex-1 flex items-center justify-center gap-3 rounded-full bg-[#4A2810] py-4 text-sm font-bold text-[#F5D78E] shadow-xl hover:scale-105 active:scale-95">
+          Proceed
+        </button>
+      </div>
+    </div>
+  ) : null
 
   return (
     <div className="relative min-h-screen bg-[#181311] text-[#4A3326] flex justify-center selection:bg-[#E8C29D]/40">
       {/* Mobile/Tablet Screen Constraint Wrapper with exact requested #ECE3D1 background */}
       <main className="relative w-full max-w-[480px] md:max-w-[820px] mx-auto bg-[#ECE3D1] shadow-[0_0_80px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col">
+
+        <Watermark />
+        <PreviewNav />
         
         {/* ── 1. COVER OPENING / SPLASH SCREEN ── */}
         <RoyalHeirloomCover 
@@ -417,6 +441,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
         />
 
         {/* ── SECTION 1: HERO ── */}
+        {showHero && (
         <RoyalHeirloomHero 
           heroBgMobile={heroBgMobile}
           hasTriggeredHeroBg={hasTriggeredHeroBg}
@@ -431,14 +456,18 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
           weddingYear={weddingYear}
           fullAddress={fullAddress}
         />
+        )}
 
         {/* ── SECTION 2: OUR STORY (NEW NARRATIVE SECTION) ── */}
+        {showWelcome && (
         <RoyalHeirloomStoryText 
           brideName={brideName}
           groomName={groomName}
         />
+        )}
 
         {/* ── SECTION 3: OUR MOMENTS (PHOTO CARDS) ── */}
+        {showStory && showGallery && (
         <RoyalHeirloomStory 
           ourPhotoBgMobile={storyBgMobile}
           storyPhotos={storyPhotos}
@@ -451,16 +480,20 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
           weddingMonth={weddingMonth}
           weddingYear={weddingYear}
         />
+        )}
 
-        {/* ── SECTION 4: WEDDING SCHEDULE (ABOVE OUR VENUE) ── */}
+        {/* ── SECTION 4: WEDDING SCHEDULE (DYNAMIC 1-6 EVENTS + S-CURVE) ── */}
+        {showSchedule && (
         <RoyalHeirloomSchedule 
           scheduleItems={scheduleItems}
           weddingDate={weddingDate}
           weddingMonth={weddingMonth}
           weddingYear={weddingYear}
         />
+        )}
 
         {/* ── SECTION 5: OUR VENUE ── */}
+        {showVenue && (
         <RoyalHeirloomVenue 
           ourVenueBgMobile={ourVenueBgMobile}
           venueTitle={venueTitle}
@@ -468,31 +501,34 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
           qrCodeUrl={qrCodeUrl}
           mapUrl={mapUrl}
         />
+        )}
 
-        {/* ── SECTION 6: WEDDING CALENDAR & RSVP (MERGED ON #F6EBD8) ── */}
+        {/* ── SECTION 6: WEDDING CALENDAR ── */}
         <RoyalHeirloomCalendar 
           calendarData={calendarData}
           fullAddress={fullAddress}
-          rsvpSubmitted={rsvpSubmitted}
-          rsvpGuestName={rsvpGuestName}
-          rsvpAttending={rsvpAttending}
-          rsvpGuestsCount={rsvpGuestsCount}
-          rsvpWishes={rsvpWishes}
-          setRsvpSubmitted={setRsvpSubmitted}
-          setRsvpGuestName={setRsvpGuestName}
-          setRsvpAttending={setRsvpAttending}
-          setRsvpGuestsCount={setRsvpGuestsCount}
-          setRsvpWishes={setRsvpWishes}
-          handleRsvpSubmit={handleRsvpSubmit}
         />
 
-        {/* ── SECTION 7: COUNTDOWN ── */}
+        {/* ── SECTION 7: RSVP (via shared InviteQRSVP component) ── */}
+        {showRsvp && (
+          <InviteQRSVP
+            weddingCode={savedData?.code}
+            groupSlug={groupSlug}
+            isPreview={!savedData}
+            theme="royal"
+            config={savedData?.rsvpData}
+          />
+        )}
+
+        {/* ── SECTION 8: COUNTDOWN ── */}
+        {showCountdown && (
         <RoyalHeirloomCountdown 
           countdownBgMobile={countdownBgMobile}
           timeLeft={timeLeft}
         />
+        )}
 
-        {/* ── SECTION 8: THEMED ROYAL FOOTER ── */}
+        {/* ── SECTION 9: THEMED ROYAL FOOTER ── */}
         <Footer 
           data={savedData?.footer || staticData?.footer || {
             id: 'footer',

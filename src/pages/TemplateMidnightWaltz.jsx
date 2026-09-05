@@ -885,6 +885,13 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
     ? (savedData.storyData?.photos || savedData.photos || [])
     : (draftData?.photos || [])
 
+  const sections = savedData?.sections || draftData?.sections || {}
+  const showHero = sections.showHero !== false
+  const showStory = sections.showStory !== false
+  const showWelcome = sections.showWelcome !== false
+  const showVenue = sections.showVenue !== false
+  const showCountdown = sections.showCountdown !== false
+
   // ── Watermark ─────────────────────────────────────────────────
   const WatermarkMobile = () => showWatermark ? (
     <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.30] select-none">
@@ -945,8 +952,12 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
           <WatermarkMobile />
           <PreviewNavMobile />
 
-          <MidnightWaltzHero data={data.hero} isDesktop={false} />
-          <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
+          {showHero && (
+  <MidnightWaltzHero data={data.hero} isDesktop={false} />
+)}
+          {showStory && (
+  <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
+)}
 
           {showGallery && (
             <PhotoCardsMidnightWaltz
@@ -961,19 +972,23 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
             />
           )}
 
-          <WelcomeMidnightWaltz
-            data={data.invitation}
-            bgImageDesktop={messageBgDesktop}
-            bgImageMobile={messageBgMobile}
-            isDesktop={false}
-          />
+          {showWelcome && (
+  <WelcomeMidnightWaltz
+              data={data.invitation}
+              bgImageDesktop={messageBgDesktop}
+              bgImageMobile={messageBgMobile}
+              isDesktop={false}
+            />
+)}
 
-          <VenueMidnightWaltz
-            data={data.venue}
-            bgImageDesktop={locationBgDesktop}
-            bgImageMobile={locationBgMobile}
-            isDesktop={false}
-          />
+          {showVenue && (
+  <VenueMidnightWaltz
+              data={data.venue}
+              bgImageDesktop={locationBgDesktop}
+              bgImageMobile={locationBgMobile}
+              isDesktop={false}
+            />
+)}
 
           {showSchedule && (
             <Events
@@ -994,13 +1009,15 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
             />
           )}
 
-          <Countdown
-            data={data.countdown}
-            bgImage={countdownBgMobile}
-            theme="traditional"
-            position="bottom"
-            isDesktop={false}
-          />
+          {showCountdown && (
+  <Countdown
+              data={data.countdown}
+              bgImage={countdownBgMobile}
+              theme="traditional"
+              position="bottom"
+              isDesktop={false}
+            />
+)}
 
           <Footer data={data.footer} theme="traditional" />
         </div>
@@ -1012,10 +1029,14 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
         <PreviewNavDesktop />
 
         <div className="w-full">
-          <MidnightWaltzHero data={data.hero} isDesktop={true} />
+          {showHero && (
+  <MidnightWaltzHero data={data.hero} isDesktop={true} />
+)}
         </div>
         <div className="w-full">
-          <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
+          {showStory && (
+  <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
+)}
         </div>
 
         {showGallery && (
@@ -1034,21 +1055,25 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
         )}
 
         <div className="w-full">
-          <WelcomeMidnightWaltz
-            data={data.invitation}
-            bgImageDesktop={messageBgDesktop}
-            bgImageMobile={messageBgMobile}
-            isDesktop={true}
-          />
+          {showWelcome && (
+  <WelcomeMidnightWaltz
+              data={data.invitation}
+              bgImageDesktop={messageBgDesktop}
+              bgImageMobile={messageBgMobile}
+              isDesktop={true}
+            />
+)}
         </div>
 
         <div className="w-full">
-          <VenueMidnightWaltz
-            data={data.venue}
-            bgImageDesktop={locationBgDesktop}
-            bgImageMobile={locationBgMobile}
-            isDesktop={true}
-          />
+          {showVenue && (
+  <VenueMidnightWaltz
+              data={data.venue}
+              bgImageDesktop={locationBgDesktop}
+              bgImageMobile={locationBgMobile}
+              isDesktop={true}
+            />
+)}
         </div>
 
         {showSchedule && (
@@ -1075,13 +1100,15 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
         )}
 
         <div className="w-full">
-          <Countdown
-            data={data.countdown}
-            bgImage={countdownBgDesktop}
-            theme="traditional"
-            position="bottom"
-            isDesktop={true}
-          />
+          {showCountdown && (
+  <Countdown
+              data={data.countdown}
+              bgImage={countdownBgDesktop}
+              theme="traditional"
+              position="bottom"
+              isDesktop={true}
+            />
+)}
         </div>
 
         <div className="w-full">

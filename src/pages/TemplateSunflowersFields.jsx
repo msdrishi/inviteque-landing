@@ -1452,6 +1452,13 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
+  const sections = savedData?.sections || draftData?.sections || {}
+  const showHero = sections.showHero !== false
+  const showStory = sections.showStory !== false
+  const showWelcome = sections.showWelcome !== false
+  const showVenue = sections.showVenue !== false
+  const showCountdown = sections.showCountdown !== false
+
   const warmGoldBgStyle = {
     backgroundColor: '#FEF1D6',
     backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L40 80 M0 40 L80 40' stroke='rgba(90,44,22,0.018)' stroke-width='1'/%3E%3Ccircle cx='40' cy='40' r='2' fill='rgba(197,155,63,0.04)'/%3E%3C/svg%3E")`,

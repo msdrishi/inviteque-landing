@@ -162,7 +162,24 @@ export default function InviteQRSVP({
           checkCircle: 'bg-[#3D5236] text-white',
           uncheckCircle: 'border-[#3D5236]/30 text-transparent',
         }
-      case 'royal':
+      case 'royal': // Royal Heirloom
+        return {
+          fontFamily: "'Cinzel', 'Playfair Display', serif",
+          bodyFont: "'Montserrat', sans-serif",
+          cardBg: 'bg-[#F6EBD8] border-[#4A2810]/25 shadow-[0_20px_50px_rgba(74,40,16,0.10)]',
+          headerText: 'text-[#4A2810]',
+          bodyText: 'text-[#4A2810]/75',
+          accentText: 'text-[#7E4520]',
+          accentBtn: 'bg-[#4A2810] text-[#F5D78E] hover:bg-[#3A1F10] shadow-md',
+          secondaryBtn: 'border-[#4A2810]/30 text-[#4A2810] hover:bg-[#4A2810]/10',
+          activeChoice: 'bg-[#4A2810] text-[#F5D78E] border-[#4A2810]',
+          inactiveChoice: 'bg-[#FAF3E5] text-[#4A2810]/80 border-[#4A2810]/25 hover:border-[#4A2810]',
+          inputBg: 'bg-[#FAF3E5] border-[#4A2810]/25 focus:border-[#4A2810] text-[#4A2810]',
+          divider: 'bg-[#4A2810]/20',
+          badgeBg: 'bg-[#4A2810]/10 text-[#4A2810]',
+          checkCircle: 'bg-[#4A2810] text-[#F5D78E]',
+          uncheckCircle: 'border-[#4A2810]/30 text-transparent',
+        }
       case 'gold': // Sunflower Fields / Royal Palace
         return {
           fontFamily: "'Cinzel', 'Playfair Display', serif",
@@ -300,9 +317,12 @@ export default function InviteQRSVP({
     }
 
     try {
-      const selectedEventNames = resolvedEvents
+      const selectedEventObjects = resolvedEvents
         .filter(evt => selectedEvents.includes(evt.id))
-        .map(evt => evt.name)
+        .map(evt => ({
+          eventName: evt.name,
+          response: 'yes'
+        }))
 
       const payload = {
         weddingCode: weddingCode,
@@ -312,7 +332,7 @@ export default function InviteQRSVP({
         guestCount: attendance === 'no' ? 0 : guestCount,
         message: message.trim() || null,
         idempotencyKey: idempotencyKey,
-        events: attendance === 'yes' ? selectedEventNames : [],
+        events: attendance === 'yes' ? selectedEventObjects : [],
       }
 
       const res = await fetch(`${API_URL}/api/public/rsvp`, {
@@ -430,16 +450,6 @@ export default function InviteQRSVP({
                     </span>
                   </div>
                 )}
-                <div className="pt-3">
-                  <button
-                    type="button"
-                    onClick={() => setSubmitted(false)}
-                    className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider border transition-all ${themeStyles.secondaryBtn}`}
-                    style={{ fontFamily: themeStyles.fontFamily }}
-                  >
-                    Edit Response
-                  </button>
-                </div>
               </motion.div>
             ) : (
               /* Sample Reference Form State */

@@ -7,6 +7,7 @@ import { templates, houseWarmingTemplates } from '../templates/templates'
 
 import { API_URL } from '../config'
 import { useAuth } from '../context/AuthContext'
+import { uploadToCloudinary } from '../utils/cloudinary'
 
 
 // Function to format text to proper case (first letter capital, rest lowercase)
@@ -554,12 +555,12 @@ export default function Builder() {
       return
     }
 
-    // Create a local blob URL for preview (no Cloudinary upload yet)
+    // Create a local blob URL for preview
     const previewUrl = URL.createObjectURL(file)
     const newPhotos = [...(formData.photos || [null, null, null])]
     newPhotos[index] = previewUrl
 
-    // Store the raw File object for later Cloudinary upload on purchase
+    // Store the raw File object for later upload on purchase
     const pendingFiles = { ...(formData._pendingPhotoFiles || {}) }
     pendingFiles[index] = file
 
@@ -653,7 +654,7 @@ export default function Builder() {
       return
     }
 
-    // Create a local blob URL for preview (no Cloudinary upload yet)
+    // Create a local blob URL for preview
     const previewUrl = URL.createObjectURL(file)
     setFormData(prev => ({ ...prev, familyPhoto: previewUrl, _pendingFamilyPhotoFile: file }))
   }

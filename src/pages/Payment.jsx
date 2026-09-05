@@ -27,7 +27,12 @@ export default function Payment() {
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false)
 
   // Resolve draftData and templateId safely from location.state OR DraftContext
-  const draftData = location.state?.draftData || contextDraft || {}
+  // React Router location.state serialization drops File objects, so we merge them back from contextDraft
+  const draftData = { 
+    ...(location.state?.draftData || contextDraft || {}),
+    _pendingPhotoFiles: contextDraft?._pendingPhotoFiles || location.state?.draftData?._pendingPhotoFiles || {},
+    _pendingFamilyPhotoFile: contextDraft?._pendingFamilyPhotoFile || location.state?.draftData?._pendingFamilyPhotoFile || null
+  }
   const templateId = location.state?.templateId || draftData?.templateId || new URLSearchParams(location.search).get('templateId') || 'twilight-serenade'
 
   // Get template details — search both wedding and house warming with safe fallback
@@ -73,8 +78,13 @@ export default function Payment() {
 
   const TEMPLATE_PRICE = 999 // Price in INR
 
-  const isTemplatePaid = draftData.status === 'PAID' || draftData.isPaid === true
-  const wasRsvpPaid = Boolean(isTemplatePaid && (draftData.wasRsvpPaid || draftData.rsvpData?.enabled))
+  const isTemplatePaid = Boolean(
+    String(draftData.status).toUpperCase() === 'PAID' || 
+    draftData.isPaid === true ||
+    (draftData.coupleData && draftData.coupleData.isPaid === true) ||
+    Number(draftData.amountPaid) > 0
+  )
+  const wasRsvpPaid = Boolean(isTemplatePaid && (draftData.wasRsvpPaid || draftData.rsvpData?.enabled || draftData.invitationData?.hasRsvp))
   const wantsRsvp = Boolean(draftData.hasRsvp)
 
   // Is this an RSVP add-on upgrade for an invitation that was already paid?
@@ -282,7 +292,7 @@ export default function Payment() {
           allowMessage: true,
           allowMaybe: false,
         },
-        status: isAlreadyPaid ? 'PAID' : 'DRAFT', // Leave as draft until payment succeeds
+        status: isTemplatePaid ? 'PAID' : 'DRAFT', // Leave as draft until payment succeeds
         couponCode: appliedCoupon ? appliedCoupon.code : null
       }
 
@@ -354,7 +364,8 @@ export default function Payment() {
         },
         body: JSON.stringify({
           code: savedInvite.code,
-          discountPercentage: appliedCoupon ? appliedCoupon.discountPercentage : null
+          discountPercentage: appliedCoupon ? appliedCoupon.discountPercentage : null,
+          amount: finalPrice
         })
       })
 
@@ -461,7 +472,7 @@ export default function Payment() {
                 template,
                 amount: finalPrice,
                 code: savedInvite.code,
-                isUpdate: isAlreadyPaid
+                isUpdate: isTemplatePaid
               }
             })
           } catch (err) {
@@ -498,7 +509,7 @@ export default function Payment() {
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <img src={logo} alt="Inviteque" className="h-8 w-auto" />
-            <span className="text-sm md:text-lg font-bold">{isAlreadyPaid ? 'Update' : 'Payment'}</span>
+            <span className="text-sm md:text-lg font-bold">{isTemplatePaid ? 'Update' : 'Payment'}</span>
           </div>
           <button
             onClick={() => navigate(-1)}

@@ -687,7 +687,9 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
               config={savedData?.rsvpData}
             />
           )}
-          <Countdown data={data.countdown} bgImage={countdownBgMobile} theme="green" />
+          {showCountdown && (
+  <Countdown data={data.countdown} bgImage={countdownBgMobile} theme="green" />
+)}
           <Footer data={data.footer} theme="green" />
         </div>
       </div>
@@ -756,7 +758,9 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
           </div>
         )}
         <div className="w-full">
-          <Countdown data={data.countdown} isDesktop={true} bgImage={countdownBgDesktop} theme="green" />
+          {showCountdown && (
+  <Countdown data={data.countdown} isDesktop={true} bgImage={countdownBgDesktop} theme="green" />
+)}
         </div>
         <div className="w-full">
           <Footer data={data.footer} isDesktop={true} theme="green" />
