@@ -53,6 +53,7 @@ export default function Payment() {
   const isRoyalPalace = templateId === 'template-3' || templateId === 'royal-palace'
   const isModernHearth = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
   const isMidnightWaltz = templateId === 'midnight-waltz'
+  const isRoyalHeirloom = templateId === 'royal-heirloom'
   const coverImage = isSunflower
     ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.webp")
     : isTwilight 
@@ -65,7 +66,9 @@ export default function Payment() {
             ? "/assets/templates/modern-hearth/hero-desktop.webp"
             : isMidnightWaltz
               ? "/assets/templates/midnight-waltz/hero-desktop.webp"
-              : themeImg
+              : isRoyalHeirloom
+                ? "/assets/templates/previews/template-6-royal-heirloom.webp"
+                : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
     : isEverlasting
