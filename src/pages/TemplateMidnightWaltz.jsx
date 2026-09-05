@@ -1001,6 +1001,7 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
 
           {showRsvp && (
             <InviteQRSVP
+            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
               weddingCode={savedData?.code}
               groupSlug={groupSlug}
               isPreview={!savedData}
@@ -1090,6 +1091,7 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
         {showRsvp && (
           <div className="w-full">
             <InviteQRSVP
+            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
               weddingCode={savedData?.code}
               groupSlug={groupSlug}
               isPreview={!savedData}

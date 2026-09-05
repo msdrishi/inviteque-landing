@@ -450,6 +450,7 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
         {showRsvp && (
           <div className="w-full">
             <InviteQRSVP
+            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
               weddingCode={savedData?.code}
               groupSlug={groupSlug}
               isPreview={!savedData}

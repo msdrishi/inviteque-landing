@@ -219,6 +219,7 @@ export default function TemplateBlossomWhisper({ savedData, groupSlug: propGroup
         {/* ── RSVP SECTION ── */}
         {showRsvp && (
           <InviteQRSVP
+            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
             weddingCode={savedData?.code}
             groupSlug={groupSlug}
             isPreview={!savedData}

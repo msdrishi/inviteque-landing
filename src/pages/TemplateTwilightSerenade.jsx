@@ -680,6 +680,7 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
           {showSchedule && <Events data={data.events} theme="green" bgImage={photoBgMobile} />}
           {showRsvp && (
             <InviteQRSVP
+            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
               weddingCode={savedData?.code}
               groupSlug={groupSlug}
               isPreview={!savedData}
@@ -749,6 +750,7 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
         {showRsvp && (
           <div className="w-full">
             <InviteQRSVP
+            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
               weddingCode={savedData?.code}
               groupSlug={groupSlug}
               isPreview={!savedData}

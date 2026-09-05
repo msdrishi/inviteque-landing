@@ -257,6 +257,7 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
           {showSchedule && <Events data={data.events} bgImage="/assets/templates/aura-of-elegance/texture-pink.webp" />}
           {showRsvp && (
             <InviteQRSVP
+            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
               weddingCode={savedData?.code}
               groupSlug={groupSlug}
               isPreview={!savedData}
@@ -339,6 +340,7 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
         {showRsvp && (
           <div className="w-full">
             <InviteQRSVP
+            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
               weddingCode={savedData?.code}
               groupSlug={groupSlug}
               isPreview={!savedData}
