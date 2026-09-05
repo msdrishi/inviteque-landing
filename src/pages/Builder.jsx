@@ -1633,6 +1633,9 @@ export default function Builder() {
                       <p className="text-xs text-iqText/50">
                         Collect guest attendance, headcounts, event choices, and manage guest links with a live RSVP dashboard.
                       </p>
+                      <p className="text-[10px] text-amber-600 mt-2 italic font-medium bg-amber-50 p-2 rounded-lg border border-amber-200">
+                        Note: The events selected in the schedule section during this initial purchase flow will be fixed for your RSVP. You will not be able to change or remove these events after purchase, as they are permanently linked to your dashboard data.
+                      </p>
                     </div>
                   </label>
                 </div>
