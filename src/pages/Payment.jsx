@@ -67,7 +67,7 @@ export default function Payment() {
             : isMidnightWaltz
               ? "/assets/templates/midnight-waltz/hero-desktop.webp"
               : isRoyalHeirloom
-                ? "/assets/templates/previews/template-6-royal-heirloom.webp"
+                ? "/assets/templates/royal-heirloom/hero-bg-mobile.webp"
                 : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"

@@ -132,6 +132,7 @@ export default function InviteDetails() {
   const isRoyalPalace = invite?.templateId === 'template-3' || invite?.templateId === 'royal-palace'
   const isModernHearth = invite?.templateId === 'template-modernhearth' || invite?.templateId === 'modernhearth' || invite?.templateId === 'modern-hearth'
   const isMidnightWaltz = invite?.templateId === 'midnight-waltz'
+  const isRoyalHeirloom = invite?.templateId === 'royal-heirloom'
   const coverImage = isSunflower
     ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.webp")
     : isTwilight 
@@ -144,7 +145,9 @@ export default function InviteDetails() {
             ? "/assets/templates/modern-hearth/hero-desktop.webp"
             : isMidnightWaltz
               ? "/assets/templates/midnight-waltz/hero-desktop.webp"
-              : themeImg
+              : isRoyalHeirloom
+                ? "/assets/templates/royal-heirloom/hero-bg-mobile.webp"
+                : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
     : isEverlasting
