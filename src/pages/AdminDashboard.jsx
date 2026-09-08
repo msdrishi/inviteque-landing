@@ -95,37 +95,35 @@ export default function AdminDashboard() {
   const [error, setError] = useState('')
   const [selectedPurchase, setSelectedPurchase] = useState(null)
 
-  // Custom Client Orders (synced with ExpenseTracker & localStorage)
-  const [customOrders, setCustomOrders] = useState(() => {
-    try {
-      const saved = localStorage.getItem('iq_admin_client_orders_v7')
-      return saved ? JSON.parse(saved) : []
-    } catch {
-      return []
-    }
-  })
+  // Custom Client Orders (synced via API)
+  const [customOrders, setCustomOrders] = useState([])
 
-  const refreshCustomOrders = () => {
+  const fetchCustomOrders = async () => {
+    if (!user || !user.token) return
     try {
-      const saved = localStorage.getItem('iq_admin_client_orders_v7')
-      if (saved) {
-        setCustomOrders(JSON.parse(saved))
+      const res = await fetch(`${API_URL}/api/admin/tracker/orders`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        }
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setCustomOrders(data)
       }
-    } catch (e) {}
+    } catch (err) {
+      console.error('Failed to fetch custom orders:', err)
+    }
   }
 
   useEffect(() => {
-    refreshCustomOrders()
-    const handleOrdersUpdated = () => {
-      refreshCustomOrders()
-    }
+    fetchCustomOrders()
+    const handleOrdersUpdated = () => fetchCustomOrders()
     window.addEventListener('iq_client_orders_updated', handleOrdersUpdated)
-    window.addEventListener('storage', handleOrdersUpdated)
     return () => {
       window.removeEventListener('iq_client_orders_updated', handleOrdersUpdated)
-      window.removeEventListener('storage', handleOrdersUpdated)
     }
-  }, [])
+  }, [user])
 
   // Combined Purchases (Standard Purchases + Customized Client Orders)
   const allPurchases = useMemo(() => {
@@ -1292,7 +1290,7 @@ Inviteque Team ❤️`
 
           {/* TAB: EXPENSES & OPERATIONS SUITE */}
           {activeTab === 'expenses' && (
-            <ExpenseTracker 
+            <ExpenseTracker token={user?.token}  
               dbPurchases={purchases} 
               visitorLogs={visitors}
               onOrdersUpdated={() => {

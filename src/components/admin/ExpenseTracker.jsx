@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { API_URL } from '../../config'
 
 // Storage Keys
 const STORAGE_KEYS = {
@@ -214,7 +215,7 @@ const SOURCE_ICONS = {
   'Mail': { icon: '✉️', label: 'Email / Web', bg: 'bg-blue-50 text-blue-700 border-blue-200' }
 }
 
-export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onOrdersUpdated }) {
+export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onOrdersUpdated, token }) {
   // Global Period Selector
   const [selectedMonth, setSelectedMonth] = useState('ALL')
 
@@ -225,75 +226,42 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
   const [pnlSelectedMonth, setPnlSelectedMonth] = useState('2026-08')
   const [showAllTransactionsModal, setShowAllTransactionsModal] = useState(false)
 
-  // Persistent States
-  const [expenses, setExpenses] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.EXPENSES)
-      return saved ? JSON.parse(saved) : SEED_EXPENSES
-    } catch {
-      return SEED_EXPENSES
-    }
-  })
+  // API states
+  const [expenses, setExpenses] = useState([])
+  const [settlements, setSettlements] = useState([])
+  const [clientOrders, setClientOrders] = useState([])
+  const [leads, setLeads] = useState([])
+  const [todos, setTodos] = useState([])
 
-  const [settlements, setSettlements] = useState(() => {
+  const fetchTrackerData = async () => {
+    if (!token) return
+    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
     try {
-      const saved = localStorage.getItem(STORAGE_KEYS.SETTLEMENTS)
-      return saved ? JSON.parse(saved) : SEED_SETTLEMENTS
-    } catch {
-      return SEED_SETTLEMENTS
+      const [expRes, setRes, ordRes, leadsRes, todosRes] = await Promise.all([
+        fetch(`${API_URL}/api/admin/tracker/expenses`, { headers }),
+        fetch(`${API_URL}/api/admin/tracker/settlements`, { headers }),
+        fetch(`${API_URL}/api/admin/tracker/orders`, { headers }),
+        fetch(`${API_URL}/api/admin/tracker/leads`, { headers }),
+        fetch(`${API_URL}/api/admin/tracker/todos`, { headers })
+      ])
+      
+      if (expRes.ok) setExpenses(await expRes.json())
+      if (setRes.ok) setSettlements(await setRes.json())
+      if (ordRes.ok) setClientOrders(await ordRes.json())
+      if (leadsRes.ok) setLeads(await leadsRes.json())
+      if (todosRes.ok) setTodos(await todosRes.json())
+    } catch (err) {
+      console.error('Failed to fetch tracker data:', err)
     }
-  })
-
-  const [clientOrders, setClientOrders] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.CLIENT_ORDERS)
-      return saved ? JSON.parse(saved) : SEED_CLIENT_ORDERS
-    } catch {
-      return SEED_CLIENT_ORDERS
-    }
-  })
-
-  const [leads, setLeads] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.LEADS)
-      return saved ? JSON.parse(saved) : SEED_LEADS
-    } catch {
-      return SEED_LEADS
-    }
-  })
-
-  const [todos, setTodos] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.TODOS)
-      return saved ? JSON.parse(saved) : SEED_TODOS
-    } catch {
-      return SEED_TODOS
-    }
-  })
-
-  // Sync to LocalStorage & Dispatch Global Updates
-  useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses)) } catch (e) {}
-  }, [expenses])
+  }
 
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEYS.SETTLEMENTS, JSON.stringify(settlements)) } catch (e) {}
-  }, [settlements])
+    fetchTrackerData()
+  }, [token])
 
   useEffect(() => {
-    try { 
-      localStorage.setItem(STORAGE_KEYS.CLIENT_ORDERS, JSON.stringify(clientOrders))
-      window.dispatchEvent(new Event('iq_client_orders_updated'))
-    } catch (e) {}
+    window.dispatchEvent(new Event('iq_client_orders_updated'))
   }, [clientOrders])
-
-  useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(leads)) } catch (e) {}
-  }, [leads])
-
-  useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEYS.TODOS, JSON.stringify(todos)) } catch (e) {}
-  }, [todos])
 
   // Modals & Form States
   const [showExpenseModal, setShowExpenseModal] = useState(false)
@@ -678,7 +646,7 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
     setShowExpenseModal(true)
   }
 
-  const handleSaveExpense = (e) => {
+  const handleSaveExpense = async (e) => {
     e.preventDefault()
     if (!expenseForm.title.trim() || !expenseForm.amount) {
       alert('Please enter title and amount.')
@@ -691,17 +659,32 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
       id: editingExpense ? editingExpense.id : `exp-${Date.now()}`
     }
 
-    if (editingExpense) {
-      setExpenses(prev => prev.map(item => item.id === editingExpense.id ? payload : item))
-    } else {
-      setExpenses(prev => [payload, ...prev])
+    try {
+      const res = await fetch(`${API_URL}/api/admin/tracker/expenses`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      })
+      if (res.ok) {
+        const saved = await res.json()
+        if (editingExpense) {
+          setExpenses(prev => prev.map(item => item.id === saved.id ? saved : item))
+        } else {
+          setExpenses(prev => [saved, ...prev])
+        }
+      }
+    } catch (err) {
+      console.error('Failed to save expense:', err)
     }
     setShowExpenseModal(false)
   }
 
-  const handleDeleteExpense = (id) => {
+  const handleDeleteExpense = async (id) => {
     if (window.confirm('Delete this expense?')) {
-      setExpenses(prev => prev.filter(e => e.id !== id))
+      try {
+        await fetch(`${API_URL}/api/admin/tracker/expenses/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } })
+        setExpenses(prev => prev.filter(e => e.id !== id))
+      } catch (e) { console.error(e) }
     }
   }
 
@@ -725,7 +708,7 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
     setShowSettlementModal(true)
   }
 
-  const handleSaveSettlement = (e) => {
+  const handleSaveSettlement = async (e) => {
     e.preventDefault()
     if (!settlementForm.clientName.trim() || !settlementForm.amount) {
       alert('Please fill out client name and amount.')
@@ -738,17 +721,32 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
       id: editingSettlement ? editingSettlement.id : `set-${Date.now()}`
     }
 
-    if (editingSettlement) {
-      setSettlements(prev => prev.map(item => item.id === editingSettlement.id ? payload : item))
-    } else {
-      setSettlements(prev => [payload, ...prev])
+    try {
+      const res = await fetch(`${API_URL}/api/admin/tracker/settlements`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      })
+      if (res.ok) {
+        const saved = await res.json()
+        if (editingSettlement) {
+          setSettlements(prev => prev.map(item => item.id === saved.id ? saved : item))
+        } else {
+          setSettlements(prev => [saved, ...prev])
+        }
+      }
+    } catch (err) {
+      console.error('Failed to save settlement:', err)
     }
     setShowSettlementModal(false)
   }
 
-  const handleDeleteSettlement = (id) => {
+  const handleDeleteSettlement = async (id) => {
     if (window.confirm('Delete this settlement record?')) {
-      setSettlements(prev => prev.filter(s => s.id !== id))
+      try {
+        await fetch(`${API_URL}/api/admin/tracker/settlements/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } })
+        setSettlements(prev => prev.filter(s => s.id !== id))
+      } catch (e) { console.error(e) }
     }
   }
 
@@ -770,7 +768,7 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
     setShowSettleReceivableModal(true)
   }
 
-  const handleSaveReceivableSettlement = (e) => {
+  const handleSaveReceivableSettlement = async (e) => {
     e.preventDefault()
     if (!settleTargetOrder || !settleForm.amount) {
       alert('Please specify the payment amount.')
@@ -788,21 +786,13 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
     const totalFee = Number(settleTargetOrder.totalCharge) || 0
     const isFullyPaid = newAdvance >= totalFee
 
-    // 1. Update Client Order advance and optional status
-    const updatedOrders = clientOrders.map(o => {
-      if (o.id === settleTargetOrder.id) {
-        return {
-          ...o,
-          advancePaid: newAdvance,
-          status: (settleForm.markCompleted || isFullyPaid) ? (o.status === 'In Progress' ? 'Completed' : o.status) : o.status
-        }
-      }
-      return o
-    })
-    setClientOrders(updatedOrders)
+    const updatedOrderPayload = {
+      ...settleTargetOrder,
+      advancePaid: newAdvance,
+      status: (settleForm.markCompleted || isFullyPaid) ? (settleTargetOrder.status === 'In Progress' ? 'Completed' : settleTargetOrder.status) : settleTargetOrder.status
+    }
 
-    // 2. Create Settlement Inflow Record
-    const newSettlement = {
+    const newSettlementPayload = {
       id: `set-${Date.now()}`,
       clientName: settleTargetOrder.clientName,
       serviceType: `${settleTargetOrder.serviceName} (${isFullyPaid ? 'Final Settlement' : 'Payment Received'})`,
@@ -812,9 +802,22 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
       status: 'Settled',
       notes: settleForm.notes || `Settlement from ${settleTargetOrder.clientName}`
     }
-    setSettlements(prev => [newSettlement, ...prev])
 
-    // 3. Update selected client detail if open
+    try {
+      const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+      const [ordRes, setRes] = await Promise.all([
+        fetch(`${API_URL}/api/admin/tracker/orders`, { method: 'POST', headers, body: JSON.stringify(updatedOrderPayload) }),
+        fetch(`${API_URL}/api/admin/tracker/settlements`, { method: 'POST', headers, body: JSON.stringify(newSettlementPayload) })
+      ]),
+      savedOrder = ordRes.ok ? await ordRes.json() : updatedOrderPayload,
+      savedSettlement = setRes.ok ? await setRes.json() : newSettlementPayload
+
+      setClientOrders(prev => prev.map(o => o.id === savedOrder.id ? savedOrder : o))
+      setSettlements(prev => [savedSettlement, ...prev])
+    } catch (err) {
+      console.error('Failed to save receivable settlement:', err)
+    }
+
     if (selectedClientDetail?.id === settleTargetOrder.id) {
       setSelectedClientDetail({
         ...selectedClientDetail,
@@ -826,7 +829,6 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
     setShowSettleReceivableModal(false)
     setSettleTargetOrder(null)
 
-    // Trigger parent callback if provided
     if (typeof onOrdersUpdated === 'function') {
       onOrdersUpdated()
     }
@@ -859,7 +861,7 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
     setShowCompleteOrderModal(true)
   }
 
-  const handleSaveCompletedOrder = (e) => {
+  const handleSaveCompletedOrder = async (e) => {
     e.preventDefault()
     if (!completingOrder) return
 
@@ -877,10 +879,11 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
 
     let finalAdv = currentAdv
 
-    // If admin checked settleRemaining and there's pending balance
+    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+
     if (completeForm.settleRemaining && pendingBalance > 0) {
       finalAdv = total
-      const newSettlement = {
+      const newSettlementPayload = {
         id: `set-${Date.now()}`,
         clientName: completingOrder.clientName,
         serviceType: `${completingOrder.serviceName} (Final Settlement upon Completion)`,
@@ -890,25 +893,36 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
         status: 'Settled',
         notes: `Final settlement on completion for ${completingOrder.clientName}`
       }
-      setSettlements(prev => [newSettlement, ...prev])
+      try {
+        const setRes = await fetch(`${API_URL}/api/admin/tracker/settlements`, { method: 'POST', headers, body: JSON.stringify(newSettlementPayload) })
+        if (setRes.ok) {
+          const savedSettlement = await setRes.json()
+          setSettlements(prev => [savedSettlement, ...prev])
+        }
+      } catch (err) {
+        console.error('Failed to save completion settlement:', err)
+      }
     }
 
-    const updatedOrders = clientOrders.map(o => {
-      if (o.id === completingOrder.id) {
-        return {
-          ...o,
-          status: 'Completed',
-          deliverableUrl: primaryUrl,
-          deliverableUrls: cleanUrls.length > 0 ? cleanUrls : [primaryUrl],
-          email: completeForm.clientEmail || o.email,
-          advancePaid: finalAdv,
-          deliveryDate: new Date().toISOString().split('T')[0]
-        }
-      }
-      return o
-    })
+    const updatedOrderPayload = {
+      ...completingOrder,
+      status: 'Completed',
+      deliverableUrl: primaryUrl,
+      deliverableUrls: cleanUrls.length > 0 ? cleanUrls : [primaryUrl],
+      email: completeForm.clientEmail || completingOrder.email,
+      advancePaid: finalAdv,
+      deliveryDate: new Date().toISOString().split('T')[0]
+    }
 
-    setClientOrders(updatedOrders)
+    try {
+      const ordRes = await fetch(`${API_URL}/api/admin/tracker/orders`, { method: 'POST', headers, body: JSON.stringify(updatedOrderPayload) })
+      if (ordRes.ok) {
+        const savedOrder = await ordRes.json()
+        setClientOrders(prev => prev.map(o => o.id === savedOrder.id ? savedOrder : o))
+      }
+    } catch (err) {
+      console.error('Failed to save completed order:', err)
+    }
 
     if (selectedClientDetail?.id === completingOrder.id) {
       setSelectedClientDetail({
@@ -969,7 +983,7 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
     setShowClientModal(true)
   }
 
-  const handleSaveClientOrder = (e) => {
+  const handleSaveClientOrder = async (e) => {
     e.preventDefault()
     if (!clientForm.clientName.trim() || !clientForm.totalCharge) {
       alert('Please enter client name and total charge.')
@@ -992,28 +1006,49 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
       id: editingClient ? editingClient.id : `ord-${Date.now()}`
     }
 
-    if (editingClient) {
-      setClientOrders(prev => prev.map(item => item.id === editingClient.id ? payload : item))
-    } else {
-      setClientOrders(prev => [payload, ...prev])
+    try {
+      const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+      const res = await fetch(`${API_URL}/api/admin/tracker/orders`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload)
+      })
+      if (res.ok) {
+        const savedOrder = await res.json()
+        if (editingClient) {
+          setClientOrders(prev => prev.map(item => item.id === savedOrder.id ? savedOrder : item))
+        } else {
+          setClientOrders(prev => [savedOrder, ...prev])
 
-      if (payload.advancePaid > 0) {
-        const newSet = {
-          id: `set-${Date.now()}`,
-          clientName: payload.clientName,
-          serviceType: `${payload.serviceName} (Advance)`,
-          amount: payload.advancePaid,
-          paymentMethod: 'UPI',
-          date: payload.advanceDate || new Date().toISOString().split('T')[0],
-          status: 'Settled',
-          notes: `Advance for ${payload.clientName}`
+          if (payload.advancePaid > 0) {
+            const newSet = {
+              id: `set-${Date.now()}`,
+              clientName: payload.clientName,
+              serviceType: `${payload.serviceName} (Advance)`,
+              amount: payload.advancePaid,
+              paymentMethod: 'UPI',
+              date: payload.advanceDate || new Date().toISOString().split('T')[0],
+              status: 'Settled',
+              notes: `Advance for ${payload.clientName}`
+            }
+            const setRes = await fetch(`${API_URL}/api/admin/tracker/settlements`, {
+              method: 'POST',
+              headers,
+              body: JSON.stringify(newSet)
+            })
+            if (setRes.ok) {
+              const savedSet = await setRes.json()
+              setSettlements(s => [savedSet, ...s])
+            }
+          }
         }
-        setSettlements(s => [newSet, ...s])
       }
+    } catch (err) {
+      console.error('Failed to save client order:', err)
     }
+
     setShowClientModal(false)
 
-    // If client was set to Completed and had no deliverable URLs, open completion modal
     if (payload.status === 'Completed' && (!payload.deliverableUrl || payload.deliverableUrls.length === 0)) {
       setTimeout(() => {
         handleOpenCompleteModal(payload)
@@ -1025,11 +1060,19 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
     }
   }
 
-  const handleDeleteClientOrder = (id) => {
+  const handleDeleteClientOrder = async (id) => {
     if (window.confirm('Delete this client project?')) {
-      setClientOrders(prev => prev.filter(o => o.id !== id))
-      if (typeof onOrdersUpdated === 'function') {
-        onOrdersUpdated()
+      try {
+        await fetch(`${API_URL}/api/admin/tracker/orders/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        setClientOrders(prev => prev.filter(o => o.id !== id))
+        if (typeof onOrdersUpdated === 'function') {
+          onOrdersUpdated()
+        }
+      } catch (err) {
+        console.error('Failed to delete client order:', err)
       }
     }
   }
@@ -1054,7 +1097,7 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
     setShowClientModal(true)
   }
 
-  const handleSaveLead = (e) => {
+  const handleSaveLead = async (e) => {
     e.preventDefault()
     if (!leadForm.name.trim()) return
 
@@ -1064,22 +1107,42 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
       id: editingLead ? editingLead.id : `lead-${Date.now()}`
     }
 
-    if (editingLead) {
-      setLeads(prev => prev.map(l => l.id === editingLead.id ? payload : l))
-    } else {
-      setLeads(prev => [payload, ...prev])
+    try {
+      const res = await fetch(`${API_URL}/api/admin/tracker/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      })
+      if (res.ok) {
+        const savedLead = await res.json()
+        if (editingLead) {
+          setLeads(prev => prev.map(l => l.id === savedLead.id ? savedLead : l))
+        } else {
+          setLeads(prev => [savedLead, ...prev])
+        }
+      }
+    } catch (err) {
+      console.error('Failed to save lead:', err)
     }
     setShowLeadModal(false)
   }
 
-  const handleDeleteLead = (id) => {
+  const handleDeleteLead = async (id) => {
     if (window.confirm('Remove this lead inquiry?')) {
-      setLeads(prev => prev.filter(l => l.id !== id))
+      try {
+        await fetch(`${API_URL}/api/admin/tracker/leads/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        setLeads(prev => prev.filter(l => l.id !== id))
+      } catch (err) {
+        console.error('Failed to delete lead:', err)
+      }
     }
   }
 
   // Handlers for Tasks
-  const handleAddTodo = (e) => {
+  const handleAddTodo = async (e) => {
     e?.preventDefault()
     if (!newTodoText.trim()) return
 
@@ -1093,16 +1156,46 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
       createdAt: new Date().toISOString().split('T')[0]
     }
 
-    setTodos(prev => [newTodo, ...prev])
-    setNewTodoText('')
+    try {
+      const res = await fetch(`${API_URL}/api/admin/tracker/todos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(newTodo)
+      })
+      if (res.ok) {
+        const savedTodo = await res.json()
+        setTodos(prev => [savedTodo, ...prev])
+        setNewTodoText('')
+      }
+    } catch (err) {
+      console.error('Failed to add todo:', err)
+    }
   }
 
-  const handleToggleTodo = (id) => {
-    setTodos(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t))
+  const handleToggleTodo = async (id) => {
+    const target = todos.find(t => t.id === id)
+    if (!target) return
+    const updated = { ...target, completed: !target.completed }
+    try {
+      const res = await fetch(`${API_URL}/api/admin/tracker/todos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(updated)
+      })
+      if (res.ok) {
+        const saved = await res.json()
+        setTodos(prev => prev.map(t => t.id === id ? saved : t))
+      }
+    } catch (err) {
+      console.error('Failed to toggle todo:', err)
+    }
   }
 
-  const handleDeleteTodo = (id) => {
-    setTodos(prev => prev.filter(t => t.id !== id))
+  const handleDeleteTodo = async (id) => {
+    try {
+      await fetch(`${API_URL}/api/admin/tracker/todos/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } })
+      setTodos(prev => prev.filter(t => t.id !== id))
+    } catch (err) { console.error(err) }
   }
 
   const filteredTodos = useMemo(() => {
