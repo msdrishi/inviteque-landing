@@ -232,9 +232,12 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
   const [clientOrders, setClientOrders] = useState([])
   const [leads, setLeads] = useState([])
   const [todos, setTodos] = useState([])
+  const [loadingTracker, setLoadingTracker] = useState(false)
+  const [convertingLeadId, setConvertingLeadId] = useState(null)
 
   const fetchTrackerData = async () => {
     if (!token) return
+    setLoadingTracker(true)
     const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
     try {
       const [expRes, setRes, ordRes, leadsRes, todosRes] = await Promise.all([
@@ -252,6 +255,8 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
       if (todosRes.ok) setTodos(await todosRes.json())
     } catch (err) {
       console.error('Failed to fetch tracker data:', err)
+    } finally {
+      setLoadingTracker(false)
     }
   }
 
@@ -447,7 +452,21 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
   // Financial Aggregates
   const stats = useMemo(() => {
     const dbRevenue = filteredDbPurchases.reduce((sum, p) => sum + (p.amountPaid || 0), 0)
-    const customRevenue = filteredSettlements.reduce((sum, s) => sum + (Number(s.amount) || 0), 0)
+    
+    // Compute Custom Revenue from settlements + any client order advance payments
+    const customSettlementsRev = filteredSettlements.reduce((sum, s) => sum + (Number(s.amount) || 0), 0)
+    let customOrdersExtraRev = 0
+    clientOrders.forEach(o => {
+      const adv = Number(o.advancePaid) || 0
+      if (adv > 0) {
+        const clientNameClean = (o.clientName || '').trim().toLowerCase()
+        const hasMatchingSettlement = filteredSettlements.some(s => s.clientName && s.clientName.trim().toLowerCase() === clientNameClean)
+        if (!hasMatchingSettlement) {
+          customOrdersExtraRev += adv
+        }
+      }
+    })
+    const customRevenue = customSettlementsRev + customOrdersExtraRev
     const grossRevenue = dbRevenue + customRevenue
 
     const totalExpense = filteredExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0)
@@ -491,7 +510,7 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
         const d = new Date(`${mKey}-01`)
         monthsMap[mKey] = {
           monthKey: mKey,
-          monthLabel: d.toLocaleString('default', { month: 'long', year: 'numeric' }),
+          monthLabel: isNaN(d.getTime()) ? mKey : d.toLocaleString('default', { month: 'long', year: 'numeric' }),
           directPurchases: [],
           directPurchasesTotal: 0,
           customSettlements: [],
@@ -527,6 +546,31 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
       }
     })
 
+    // Include client order advances if not already covered in settlements
+    clientOrders.forEach(o => {
+      const adv = Number(o.advancePaid) || 0
+      if (adv > 0) {
+        const oDate = o.advanceDate || o.deliveryDate || '2026-08-24'
+        const mKey = oDate.slice(0, 7)
+        const clientNameClean = (o.clientName || '').trim().toLowerCase()
+        const hasSettlement = settlements.some(s => s.clientName && s.clientName.trim().toLowerCase() === clientNameClean)
+        if (!hasSettlement) {
+          ensureMonth(mKey)
+          if (monthsMap[mKey]) {
+            monthsMap[mKey].customSettlements.push({
+              id: `ord-adv-${o.id}`,
+              clientName: o.clientName,
+              serviceType: `${o.serviceName} (Advance)`,
+              amount: adv,
+              date: oDate,
+              status: 'Settled'
+            })
+            monthsMap[mKey].customSettlementsTotal += adv
+          }
+        }
+      }
+    })
+
     // Expenses
     expenses.forEach(e => {
       if (!e.date) return
@@ -554,7 +598,7 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
     })
 
     return result.sort((a, b) => b.monthKey.localeCompare(a.monthKey))
-  }, [dbPurchases, settlements, expenses])
+  }, [dbPurchases, settlements, expenses, clientOrders])
 
   // Calendar Helpers
   const calendarData = useMemo(() => {
@@ -1042,6 +1086,20 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
             }
           }
         }
+
+        // If converting from an inquiry/lead, delete the lead from DB & state
+        if (convertingLeadId) {
+          try {
+            await fetch(`${API_URL}/api/admin/tracker/leads/${convertingLeadId}`, {
+              method: 'DELETE',
+              headers: { 'Authorization': `Bearer ${token}` }
+            })
+            setLeads(prev => prev.filter(l => l.id !== convertingLeadId))
+          } catch (leadErr) {
+            console.error('Failed to remove converted lead:', leadErr)
+          }
+          setConvertingLeadId(null)
+        }
       }
     } catch (err) {
       console.error('Failed to save client order:', err)
@@ -1061,12 +1119,32 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
   }
 
   const handleDeleteClientOrder = async (id) => {
-    if (window.confirm('Delete this client project?')) {
+    if (window.confirm('Delete this client project and its associated settlements?')) {
       try {
+        const orderToDelete = clientOrders.find(o => o.id === id)
+        const headers = { 'Authorization': `Bearer ${token}` }
+
         await fetch(`${API_URL}/api/admin/tracker/orders/${id}`, {
           method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers
         })
+
+        if (orderToDelete && orderToDelete.clientName) {
+          const clientNameClean = orderToDelete.clientName.trim().toLowerCase()
+          const linkedSettlements = settlements.filter(s => s.clientName && s.clientName.trim().toLowerCase() === clientNameClean)
+          for (const s of linkedSettlements) {
+            try {
+              await fetch(`${API_URL}/api/admin/tracker/settlements/${s.id}`, {
+                method: 'DELETE',
+                headers
+              })
+            } catch (sErr) {
+              console.error(`Failed to delete settlement ${s.id}:`, sErr)
+            }
+          }
+          setSettlements(prev => prev.filter(s => !(s.clientName && s.clientName.trim().toLowerCase() === clientNameClean)))
+        }
+
         setClientOrders(prev => prev.filter(o => o.id !== id))
         if (typeof onOrdersUpdated === 'function') {
           onOrdersUpdated()
@@ -1079,6 +1157,7 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
 
   // Convert Lead / Inquiry to Active Client
   const handleConvertLeadToClient = (lead) => {
+    setConvertingLeadId(lead.id)
     setClientForm({
       clientName: lead.name,
       phone: lead.phone || '',
@@ -1226,10 +1305,19 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
           </div>
 
           <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-slate-600">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>{clientOrders.length} Active</span>
-            <span>•</span>
-            <span>{leads.length} Inquiries</span>
+            {loadingTracker ? (
+              <span className="flex items-center gap-1 text-indigo-600 font-bold animate-pulse">
+                <span className="h-2 w-2 rounded-full bg-indigo-600 animate-ping" />
+                Syncing PostgreSQL DB...
+              </span>
+            ) : (
+              <>
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>{clientOrders.length} Active Clients</span>
+                <span>•</span>
+                <span>{leads.length} Inquiries</span>
+              </>
+            )}
           </div>
         </div>
 
@@ -1258,76 +1346,92 @@ export default function ExpenseTracker({ dbPurchases = [], visitorLogs = [], onO
         </div>
       </div>
 
-      {/* 2. CORE FINANCIAL KPI CARDS (Uniform height & single-line footers) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 font-saas min-w-0">
-        {/* Gross Revenue */}
-        <div className="rounded-2xl bg-white p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col justify-between min-h-[120px] sm:h-[135px] min-w-0">
+      {/* 2. CORE FINANCIAL KPI CARDS (5 SEPARATED METRIC BOXES) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 font-saas min-w-0">
+        {/* Box 1: Direct Web Sales Inflow */}
+        <div className="rounded-2xl bg-white p-4 sm:p-4.5 border border-slate-200 shadow-xs flex flex-col justify-between min-h-[120px] min-w-0 hover:border-slate-300 transition">
           <div className="flex justify-between items-start">
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 truncate">Total Inflow</span>
-            <span className="text-base sm:text-lg">💰</span>
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 truncate">Direct Web Sales</span>
+            <span className="text-base">🛒</span>
           </div>
-          <div className="mt-2 sm:mt-0">
-            <div className="font-saas font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight leading-none truncate">
+          <div className="mt-2">
+            <div className="font-saas font-extrabold text-xl sm:text-2xl text-slate-900 tracking-tight leading-none truncate">
+              ₹{stats.dbRevenue.toLocaleString('en-IN')}
+            </div>
+            <div className="h-5 flex items-center text-[10px] font-medium text-slate-500 mt-2 truncate">
+              <span className="font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.2 rounded text-[9px]">
+                {stats.dbOrdersCount} Orders
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Box 2: Custom Orders Inflow */}
+        <div className="rounded-2xl bg-white p-4 sm:p-4.5 border border-slate-200 shadow-xs flex flex-col justify-between min-h-[120px] min-w-0 hover:border-slate-300 transition">
+          <div className="flex justify-between items-start">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 truncate">Custom Orders Inflow</span>
+            <span className="text-base">💎</span>
+          </div>
+          <div className="mt-2">
+            <div className="font-saas font-extrabold text-xl sm:text-2xl text-purple-700 tracking-tight leading-none truncate">
+              ₹{stats.customRevenue.toLocaleString('en-IN')}
+            </div>
+            <div className="h-5 flex items-center text-[10px] font-medium text-slate-500 mt-2 truncate">
+              <span className="font-bold text-purple-700 bg-purple-50 px-1.5 py-0.2 rounded text-[9px]">
+                {clientOrders.length} Custom Clients
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Box 3: Total Combined Gross Inflow */}
+        <div className="rounded-2xl bg-white p-4 sm:p-4.5 border border-slate-200 shadow-xs flex flex-col justify-between min-h-[120px] min-w-0 hover:border-slate-300 transition">
+          <div className="flex justify-between items-start">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 truncate">Total Gross Inflow</span>
+            <span className="text-base">💰</span>
+          </div>
+          <div className="mt-2">
+            <div className="font-saas font-extrabold text-xl sm:text-2xl text-emerald-700 tracking-tight leading-none truncate">
               ₹{stats.grossRevenue.toLocaleString('en-IN')}
             </div>
-            <div className="h-5 flex items-center text-[10px] sm:text-[11px] font-medium text-slate-500 mt-2 truncate">
-              Custom: <b className="text-slate-800 font-bold ml-1">₹{stats.customRevenue.toLocaleString('en-IN')}</b> • Web: <b className="text-slate-800 font-bold ml-1">₹{stats.dbRevenue.toLocaleString('en-IN')}</b>
+            <div className="h-5 flex items-center text-[10px] font-medium text-slate-500 mt-2 truncate">
+              Web + Custom Combined
             </div>
           </div>
         </div>
 
-        {/* Total Expenses / Spent */}
-        <div className="rounded-2xl bg-white p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col justify-between min-h-[120px] sm:h-[135px] min-w-0">
+        {/* Box 4: Total Outflow / Spent */}
+        <div className="rounded-2xl bg-white p-4 sm:p-4.5 border border-slate-200 shadow-xs flex flex-col justify-between min-h-[120px] min-w-0 hover:border-slate-300 transition">
           <div className="flex justify-between items-start">
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 truncate">Total Spent</span>
-            <span className="text-base sm:text-lg">📉</span>
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 truncate">Expenses Spent</span>
+            <span className="text-base">📉</span>
           </div>
-          <div className="mt-2 sm:mt-0">
-            <div className="font-saas font-extrabold text-2xl sm:text-3xl text-rose-600 tracking-tight leading-none truncate">
+          <div className="mt-2">
+            <div className="font-saas font-extrabold text-xl sm:text-2xl text-rose-600 tracking-tight leading-none truncate">
               ₹{stats.totalExpense.toLocaleString('en-IN')}
             </div>
-            <div className="h-5 flex items-center text-[10px] sm:text-[11px] font-medium text-slate-500 mt-2 truncate">
-              <span className="font-bold text-slate-700 bg-slate-100 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] mr-1.5">
-                {filteredExpenses.length} Logs
+            <div className="h-5 flex items-center text-[10px] font-medium text-slate-500 mt-2 truncate">
+              <span className="font-bold text-rose-700 bg-rose-50 px-1.5 py-0.2 rounded text-[9px]">
+                {filteredExpenses.length} Expense Logs
               </span>
-              <span>Hosting & Meta Ads active</span>
             </div>
           </div>
         </div>
 
-        {/* Net Operating Profit */}
-        <div className="rounded-2xl bg-white p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col justify-between min-h-[120px] sm:h-[135px] min-w-0">
+        {/* Box 5: Net Profit & Margin */}
+        <div className="rounded-2xl bg-white p-4 sm:p-4.5 border border-slate-200 shadow-xs flex flex-col justify-between min-h-[120px] min-w-0 hover:border-slate-300 transition">
           <div className="flex justify-between items-start">
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 truncate">Net Profit</span>
-            <span className={`text-base sm:text-lg ${stats.netProfit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 truncate">Net Operating Profit</span>
+            <span className={`text-base ${stats.netProfit >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
               {stats.netProfit >= 0 ? '📈' : '⚠️'}
             </span>
           </div>
-          <div className="mt-2 sm:mt-0">
-            <div className={`font-saas font-extrabold text-2xl sm:text-3xl tracking-tight leading-none truncate ${stats.netProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+          <div className="mt-2">
+            <div className={`font-saas font-extrabold text-xl sm:text-2xl tracking-tight leading-none truncate ${stats.netProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
               ₹{stats.netProfit.toLocaleString('en-IN')}
             </div>
-            <div className="h-5 flex items-center text-[10px] sm:text-[11px] font-medium text-slate-500 mt-2 truncate">
-              Margin: <span className="font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] ml-1">{stats.profitMargin}%</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Pending Receivables */}
-        <div className="rounded-2xl bg-white p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col justify-between min-h-[120px] sm:h-[135px] min-w-0">
-          <div className="flex justify-between items-start">
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 truncate">Receivables</span>
-            <span className="text-base sm:text-lg">⏳</span>
-          </div>
-          <div className="mt-2 sm:mt-0">
-            <div className="font-saas font-extrabold text-2xl sm:text-3xl text-amber-600 tracking-tight leading-none truncate">
-              ₹{stats.totalReceivables.toLocaleString('en-IN')}
-            </div>
-            <div className="h-5 flex items-center text-[10px] sm:text-[11px] font-medium text-slate-500 mt-2 truncate">
-              <span className="font-bold text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] mr-1.5">
-                {clientOrders.length} Orders
-              </span>
-              <span>Expected on delivery</span>
+            <div className="h-5 flex items-center text-[10px] font-medium text-slate-500 mt-2 truncate">
+              Margin: <span className="font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded text-[9px] ml-1">{stats.profitMargin}%</span>
             </div>
           </div>
         </div>

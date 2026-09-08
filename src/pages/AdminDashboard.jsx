@@ -116,6 +116,36 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleDeleteCustomOrder = async (orderId) => {
+    if (!window.confirm('Delete this custom order record?')) return
+    try {
+      const orderToDelete = customOrders.find(c => c.id === orderId)
+      const headers = { 'Authorization': `Bearer ${user.token}` }
+
+      await fetch(`${API_URL}/api/admin/tracker/orders/${orderId}`, {
+        method: 'DELETE',
+        headers
+      })
+
+      if (orderToDelete && orderToDelete.clientName) {
+        const clientNameClean = orderToDelete.clientName.trim().toLowerCase()
+        const setRes = await fetch(`${API_URL}/api/admin/tracker/settlements`, { headers })
+        if (setRes.ok) {
+          const allSets = await setRes.json()
+          const linkedSets = allSets.filter(s => s.clientName && s.clientName.trim().toLowerCase() === clientNameClean)
+          for (const s of linkedSets) {
+            await fetch(`${API_URL}/api/admin/tracker/settlements/${s.id}`, { method: 'DELETE', headers })
+          }
+        }
+      }
+
+      fetchCustomOrders()
+      window.dispatchEvent(new Event('iq_client_orders_updated'))
+    } catch (err) {
+      console.error('Failed to delete custom order:', err)
+    }
+  }
+
   useEffect(() => {
     fetchCustomOrders()
     const handleOrdersUpdated = () => fetchCustomOrders()
@@ -1764,7 +1794,21 @@ Inviteque Team ❤️`
                             </div>
                           </div>
                           <div className="text-right flex flex-col items-end gap-1">
-                            <p className="text-xs font-bold text-slate-800 font-mono">₹{(p.amountPaid || 0).toLocaleString('en-IN')}</p>
+                            <div className="flex items-center gap-1.5">
+                              <p className="text-xs font-bold text-slate-800 font-mono">₹{(p.amountPaid || 0).toLocaleString('en-IN')}</p>
+                              {p.isCustom && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleDeleteCustomOrder(p.inviteId)
+                                  }}
+                                  className="text-slate-300 hover:text-rose-600 text-xs font-bold p-0.5"
+                                  title="Delete Custom Order"
+                                >
+                                  🗑️
+                                </button>
+                              )}
+                            </div>
                             <span className={`rounded-full px-2 py-0.2 text-[9px] font-bold ${
                               p.status === 'Completed' || p.status === 'Paid'
                                 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
