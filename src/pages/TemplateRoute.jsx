@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Navigate, useParams, useNavigate, useLocation } from 'react-router-dom'
 import TemplateRoyalWedding from './TemplateRoyalWedding.jsx'
 import TemplateAuraOfElegance from './TemplateAuraOfElegance.jsx'
-import TemplateTwilightSerenade from './TemplateTwilightSerenade.jsx'
+import TemplateTwilightSerenadeOld from './TemplateTwilightSerenade.jsx'
+import TemplateTwilightSerenadeNew from '../templates/TwilightSerenade/index.jsx'
 import TemplateBlossomWhisper from './TemplateBlossomWhisper.jsx'
 import TemplateEverlastingVows from './TemplateEverlastingVows.jsx'
 import TemplateSunflowersFields from './TemplateSunflowersFields.jsx'
@@ -19,8 +20,9 @@ import template3VenueBg from '../assets/themes/template3/venue_bg.png'
 import template3DesktopBg from '../assets/themes/template3/desktop_bg.png'
 
 const logo = "/assets/logo/inviteq-logo.png"
-import { API_URL } from '../config'
+import { API_URL, USE_NEW_ARCHITECTURE } from '../config'
 
+const TemplateTwilightSerenade = USE_NEW_ARCHITECTURE ? TemplateTwilightSerenadeNew : TemplateTwilightSerenadeOld;
 const TEMPLATE_MAP = {
   'royal-wedding': TemplateRoyalWedding,
   'aura-of-elegance': TemplateAuraOfElegance,

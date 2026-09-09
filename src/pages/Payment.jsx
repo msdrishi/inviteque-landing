@@ -4,7 +4,8 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { useDraft } from '../context/DraftContext'
 import { API_URL } from '../config'
-import { uploadToCloudinary } from '../utils/cloudinary'
+import { compressImageForUpload } from '../utils/imageCompression'
+import { uploadToR2 } from '../utils/r2Upload'
 const logo = "/assets/logo/inviteq-watermark.png"
 import { fadeUp } from '../motionVariants'
 import { templates, houseWarmingTemplates } from '../templates/templates'
@@ -189,18 +190,20 @@ export default function Payment() {
 
       const photoUploadPromises = Object.entries(pendingFiles).map(async ([index, file]) => {
         if (file && (file instanceof Blob || file instanceof File)) {
-          const result = await uploadToCloudinary(file)
-          if (result && result.url) {
-            resolvedPhotos[Number(index)] = result.url
+          const compressed = await compressImageForUpload(file)
+          const resultUrl = await uploadToR2(compressed)
+          if (resultUrl) {
+            resolvedPhotos[Number(index)] = resultUrl
           }
         }
       })
 
       let resolvedFamilyPhoto = draftData.familyPhoto || null
       if (draftData._pendingFamilyPhotoFile && (draftData._pendingFamilyPhotoFile instanceof Blob || draftData._pendingFamilyPhotoFile instanceof File)) {
-        const familyResult = await uploadToCloudinary(draftData._pendingFamilyPhotoFile)
-        if (familyResult && familyResult.url) {
-          resolvedFamilyPhoto = familyResult.url
+        const compressedFamily = await compressImageForUpload(draftData._pendingFamilyPhotoFile)
+        const familyResultUrl = await uploadToR2(compressedFamily)
+        if (familyResultUrl) {
+          resolvedFamilyPhoto = familyResultUrl
         }
       }
 

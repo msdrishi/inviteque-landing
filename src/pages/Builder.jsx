@@ -7,7 +7,8 @@ import { templates, houseWarmingTemplates } from '../templates/templates'
 
 import { API_URL } from '../config'
 import { useAuth } from '../context/AuthContext'
-import { uploadToCloudinary } from '../utils/cloudinary'
+import { uploadToR2 } from '../utils/r2Upload'
+import { compressImageForUpload } from '../utils/imageCompression'
 
 
 // Function to format text to proper case (first letter capital, rest lowercase)
@@ -683,9 +684,50 @@ export default function Builder() {
     e.preventDefault()
     setIsSaving(true)
     try {
-      updateDraft(formData)
+      // 1. Process pending image uploads if any
+      const resolvedPhotos = [...(formData.photos || [null, null, null])]
+      const pendingFiles = formData._pendingPhotoFiles || {}
+      
+      const photoUploadPromises = Object.entries(pendingFiles).map(async ([index, file]) => {
+        if (file && (file instanceof Blob || file instanceof File)) {
+          const compressed = await compressImageForUpload(file)
+          const resultUrl = await uploadToR2(compressed)
+          if (resultUrl) {
+            resolvedPhotos[Number(index)] = resultUrl
+          }
+        }
+      })
+
+      let resolvedFamilyPhoto = formData.familyPhoto || null
+      if (formData._pendingFamilyPhotoFile && (formData._pendingFamilyPhotoFile instanceof Blob || formData._pendingFamilyPhotoFile instanceof File)) {
+        const compressedFamily = await compressImageForUpload(formData._pendingFamilyPhotoFile)
+        const familyResultUrl = await uploadToR2(compressedFamily)
+        if (familyResultUrl) {
+          resolvedFamilyPhoto = familyResultUrl
+        }
+      }
+
+      await Promise.all(photoUploadPromises)
+
+      // Ensure any remaining local blob: URLs are cleared if not uploaded
+      const finalPhotos = resolvedPhotos.map(p => (p && typeof p === 'string' && p.startsWith('blob:') ? null : p))
+      const finalFamilyPhoto = resolvedFamilyPhoto && typeof resolvedFamilyPhoto === 'string' && resolvedFamilyPhoto.startsWith('blob:') 
+        ? null 
+        : resolvedFamilyPhoto
+
+      const newFormData = { 
+        ...formData, 
+        photos: finalPhotos, 
+        familyPhoto: finalFamilyPhoto 
+      }
+      delete newFormData._pendingPhotoFiles
+      delete newFormData._pendingFamilyPhotoFile
+      
+      // Update draft with resolved photo URLs
+      updateDraft(newFormData)
+      
       if (editCode && saveInvitation) {
-        const resolvedDraft = { ...draftData, ...formData }
+        const resolvedDraft = { ...draftData, ...newFormData }
         const inviteRequest = {
           templateId,
           code: editCode,

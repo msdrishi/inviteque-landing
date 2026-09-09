@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, useRef } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import { pavitraSriData } from '../../data/custom/pavitraSriData.js'
+import { variant1Data, variant2Data } from '../../data/custom/pavitraSriData.js'
 import PhotoCardsMidnightWaltz from '../../components/PhotoCardsMidnightWaltz.jsx'
 import Countdown from '../../components/Countdown.jsx'
 import Footer from '../../components/Footer.jsx'
@@ -1917,454 +1917,70 @@ function CelebrateAndBlessSection({ data, isDesktop }) {
 // ═══════════════════════════════════════════════════════════════════
 export default function CustomMidnightWaltzPavitraSri() {
   const { variant } = useParams()
-  const [searchParams] = useSearchParams()
-  const isPreview = searchParams.get('preview') === 'true'
-  const { draftData } = useDraft()
-  const [liveInvite, setLiveInvite] = useState(null)
-  const [showSplash, setShowSplash] = useState(!isPreview)
+  const [showSplash, setShowSplash] = useState(true)
 
   useEffect(() => {
-    if (!isPreview) {
-      const timer = setTimeout(() => setShowSplash(false), 900)
-      return () => clearTimeout(timer)
-    }
-  }, [isPreview])
+    const timer = setTimeout(() => setShowSplash(false), 900)
+    return () => clearTimeout(timer)
+  }, [])
 
-  // Fetch from Backend Database by slug (single source of truth)
-  useEffect(() => {
-    if (!isPreview) {
-      const tryFetch = async () => {
-        try {
-          // Fetch by slug — backend resolves Pavitra-Sri via slug column (case-insensitive)
-          const res = await fetch(`${API_URL}/api/invites/Pavitra-Sri`)
-          if (res.ok) {
-            const dbData = await res.json()
-            if (dbData && (dbData.groomName || dbData.coupleData || dbData.heroData || dbData.slug || dbData.code)) {
-              setLiveInvite(dbData)
-            }
-          }
-        } catch (e) {
-          console.warn('Template DB fetch error:', e)
-        }
-      }
-      tryFetch()
-    }
-  }, [isPreview])
-
-
-  // Merge live data, IndexedDB data, custom editor data, or draft data with base pavitraSriData
-  const data = useMemo(() => {
-    const base = pavitraSriData
-    // DB (liveInvite) always wins, then draftData, then base defaults
-    const dynamicSource = isPreview 
-      ? draftData 
-      : (liveInvite || (draftData?.slug === 'Pavitra-Sri' ? draftData : null))
-
-    if (!dynamicSource) return base
-
-    // Map dynamic fields gracefully over base
-    const groom = dynamicSource.groomName || dynamicSource.coupleData?.groomName || base.hero.groomName
-    const bride = dynamicSource.brideName || dynamicSource.coupleData?.brideName || base.hero.brideName
-    
-    let day = base.hero.weddingDate || '12'
-    let month = base.hero.weddingMonth || 'November'
-    let year = base.hero.weddingYear || '2026'
-    let time = dynamicSource.weddingTime || dynamicSource.heroData?.weddingTime || base.hero.weddingTime || '09:00 AM - 10:30 AM'
-
-    const rawDate = dynamicSource.weddingDate || dynamicSource.heroData?.weddingDate
-    if (rawDate) {
-      if (typeof rawDate === 'object' && rawDate !== null) {
-        day = rawDate.day || rawDate.date || day
-        month = rawDate.month || month
-        year = rawDate.year || year
-      } else if (typeof rawDate === 'string') {
-        if (rawDate.includes('-')) {
-          const parts = rawDate.split('-')
-          if (parts.length === 3) {
-            year = parts[0]
-            const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"]
-            const mIdx = parseInt(parts[1], 10) - 1
-            month = monthNames[mIdx] || parts[1]
-            day = String(parseInt(parts[2], 10))
-          }
-        } else {
-          day = rawDate
-        }
-      }
-    }
-    if (dynamicSource.weddingMonth && typeof dynamicSource.weddingMonth === 'string') {
-      month = dynamicSource.weddingMonth
-    }
-    if (dynamicSource.weddingYear && (typeof dynamicSource.weddingYear === 'string' || typeof dynamicSource.weddingYear === 'number')) {
-      year = String(dynamicSource.weddingYear)
-    }
-
-    day = String(day || '12')
-    month = String(month || 'November')
-    year = String(year || '2026')
-
-    const defaultWeddingEvent = base.events.find(e => e.id === 'wedding') || base.events[base.events.length - 1]
-    const mahal = dynamicSource.mahalName || dynamicSource.venueData?.mahalName || defaultWeddingEvent?.venueName
-    const addr = dynamicSource.venueAddress || dynamicSource.venueData?.venueAddress || defaultWeddingEvent?.venueLine1
-    const cityState = `${dynamicSource.venueCity || dynamicSource.venueData?.venueCity || ''}${dynamicSource.state || dynamicSource.venueData?.state ? ', ' + (dynamicSource.state || dynamicSource.venueData?.state) : ''}`.trim() || defaultWeddingEvent?.venueLine2
-    const map = dynamicSource.mapLink || dynamicSource.venueData?.mapLink || defaultWeddingEvent?.mapUrl
-
-    // Photos: safely extract and merge slot by slot
-    let mappedPhotos = base.moments.photos.map(p => ({ ...p }))
-    const rawPhotos = dynamicSource.photos || dynamicSource.storyData?.photos
-    if (rawPhotos && Array.isArray(rawPhotos)) {
-      rawPhotos.forEach((item, i) => {
-        if (i < 3 && item) {
-          const imgUrl = typeof item === 'object' ? (item.image || item.url || item.secure_url) : item
-          if (imgUrl && typeof imgUrl === 'string' && imgUrl.trim() !== '') {
-            mappedPhotos[i] = {
-              ...(mappedPhotos[i] || { id: i + 1 }),
-              id: i + 1,
-              image: imgUrl
-            }
-          }
-        }
-      })
-    }
-
-    // Events
-    let mappedEvents = base.events
-    if (dynamicSource.events && Array.isArray(dynamicSource.events) && dynamicSource.events.length > 0) {
-      mappedEvents = dynamicSource.events.map((ev, i) => {
-        const baseEv = base.events[i] || base.events.find(b => b.id === ev.id) || base.events[base.events.length - 1]
-        const evDate = ev.date || baseEv?.date || ''
-        const evTime = ev.time || baseEv?.time || ''
-        const dynamicDateTime = (evDate && evTime) ? `${evDate} • ${evTime}` : (evDate || evTime || ev.dateTimeLine || baseEv?.dateTimeLine || '')
-
-        return {
-          ...ev,
-          id: ev.id || baseEv?.id || `custom-event-${i + 1}`,
-          eventName: ev.eventName || ev.title || baseEv?.eventName || 'Ceremony',
-          sectionLabel: ev.sectionLabel || ev.label || baseEv?.sectionLabel || 'Our Venue',
-          dateTimeLine: ev.dateTimeLine || (ev.date && ev.time ? `${ev.date} • ${ev.time}` : (ev.date || ev.time || '')) || baseEv?.dateTimeLine,
-          venueName: ev.venueName || ev.mahalName || baseEv?.venueName || mahal,
-          venueLine1: ev.venueLine1 || ev.venueAddress || baseEv?.venueLine1 || addr,
-          venueLine2: ev.venueLine2 || ev.venueCity || baseEv?.venueLine2 || cityState,
-          mapUrl: ev.mapUrl || ev.mapLink || baseEv?.mapUrl || map,
-          bgDesktop: (ev.bgDesktop ? ev.bgDesktop.replace(/\.(png|jpg|jpeg)$/i, '.webp') : null) || baseEv?.bgDesktop || (i === 0 ? "/backgrounds/midnight%20waltz/haldi-desktop.webp" : (i === 1 ? "/backgrounds/midnight%20waltz/reception-desktop.webp" : "/backgrounds/midnight%20waltz/temple-desktop.webp")),
-          bgMobile: (ev.bgMobile ? ev.bgMobile.replace(/\.(png|jpg|jpeg)$/i, '.webp') : null) || baseEv?.bgMobile || (i === 0 ? "/backgrounds/midnight%20waltz/haldi-mobile.webp" : (i === 1 ? "/backgrounds/midnight%20waltz/reception-mobile.webp" : "/backgrounds/midnight%20waltz/temple-mobile.webp")),
-          isWeddingOnly: ev.isWeddingOnly ?? (dynamicSource.events.length === 1 || i === dynamicSource.events.length - 1 || (ev.eventName && ev.eventName.toLowerCase().includes('wedding')))
-        }
-      })
-    } else if (dynamicSource.scheduleItems || dynamicSource.scheduleData?.items) {
-      const rawSchedule = dynamicSource.scheduleItems || dynamicSource.scheduleData?.items
-      if (rawSchedule && rawSchedule.length > 0) {
-        mappedEvents = rawSchedule.map((item, idx) => {
-          const baseEv = base.events[idx] || base.events[base.events.length - 1]
-          return {
-            id: `evt-${idx + 1}`,
-            label: item.title || baseEv?.label || 'Ceremony',
-            sectionLabel: item.title || baseEv?.sectionLabel || 'Ceremony',
-            eventName: item.title || baseEv?.eventName || 'Ceremony',
-            dateTimeLine: `${day} ${month} ${year} • ${item.time || time}`.trim(),
-            date: `${day} ${month} ${year}`.trim(),
-            time: item.time || time,
-            venueName: item.venueName || baseEv?.venueName || mahal,
-            venueLine1: item.venueLine1 || baseEv?.venueLine1 || addr,
-            venueLine2: item.venueLine2 || baseEv?.venueLine2 || cityState,
-            mapUrl: item.mapUrl || baseEv?.mapUrl || map,
-            bgDesktop: baseEv?.bgDesktop || (idx === 0 ? "/backgrounds/midnight%20waltz/haldi-desktop.webp" : (idx === 1 ? "/backgrounds/midnight%20waltz/reception-desktop.webp" : "/backgrounds/midnight%20waltz/temple-desktop.webp")),
-            bgMobile: baseEv?.bgMobile || (idx === 0 ? "/backgrounds/midnight%20waltz/haldi-mobile.webp" : (idx === 1 ? "/backgrounds/midnight%20waltz/reception-mobile.webp" : "/backgrounds/midnight%20waltz/temple-mobile.webp")),
-            isWeddingOnly: rawSchedule.length === 1 || idx === rawSchedule.length - 1 || (item.title && item.title.toLowerCase().includes('wedding'))
-          }
-        })
-      }
-    }
-
-    const currentCode = dynamicSource.slug || dynamicSource.code || 'Pavitra-Sri'
-
-    // Dynamic Story Mapping
-    const storySectionLabel = dynamicSource.storySectionLabel || dynamicSource.invitationData?.storySectionLabel || dynamicSource.storyData?.sectionLabel || dynamicSource.story?.sectionLabel || base.story.sectionLabel || "Our Story"
-    const storyHeading = dynamicSource.storyHeading || dynamicSource.invitationData?.storyHeading || dynamicSource.invitationData?.customSectionTitle || dynamicSource.storyData?.heading || dynamicSource.story?.heading || base.story.heading || "From A Chance Encounter to Forever"
-    
-    let storyParagraphs = []
-    if (dynamicSource.storyParagraph1 || dynamicSource.storyParagraph2) {
-      if (dynamicSource.storyParagraph1) storyParagraphs.push(dynamicSource.storyParagraph1)
-      if (dynamicSource.storyParagraph2) storyParagraphs.push(dynamicSource.storyParagraph2)
-    } else if (Array.isArray(dynamicSource.storyParagraphs) && dynamicSource.storyParagraphs.length > 0) {
-      storyParagraphs = dynamicSource.storyParagraphs
-    } else if (Array.isArray(dynamicSource.storyData?.paragraphs) && dynamicSource.storyData.paragraphs.length > 0) {
-      storyParagraphs = dynamicSource.storyData.paragraphs
-    } else if (Array.isArray(dynamicSource.story?.paragraphs) && dynamicSource.story.paragraphs.length > 0) {
-      storyParagraphs = dynamicSource.story.paragraphs
-    } else if (dynamicSource.storyMessage) {
-      storyParagraphs = dynamicSource.storyMessage.split('\n\n').filter(Boolean)
-    } else if (dynamicSource.customSectionContent) {
-      storyParagraphs = dynamicSource.customSectionContent.split('\n\n').filter(Boolean)
-    } else {
-      storyParagraphs = base.story.paragraphs || []
-    }
-
-    const storyQuote = dynamicSource.storyQuote || dynamicSource.invitationData?.storyQuote || dynamicSource.invitationData?.customSectionSubtitle || dynamicSource.storyData?.quote || dynamicSource.story?.quote || dynamicSource.customSectionSubtitle || base.story.quote
-
-    // Welcome message — reads from invitationData (where editor saves it)
-    const welcomeLabel = dynamicSource.welcomeLabel || dynamicSource.invitationData?.welcomeLabel || base.welcome.label
-    const welcomeHeading1 = dynamicSource.welcomeHeading1 || dynamicSource.invitationData?.welcomeHeadingLine1 || base.welcome.headingLine1
-    const welcomeHeading2 = dynamicSource.welcomeHeading2 || dynamicSource.invitationData?.welcomeHeadingLine2 || base.welcome.headingLine2
-    const welcomeMessage = dynamicSource.welcomeMessage || dynamicSource.invitationData?.welcomeMessage || dynamicSource.invitationData?.familyMessage || dynamicSource.familyMessage || base.welcome.message
-
-    // Convert wedding date into a valid ISO string for countdown (e.g. 2026-11-12T09:00:00.000Z)
-    let countdownISO = "2026-11-12T09:00:00.000Z"
-    if (dynamicSource.countdownTargetDate && dynamicSource.countdownTargetDate.includes('-')) {
-      countdownISO = `${dynamicSource.countdownTargetDate}T09:00:00.000Z`
-    } else if (year && month && day) {
-      const monthNames = ["january","february","march","april","may","june","july","august","september","october","november","december"]
-      const mIdx = monthNames.findIndex(m => m.startsWith(String(month).toLowerCase().slice(0, 3)))
-      const mNum = mIdx !== -1 ? String(mIdx + 1).padStart(2, '0') : '11'
-      const dNum = String(day).padStart(2, '0')
-      countdownISO = `${year}-${mNum}-${dNum}T09:00:00.000Z`
-    }
-
-    // Find primary wedding ceremony event from mappedEvents
-    const weddingEvent = mappedEvents.find(e => e.isWeddingOnly || (e.eventName && e.eventName.toLowerCase().includes('wedding')) || e.id === 'wedding') || mappedEvents[mappedEvents.length - 1]
-
-    const weddingVenueName = weddingEvent?.venueName || mahal || ''
-    const weddingLine1 = weddingEvent?.venueLine1 || addr || ''
-    const weddingLine2 = weddingEvent?.venueLine2 || cityState || ''
-    const weddingTime = weddingEvent?.time || time || '09:00 AM - 10:30 AM'
-
-    const dynamicHeroAddressParts = [
-      weddingVenueName,
-      weddingLine1,
-      weddingLine2
-    ].filter(Boolean)
-
-    return {
-      ...base,
-      hero: {
-        ...base.hero,
-        groomName: groom,
-        brideName: bride,
-        weddingDate: day,
-        weddingMonth: month,
-        weddingYear: year,
-        weddingTime: weddingTime,
-        venueName: weddingVenueName,
-        venueCity: weddingLine2,
-        venueLine1: weddingLine1,
-        venueLine2: weddingLine2,
-        addressParts: {
-          desktop: dynamicHeroAddressParts,
-          mobile: dynamicHeroAddressParts,
-        },
-        dateLine: `${day} ${month} ${year}`.trim(),
-        subtitle: dynamicSource.heroSubtitle || base.hero.subtitle,
-      },
-      story: {
-        ...base.story,
-        sectionLabel: storySectionLabel,
-        heading: storyHeading,
-        paragraphs: storyParagraphs,
-        quote: storyQuote,
-      },
-      moments: {
-        ...base.moments,
-        photos: mappedPhotos
-      },
-      welcome: {
-        ...base.welcome,
-        label: welcomeLabel,
-        headingLine1: welcomeHeading1,
-        headingLine2: welcomeHeading2,
-        message: welcomeMessage,
-      },
-      events: mappedEvents,
-      countdown: {
-        ...base.countdown,
-        targetDateTimeISO: countdownISO,
-        targetDate: countdownISO,
-      },
-      celebrate: {
-        ...base.celebrate,
-        rsvp: {
-          ...base.celebrate.rsvp,
-          title: dynamicSource.rsvpTitle || base.celebrate.rsvp.title,
-          description: dynamicSource.rsvpDescription || base.celebrate.rsvp.description,
-          buttonLabel: dynamicSource.rsvpButtonLabel || base.celebrate.rsvp.buttonLabel,
-          url: dynamicSource.rsvpUrl || `/templates/midnight-waltz/${currentCode}/RSVP`
-        },
-        registry: {
-          ...base.celebrate.registry,
-          title: dynamicSource.registryTitle || base.celebrate.registry.title,
-          description: dynamicSource.registryDescription || base.celebrate.registry.description,
-          buttonLabel: dynamicSource.registryButtonLabel || base.celebrate.registry.buttonLabel,
-          url: dynamicSource.registryUrl || base.celebrate.registry.url,
-          enabled: dynamicSource.hasRegistry !== undefined ? dynamicSource.hasRegistry : base.celebrate.registry.enabled
-        }
-      },
-      sections: dynamicSource.sections ? { ...base.sections, ...dynamicSource.sections } : {
-        showHero: dynamicSource.showHero !== undefined ? dynamicSource.showHero : true,
-        showStory: dynamicSource.showStory !== undefined ? dynamicSource.showStory : (dynamicSource.showCustomSection ?? true),
-        showGallery: dynamicSource.showGallery !== undefined ? dynamicSource.showGallery : true,
-        showWelcome: dynamicSource.showWelcome !== undefined ? dynamicSource.showWelcome : true,
-        showVenue: dynamicSource.showVenue !== undefined ? dynamicSource.showVenue : (dynamicSource.showSchedule ?? true),
-        showCountdown: dynamicSource.showCountdown !== undefined ? dynamicSource.showCountdown : true,
-        hasRsvp: dynamicSource.hasRsvp !== undefined ? dynamicSource.hasRsvp : true,
-      }
-    }
-  }, [variant, isPreview, draftData, liveInvite])
-
-
-  // Filter events based on variant:
-  // Variant "2" = Wedding ceremony venue only
-  // Variant "1" (or default) = All configured venue sections (Haldi & Mehendi, Reception, Wedding)
-  const filteredEvents = useMemo(() => {
-    if (variant === '2') {
-      const weddingEvents = data.events.filter(e => 
-        e.isWeddingOnly === true || 
-        e.id === 'wedding' || 
-        (e.eventName && e.eventName.toLowerCase().includes('wedding')) || 
-        (e.eventName && e.eventName.toLowerCase().includes('muhurtham')) ||
-        (e.label && e.label.toLowerCase().includes('wedding'))
-      )
-      if (weddingEvents.length > 0) return weddingEvents
-      if (data.events.length === 1) return data.events
-      return [data.events[data.events.length - 1]]
-    }
-    return data.events && data.events.length > 0 ? data.events : pavitraSriData.events
-  }, [variant, data.events])
-
-  const sections = data.sections || {
-    showHero: true,
-    showStory: true,
-    showGallery: true,
-    showWelcome: true,
-    showVenue: true,
-    showCountdown: true,
-    hasRsvp: true,
-  }
-
-  // Watermark status: Shown for preview / non-paid custom invites
-  const isPaid = (
-    liveInvite?.status?.toUpperCase?.() === 'PAID' ||
-    liveInvite?.isPaid === true ||
-    draftData?.status?.toUpperCase?.() === 'PAID' ||
-    draftData?.isPaid === true
-  )
-  const showWatermark = false
+  const data = variant === '2' ? variant2Data : variant1Data
 
   return (
     <div className="relative min-h-screen bg-[#FDFBF7] text-[#4A3E20]">
-      {/* Luxury Splash Screen overlay (Identical to other templates) */}
       <SplashScreen loading={showSplash} />
 
       {/* ── MOBILE VIEW ── */}
       <div className="lg:hidden flex justify-center items-start min-h-screen bg-[#F0E8D8]">
         <div className="relative w-full max-w-[768px] min-h-[100svh] bg-[#FDFBF7] shadow-[0_0_60px_rgba(0,0,0,0.10)]">
-          {/* 1. Hero Section */}
-          {sections.showHero !== false && (
-            <MidnightWaltzHero data={data.hero} isDesktop={false} />
-          )}
-
-          {/* 2. Our Story Section */}
-          {sections.showStory !== false && (
-            <OurStorySection data={data.story} isDesktop={false} />
-          )}
-
-          {/* 3. Watercolor Photo Moments Section */}
-          {sections.showGallery !== false && (
-            <WatercolorMomentsSection data={data.moments} isDesktop={false} />
-          )}
-
-          {/* 4. Welcome Invitation Section */}
-          {sections.showWelcome !== false && (
-            <WelcomeSection data={data.welcome} isDesktop={false} />
-          )}
-
-          {/* 5. Multi-Event Venues */}
-          {sections.showVenue !== false && filteredEvents.map((event) => (
+          <MidnightWaltzHero data={data.hero} isDesktop={false} />
+          <OurStorySection data={data.story} isDesktop={false} />
+          <WatercolorMomentsSection data={data.moments} isDesktop={false} />
+          <WelcomeSection data={data.welcome} isDesktop={false} />
+          
+          {data.events.map((event) => (
             <SingleEventVenueSection key={event.id} event={event} isDesktop={false} />
           ))}
 
-          {/* 6. Live Countdown Timer */}
-          {sections.showCountdown !== false && (
-            <Countdown
-              data={data.countdown}
-              bgImage={countdownBgMobile}
-              theme="traditional"
-              position="bottom"
-              isDesktop={false}
-            />
-          )}
+          <Countdown
+            data={data.countdown}
+            bgImage={countdownBgMobile}
+            theme="traditional"
+            position="bottom"
+            isDesktop={false}
+          />
 
-          {/* 7. Celebrate & Bless Us (RSVP & Registry) */}
-          {sections.hasRsvp !== false && (
-            <CelebrateAndBlessSection data={data.celebrate} isDesktop={false} />
-          )}
-
-          {/* 8. Footer */}
+          <CelebrateAndBlessSection data={data.celebrate} isDesktop={false} />
           <Footer data={data.footer} theme="traditional" isDesktop={false} />
         </div>
       </div>
 
       {/* ── DESKTOP VIEW ── */}
       <div className="hidden lg:block w-full min-h-screen bg-[#FDFBF7] relative">
-        {/* 1. Hero Section */}
-        {sections.showHero !== false && (
-          <div className="w-full">
-            <MidnightWaltzHero data={data.hero} isDesktop={true} />
-          </div>
-        )}
-
-        {/* 2. Our Story Section */}
-        {sections.showStory !== false && (
-          <div className="w-full">
-            <OurStorySection data={data.story} isDesktop={true} />
-          </div>
-        )}
-
-        {/* 3. Watercolor Photo Moments Section */}
-        {sections.showGallery !== false && (
-          <div className="w-full">
-            <WatercolorMomentsSection data={data.moments} isDesktop={true} />
-          </div>
-        )}
-
-        {/* 4. Welcome Invitation Section */}
-        {sections.showWelcome !== false && (
-          <div className="w-full">
-            <WelcomeSection data={data.welcome} isDesktop={true} />
-          </div>
-        )}
-
-        {/* 5. Multi-Event Venues */}
-        {sections.showVenue !== false && filteredEvents.map((event) => (
+        <div className="w-full"><MidnightWaltzHero data={data.hero} isDesktop={true} /></div>
+        <div className="w-full"><OurStorySection data={data.story} isDesktop={true} /></div>
+        <div className="w-full"><WatercolorMomentsSection data={data.moments} isDesktop={true} /></div>
+        <div className="w-full"><WelcomeSection data={data.welcome} isDesktop={true} /></div>
+        
+        {data.events.map((event) => (
           <div key={event.id} className="w-full">
             <SingleEventVenueSection event={event} isDesktop={true} />
           </div>
         ))}
 
-        {/* 6. Live Countdown Timer */}
-        {sections.showCountdown !== false && (
-          <div className="w-full">
-            <Countdown
-              data={data.countdown}
-              bgImage={countdownBgDesktop}
-              theme="traditional"
-              position="bottom"
-              isDesktop={true}
-            />
-          </div>
-        )}
-
-        {/* 7. Celebrate & Bless Us */}
-        {sections.hasRsvp !== false && (
-          <div className="w-full">
-            <CelebrateAndBlessSection data={data.celebrate} isDesktop={true} />
-          </div>
-        )}
-
-        {/* 8. Footer */}
         <div className="w-full">
-          <Footer data={data.footer} theme="traditional" isDesktop={true} />
+          <Countdown
+            data={data.countdown}
+            bgImage={countdownBgDesktop}
+            theme="traditional"
+            position="bottom"
+            isDesktop={true}
+          />
         </div>
-      </div>
 
+        <div className="w-full"><CelebrateAndBlessSection data={data.celebrate} isDesktop={true} /></div>
+        <div className="w-full"><Footer data={data.footer} theme="traditional" isDesktop={true} /></div>
+      </div>
     </div>
   )
 }

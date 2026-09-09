@@ -1491,13 +1491,13 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
     hero: {
       ...staticData.hero,
       names: savedData
-        ? `${savedData.coupleData.groomName} & ${savedData.coupleData.brideName}`
-        : `${draftData.groomName} & ${draftData.brideName}`,
-      groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
-      brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
+        ? `${savedData.coupleData?.groomName || savedData.groomName || 'Groom'} & ${savedData.coupleData?.brideName || savedData.brideName || 'Bride'}`
+        : `${draftData?.groomName || 'Groom'} & ${draftData?.brideName || 'Bride'}`,
+      groomName: savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName,
+      brideName: savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName,
       dateLine: savedData
-        ? `${savedData.heroData.weddingDate} ${savedData.heroData.weddingMonth} ${savedData.heroData.weddingYear}`
-        : `${draftData.weddingDate} ${draftData.weddingMonth} ${draftData.weddingYear}`,
+        ? `${savedData.heroData?.weddingDate || savedData.weddingDate?.day || '18'} ${savedData.heroData?.weddingMonth || savedData.weddingDate?.month || 'December'} ${savedData.heroData?.weddingYear || savedData.weddingDate?.year || '2026'}`
+        : `${draftData?.weddingDate || '18'} ${draftData?.weddingMonth || 'December'} ${draftData?.weddingYear || '2026'}`,
       weddingTime: savedData
         ? (savedData.heroData?.weddingTime || '09:00 AM - 10:30 AM')
         : (draftData.weddingTime || '09:00 AM - 10:30 AM'),
