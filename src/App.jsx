@@ -38,7 +38,7 @@ function AnalyticsTracker() {
       try {
         let templateId = null
         let inviteCode = null
-        
+
         // Parse /template/:templateId or /templates/:templateId or custom routes
         const pathParts = location.pathname.split('/').filter(Boolean)
         if (pathParts[0] === 'templates' || pathParts[0] === 'template') {
@@ -69,8 +69,8 @@ function AnalyticsTracker() {
         try {
           const currentPathViews = parseInt(localStorage.getItem(`iq_views_path_${location.pathname}`) || '0', 10)
           localStorage.setItem(`iq_views_path_${location.pathname}`, String(currentPathViews + 1))
-        } catch (e) {}
-        
+        } catch (e) { }
+
         await fetch(`${API_URL}/api/public/analytics/visit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -104,7 +104,7 @@ export default function App() {
           <Route path="/account/:code" element={<InviteDetails />} />
           <Route path="/account/:code/rsvp" element={<CustomerRsvpDashboard />} />
           <Route path="/builder/:templateId" element={<Builder />} />
-          
+
           {/* Custom Client Template Routes (Pavitra & Sri) */}
           <Route path="/template/midnight-waltz/Pavitra-Sri" element={<CustomMidnightWaltzPavitraSri />} />
           <Route path="/template/midnight-waltz/Pavitra-Sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
@@ -140,7 +140,7 @@ export default function App() {
           <Route path="/template/:templateId/:code/:groupSlug" element={<TemplateRoute />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
-          
+
           {/* Admin console routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />

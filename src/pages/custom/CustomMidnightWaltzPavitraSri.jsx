@@ -1405,7 +1405,7 @@ function SingleEventVenueSection({ event, isDesktop }) {
   if (addrParts.length === 0 && event.venueAddress) addrParts.push(event.venueAddress)
   if (addrParts.length === 1 && event.venueCity) addrParts.push(event.venueCity)
 
-  const displayDateTime = (event.date && event.time) ? `${event.date} • ${event.time}` : (event.date || event.time || event.dateTimeLine || '')
+  const displayDateTime = (event.date && event.time) ? `${event.date}\n${event.time}` : (event.date || event.time || event.dateTimeLine || '')
 
   // Dedicated bespoke backgrounds for Pavitra & Sri events:
   const isHaldi = event.id === 'haldi-mehendi' || (event.eventName && event.eventName.toLowerCase().includes('haldi')) || (event.sectionLabel && event.sectionLabel.toLowerCase().includes('haldi'))
@@ -1525,6 +1525,7 @@ function SingleEventVenueSection({ event, isDesktop }) {
               color: '#B09060',
               margin: '0 0 8px 0',
               letterSpacing: '0.05em',
+              whiteSpace: 'pre-line',
             }}
           >
             {displayDateTime}
