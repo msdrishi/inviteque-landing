@@ -559,18 +559,26 @@ function MidnightWaltzHero({ data, isDesktop }) {
         </motion.p>
 
         {/* 11. Pin / location icon */}
-        <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 6 : (isTablet ? 8 : 5) }}>
-          <svg
-            viewBox="0 0 24 24"
-            width={isDesktop ? 16 : (isTablet ? 22 : 14)}
-            height={isDesktop ? 16 : (isTablet ? 22 : 14)}
-            fill={C.secondary}
-            aria-hidden="true"
-            style={{ opacity: 0.8 }}
-          >
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-          </svg>
-        </motion.div>
+        {(() => {
+          const lines = data.addressParts
+            ? (isDesktop ? data.addressParts.desktop : data.addressParts.mobile)
+            : null
+          if (!lines || lines.length === 0) return null
+          return (
+            <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 6 : (isTablet ? 8 : 5) }}>
+              <svg
+                viewBox="0 0 24 24"
+                width={isDesktop ? 16 : (isTablet ? 22 : 14)}
+                height={isDesktop ? 16 : (isTablet ? 22 : 14)}
+                fill={C.secondary}
+                aria-hidden="true"
+                style={{ opacity: 0.8 }}
+              >
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+            </motion.div>
+          )
+        })()}
 
         {/* 12. Full address ── pin code removed */}
         <motion.div
@@ -722,6 +730,7 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
   const [hasInteracted, setHasInteracted] = useState(false)
   const [showLoadingSplash, setShowLoadingSplash] = useState(true)
   const [splashState, setSplashState] = useState('waiting')
+  const [isDoorVideoPlaying, setIsDoorVideoPlaying] = useState(false)
   const audioRef = React.useRef(null)
   const videoRef = React.useRef(null)
 
@@ -735,10 +744,8 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
       setSplashState('playing')
       setHasInteracted(true)
       
-      if (audioRef.current) {
-        audioRef.current.play().then(() => {
-          audioRef.current.pause()
-        }).catch(() => {})
+      if (audioRef.current && !isMusicMuted) {
+        audioRef.current.play().catch(() => {})
       }
 
       if (videoRef.current) {
@@ -873,14 +880,19 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
             className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#000000] cursor-pointer overflow-hidden"
             onClick={handleSplashClick}
           >
+            <img 
+              src={doorPosterSrc} 
+              alt=""
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 pointer-events-none z-[1] ${isDoorVideoPlaying ? 'opacity-0' : 'opacity-100'}`} 
+            />
             <video
               ref={videoRef}
               src={doorVideoSrc}
               className="absolute inset-0 w-full h-full object-cover"
               playsInline
               muted
-              poster={doorPosterSrc}
               preload="auto"
+              onPlaying={() => setIsDoorVideoPlaying(true)}
               onEnded={handleVideoEnded}
               style={{ pointerEvents: 'none' }}
             />

@@ -8,25 +8,17 @@ export const customData = {
     dateLine: "01 NOV 2026",
     dayOfWeek: "SUNDAY",
     weddingTime: "08:00 AM - 10:00 AM",
-    venueName: "KING HALLY MY FAME HOTEL",
+    venueName: "",
     addressParts: {
-      desktop: [
-        "King Hall, My Fame Hotel, Wisma City Kingdom",
-        "B3 Floor, Lebuhraya Seremban - Bukit Nenas, Taman Ast",
-        "70200 Seremban, Negeri Sembilan, Malaysia"
-      ],
-      mobile: [
-        "King Hall, My Fame Hotel, Wisma City Kingdom",
-        "B3 Floor, Lebuhraya Seremban - Bukit Nenas",
-        "Taman Ast, 70200 Seremban, Negeri Sembilan, Malaysia"
-      ]
+      desktop: [],
+      mobile: []
     },
     subtitle: "ARE GETTING MARRIED",
   },
   venue: {
-    venueName: "KING HALLY MY FAME HOTEL",
-    venueLine1: "King Hall, My Fame Hotel, Wisma City Kingdom, B3 Floor",
-    venueLine2: "Lebuhraya Seremban - Bukit Nenas, Taman Ast, 70200 Seremban, Negeri Sembilan, Malaysia",
+    venueName: "KING HALL, MY FAME HOTEL",
+    venueLine1: "Wisma City Kingdom, B3 Floor, Lebuhraya Seremban - Bukit Nanas",
+    venueLine2: "70200 Seremban, Negeri Sembilan.",
     mapUrl: "https://share.google/jaI6o5WeR6pu5kBhH",
   },
   moments: {
