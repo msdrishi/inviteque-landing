@@ -17,6 +17,7 @@ import AdminDashboard from './pages/AdminDashboard.jsx'
 import CustomerRsvpDashboard from './pages/CustomerRsvpDashboard.jsx'
 import CustomMidnightWaltzPavitraSri from './pages/custom/CustomMidnightWaltzPavitraSri.jsx'
 import CustomEverlastingVowsShradha from './pages/custom/CustomEverlastingVowsShradha.jsx'
+import CustomMidnightWaltzSharanRajAndShanteriyga from './pages/custom-orders/midnight-waltz/SharanRajAndShanteriyga/index.jsx'
 import { API_URL } from './config'
 
 function ScrollToTop() {
@@ -114,6 +115,12 @@ export default function App() {
           <Route path="/template/midnight-waltz/pavitra-sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
           <Route path="/templates/midnight-waltz/pavitra-sri" element={<CustomMidnightWaltzPavitraSri />} />
           <Route path="/templates/midnight-waltz/pavitra-sri/:variant" element={<CustomMidnightWaltzPavitraSri />} />
+
+          {/* Custom Client Template Routes (Sharan Raj & Shanteriyga) */}
+          <Route path="/template/midnight-waltz/SharanRajAndShanteriyga" element={<CustomMidnightWaltzSharanRajAndShanteriyga />} />
+          <Route path="/templates/midnight-waltz/SharanRajAndShanteriyga" element={<CustomMidnightWaltzSharanRajAndShanteriyga />} />
+          <Route path="/template/midnight-waltz/sharanrajandshanteriyga" element={<CustomMidnightWaltzSharanRajAndShanteriyga />} />
+          <Route path="/templates/midnight-waltz/sharanrajandshanteriyga" element={<CustomMidnightWaltzSharanRajAndShanteriyga />} />
 
           {/* Custom Client Template Routes (Shradha - Everlasting Vows Roka & Engagement) */}
           <Route path="/template/everlastingvows/Shradha" element={<CustomEverlastingVowsShradha />} />
