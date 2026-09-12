@@ -8,10 +8,12 @@ import WelcomeMidnightWaltz from '../../../../components/WelcomeMidnightWaltz.js
 import VenueMidnightWaltz from '../../../../components/VenueMidnightWaltz.jsx'
 import CustomSection from '../../../../components/CustomSection.jsx'
 import InviteQRSVP from '../../../../components/InviteQRSVP.jsx'
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion'
+import SplashScreen from '../../../../components/SplashScreen.jsx'
 
 import { customData as data } from './data.js'
 import bgMusicSrc from '../../../../assets/audio/tamil-temple-bgm.mp3'
+import doorVideoSrc from '../../../../assets/video/Mid-night-waltz-door-opening.MP4'
 
 // Simple SVG icon for Music On
 const MusicOnIcon = () => (
@@ -714,15 +716,47 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
   const isPaid = true
   const showWatermark = false
 
-  // Music state
+  // Music & Splash state
   const [isMusicMuted, setIsMusicMuted] = useState(false)
   const [hasInteracted, setHasInteracted] = useState(false)
+  const [showLoadingSplash, setShowLoadingSplash] = useState(true)
+  const [splashState, setSplashState] = useState('waiting')
   const audioRef = React.useRef(null)
+  const videoRef = React.useRef(null)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoadingSplash(false), 1200)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const handleSplashClick = () => {
+    if (splashState === 'waiting') {
+      setSplashState('playing')
+      setHasInteracted(true)
+      
+      if (audioRef.current) {
+        audioRef.current.play().then(() => {
+          audioRef.current.pause()
+        }).catch(() => {})
+      }
+
+      if (videoRef.current) {
+        videoRef.current.play().catch(e => console.error(e))
+      }
+    }
+  }
+
+  const handleVideoEnded = () => {
+    setSplashState('done')
+    if (audioRef.current && !isMusicMuted) {
+      audioRef.current.play().catch(() => {})
+    }
+  }
 
   // Handle first interaction to autoplay music
   useEffect(() => {
     // Attempt immediate autoplay
-    if (audioRef.current && !isMusicMuted && !hasInteracted) {
+    if (audioRef.current && !isMusicMuted && !hasInteracted && splashState === 'done') {
       audioRef.current.play().then(() => {
         setHasInteracted(true)
       }).catch(() => {
@@ -733,7 +767,7 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
     const handleInteraction = () => {
       if (!hasInteracted) {
         setHasInteracted(true)
-        if (audioRef.current && !isMusicMuted) {
+        if (audioRef.current && !isMusicMuted && splashState === 'done') {
           audioRef.current.play().catch(() => {})
         }
       }
@@ -827,7 +861,53 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
 
   // ── Render ────────────────────────────────────────────────────
   return (
-    <div className="relative min-h-screen bg-[#FDFBF7] text-[#4A3E20]">
+    <>
+      <SplashScreen loading={showLoadingSplash} />
+
+      <AnimatePresence>
+        {!showLoadingSplash && splashState !== 'done' && (
+          <motion.div 
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 1.2, ease: "easeInOut" } }}
+            className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#000000] cursor-pointer overflow-hidden"
+            onClick={handleSplashClick}
+          >
+            <video
+              ref={videoRef}
+              src={doorVideoSrc}
+              className="absolute inset-0 w-full h-full object-cover"
+              playsInline
+              muted
+              onEnded={handleVideoEnded}
+              style={{ pointerEvents: 'none' }}
+            />
+            {splashState === 'waiting' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: [0, -10, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ 
+                  opacity: { duration: 1 }, 
+                  y: { repeat: Infinity, duration: 2.5, ease: "easeInOut" } 
+                }}
+                className="absolute z-10 flex flex-col items-center pointer-events-none mt-[40vh]"
+              >
+                <button className="px-8 py-3 border border-white/50 rounded-full text-sm uppercase tracking-widest text-white backdrop-blur-sm bg-black/30 shadow-lg">
+                  Tap to Open
+                </button>
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {splashState === 'done' && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="relative min-h-screen bg-[#FDFBF7] text-[#4A3E20]"
+        >
 
       {/* ── MOBILE & TABLET VIEW ── */}
       <div className="lg:hidden flex justify-center items-start min-h-screen bg-[#F0E8D8]">
@@ -1013,6 +1093,8 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
         {isMusicMuted ? <MusicOffIcon /> : <MusicOnIcon />}
       </button>
 
-    </div>
+        </motion.div>
+      )}
+    </>
   )
 }
