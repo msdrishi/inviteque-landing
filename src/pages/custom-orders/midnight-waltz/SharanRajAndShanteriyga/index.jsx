@@ -14,6 +14,7 @@ import SplashScreen from '../../../../components/SplashScreen.jsx'
 import { customData as data } from './data.js'
 import bgMusicSrc from '../../../../assets/audio/tamil-temple-bgm.mp3'
 import doorVideoSrc from '../../../../assets/video/Mid-night-waltz-door-opening.MP4'
+import doorPosterSrc from '../../../../assets/images/door-opening-poster.webp'
 
 // Simple SVG icon for Music On
 const MusicOnIcon = () => (
@@ -878,6 +879,8 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
               className="absolute inset-0 w-full h-full object-cover"
               playsInline
               muted
+              poster={doorPosterSrc}
+              preload="auto"
               onEnded={handleVideoEnded}
               style={{ pointerEvents: 'none' }}
             />
