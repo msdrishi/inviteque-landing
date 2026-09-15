@@ -10,7 +10,7 @@ export default function FathersMessage({ message, bgImage, isSticky, zIndex }) {
 
   return (
     <section
-      className={`relative min-h-[100dvh] w-full flex flex-col justify-start pt-[12vh] items-center overflow-hidden bg-[#F9F6F0]
+      className={`relative min-h-[100dvh] w-full flex flex-col justify-start pt-[5vh] items-center overflow-hidden bg-[#F9F6F0]
         ${isSticky ? 'sticky top-0' : ''}
       `}
       style={{ zIndex }}

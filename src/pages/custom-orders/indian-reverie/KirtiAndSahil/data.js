@@ -16,7 +16,7 @@ export const customData = {
   familyDetails: "SON OF MRS. ANITA & MR. RAJESH SHARMA\nDAUGHTER OF MRS. SUNITA & MR. ANIL VERMA",
   personalizedMessage: "TOGETHER WITH THEIR FAMILIES INVITE YOU\nTO THEIR WEDDING CELEBRATION",
   
-  fathersMessage: `"In loving memory of late Mr. Anil Verma. As two families unite and two souls embark on their eternal journey, his blessings shine upon us from above. His gentle spirit, endless wisdom, and boundless love continue to guide our steps today and always. Though he may not be here in person, we know he is smiling down upon this union. Your presence, love, and participation will make this celebration complete as we honor his memory."`,
+  fathersMessage: `"In loving memory of late Mr. Anil Verma. His blessings shine upon us from above. His gentle spirit and boundless love continue to guide our steps today and always. Your presence, love, and participation will make this celebration complete as we honor his memory."`,
   
   haldi: {
     date: "DAY 1\n25 NOVEMBER 2026",
@@ -25,13 +25,10 @@ export const customData = {
       {
         title: "Haldi & Pool Party",
         time: "11:00 AM",
-        description: null,
-        expectations: [
-          "Haldi will be applied to all just like Holi!",
-          "Pool party, games, dancing, drinks, and lots of fun"
-        ],
+        description: "Haldi will be applied to all just like Holi, followed by a pool party, games, dancing, and drinks!",
+        expectations: [],
         dressCodeArray: [
-          { label: "Women", desc: "Yellow outfits (can get messy!)", color: "#EAB308" },
+          { label: "Women", desc: "Yellow outfits", color: "#EAB308" },
           { label: "Men", desc: "Light kurta / casual wear", color: "#FEF08A" }
         ]
       }
@@ -45,11 +42,8 @@ export const customData = {
       {
         title: "Engagement & Sangeet",
         time: "06:30 PM",
-        description: "Sunset vibes, ring exchange, and a celebration under the stars ✨",
-        expectations: [
-          "Ring exchange ceremony & Sangeet performances",
-          "Dinner, cocktails, and dancing on the house"
-        ],
+        description: "Join us for sunset vibes, ring exchange, Sangeet performances, dinner, and dancing under the stars ✨",
+        expectations: [],
         dressCodeArray: [
           { label: "Women", desc: "Indo-western / gowns / lehenga / Glitters", color: "#C026D3" },
           { label: "Men", desc: "Suit / blazer / kurta", color: "#1E3A8A" }
@@ -75,11 +69,10 @@ export const customData = {
   travelGuide: {
     title: "Travel & Stay",
     venueName: "Wildernest Hilltop Resort",
-    location: "Khadakwasla, Pune, Maharashtra 411024",
+    location: "Survey No - 58, 59, 60, Sinhgad Rd, Khadakwasla, Pune, Maharashtra 411025",
     directions: [
       "Nearest Airport: Pune International Airport (PNQ) - 40km away",
       "Nearest Railway Station: Pune Junction - 25km away",
-      "Ola, Uber, and local taxis are readily available from both locations.",
       "Valet parking will be provided at the resort."
     ],
     mapUrl: "https://share.google/KYnaei1gOt8P3qn2s"

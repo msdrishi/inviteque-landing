@@ -107,6 +107,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Shalyne';
+  src: url('./assets/fonts/shalyne-typeface-personal-use-only.regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

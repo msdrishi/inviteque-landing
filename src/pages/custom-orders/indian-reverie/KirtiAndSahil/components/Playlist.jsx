@@ -15,11 +15,9 @@ export default function Playlist({ data, bgImage }) {
         <img
           src={bgImage}
           alt=""
-          className="w-full h-full object-cover object-center opacity-90"
+          className="w-full h-full object-cover object-center"
           draggable={false}
         />
-        {/* Subtle overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-white/30"></div>
       </div>
 
       <motion.div

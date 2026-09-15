@@ -32,18 +32,22 @@ export default function Closing({ data, bgImage, borderImage }) {
         </div>
       )}
 
+      {/* Logo at the top */}
+      <div className="absolute top-[8vh] left-0 w-full flex justify-center z-30">
+        <SectionLogo />
+      </div>
+
       {/* Content Layer */}
       <motion.div
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.4 }}
-        className="relative z-20 w-full max-w-md text-center px-8 flex flex-col items-center justify-center h-full"
+        className="relative z-20 w-full max-w-sm text-center px-8 flex flex-col items-center justify-center h-full mt-10"
       >
-        <SectionLogo />
 
         <h2
-          className="font-['Cinzel'] text-3xl font-bold mb-6 leading-tight uppercase tracking-wider"
+          className="font-['Cinzel'] text-xl md:text-2xl font-bold mb-4 leading-tight uppercase tracking-wider"
           style={{ color: C.primary }}
         >
           <BlurText text={data.title} />
@@ -51,19 +55,13 @@ export default function Closing({ data, bgImage, borderImage }) {
 
         <motion.p
           variants={slideInUp}
-          className="font-['Cormorant_Garamond'] text-sm md:text-base italic leading-relaxed opacity-90 max-w-[280px] mx-auto"
+          className="font-['Cormorant_Garamond'] text-sm md:text-base italic leading-relaxed opacity-90 max-w-[200px] mx-auto font-medium"
           style={{ color: C.primary }}
         >
           We are overjoyed to have you celebrate this beautiful beginning with us. Your presence, love, and blessings mean the world to us.
         </motion.p>
 
-        <motion.p
-          variants={slideInUp}
-          className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-5xl mt-10"
-          style={{ color: C.primary }}
-        >
-          &
-        </motion.p>
+
       </motion.div>
 
       {/* Date floating at the bottom outside the main border focus */}

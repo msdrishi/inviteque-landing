@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { staggerContainer, slideInUp, slowReveal, SectionLogo, BlurText } from './Animations';
+import { staggerContainer, slideInUp, slowReveal, SectionLogo, BlurText, WatercolorSplash } from './Animations';
 
 export default function EventScene({ dayData, bgImage, isSticky, zIndex, topRounded }) {
   const [showPopup, setShowPopup] = useState(false);
@@ -12,10 +12,15 @@ export default function EventScene({ dayData, bgImage, isSticky, zIndex, topRoun
   useEffect(() => {
     if (showPopup) {
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
-    return () => { document.body.style.overflow = ''; }
+    return () => { 
+      document.body.style.overflow = ''; 
+      document.documentElement.style.overflow = '';
+    }
   }, [showPopup]);
 
   if (!dayData) return null;
@@ -59,7 +64,7 @@ export default function EventScene({ dayData, bgImage, isSticky, zIndex, topRoun
         {!isDayOne && (
           <>
             <h2
-              className="font-['Cinzel'] text-3xl font-bold mb-6 leading-tight uppercase tracking-wider"
+              className="font-['Cinzel'] text-xl font-bold mb-2 leading-none uppercase tracking-wider drop-shadow-md bg-white/40 backdrop-blur-sm px-4 py-1 rounded-full inline-block"
               style={{ color: C.primary }}
             >
               <BlurText text={dayData.title} />
@@ -101,7 +106,9 @@ export default function EventScene({ dayData, bgImage, isSticky, zIndex, topRoun
             )}
 
             {dayData.events[0].dressCodeArray && (
-              <div className="w-full text-left bg-white/85 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-white">
+              <div className="w-full text-left bg-white/85 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-white relative overflow-hidden">
+                <WatercolorSplash colors={dayData.events[0].dressCodeArray.map(d => d.color).filter(Boolean)} />
+                <div className="relative z-10">
                 <p className="font-['Cormorant_Garamond'] text-base font-bold mb-2 flex items-center gap-2" style={{ color: C.primary }}>
                   👗 Dress Code
                 </p>
@@ -115,6 +122,7 @@ export default function EventScene({ dayData, bgImage, isSticky, zIndex, topRoun
                     </li>
                   ))}
                 </ul>
+                </div>
               </div>
             )}
 
@@ -151,6 +159,7 @@ export default function EventScene({ dayData, bgImage, isSticky, zIndex, topRoun
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowPopup(false)}
+            style={{ overscrollBehavior: 'none' }}
           >
             <motion.div
               initial={{ y: 50, opacity: 0, scale: 0.95 }}
@@ -167,7 +176,7 @@ export default function EventScene({ dayData, bgImage, isSticky, zIndex, topRoun
               </button>
 
               <div className="text-center mb-8 mt-2">
-                <p className="font-['Cormorant_Garamond'] text-sm uppercase tracking-[0.2em] mb-1 font-bold" style={{ color: C.gold }}>
+                <p className="font-['Cinzel'] text-xs uppercase tracking-[0.2em] mb-2 font-bold tabular-nums" style={{ color: C.gold }}>
                   {dayData.date}
                 </p>
                 <h3 className="font-['Cinzel'] text-3xl font-bold uppercase tracking-widest" style={{ color: C.primary }}>
