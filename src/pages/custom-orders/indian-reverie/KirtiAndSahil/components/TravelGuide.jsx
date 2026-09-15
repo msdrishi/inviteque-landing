@@ -55,10 +55,15 @@ export default function TravelGuide({ data, bgImage }) {
                 <motion.div
                   initial={{ left: '0%' }}
                   whileInView={{ left: '100%' }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-                  className="absolute top-1/2 -translate-y-[60%] -translate-x-1/2 text-2xl drop-shadow-sm"
+                  viewport={{ once: true }}
+                  transition={{ duration: 6, ease: 'easeOut' }}
+                  className="absolute top-1/2 -translate-y-[60%] -translate-x-1/2 drop-shadow-sm w-6 h-6 text-[#B09060]"
                 >
-                  🚙
+                  <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.08 3.11H5.77L6.85 7zM19 17H5v-5h14v5z" />
+                    <circle cx="7.5" cy="14.5" r="1.5" />
+                    <circle cx="16.5" cy="14.5" r="1.5" />
+                  </svg>
                 </motion.div>
                 <div className="absolute top-3 left-1/2 -translate-x-1/2 font-['Cormorant_Garamond'] text-[10px] font-bold tracking-widest bg-white/50 px-2 rounded-full" style={{ color: C.primary }}>
                   40 KM
@@ -77,10 +82,15 @@ export default function TravelGuide({ data, bgImage }) {
                 <motion.div
                   initial={{ left: '0%' }}
                   whileInView={{ left: '100%' }}
-                  transition={{ duration: 5, repeat: Infinity, ease: 'linear', delay: 1 }}
-                  className="absolute top-1/2 -translate-y-[60%] -translate-x-1/2 text-2xl drop-shadow-sm"
+                  viewport={{ once: true }}
+                  transition={{ duration: 8, ease: 'easeOut', delay: 1 }}
+                  className="absolute top-1/2 -translate-y-[60%] -translate-x-1/2 drop-shadow-sm w-6 h-6 text-[#B09060]"
                 >
-                  🚗
+                  <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.08 3.11H5.77L6.85 7zM19 17H5v-5h14v5z" />
+                    <circle cx="7.5" cy="14.5" r="1.5" />
+                    <circle cx="16.5" cy="14.5" r="1.5" />
+                  </svg>
                 </motion.div>
                 <div className="absolute top-3 left-1/2 -translate-x-1/2 font-['Cormorant_Garamond'] text-[10px] font-bold tracking-widest bg-white/50 px-2 rounded-full" style={{ color: C.primary }}>
                   180 KM

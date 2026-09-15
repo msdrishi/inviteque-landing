@@ -93,7 +93,7 @@ export default function Hero({ data, heroBg, hasOpened }) {
             className="font-['Cinzel'] text-[10px] md:text-[12px] uppercase tracking-[0.22em] mb-1 px-2 leading-relaxed whitespace-pre-line mt-4 font-bold"
             style={{ color: C.secondary }}
           >
-            <BlurText text={data.heroSubtitle} delay={1.6} />
+            {data.heroSubtitle}
           </motion.p>
 
           <motion.div variants={lineAnim} className="mb-1">
@@ -101,13 +101,13 @@ export default function Hero({ data, heroBg, hasOpened }) {
           </motion.div>
 
           <motion.div variants={lineAnim} className="flex flex-col items-center mb-2 mt-4 overflow-visible">
-            <h1 className="font-['Shalyne',_cursive] text-[70px] leading-none select-none font-normal drop-shadow-sm" style={{ color: C.primary }}>
+            <h1 className="font-['Shalyne',_cursive] text-[56px] leading-none select-none font-normal drop-shadow-sm" style={{ color: C.primary }}>
               <BlurText text={data.groomName} delay={0.8} />
             </h1>
             <p className="font-['Shalyne',_cursive] text-4xl -my-2 z-10" style={{ color: C.gold }}>
               &
             </p>
-            <h1 className="font-['Shalyne',_cursive] text-[70px] leading-none select-none font-normal drop-shadow-sm" style={{ color: C.primary }}>
+            <h1 className="font-['Shalyne',_cursive] text-[56px] leading-none select-none font-normal drop-shadow-sm" style={{ color: C.primary }}>
               <BlurText text={data.brideName} delay={1.2} />
             </h1>
           </motion.div>
@@ -117,7 +117,7 @@ export default function Hero({ data, heroBg, hasOpened }) {
             className="font-['Cinzel'] text-[10px] uppercase tracking-[0.2em] mb-4 whitespace-pre-line leading-relaxed font-bold opacity-90"
             style={{ color: C.secondary }}
           >
-            <BlurText text={data.familyDetails} delay={1.8} />
+            {data.familyDetails}
           </motion.p>
 
           <motion.div variants={lineAnim} className="flex items-center gap-4 mb-2 mt-2">

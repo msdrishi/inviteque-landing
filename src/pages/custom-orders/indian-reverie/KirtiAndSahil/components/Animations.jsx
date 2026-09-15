@@ -179,20 +179,20 @@ export function FallingPetals() {
 
 export const WatercolorSplash = ({ colors = ['#EAB308', '#FEF08A'] }) => (
   <motion.div 
-    className="absolute inset-0 z-0 pointer-events-none opacity-[0.35] overflow-hidden rounded-2xl mix-blend-multiply"
+    className="absolute inset-0 z-0 pointer-events-none opacity-80 overflow-hidden rounded-2xl"
   >
     <motion.div
       initial={{ scale: 0, opacity: 0 }}
-      whileInView={{ scale: [1, 2.5, 3], opacity: [0.6, 0.4, 0] }}
-      transition={{ duration: 4, repeat: Infinity, ease: 'easeOut' }}
+      whileInView={{ scale: [1, 2, 2.5, 1], opacity: [0.8, 0.6, 0.2, 0.8] }}
+      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full blur-[30px]"
       style={{ background: `radial-gradient(circle, ${colors[0]} 0%, transparent 70%)` }}
     />
     {colors[1] && (
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
-        whileInView={{ scale: [1, 2, 2.5], opacity: [0.6, 0.5, 0] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeOut', delay: 1 }}
+        whileInView={{ scale: [1, 2, 2.5, 1], opacity: [0.8, 0.6, 0.2, 0.8] }}
+        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
         className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full blur-[40px]"
         style={{ background: `radial-gradient(circle, ${colors[1]} 0%, transparent 70%)` }}
       />
