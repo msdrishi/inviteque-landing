@@ -18,6 +18,7 @@ import CustomerRsvpDashboard from './pages/CustomerRsvpDashboard.jsx'
 import CustomMidnightWaltzPavitraSri from './pages/custom/CustomMidnightWaltzPavitraSri.jsx'
 import CustomEverlastingVowsShradha from './pages/custom/CustomEverlastingVowsShradha.jsx'
 import CustomMidnightWaltzSharanRajAndShanteriyga from './pages/custom-orders/midnight-waltz/SharanRajAndShanteriyga/index.jsx'
+import CustomIndianReverieKirtiAndSahil from './pages/custom-orders/indian-reverie/KirtiAndSahil/index.jsx'
 import { API_URL } from './config'
 
 function ScrollToTop() {
@@ -138,6 +139,11 @@ export default function App() {
           <Route path="/template/:templateId/:code/RSVP" element={<CustomerRsvpDashboard />} />
           <Route path="/template/:templateId/:code/rsvp" element={<CustomerRsvpDashboard />} />
 
+          {/* Custom Client Template Routes (Kirti & Sahil - Indian Reverie) */}
+          <Route path="/template/indian-reverie/kirti-and-sahil" element={<CustomIndianReverieKirtiAndSahil />} />
+          <Route path="/templates/indian-reverie/kirti-and-sahil" element={<CustomIndianReverieKirtiAndSahil />} />
+          <Route path="/template/indian-reverie/H325KM" element={<CustomIndianReverieKirtiAndSahil />} />
+          
           {/* Standard & Multi-Link Templates */}
           <Route path="/templates/:templateId" element={<TemplateRoute />} />
           <Route path="/templates/:templateId/:code" element={<TemplateRoute />} />
