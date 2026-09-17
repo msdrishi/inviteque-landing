@@ -19,6 +19,7 @@ import CustomMidnightWaltzPavitraSri from './pages/custom/CustomMidnightWaltzPav
 import CustomEverlastingVowsShradha from './pages/custom/CustomEverlastingVowsShradha.jsx'
 import CustomMidnightWaltzSharanRajAndShanteriyga from './pages/custom-orders/midnight-waltz/SharanRajAndShanteriyga/index.jsx'
 import CustomIndianReverieKirtiAndSahil from './pages/custom-orders/indian-reverie/KirtiAndSahil/index.jsx'
+import CustomRoyalHeirloomHemangAndJasmine from './pages/custom-orders/royal-heirloom/HemangAndJasmine/index.jsx'
 import { API_URL } from './config'
 
 function ScrollToTop() {
@@ -143,6 +144,12 @@ export default function App() {
           <Route path="/template/indian-reverie/kirti-and-sahil" element={<CustomIndianReverieKirtiAndSahil />} />
           <Route path="/templates/indian-reverie/kirti-and-sahil" element={<CustomIndianReverieKirtiAndSahil />} />
           <Route path="/template/indian-reverie/H325KM" element={<CustomIndianReverieKirtiAndSahil />} />
+
+          {/* Custom Client Template Routes (Hemang & Jasmine - Royal Heirloom) */}
+          <Route path="/template/royal-heirloom/hemang-and-jasmine" element={<CustomRoyalHeirloomHemangAndJasmine />} />
+          <Route path="/template/royal-heirloom/hemang-and-jasmine/:variant" element={<CustomRoyalHeirloomHemangAndJasmine />} />
+          <Route path="/templates/royal-heirloom/hemang-and-jasmine" element={<CustomRoyalHeirloomHemangAndJasmine />} />
+          <Route path="/templates/royal-heirloom/hemang-and-jasmine/:variant" element={<CustomRoyalHeirloomHemangAndJasmine />} />
           
           {/* Standard & Multi-Link Templates */}
           <Route path="/templates/:templateId" element={<TemplateRoute />} />
