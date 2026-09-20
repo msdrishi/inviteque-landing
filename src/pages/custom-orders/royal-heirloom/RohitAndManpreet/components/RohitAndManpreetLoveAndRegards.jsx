@@ -32,8 +32,8 @@ export default function RohitAndManpreetLoveAndRegards({
           transition={{ duration: 1.0, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col items-center w-full mt-2"
         >
-          <p className="font-['Cinzel'] text-[14px] sm:text-[16px] font-bold tracking-[0.25em] uppercase text-[#6B401D] leading-relaxed break-words w-full">
-            {familyNames || "Methwanis and Sohals"}
+          <p className="font-['Cinzel'] text-[14px] sm:text-[16px] font-bold tracking-[0.25em] uppercase text-[#6B401D] leading-relaxed break-words w-full whitespace-pre-line">
+            {familyNames || "Methwanis and Sohals\nFamily"}
           </p>
         </motion.div>
       </div>

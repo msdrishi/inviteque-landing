@@ -375,20 +375,15 @@ export default function CustomRoyalHeirloomHemangAndJasmine({ groupSlug: propGro
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
           console.warn("Video play interrupted/prevented:", err)
-          setHasTriggeredHeroText(true)
-          setHasTriggeredHeroBg(true)
-          setHasOpened(true)
+          // Only skip forcefully if it's a fatal error like NotSupportedError
+          if (err.name !== 'AbortError') {
+            setHasOpened(true)
+            setHasTriggeredHeroBg(true)
+            setHasTriggeredHeroText(true)
+          }
         })
       }
-
-      // Failsafe timeout for mobile devices (video duration is ~3.5s)
-      setTimeout(() => {
-        if (!hasOpened) {
-          setHasOpened(true)
-          setHasTriggeredHeroBg(true)
-          setHasTriggeredHeroText(true)
-        }
-      }, 5500)
+      // Removed the 5.5s hardcoded timeout to guarantee 100% video flow
     } else {
       setHasTriggeredHeroText(true)
       setHasTriggeredHeroBg(true)

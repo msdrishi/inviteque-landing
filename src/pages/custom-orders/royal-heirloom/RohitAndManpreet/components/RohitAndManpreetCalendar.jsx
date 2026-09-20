@@ -67,15 +67,21 @@ export default function RohitAndManpreetCalendar({
         transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 w-full max-w-[360px] bg-[#FAF5EB]/95 backdrop-blur-md border border-[#CBB89D] rounded-[22px] p-6 shadow-[0_20px_50px_rgba(90,50,20,0.12)] flex flex-col items-center text-center my-auto"
       >
-        {/* Big Target Date Summary */}
-        <span className="font-['Cinzel'] text-[11px] tracking-[0.28em] uppercase text-[#8C5D38] font-bold">
-          {calendarData.targetDateStr}
-        </span>
-        <span className="font-['Cinzel'] text-[9.5px] tracking-widest text-[#7A5540] uppercase mt-0.5">
-          {fullAddress}
-        </span>
-
-        <div className="w-full h-[0.8px] bg-[#D5C6AC] my-4" />
+        {/* Thematic Calendar Icon & Text */}
+        <div className="flex flex-col items-center justify-center w-full mb-4">
+          <div className="flex justify-center w-full mb-2 text-[#8C5329]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" className="w-10 h-10 opacity-90 drop-shadow-sm">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+              <circle cx="12" cy="15" r="1.5" fill="currentColor" stroke="none" />
+            </svg>
+          </div>
+          <span className="font-['Cinzel'] text-[11px] tracking-[0.28em] uppercase text-[#8C5D38] font-bold">
+            CALENDAR
+          </span>
+        </div>
 
         {/* Days of Week Header */}
         <div className="grid grid-cols-7 w-full gap-1 mb-2 text-center text-[#6B401D] font-['Cinzel'] text-[12px] sm:text-[13px] font-bold tracking-wider">

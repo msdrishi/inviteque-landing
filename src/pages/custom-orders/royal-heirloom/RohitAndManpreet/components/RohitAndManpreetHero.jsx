@@ -278,7 +278,7 @@ export default function RohitAndManpreetHero({
             transition={{ duration: 3.6, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
             className="font-['Cinzel'] text-[9.5px] sm:text-[10px] md:text-[14px] tracking-[0.22em] uppercase text-[#6B4734] font-medium leading-[1.55] max-w-[280px] md:max-w-[400px]"
           >
-            TOGETHER WITH THEIR FAMILIES INVITE YOU TO THEIR WEDDING CELEBRATION
+            Invite you to their wedding celebration
           </motion.p>
 
           <motion.div 
@@ -310,15 +310,6 @@ export default function RohitAndManpreetHero({
                 <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mt-1 md:mt-2" />
               </div>
             </div>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
-            animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(4px)' }}
-            transition={{ duration: 3.6, delay: 2.3, ease: [0.16, 1, 0.3, 1] }}
-            className="font-['Cinzel'] text-[8.5px] sm:text-[9.5px] md:text-[12.5px] tracking-[0.2em] uppercase text-[#73503D] opacity-90 max-w-[270px] md:max-w-[400px] leading-[1.45] md:leading-relaxed"
-          >
-            {fullAddress}
           </motion.div>
 
           <motion.div

@@ -107,7 +107,7 @@ export const weddingData = {
   },
   loveAndRegards: {
     headline: "Love",
-    familyNames: "Methwanis and Sohals",
+    familyNames: "Methwanis and Sohals\nFamily",
   },
   footer: {
     headline: "With Love & Gratitude",
