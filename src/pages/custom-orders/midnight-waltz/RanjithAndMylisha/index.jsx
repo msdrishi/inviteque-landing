@@ -14,8 +14,7 @@ import SplashScreen from '../../../../components/SplashScreen.jsx'
 
 import { customData as data } from './data.js'
 import bgMusicSrc from '../../../../assets/audio/Anbil Avan.mp3'
-import doorVideoSrc from '../../../../assets/video/Mid-night-waltz-door-opening.MP4'
-import doorPosterSrc from '../../../../assets/images/door-opening-poster.webp'
+const doorVideoSrc = "/assets/templates/midnight-waltz/taptoopenvideo.mp4#t=0.001"
 
 // Simple SVG icon for Music On
 const MusicOnIcon = () => (
@@ -43,6 +42,7 @@ const locationBgDesktop  = "/assets/templates/midnight-waltz/venue-desktop.webp"
 const locationBgMobile   = "/assets/templates/midnight-waltz/venue-mobile.webp"
 const countdownBgDesktop = "/assets/templates/midnight-waltz/countdown-desktop.webp"
 const countdownBgMobile  = "/assets/templates/midnight-waltz/countdown-mobile.webp"
+const stageBg            = "/assets/templates/midnight-waltz/stage-bg.webp"
 const rosePetalSrc       = "/assets/decorations/midnight-waltz-rosePetal.png"
 
 // ── Petal configs — computed once at module level ────────────────
@@ -724,7 +724,7 @@ export default function CustomMidnightWaltzRanjithAndMylisha({ groupSlug: propGr
   const groupSlug   = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   const isPaid = true
-  const showWatermark = false
+  const showWatermark = true
 
   // Music & Splash state
   const [isMusicMuted, setIsMusicMuted] = useState(false)
@@ -848,7 +848,7 @@ export default function CustomMidnightWaltzRanjithAndMylisha({ groupSlug: propGr
   const showStory = true
   const showWelcome = true
   const showVenue = true
-  const showCountdown = true
+  const showCountdown = false
 
   const WatermarkMobile = () => showWatermark ? (
     <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.30] select-none">
@@ -885,19 +885,14 @@ export default function CustomMidnightWaltzRanjithAndMylisha({ groupSlug: propGr
         {!showLoadingSplash && splashState !== 'done' && (
           <motion.div 
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 1.2, ease: "easeInOut" } }}
-            className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#000000] cursor-pointer overflow-hidden"
+            exit={{ opacity: 0, transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] } }}
+            className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#1A1412] max-w-[480px] md:max-w-[820px] mx-auto overflow-hidden cursor-pointer"
             onClick={handleSplashClick}
           >
-            <img 
-              src={doorPosterSrc} 
-              alt=""
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 pointer-events-none z-[1] ${isDoorVideoPlaying ? 'opacity-0' : 'opacity-100'}`} 
-            />
             <video
               ref={videoRef}
               src={doorVideoSrc}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover scale-[1.04]"
               playsInline
               muted
               preload="auto"
@@ -905,21 +900,74 @@ export default function CustomMidnightWaltzRanjithAndMylisha({ groupSlug: propGr
               onEnded={handleVideoEnded}
               style={{ pointerEvents: 'none' }}
             />
+            
             {splashState === 'waiting' && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: [0, -10, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ 
-                  opacity: { duration: 1 }, 
-                  y: { repeat: Infinity, duration: 2.5, ease: "easeInOut" } 
-                }}
-                className="absolute z-10 flex flex-col items-center pointer-events-none mt-[40vh]"
-              >
-                <button className="px-8 py-3 border border-white/50 rounded-full text-sm uppercase tracking-widest text-white backdrop-blur-sm bg-black/30 shadow-lg">
-                  Tap to Open
-                </button>
-              </motion.div>
+              <>
+                <motion.div 
+                  initial={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  className="absolute inset-0 pointer-events-none flex items-center justify-center z-20"
+                >
+                  {[...Array(6)].map((_, idx) => (
+                    <motion.span
+                      key={idx}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ 
+                        opacity: [0, 0.8, 0],
+                        scale: [0.5, 1.2, 0.5],
+                        y: [0, -15 - idx * 5, -30],
+                        x: [(idx % 2 === 0 ? 1 : -1) * (10 + idx * 8)]
+                      }}
+                      transition={{
+                        duration: 2.5 + idx * 0.4,
+                        repeat: Infinity,
+                        delay: idx * 0.5,
+                        ease: "easeInOut"
+                      }}
+                      className="absolute text-[10px] text-[#F5D78E] drop-shadow-[0_0_8px_rgba(255,215,0,0.8)]"
+                    >
+                      ✦
+                    </motion.span>
+                  ))}
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.3, ease: "easeOut" } }}
+                  transition={{ duration: 0.8 }}
+                  className="absolute top-[20%] inset-x-0 flex flex-col items-center pointer-events-none z-20 px-6 text-center"
+                >
+                  <motion.div
+                    animate={{ 
+                      opacity: [0.45, 1, 0.45],
+                      scale: [0.98, 1.02, 0.98],
+                    }}
+                    transition={{ 
+                      duration: 1.8, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
+                    className="flex flex-col items-center gap-1.5"
+                  >
+                    <span 
+                      className="font-['Cinzel'] tracking-[0.38em] text-[15px] uppercase font-bold select-none text-[#5A2821]"
+                      style={{
+                        textShadow: '0 0 16px rgba(235, 190, 90, 0.8), 0 1px 1px rgba(255, 255, 255, 0.9)',
+                        filter: 'drop-shadow(0 2px 8px rgba(90, 40, 33, 0.35))'
+                      }}
+                    >
+                      Tap to Open
+                    </span>
+                    <div className="flex items-center gap-2 opacity-90">
+                      <div className="w-6 h-[0.8px] bg-[#965545]" />
+                      <span className="text-[7px] text-[#A85B49]">✦</span>
+                      <div className="w-6 h-[0.8px] bg-[#965545]" />
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </>
             )}
           </motion.div>
         )}
@@ -936,6 +984,7 @@ export default function CustomMidnightWaltzRanjithAndMylisha({ groupSlug: propGr
       {/* ── MOBILE & TABLET VIEW ── */}
       <div className="lg:hidden flex justify-center items-start min-h-screen bg-[#F0E8D8]">
         <div className="relative w-full max-w-[768px] min-h-[100svh] bg-[#FDFBF7] shadow-[0_0_60px_rgba(0,0,0,0.10)]">
+          <WatermarkMobile />
 
           {showHero && (
   <MidnightWaltzHero data={data.hero} isDesktop={false} />
@@ -969,8 +1018,8 @@ export default function CustomMidnightWaltzRanjithAndMylisha({ groupSlug: propGr
           {showVenue && (
   <VenueMidnightWaltz
               data={data.venue}
-              bgImageDesktop={locationBgDesktop}
-              bgImageMobile={locationBgMobile}
+              bgImageDesktop={stageBg}
+              bgImageMobile={stageBg}
               isDesktop={false}
             />
 )}
@@ -1008,7 +1057,7 @@ export default function CustomMidnightWaltzRanjithAndMylisha({ groupSlug: propGr
 
       {/* ── DESKTOP VIEW ── */}
       <div className="hidden lg:block w-full min-h-screen bg-[#FDFBF7] relative">
-
+        <WatermarkDesktop />
         <div className="w-full">
           {showHero && (
   <MidnightWaltzHero data={data.hero} isDesktop={true} />
@@ -1050,8 +1099,8 @@ export default function CustomMidnightWaltzRanjithAndMylisha({ groupSlug: propGr
           {showVenue && (
   <VenueMidnightWaltz
               data={data.venue}
-              bgImageDesktop={locationBgDesktop}
-              bgImageMobile={locationBgMobile}
+              bgImageDesktop={stageBg}
+              bgImageMobile={stageBg}
               isDesktop={true}
             />
 )}
