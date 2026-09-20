@@ -4,7 +4,7 @@ export const weddingData = {
     groomName: "Rohit",
     brideName: "Manpreet",
     groomParents: "S/O Harsha Methwani & Ramesh Methwani",
-    brideParents: "D/O Rupinder Kaur Sohal & Charanjith Singh Sohal",
+    brideParents: "D/O Rupinder Kaur Sohal & Charanjit Singh Sohal",
     weddingDate: "22 & 23",
     weddingMonth: "NOV",
     weddingYear: "2026",
@@ -107,7 +107,7 @@ export const weddingData = {
   },
   loveAndRegards: {
     headline: "Love",
-    familyNames: "Methwanis and Sohals\nFamily",
+    familyNames: "Methwani & Sohal\nFamily",
   },
   footer: {
     headline: "With Love & Gratitude",

@@ -193,16 +193,16 @@ export default function RohitAndManpreetHero({
       {/* Falling Royal Flower Petals from top */}
       {(hasTriggeredHeroBg || hasOpened) && <FallingRoyalFlowers />}
 
-      <div className="relative z-10 w-full h-full flex flex-col justify-center items-center py-6 px-6 text-[#4A3223]">
+      <div className="relative z-10 w-full h-full flex flex-col justify-center items-center pt-2 pb-16 md:pb-20 px-6 text-[#4A3223]">
         {/* Header: Ganesha & WEDDING INVITATION */}
         <motion.div 
           initial={{ opacity: 0, y: 16, filter: 'blur(6px)' }}
           animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 16, filter: 'blur(6px)' }}
           transition={{ duration: 3.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center gap-2 mb-3 md:mb-5"
+          className="flex flex-col items-center gap-1.5 mb-2 md:mb-4"
         >
           {/* Ganesha Logo Placeholder */}
-          <img src={ganeshaLogo} alt="Om Ganesha" className="w-16 h-16 md:w-20 md:h-20 object-contain mb-2 opacity-90 drop-shadow-md" />
+          <img src={ganeshaLogo} alt="Om Ganesha" className="w-12 h-12 md:w-16 md:h-16 object-contain mb-1 opacity-90 drop-shadow-md" />
           
           <span className="font-['Cinzel'] text-[12px] sm:text-[14px] md:text-[18px] tracking-[0.36em] uppercase text-[#6B4330] font-semibold leading-tight">
             WEDDING
@@ -213,13 +213,13 @@ export default function RohitAndManpreetHero({
         </motion.div>
 
         {/* Couple Names in signature calligraphy with super slow majestic reveal */}
-        <div className="flex flex-col items-center justify-center w-full my-3 md:my-6 overflow-visible">
+        <div className="flex flex-col items-center justify-center w-full my-2 md:my-4 overflow-visible">
           <div className="flex flex-col items-center">
             <AnimatedCoupleName 
               name={groomName} 
               isTriggered={hasTriggeredHeroText || hasOpened}
               delay={0.3} 
-              fontSizeClass="text-[48px] sm:text-[56px] md:text-[80px]" 
+              fontSizeClass="text-[46px] sm:text-[54px] md:text-[76px]" 
             />
             {groomFamily && (
               <motion.p
@@ -237,7 +237,7 @@ export default function RohitAndManpreetHero({
             initial={{ opacity: 0, scale: 0.7 }}
             animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.7 }}
             transition={{ duration: 3.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="my-1 md:my-2 text-center"
+            className="my-0.5 md:my-1 text-center"
           >
             <span 
               className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[28px] sm:text-[34px] md:text-[50px] leading-none inline-block select-none font-normal"
@@ -255,7 +255,7 @@ export default function RohitAndManpreetHero({
               name={brideName} 
               isTriggered={hasTriggeredHeroText || hasOpened}
               delay={1.2} 
-              fontSizeClass="text-[48px] sm:text-[56px] md:text-[80px]" 
+              fontSizeClass="text-[46px] sm:text-[54px] md:text-[76px]" 
             />
             {brideFamily && (
               <motion.p
@@ -271,7 +271,7 @@ export default function RohitAndManpreetHero({
         </div>
 
         {/* Subtext, Date Module & Mumbai Address */}
-        <div className="flex flex-col items-center w-full max-w-[340px] md:max-w-[500px] px-2 gap-2 md:gap-4 mt-3 md:mt-6">
+        <div className="flex flex-col items-center w-full max-w-[340px] md:max-w-[500px] px-2 gap-1.5 md:gap-3 mt-1.5 md:mt-4">
           <motion.p 
             initial={{ opacity: 0, y: 14, filter: 'blur(5px)' }}
             animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(5px)' }}
@@ -285,7 +285,7 @@ export default function RohitAndManpreetHero({
             initial={{ opacity: 0, y: 15 }}
             animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
             transition={{ duration: 3.5, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center gap-1.5 md:gap-2 mb-6"
+            className="flex flex-col items-center gap-1.5 md:gap-2 mb-3 md:mb-5"
           >
             <div className="flex items-center justify-center w-full max-w-[280px] md:max-w-[420px]">
               <div className="flex-1 flex flex-col justify-center">
@@ -316,10 +316,10 @@ export default function RohitAndManpreetHero({
             initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
             animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(4px)' }}
             transition={{ duration: 3.6, delay: 2.6, ease: [0.16, 1, 0.3, 1] }}
-            className="pt-0.5 md:pt-3"
+            className="mt-0 md:mt-2"
           >
             <span 
-              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[18px] sm:text-[20px] md:text-[26px] leading-none select-none"
+              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[16px] sm:text-[18px] md:text-[22px] leading-none select-none"
               style={{
                 color: '#6E4424',
                 filter: 'drop-shadow(0px 1px 1px rgba(90, 45, 15, 0.2))'
