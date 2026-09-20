@@ -18,8 +18,12 @@ import CustomerRsvpDashboard from './pages/CustomerRsvpDashboard.jsx'
 import CustomMidnightWaltzPavitraSri from './pages/custom/CustomMidnightWaltzPavitraSri.jsx'
 import CustomEverlastingVowsShradha from './pages/custom/CustomEverlastingVowsShradha.jsx'
 import CustomMidnightWaltzSharanRajAndShanteriyga from './pages/custom-orders/midnight-waltz/SharanRajAndShanteriyga/index.jsx'
+import CustomMidnightWaltzRanjithAndMylisha from './pages/custom-orders/midnight-waltz/RanjithAndMylisha/index.jsx'
 import CustomIndianReverieKirtiAndSahil from './pages/custom-orders/indian-reverie/KirtiAndSahil/index.jsx'
 import CustomRoyalHeirloomHemangAndJasmine from './pages/custom-orders/royal-heirloom/HemangAndJasmine/index.jsx'
+import CustomRoyalHeirloomRohitAndManpreet from './pages/custom-orders/royal-heirloom/RohitAndManpreet/index.jsx'
+import CustomRoyalHeirloomSaaranshAndStuti from './pages/custom-orders/royal-heirloom/SaaranshAndStuti/index.jsx'
+import CustomRsvpDashboard from './pages/CustomRsvpDashboard.jsx'
 import { API_URL } from './config'
 
 function ScrollToTop() {
@@ -124,6 +128,12 @@ export default function App() {
           <Route path="/template/midnight-waltz/sharanrajandshanteriyga" element={<CustomMidnightWaltzSharanRajAndShanteriyga />} />
           <Route path="/templates/midnight-waltz/sharanrajandshanteriyga" element={<CustomMidnightWaltzSharanRajAndShanteriyga />} />
 
+          {/* Custom Client Template Routes (Ranjith & Mylisha - Midnight Waltz) */}
+          <Route path="/template/midnight-waltz/RanjithAndMylisha" element={<CustomMidnightWaltzRanjithAndMylisha />} />
+          <Route path="/templates/midnight-waltz/RanjithAndMylisha" element={<CustomMidnightWaltzRanjithAndMylisha />} />
+          <Route path="/template/midnight-waltz/ranjithandmylisha" element={<CustomMidnightWaltzRanjithAndMylisha />} />
+          <Route path="/templates/midnight-waltz/ranjithandmylisha" element={<CustomMidnightWaltzRanjithAndMylisha />} />
+
           {/* Custom Client Template Routes (Shradha - Everlasting Vows Roka & Engagement) */}
           <Route path="/template/everlastingvows/Shradha" element={<CustomEverlastingVowsShradha />} />
           <Route path="/template/everlastingvows/Shradha/:variant" element={<CustomEverlastingVowsShradha />} />
@@ -145,11 +155,22 @@ export default function App() {
           <Route path="/templates/indian-reverie/kirti-and-sahil" element={<CustomIndianReverieKirtiAndSahil />} />
           <Route path="/template/indian-reverie/H325KM" element={<CustomIndianReverieKirtiAndSahil />} />
 
+          {/* Custom Client Template Routes (Rohit & Manpreet - Royal Heirloom) */}
+          <Route path="/template/royal-heirloom/rohit-and-manpreet" element={<CustomRoyalHeirloomRohitAndManpreet />} />
+          <Route path="/template/royal-heirloom/RohitAndManpreet" element={<CustomRoyalHeirloomRohitAndManpreet />} />
+          <Route path="/template/royal-heirloom/rohit-and-manpreet/RSVP" element={<CustomRsvpDashboard weddingCode="ROHITMAN" coupleName="Rohit & Manpreet" />} />
+
           {/* Custom Client Template Routes (Hemang & Jasmine - Royal Heirloom) */}
           <Route path="/template/royal-heirloom/hemang-and-jasmine" element={<CustomRoyalHeirloomHemangAndJasmine />} />
           <Route path="/template/royal-heirloom/hemang-and-jasmine/:variant" element={<CustomRoyalHeirloomHemangAndJasmine />} />
           <Route path="/templates/royal-heirloom/hemang-and-jasmine" element={<CustomRoyalHeirloomHemangAndJasmine />} />
           <Route path="/templates/royal-heirloom/hemang-and-jasmine/:variant" element={<CustomRoyalHeirloomHemangAndJasmine />} />
+          
+          {/* Custom Client Template Routes (Saaransh & Stuti - Royal Heirloom) */}
+          <Route path="/template/royal-heirloom/saaransh-and-stuti" element={<CustomRoyalHeirloomSaaranshAndStuti />} />
+          <Route path="/template/royal-heirloom/saaransh-and-stuti/:variant" element={<CustomRoyalHeirloomSaaranshAndStuti />} />
+          <Route path="/templates/royal-heirloom/saaransh-and-stuti" element={<CustomRoyalHeirloomSaaranshAndStuti />} />
+          <Route path="/templates/royal-heirloom/saaransh-and-stuti/:variant" element={<CustomRoyalHeirloomSaaranshAndStuti />} />
           
           {/* Standard & Multi-Link Templates */}
           <Route path="/templates/:templateId" element={<TemplateRoute />} />

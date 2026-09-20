@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import { SectionHeader } from './RoyalHeirloomShared.jsx'
-import { FallingRoyalFlowers } from './RoyalHeirloomHero.jsx'
+import { SectionHeader } from '../../../../../templates/royal-heirloom/RoyalHeirloomShared.jsx'
+import { FallingRoyalFlowers } from './RohitAndManpreetHero.jsx'
 
 const itemVariants = {
   hidden: { opacity: 0, y: 25, filter: 'blur(3px)' },
@@ -12,7 +12,7 @@ const itemVariants = {
   }
 }
 
-export default function RoyalHeirloomVenue({
+export default function RohitAndManpreetVenue({
   ourVenueBgMobile,
   venueTitle,
   fullAddress,
@@ -20,11 +20,11 @@ export default function RoyalHeirloomVenue({
   mapUrl,
   dateTime,
 }) {
-  const bgImg = ourVenueBgMobile || "/assets/templates/royal-heirloom/hotel-bg.webp"
+  const bgImg = "/assets/templates/royal-heirloom/hotel-bg.webp"
 
   return (
     <section className="relative w-full aspect-[941/1672] min-h-[100svh] flex flex-col px-6 pt-10 pb-8 bg-[#F4EDE2] border-t border-[#D5C6AC] overflow-hidden">
-      {/* Background architectural heritage illustration */}
+      {/* Background architectural heritage illustration: location-bg.webp */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
@@ -41,7 +41,7 @@ export default function RoyalHeirloomVenue({
         <SectionHeader 
           subtitle="WHERE WE UNITE"
           title="OUR VENUE"
-          description="A royal architectural heritage where our vows will be celebrated."
+          description="An enclave of timeless luxury where our vows will be celebrated"
         />
       </div>
 

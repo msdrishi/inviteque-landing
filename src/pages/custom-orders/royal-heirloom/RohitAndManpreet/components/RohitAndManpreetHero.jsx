@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import ganeshaLogo from '../../../../../templates/royal-heirloom/ganesha-logo.png'
 
 // ── Falling Leaves / Petals Component (Aura of Elegance Style — delicate, smaller, pinkish blush matching bg) ──
 const petalConfig = Array.from({ length: 16 }).map((_, i) => {
@@ -89,7 +90,7 @@ export const AnimatedCoupleName = ({ name, isTriggered, delay = 0.2, fontSizeCla
   }, [isTriggered, delay, letters.length])
 
   return (
-    <div className="relative inline-flex items-center justify-center select-none overflow-visible px-2 my-0">
+    <div className="relative inline-flex items-center justify-center select-none overflow-visible px-2 py-6 -my-6">
       <span className="relative z-10 flex items-center justify-center overflow-visible">
         {letters.map((char, i) => (
           <motion.span
@@ -111,7 +112,7 @@ export const AnimatedCoupleName = ({ name, isTriggered, delay = 0.2, fontSizeCla
               delay: delay + i * 0.15,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className={`font-['Modernline',_'Allura',_'Alex_Brush',_cursive] ${fontSizeClass} leading-[1.15] inline-block font-normal overflow-visible`}
+            className={`font-['Modernline',_'Allura',_'Alex_Brush',_cursive] ${fontSizeClass} leading-[1.35] pb-3 inline-block font-normal overflow-visible`}
             style={{
               display: 'inline-block',
               whiteSpace: char === ' ' ? 'pre' : 'normal',
@@ -142,7 +143,7 @@ export const AnimatedCoupleName = ({ name, isTriggered, delay = 0.2, fontSizeCla
             }
           }}
           aria-hidden="true"
-          className={`absolute inset-0 pointer-events-none z-20 flex items-center justify-center font-['Modernline',_'Allura',_'Alex_Brush',_cursive] ${fontSizeClass} leading-[1.15] overflow-visible select-none`}
+          className={`absolute inset-0 pointer-events-none z-20 flex items-center justify-center font-['Modernline',_'Allura',_'Alex_Brush',_cursive] ${fontSizeClass} leading-[1.35] pb-3 overflow-visible select-none`}
           style={{
             background: 'linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.9) 47%, rgba(255,230,150,0.98) 50%, rgba(255,255,255,0.9) 53%, transparent 75%)',
             backgroundSize: '300% 100%',
@@ -158,7 +159,7 @@ export const AnimatedCoupleName = ({ name, isTriggered, delay = 0.2, fontSizeCla
   )
 }
 
-export default function RoyalHeirloomHero({
+export default function RohitAndManpreetHero({
   heroBgMobile,
   hasTriggeredHeroBg,
   hasTriggeredHeroText,
@@ -193,13 +194,16 @@ export default function RoyalHeirloomHero({
       {(hasTriggeredHeroBg || hasOpened) && <FallingRoyalFlowers />}
 
       <div className="relative z-10 w-full h-full flex flex-col justify-center items-center py-6 px-6 text-[#4A3223]">
-        {/* Header: WEDDING INVITATION */}
+        {/* Header: Ganesha & WEDDING INVITATION */}
         <motion.div 
           initial={{ opacity: 0, y: 16, filter: 'blur(6px)' }}
           animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 16, filter: 'blur(6px)' }}
           transition={{ duration: 3.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center gap-0.5 mb-3 md:mb-5"
+          className="flex flex-col items-center gap-2 mb-3 md:mb-5"
         >
+          {/* Ganesha Logo Placeholder */}
+          <img src={ganeshaLogo} alt="Om Ganesha" className="w-16 h-16 md:w-20 md:h-20 object-contain mb-2 opacity-90 drop-shadow-md" />
+          
           <span className="font-['Cinzel'] text-[12px] sm:text-[14px] md:text-[18px] tracking-[0.36em] uppercase text-[#6B4330] font-semibold leading-tight">
             WEDDING
           </span>
@@ -277,43 +281,35 @@ export default function RoyalHeirloomHero({
             TOGETHER WITH THEIR FAMILIES INVITE YOU TO THEIR WEDDING CELEBRATION
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 14, filter: 'blur(5px)' }}
-            animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(5px)' }}
-            transition={{ duration: 3.6, delay: 2.0, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center w-full max-w-[280px] md:max-w-[400px] pt-1 pb-1"
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            transition={{ duration: 3.5, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-center gap-1.5 md:gap-2 mb-6"
           >
-            <span className="font-['Cinzel'] text-[11px] sm:text-[12px] md:text-[16px] tracking-[0.3em] uppercase text-[#543625] font-bold">
-              {weddingMonth.toUpperCase()}
-            </span>
-
-            <div className="flex items-center justify-between w-full my-1 md:my-3 gap-2">
+            <div className="flex items-center justify-center w-full max-w-[280px] md:max-w-[420px]">
               <div className="flex-1 flex flex-col justify-center">
                 <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mb-1 md:mb-2" />
-                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[13px] tracking-[0.2em] uppercase text-[#6B4330] font-semibold text-center">
-                  {dayOfWeek}
+                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[13px] tracking-[0.28em] uppercase text-[#6B4330] font-semibold text-center whitespace-nowrap">
+                  {weddingMonth}
                 </span>
                 <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mt-1 md:mt-2" />
               </div>
 
               <div className="px-2 md:px-4">
-                <span className="font-['Bodoni_Moda',_'Cinzel',_serif] text-[34px] sm:text-[38px] md:text-[54px] leading-none font-bold text-[#4F301D] tracking-tight">
+                <span className="font-['Bodoni_Moda',_'Cinzel',_serif] text-[24px] sm:text-[28px] md:text-[42px] leading-none font-bold text-[#4F301D] tracking-tight whitespace-nowrap">
                   {weddingDate}
                 </span>
               </div>
 
               <div className="flex-1 flex flex-col justify-center">
                 <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mb-1 md:mb-2" />
-                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[13px] tracking-[0.16em] uppercase text-[#6B4330] font-semibold text-center whitespace-nowrap">
-                  {formattedTime}
+                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[13px] tracking-[0.28em] uppercase text-[#6B4330] font-semibold text-center whitespace-nowrap">
+                  {weddingYear}
                 </span>
                 <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mt-1 md:mt-2" />
               </div>
             </div>
-
-            <span className="font-['Cinzel'] text-[10px] sm:text-[11px] md:text-[15px] tracking-[0.28em] text-[#543625] font-semibold">
-              {weddingYear}
-            </span>
           </motion.div>
 
           <motion.div 
@@ -332,13 +328,13 @@ export default function RoyalHeirloomHero({
             className="pt-0.5 md:pt-3"
           >
             <span 
-              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[26px] sm:text-[30px] md:text-[42px] leading-none select-none"
+              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[18px] sm:text-[20px] md:text-[26px] leading-none select-none"
               style={{
                 color: '#6E4424',
                 filter: 'drop-shadow(0px 1px 1px rgba(90, 45, 15, 0.2))'
               }}
             >
-              Save the Date
+              #LettheRoMancebegin
             </span>
           </motion.div>
         </div>

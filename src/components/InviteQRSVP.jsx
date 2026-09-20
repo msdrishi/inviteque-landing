@@ -61,6 +61,7 @@ export default function InviteQRSVP({
   theme = 'green',
   title: propTitle,
   subtitle: propSubtitle,
+  hideEvents = false,
 }) {
   const [loadingConfig, setLoadingConfig] = useState(!propConfig && !isPreview)
   const [config, setConfig] = useState(propConfig || null)
@@ -110,7 +111,7 @@ export default function InviteQRSVP({
   // Fetch Public Config if not supplied and not in preview mode
   useEffect(() => {
     let active = true
-    if (!weddingCode || isPreview) {
+    if (!weddingCode || isPreview || (propEvents && propEvents.length > 0)) {
       setLoadingConfig(false)
       return
     }
@@ -564,6 +565,7 @@ export default function InviteQRSVP({
                     </div>
 
                     {/* 4. SELECT EVENTS YOU WILL ATTEND */}
+                    {!hideEvents && (
                     <div className="space-y-2">
                       <label 
                         className={`block text-[11px] font-bold uppercase tracking-wider ${themeStyles.accentText}`}
@@ -605,6 +607,7 @@ export default function InviteQRSVP({
                         })}
                       </div>
                     </div>
+                    )}
                   </motion.div>
                 )}
 

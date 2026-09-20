@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { SectionHeader } from './RoyalHeirloomShared.jsx'
+import { SectionHeader } from '../../../../../templates/royal-heirloom/RoyalHeirloomShared.jsx'
 
 const defaultIconList = [
   "/assets/templates/royal-heirloom/icons/bouque.png",
@@ -10,7 +10,26 @@ const defaultIconList = [
   "/assets/templates/royal-heirloom/icons/dinner.png",
 ]
 
-export default function RoyalHeirloomSchedule({ scheduleItems, weddingDate, weddingMonth, weddingYear }) {
+export default function RohitAndManpreetSchedule({ scheduleItems, weddingDate, weddingMonth, weddingYear }) {
+  // Generate random hearts for background texture
+  const randomHearts = useMemo(() => {
+    const hearts = [];
+    let id = 0;
+    // Create a 4x4 grid to ensure minimal but perfectly even spread across the entire background
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        hearts.push({
+          id: id++,
+          size: 14 + Math.random() * 20,
+          top: (row * 25) + (Math.random() * 15),
+          left: (col * 25) + (Math.random() * 15),
+          rotate: Math.random() * 360,
+          opacity: 0.08 + Math.random() * 0.05
+        });
+      }
+    }
+    return hearts;
+  }, [])
   // Support 1 to 6+ dynamic events cleanly
   const events = useMemo(() => {
     if (Array.isArray(scheduleItems) && scheduleItems.length > 0) {
@@ -19,7 +38,10 @@ export default function RoyalHeirloomSchedule({ scheduleItems, weddingDate, wedd
         title: item.title || item.name || "Celebration",
         description: item.description || null,
         iconSrc: item.iconSrc || defaultIconList[idx % defaultIconList.length],
-        dateStr: item.date || `${String(weddingMonth || 'Nov').slice(0, 3)} ${weddingDate || '28'}, ${weddingYear || '2026'}`
+        dateStr: item.date || `${String(weddingMonth || 'Nov').slice(0, 3)} ${weddingDate || '28'}, ${weddingYear || '2026'}`,
+        venueName: item.venueName || "TBD",
+        dressCode: item.dressCode || "Traditional",
+        caricatureColor: item.caricatureColor || "Custom Colors"
       }))
     }
 
@@ -59,8 +81,8 @@ export default function RoyalHeirloomSchedule({ scheduleItems, weddingDate, wedd
   }, [scheduleItems, weddingDate, weddingMonth, weddingYear])
 
   const n = events.length
-  // Dynamic height based on number of events: 150px per item
-  const itemRowHeight = 150
+  // Dynamic height based on number of events: increased to 220px per item to fit venue, dress code, and caricature
+  const itemRowHeight = 230
   const svgHeight = Math.max(400, n * itemRowHeight)
 
   // Dynamically compute S-curve path that weaves cleanly through the center gap (X: 160-240)
@@ -113,6 +135,24 @@ export default function RoyalHeirloomSchedule({ scheduleItems, weddingDate, wedd
       className="relative w-full min-h-[100svh] flex flex-col items-center justify-between px-4 py-12 bg-[#F6EBD8] border-t border-[#E8D9C5] overflow-hidden"
       style={{ backgroundColor: '#F6EBD8' }}
     >
+      {/* Background Hearts Texture */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {randomHearts.map((h) => (
+          <svg key={h.id} viewBox="0 0 24 24" fill="currentColor" 
+               className="absolute text-[#8B1A1A]"
+               style={{
+                 width: `${h.size}px`,
+                 height: `${h.size}px`,
+                 top: `${h.top}%`,
+                 left: `${h.left}%`,
+                 transform: `rotate(${h.rotate}deg)`,
+                 opacity: h.opacity
+               }}>
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        ))}
+      </div>
+
       {/* Header matching royal heirloom palette */}
       <div className="relative z-10 w-full flex flex-col items-center text-center pt-2">
         <SectionHeader 
@@ -175,22 +215,12 @@ export default function RoyalHeirloomSchedule({ scheduleItems, weddingDate, wedd
                   isLeft ? 'justify-start pl-1 sm:pl-2' : 'justify-end pr-1 sm:pr-2'
                 }`}
               >
-                {/* Event Card: max width 145px with generous margin so curve never touches */}
-                <div className="flex flex-col items-center text-center w-[138px] sm:w-[148px] select-none">
+                {/* Event Card: max width 155px with generous margin so curve never touches */}
+                <div className="flex flex-col items-center text-center w-[145px] sm:w-[155px] select-none">
                   
-                  {/* Floating Micro-Animated Icon Badge */}
+                  {/* Static Caricature Image (No continuous animation) */}
                   <motion.div 
-                    animate={{ 
-                      y: [0, -4, 0],
-                      rotate: isLeft ? [-2, 2, -2] : [2, -2, 2]
-                    }}
-                    transition={{
-                      duration: 3.2 + (idx % 3) * 0.4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: idx * 0.3,
-                    }}
-                    className="mb-1 flex items-center justify-center w-12 h-12 rounded-full bg-[#FAF5EB]/95 border border-[#CBB89D] shadow-[0_4px_12px_rgba(70,35,15,0.15)] p-2 cursor-pointer hover:scale-105 transition-transform"
+                    className="mb-3 flex items-center justify-center w-28 h-28 sm:w-32 sm:h-32 cursor-pointer hover:scale-105 transition-transform drop-shadow-md shrink-0"
                   >
                     <img 
                       src={evt.iconSrc} 
@@ -210,9 +240,25 @@ export default function RoyalHeirloomSchedule({ scheduleItems, weddingDate, wedd
                   </h4>
 
                   {/* Date Subtitle */}
-                  <span className="font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.12em] uppercase text-[#8C5D38] font-semibold opacity-90">
+                  <span className="font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.12em] uppercase text-[#8C5D38] font-semibold opacity-90 mb-1">
                     {evt.dateStr}
                   </span>
+
+                  {/* Venue */}
+                  <div className="flex items-center justify-center gap-1 font-['Cormorant_Garamond'] text-[13px] sm:text-[14px] leading-tight text-[#4A2810] italic font-semibold mb-1">
+                    <svg className="w-3.5 h-3.5 text-[#8C6044]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>{evt.venueName}</span>
+                  </div>
+
+                  {/* Dress Code */}
+                  <div className="flex flex-col items-center gap-0.5 mt-1 border-t border-[#8C6044]/30 pt-1.5 w-full">
+                    <span className="font-['Cinzel'] text-[8.5px] sm:text-[9.5px] font-bold tracking-[0.08em] text-[#6B401D] uppercase leading-tight">
+                      {evt.dressCode}
+                    </span>
+                  </div>
 
                   {/* Optional Description Note */}
                   {evt.description && (
