@@ -1,3 +1,7 @@
+import photo1 from './images/photo_2026-09-22_22-20-15.jpg';
+import photo2 from './images/photo_2026-09-22_22-20-16.jpg';
+import photo3 from './images/photo_2026-09-22_22-21-11.jpg';
+
 export const customData = {
   hero: {
     groomName: "RANJITH",
@@ -28,21 +32,21 @@ export const customData = {
     photos: [
       {
         id: 1,
-        image: "/assets/templates/midnight-waltz/sample-photo-1.webp",
+        image: photo1,
         title: "Side by Side",
         quote: "In your arms, I have found my forever home.",
         rotation: -3,
       },
       {
         id: 2,
-        image: "/assets/templates/midnight-waltz/sample-photo-2.webp",
+        image: photo2,
         title: "Shared Laughter",
         quote: "Every love story is beautiful, but ours is my favorite.",
         rotation: 3,
       },
       {
         id: 3,
-        image: "/assets/templates/midnight-waltz/sample-photo-3.webp",
+        image: photo3,
         title: "Forever Us",
         quote: "Two hearts, one soul, a lifetime of beautiful memories.",
         rotation: -2,

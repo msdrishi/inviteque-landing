@@ -124,7 +124,7 @@ export default function MidnightWaltzCalendar({
           </div>
         </motion.div>
 
-        {/* WEDNESDAY & Time */}
+        {/* WEDNESDAY & Time (Removed) */}
         <motion.div
           variants={lineAnim}
           className="flex flex-col items-center"
@@ -132,9 +132,6 @@ export default function MidnightWaltzCalendar({
           <h3 className="font-['Cinzel'] text-[14px] md:text-[16px] text-[#4A3E20] tracking-widest font-semibold mb-1 uppercase">
             WEDNESDAY
           </h3>
-          <p className="font-['Cormorant_Garamond',serif] text-[12px] md:text-[14px] tracking-[0.1em] text-[#4A3E20]/80 mb-4 uppercase">
-            04:30 AM - 06:00 AM
-          </p>
         </motion.div>
 
         {/* Separator */}

@@ -545,19 +545,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
           {data.dayOfWeek || 'Friday'}
         </motion.p>
 
-        {/* 10. Wedding time ── Religath font */}
-        <motion.p
-          variants={lineAnim}
-          style={{
-            fontFamily: "'Religath', serif",
-            fontSize: isDesktop ? 'clamp(12px, 1.1vw, 15px)' : (isTablet ? 'clamp(18px, 2.5vw, 24px)' : 'clamp(13px, 1.8vw, 16px)'),
-            letterSpacing: '0.10em',
-            color: C.primary,
-            margin: `1px 0 ${isDesktop ? '10px' : '8px'} 0`,
-          }}
-        >
-          {data.weddingTime || '09:00 AM - 10:30 AM'}
-        </motion.p>
+        {/* 10. Wedding time ── Religath font (Removed) */}
 
         {/* 11. Pin / location icon */}
         {(() => {
@@ -724,7 +712,7 @@ export default function CustomMidnightWaltzRanjithAndMylisha({ groupSlug: propGr
   const groupSlug   = propGroupSlug || new URLSearchParams(location.search).get('group')
 
   const isPaid = true
-  const showWatermark = true
+  const showWatermark = false
 
   // Music & Splash state
   const [isMusicMuted, setIsMusicMuted] = useState(false)
