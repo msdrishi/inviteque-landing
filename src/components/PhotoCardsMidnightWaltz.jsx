@@ -80,7 +80,7 @@ export default function PhotoCardsMidnightWaltz({
     const photoUrl = typeof rawPhoto === 'string' ? rawPhoto : (rawPhoto?.image || null)
     return {
       image: (photoUrl && photoUrl.trim() !== '') ? photoUrl : defaultImages[i],
-      quote: defaultQuotes[i]
+      quote: (typeof rawPhoto === 'object' && rawPhoto?.quote) ? rawPhoto.quote : defaultQuotes[i]
     }
   })
 

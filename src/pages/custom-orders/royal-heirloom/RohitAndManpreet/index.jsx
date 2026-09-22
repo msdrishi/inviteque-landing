@@ -16,6 +16,7 @@ import RohitAndManpreetVenue from './components/RohitAndManpreetVenue.jsx'
 import RohitAndManpreetSchedule from './components/RohitAndManpreetSchedule.jsx'
 import RohitAndManpreetCalendar from './components/RohitAndManpreetCalendar.jsx'
 import RohitAndManpreetLoveAndRegards from './components/RohitAndManpreetLoveAndRegards.jsx'
+import RohitAndManpreetContact from './components/RohitAndManpreetContact.jsx'
 import RoyalHeirloomCountdown from '../../../../templates/royal-heirloom/RoyalHeirloomCountdown.jsx'
 import bgMusicSrc from '../../../../assets/audio/punjabi.mp3'
 
@@ -558,6 +559,9 @@ export default function CustomRoyalHeirloomRohitAndManpreet({ savedData, groupSl
           headline={staticData?.loveAndRegards?.headline}
           familyNames={staticData?.loveAndRegards?.familyNames}
         />
+
+        {/* ── SECTION 9.5: CONTACT ── */}
+        <RohitAndManpreetContact />
 
         {/* ── SECTION 10: THEMED ROYAL FOOTER ── */}
         <Footer 

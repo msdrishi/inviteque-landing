@@ -204,11 +204,11 @@ export default function RohitAndManpreetHero({
           {/* Ganesha Logo Placeholder */}
           <img src={ganeshaLogo} alt="Om Ganesha" className="w-12 h-12 md:w-16 md:h-16 object-contain mb-1 opacity-90 drop-shadow-md" />
           
-          <span className="font-['Cinzel'] text-[12px] sm:text-[14px] md:text-[18px] tracking-[0.36em] uppercase text-[#6B4330] font-semibold leading-tight">
-            WEDDING
+          <span className="font-['Cinzel'] text-[9px] sm:text-[11px] md:text-[14px] tracking-[0.25em] uppercase text-[#6B4330] font-semibold leading-tight text-center max-w-[280px]">
+            WE CORDIALLY INVITE YOU TO
           </span>
-          <span className="font-['Cinzel'] text-[12px] sm:text-[14px] md:text-[18px] tracking-[0.36em] uppercase text-[#6B4330] font-semibold leading-tight">
-            INVITATION
+          <span className="font-['Cinzel'] text-[9px] sm:text-[11px] md:text-[14px] tracking-[0.25em] uppercase text-[#6B4330] font-semibold leading-tight text-center max-w-[280px]">
+            THE WEDDING CELEBRATION OF
           </span>
         </motion.div>
 
@@ -270,16 +270,8 @@ export default function RohitAndManpreetHero({
           </div>
         </div>
 
-        {/* Subtext, Date Module & Mumbai Address */}
+        {/* Date Module & Mumbai Address */}
         <div className="flex flex-col items-center w-full max-w-[340px] md:max-w-[500px] px-2 gap-1.5 md:gap-3 mt-1.5 md:mt-4">
-          <motion.p 
-            initial={{ opacity: 0, y: 14, filter: 'blur(5px)' }}
-            animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(5px)' }}
-            transition={{ duration: 3.6, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
-            className="font-['Cinzel'] text-[9.5px] sm:text-[10px] md:text-[14px] tracking-[0.22em] uppercase text-[#6B4734] font-medium leading-[1.55] max-w-[280px] md:max-w-[400px]"
-          >
-            Invite you to their wedding celebration
-          </motion.p>
 
           <motion.div 
             initial={{ opacity: 0, y: 15 }}

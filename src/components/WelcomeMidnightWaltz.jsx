@@ -125,7 +125,7 @@ export default function WelcomeMidnightWaltz({
             letterSpacing: '0.04em',
           }}
         >
-          Dear Friends
+          {data.headingLine1 || 'Dear Friends'}
         </motion.p>
 
         {/* & Family — Religath serif */}
@@ -141,7 +141,7 @@ export default function WelcomeMidnightWaltz({
             letterSpacing: '0.04em',
           }}
         >
-          &amp; Family,
+          {data.headingLine2 || '& Family,'}
         </motion.p>
 
         {/* Thin gold rule */}
@@ -171,7 +171,7 @@ export default function WelcomeMidnightWaltz({
             maxWidth: '100%',
           }}
         >
-          Your presence is a cherished part of our celebration. Join us as we gather with love, laughter, and blessings to celebrate the beginning of our beautiful journey together.
+          {data.message || 'Your presence is a cherished part of our celebration. Join us as we gather with love, laughter, and blessings to celebrate the beginning of our beautiful journey together.'}
         </motion.p>
 
         {/* Lotus divider */}

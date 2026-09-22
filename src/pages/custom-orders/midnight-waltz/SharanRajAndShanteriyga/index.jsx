@@ -739,17 +739,45 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
     return () => clearTimeout(timer)
   }, [])
 
+  const [isVideoReady, setIsVideoReady] = useState(false)
+
   const handleSplashClick = () => {
     if (splashState === 'waiting') {
       setSplashState('playing')
       setHasInteracted(true)
       
       if (audioRef.current && !isMusicMuted) {
+        audioRef.current.muted = false
         audioRef.current.play().catch(() => {})
       }
 
-      if (videoRef.current) {
-        videoRef.current.play().catch(e => console.error(e))
+      const vid = videoRef.current
+      if (vid) {
+        const playPromise = vid.play()
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            console.warn("Video play interrupted/prevented:", err)
+            if (err.name !== 'AbortError') {
+              setSplashState('done')
+            }
+          })
+        }
+      } else {
+        setSplashState('done')
+      }
+    }
+  }
+
+  const handleTimeUpdate = () => {
+    const vid = videoRef.current
+    if (vid) {
+      if (vid.currentTime > 0.1 && !isVideoReady) {
+        setIsVideoReady(true)
+      }
+      if (vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
+        if (splashState !== 'done') {
+          setSplashState('done')
+        }
       }
     }
   }
@@ -894,6 +922,7 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
               preload="auto"
               onPlaying={() => setIsDoorVideoPlaying(true)}
               onEnded={handleVideoEnded}
+              onTimeUpdate={handleTimeUpdate}
               style={{ pointerEvents: 'none' }}
             />
             {splashState === 'waiting' && (
@@ -1096,9 +1125,6 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
         </div>
       </div>
       
-      {/* Persistent Background Audio Player */}
-      <audio ref={audioRef} src={bgMusicSrc} loop autoPlay />
-
       {/* Music Toggle Button */}
       <button
         onClick={toggleMusic}
@@ -1110,6 +1136,9 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
 
         </motion.div>
       )}
+
+      {/* Persistent Background Audio Player */}
+      <audio ref={audioRef} src={bgMusicSrc} loop />
     </>
   )
 }

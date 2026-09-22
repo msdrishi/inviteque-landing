@@ -1,3 +1,7 @@
+import photo1 from './images/photo_2026-09-22_22-59-48.jpg';
+import photo2 from './images/photo_2026-09-22_22-59-55.jpg';
+import photo3 from './images/photo_2026-09-22_23-00-01.jpg';
+
 export const customData = {
   hero: {
     groomName: "SHARAN RAJ",
@@ -28,31 +32,31 @@ export const customData = {
     photos: [
       {
         id: 1,
-        image: "/assets/templates/midnight-waltz/sample-photo-1.webp",
+        image: photo1,
         title: "Side by Side",
-        quote: "In your arms, I have found my forever home.",
+        quote: "As the petals fall, our love story unfolds.",
         rotation: -3,
       },
       {
         id: 2,
-        image: "/assets/templates/midnight-waltz/sample-photo-2.webp",
+        image: photo2,
         title: "Shared Laughter",
-        quote: "Every love story is beautiful, but ours is my favorite.",
+        quote: "In your arms, I have found my forever home.",
         rotation: 3,
       },
       {
         id: 3,
-        image: "/assets/templates/midnight-waltz/sample-photo-3.webp",
+        image: photo3,
         title: "Forever Us",
-        quote: "Two hearts, one soul, a lifetime of beautiful memories.",
+        quote: "With love in our hearts, we step into forever.",
         rotation: -2,
       }
     ],
   },
   welcome: {
     label: "Welcome",
-    headingLine1: "Dear Friends",
-    headingLine2: "& Family,",
+    headingLine1: "Dear Family",
+    headingLine2: "& Friends,",
     message: "With hearts full of love and gratitude, we are so excited to celebrate this beautiful chapter of our lives with you. Come celebrate, laugh, dance, eat, bless us, and make memories with us as we say “I do!”",
   },
   events: [
