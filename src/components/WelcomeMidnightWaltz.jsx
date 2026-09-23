@@ -147,11 +147,11 @@ export default function WelcomeMidnightWaltz({
         {/* Thin gold rule */}
         <motion.div
           variants={lineAnim}
-          style={{ 
-            width: 44, 
-            height: 0.75, 
-            background: '#B09060', 
-            opacity: 0.55, 
+          style={{
+            width: 44,
+            height: 0.75,
+            background: '#B09060',
+            opacity: 0.55,
             marginBottom: 12,
             marginInline: isDesktop ? 'auto' : '0'
           }}

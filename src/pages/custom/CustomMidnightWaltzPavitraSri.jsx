@@ -1301,8 +1301,8 @@ function WelcomeSection({ data, isDesktop }) {
           marginInline: isDesktop ? 'auto' : 'none',
           marginLeft: isDesktop ? 'auto' : (isTablet ? '8%' : '6%'),
           marginRight: isDesktop ? 'auto' : 'none',
-          width: isDesktop ? 'clamp(280px, 60%, 800px)' : (isTablet ? '50%' : '72%'),
-          maxWidth: isDesktop ? 680 : (isTablet ? 450 : 320),
+          width: isDesktop ? 'clamp(280px, 60%, 800px)' : (isTablet ? '50%' : '58%'),
+          maxWidth: isDesktop ? 680 : (isTablet ? 450 : 260),
           display: 'flex',
           flexDirection: 'column',
           alignItems: isDesktop ? 'center' : 'flex-start',
@@ -1985,3 +1985,4 @@ export default function CustomMidnightWaltzPavitraSri() {
     </div>
   )
 }
+

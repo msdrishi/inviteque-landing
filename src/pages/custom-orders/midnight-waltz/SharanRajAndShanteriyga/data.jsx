@@ -1,6 +1,6 @@
-import photo1 from './images/photo_2026-09-22_22-59-48.jpg';
-import photo2 from './images/photo_2026-09-22_22-59-55.jpg';
-import photo3 from './images/photo_2026-09-22_23-00-01.jpg';
+import photo1 from './images/IMG_4472.webp';
+import photo2 from './images/IMG_4473.webp';
+import photo3 from './images/IMG_4474.webp';
 
 export const customData = {
   hero: {
@@ -34,21 +34,21 @@ export const customData = {
         id: 1,
         image: photo1,
         title: "Side by Side",
-        quote: "As the petals fall, our love story unfolds.",
+        quote: "With love in our hearts, we step into forever.",
         rotation: -3,
       },
       {
         id: 2,
         image: photo2,
         title: "Shared Laughter",
-        quote: "In your arms, I have found my forever home.",
+        quote: "As the petals fall, our love story unfolds.",
         rotation: 3,
       },
       {
         id: 3,
         image: photo3,
         title: "Forever Us",
-        quote: "With love in our hearts, we step into forever.",
+        quote: "In your arms, I have found my forever home.",
         rotation: -2,
       }
     ],
@@ -57,14 +57,21 @@ export const customData = {
     label: "Welcome",
     headingLine1: "Dear Family",
     headingLine2: "& Friends,",
-    message: "With hearts full of love and gratitude, we are so excited to celebrate this beautiful chapter of our lives with you. Come celebrate, laugh, dance, eat, bless us, and make memories with us as we say “I do!”",
+    message: "Your presence is a cherished part of our celebration. Join us as we gather with love, laughter, and blessings to celebrate the beginning of our beautiful journey together.",
   },
   events: [
     {
       id: "wedding-vows",
       sectionLabel: "Wedding Vows",
-      eventName: "Wedding Vows",
-      name: "Wedding Vows",
+      eventName: "Wedding Ceremony",
+      icon: (
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="9" cy="12" r="5" />
+          <circle cx="15" cy="12" r="5" />
+          <path d="M9 7l1-2 1 2" />
+        </svg>
+      ),
+      name: "Wedding Ceremony",
       venueName: "KING HALLY MY FAME HOTEL",
       date: "Sunday, 01 November 2026",
       time: "08:00 AM - 10:00 AM",
@@ -79,6 +86,14 @@ export const customData = {
       id: "wedding-luncheon",
       sectionLabel: "Wedding Luncheon",
       eventName: "Wedding Luncheon",
+      icon: (
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 15c0-4 3.5-7 7-7s7 3 7 7" />
+          <path d="M12 8V6M10 6h4" />
+          <path d="M3 15h18" />
+          <path d="M4 17h16" />
+        </svg>
+      ),
       name: "Wedding Luncheon",
       venueName: "KING HALLY MY FAME HOTEL",
       date: "Sunday, 01 November 2026",

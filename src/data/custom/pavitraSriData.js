@@ -1,23 +1,25 @@
-// e:\Wedding-Website\wedding-invite\src\data\custom\pavitraSriData.js
+import photo3 from '../../pages/custom/images/IMG_4475.webp';
+import photo2 from '../../pages/custom/images/IMG_4476.webp';
+import photo1 from '../../pages/custom/images/IMG_4477.webp';
 
 const sharedPhotos = [
   {
     id: 1,
-    image: "/assets/templates/midnight-waltz/sample-photo-1.webp",
+    image: photo1,
     title: "Side by Side",
     quote: "In your arms, I have found my forever home.",
     rotation: -3,
   },
   {
     id: 2,
-    image: "/assets/templates/midnight-waltz/sample-photo-2.webp",
+    image: photo2,
     title: "Shared Laughter",
     quote: "Every love story is beautiful, but ours is my favorite.",
     rotation: 3,
   },
   {
     id: 3,
-    image: "/assets/templates/midnight-waltz/sample-photo-3.webp",
+    image: photo3,
     title: "Forever Us",
     quote: "Two hearts, one soul, a lifetime of beautiful memories.",
     rotation: -2,
@@ -28,9 +30,10 @@ const sharedStory = {
   sectionLabel: "Our Story",
   heading: "From A Chance Encounter to Forever",
   paragraphs: [
-    "Little did we know that we would fall in love with the person who lived right next door—our very own Leonard and Penny moment. Like Leonard, Sri fell for Pavi from the very beginning, and with his charm, patience, and incredibly kind heart, he slowly found his way into hers, too. Somewhere between friendship, endless conversations, shared laughter, and a little bit of fate, we found each other.",
+    "Little did we know that we would fall in love with the person who lived right next door, our very own Leonard and Penny moment. Like Leonard, Sri fell for Pavi from the very beginning, and with his charm, patience, and incredibly kind heart, he slowly found his way into hers, too. Somewhere between friendship, endless conversations, shared laughter, and a little bit of fate, we found each other.",
     "What began unexpectedly grew into a love that stayed with us through distance, change, growing up, and everything life brought along the way.",
-    "Two years later, on August 30, 2025, as the sun was setting over La Jolla Beach, Sri got down on one knee. Pavi said YES! 💍 From next-door neighbors who had no idea what was coming, to best friends, to choosing each other for a lifetime—after all the almosts, the waiting, the miles, and the memories, here we are, ready for our forever. 💛",
+    "Two years later, on August 30, 2025, as the sun was setting over La Jolla Beach, Sri got down on one knee. Pavi said YES! 💍",
+    "From next-door neighbors who had no idea what was coming, to best friends, to choosing each other for a lifetime, after all the almosts, the waiting, the miles, and the memories, here we are, ready for our forever. 💛",
     "With the blessings of our parents and surrounded by the love of family and friends, we are thrilled to step into this new chapter of our lives hand in hand."
   ],
   quote: "“In your arms, I have found my forever home and love.”",
@@ -96,18 +99,18 @@ export const variant1Data = {
     label: "Welcome",
     headingLine1: "Dear Friends",
     headingLine2: "& Family,",
-    message: "With hearts full of love and gratitude, we are so excited to celebrate this beautiful chapter of our lives with you. As we begin our forever together, it means the world to have our favorite people by our side. This website has everything you’ll need for our celebrations—from event details and venues to all the little updates along the way. Come celebrate, laugh, dance, eat, bless us, and make memories with us as we say “I do!”",
+    message: "With hearts full of love and gratitude, we are so excited to celebrate this beautiful chapter of our lives with you. As we begin our forever together, it means the world to have our favorite people by our side. This website has everything you’ll need for our celebrations from event details and venues to all the little updates along the way. Come celebrate, laugh, dance, eat, bless us, and make memories with us as we say “I do!”",
   },
   events: [
     {
       id: "haldi-mehendi",
       sectionLabel: "Haldi, Mehandi & Sangeet",
       eventName: "Haldi, Mehandi & Sangeet",
-      venueName: "Dsire Zone",
-      date: "Sunday, 15 November 2026",
+      venueName: "Dspire Zone",
+      date: "Saturday, 14 November 2026",
       time: "Haldi: 10:00 AM - 12:00 PM\nMehandi & Sangeet: 06:00 PM - 09:00 PM",
-      dateTimeLine: "Sunday, 15 November 2026\nHaldi: 10:00 AM - 12:00 PM\nMehandi & Sangeet: 06:00 PM - 09:00 PM",
-      venueLine1: "Dsire zone, 30 Srinivasa Perumal, Sannathi St",
+      dateTimeLine: "Saturday, 14 November 2026\nHaldi: 10:00 AM - 12:00 PM\nMehandi & Sangeet: 06:00 PM - 09:00 PM",
+      venueLine1: "Dspire zone, 30 Srinivasa Perumal, Sannathi St",
       venueLine2: "New Perungalathur, Chennai, Tambaram, Tamil Nadu 600063",
       mapUrl: "https://maps.google.com/maps/place//data=!4m2!3m1!1s0x3a52f5ac74ed6709:0x5b1fb231c182e857",
       bgDesktop: "/backgrounds/midnight%20waltz/haldi-desktop.webp",
@@ -185,7 +188,7 @@ export const variant2Data = {
     label: "Welcome",
     headingLine1: "Dear Friends",
     headingLine2: "& Family,",
-    message: "With hearts full of love and gratitude, we are so excited to celebrate this beautiful chapter of our lives with you. \n\nWe have chosen to begin our forever with an intimate temple wedding on November 16th, surrounded by our families. While we’ll be keeping the wedding ceremony small and close to our hearts, we couldn’t imagine celebrating this milestone without all the wonderful people who have been a part of our lives.\n\nSo, we warmly invite you to join us at our Wedding Reception as we celebrate the beginning of our forever. Come laugh, dance, eat, celebrate, and make beautiful memories with us. Most of all, come shower us with your love and blessings as we step into this new chapter together.",
+    message: "With hearts full of love and gratitude, we’re beginning our forever with an intimate temple wedding on November 16th, surrounded by our families. But our celebration wouldn’t be complete without the wonderful people who have been part of our journey! We warmly invite you to join us at our Wedding Reception to celebrate this beautiful new chapter. Come laugh, dance, feast, and make unforgettable memories with us. Most of all, come shower us with your love and blessings as we begin our forever together.",
   },
   events: [
     {

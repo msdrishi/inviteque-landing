@@ -11,7 +11,7 @@ import InviteQRSVP from '../../../../components/InviteQRSVP.jsx'
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion'
 import SplashScreen from '../../../../components/SplashScreen.jsx'
 
-import { customData as data } from './data.js'
+import { customData as data } from './data.jsx'
 import bgMusicSrc from '../../../../assets/audio/tamil-temple-bgm.mp3'
 import doorVideoSrc from '../../../../assets/video/Mid-night-waltz-door-opening.MP4'
 import doorPosterSrc from '../../../../assets/images/door-opening-poster.webp'

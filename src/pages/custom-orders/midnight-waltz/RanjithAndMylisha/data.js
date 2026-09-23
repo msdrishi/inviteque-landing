@@ -1,6 +1,6 @@
-import photo1 from './images/photo_2026-09-22_22-20-15.jpg';
-import photo2 from './images/photo_2026-09-22_22-20-16.jpg';
-import photo3 from './images/photo_2026-09-22_22-21-11.jpg';
+import photo1 from './images/IMG_4467.webp';
+import photo2 from './images/IMG_4468.webp';
+import photo3 from './images/IMG_4469.webp';
 
 export const customData = {
   hero: {
