@@ -77,7 +77,7 @@ export const templates = [
     priceLabel: '₹999',
     thumbnail: t7,
     href: '/templates/royal-heritage',
-    available: false,
+    available: true,
   },
   {
     id: 'enchanted-forest',

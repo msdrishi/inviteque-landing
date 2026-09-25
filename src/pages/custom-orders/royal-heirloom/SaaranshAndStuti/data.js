@@ -11,7 +11,7 @@ export const customData = {
     weddingYear: '2026',
     weddingTime: '5:00 PM Onwards',
   },
-  welcomeMessage: "TOGETHER WITH THEIR FAMILIES, WE JOYFULLY INVITE YOU TO GRACE THE AUSPICIOUS OCCASION OF THEIR WEDDING CELEBRATION.",
+  welcomeMessage: "Two families brought us together, but destiny had already written our story. What began as a formal introduction quickly blossomed into endless conversations, shared laughter, and a profound connection. We found not just a partner, but a soulmate in one another.",
   venueData: {
     mahalName: 'MorBagh',
     venueAddress: '16, Bandh Rd, Chattarpur',

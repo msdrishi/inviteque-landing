@@ -9,14 +9,14 @@ import CustomSection from '../../../../components/CustomSection.jsx'
 
 // Section Components
 import RoyalHeirloomCover from '../../../../templates/royal-heirloom/RoyalHeirloomCover.jsx'
-import RoyalHeirloomHero from '../../../../templates/royal-heirloom/RoyalHeirloomHero.jsx'
+import CustomRoyalHeirloomHero from './components/CustomRoyalHeirloomHero.jsx'
 import RoyalHeirloomStory from '../../../../templates/royal-heirloom/RoyalHeirloomStory.jsx'
 import StoryText from './components/StoryText.jsx'
 import RoyalHeirloomVenue from '../../../../templates/royal-heirloom/RoyalHeirloomVenue.jsx'
 import RoyalHeirloomSchedule from '../../../../templates/royal-heirloom/RoyalHeirloomSchedule.jsx'
 import RoyalHeirloomCalendar from '../../../../templates/royal-heirloom/RoyalHeirloomCalendar.jsx'
 import RoyalHeirloomCountdown from '../../../../templates/royal-heirloom/RoyalHeirloomCountdown.jsx'
-import bgMusicSrc from '../../../../assets/audio/bg-music-a-thousand-years.mp3'
+import bgMusicSrc from '../../../../assets/audio/Annie Ahluwalia.mp4'
 
 import { customData } from './data.js'
 import FullScreenEvent from './components/FullScreenEvent.jsx'
@@ -76,30 +76,57 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
   const brideFamily = (savedData ? savedData.brideFamily : null)
 
   // Wedding date components
-  const weddingDateStr = (() => {
+  // Variant Overrides
+  let variantDateStr = (() => {
     if (savedData?.heroData?.weddingDate) return savedData.heroData.weddingDate
     if (draftData?.weddingDate) return draftData.weddingDate
     return '28'
   })()
-  const weddingMonth = (() => {
+  let variantMonth = (() => {
     if (savedData?.heroData?.weddingMonth) return savedData.heroData.weddingMonth
     if (draftData?.weddingMonth) return draftData.weddingMonth
     return 'November'
   })()
-  const weddingYear = (() => {
+  let variantYear = (() => {
     if (savedData?.heroData?.weddingYear) return savedData.heroData.weddingYear
     if (draftData?.weddingYear) return draftData.weddingYear
     return '2026'
   })()
+  
   const weddingTime = (savedData ? (savedData.heroData?.weddingTime || savedData.weddingTime) : draftData?.weddingTime) || '09:00 AM - 10:30 AM'
+  let invitationText = "Together with their families, we joyfully invite you\nto grace the auspicious occasion of their wedding celebration."
+  let heroTitleTop = "WEDDING"
+  let heroTitleBottom = "INVITATION"
+
+  if (variant === '4') {
+    variantDateStr = '18'
+    variantMonth = 'December'
+    invitationText = "Together with their families, we joyfully invite you\nto grace the auspicious occasion of their sagan celebration."
+    heroTitleTop = "SAGAN"
+    heroTitleBottom = "CELEBRATION"
+  } else if (variant === '5') {
+    variantDateStr = '20'
+    variantMonth = 'December'
+  } else if (variant === '2') {
+    variantDateStr = '13'
+    variantMonth = 'December'
+    invitationText = "Together with their families, we joyfully invite you\nto grace the auspicious occasion of their pre-wedding celebrations."
+    heroTitleTop = "WEDDING"
+    heroTitleBottom = "CELEBRATIONS"
+  } else if (variant === '3') {
+    // Cocktail + Wedding - maybe we leave it as 20 Dec?
+  }
 
   // Derive computed values from date components
   const eventDateObj = useMemo(() => {
-    const d = new Date(`${weddingMonth} ${weddingDateStr}, ${weddingYear}`)
+    const d = new Date(`${variantMonth} ${variantDateStr}, ${variantYear}`)
     return isNaN(d.getTime()) ? new Date('2026-11-28') : d
-  }, [weddingMonth, weddingDateStr, weddingYear])
+  }, [variantMonth, variantDateStr, variantYear])
 
-  const weddingDate = weddingDateStr
+  const weddingDate = variantDateStr
+  const weddingMonth = variantMonth
+  const weddingYear = variantYear
+
   const dayOfWeek = useMemo(() => {
     return eventDateObj.toLocaleString('en-US', { weekday: 'long' })
   }, [eventDateObj])
@@ -120,12 +147,22 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
   }, [weddingTime])
 
   // Venue data
-  const venueTitle = (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || 'The Taj Mahal Palace'
-  const venueAddress = (savedData ? (savedData.venueData?.venueAddress || savedData.venueAddress) : draftData?.venueAddress) || 'Apollo Bunder, Colaba'
-  const venueCity = (savedData ? (savedData.venueData?.venueCity || savedData.venueCity) : draftData?.venueCity) || 'Mumbai'
-  const venueState = (savedData ? (savedData.venueData?.state || savedData.state) : draftData?.state) || 'Maharashtra 400001'
-  const fullAddress = [venueAddress, venueCity, venueState].filter(Boolean).join(', ')
-  const mapUrl = (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData?.mapLink) || `https://maps.google.com/?q=${encodeURIComponent(venueTitle + ', ' + fullAddress)}`
+  let venueTitle = (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || 'The Taj Mahal Palace'
+  let venueAddress = (savedData ? (savedData.venueData?.venueAddress || savedData.venueAddress) : draftData?.venueAddress) || 'Apollo Bunder, Colaba'
+  let venueCity = (savedData ? (savedData.venueData?.venueCity || savedData.venueCity) : draftData?.venueCity) || 'Mumbai'
+  let venueState = (savedData ? (savedData.venueData?.state || savedData.state) : draftData?.state) || 'Maharashtra 400001'
+  let mapUrl = (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData?.mapLink) || `https://maps.google.com/?q=${encodeURIComponent(venueTitle + ', ' + venueAddress)}`
+
+  if (variant === '4') {
+    venueTitle = 'Amarai Farms'
+    venueAddress = 'Delhi Ggn Rd, Kapas Hera'
+    venueCity = 'New Delhi'
+    venueState = ''
+    mapUrl = 'https://maps.app.goo.gl/2iquCoZgx6heyMmVA?g_st=ic'
+  }
+
+  const fullAddress = [venueTitle, venueAddress, venueCity, venueState].filter(Boolean).join(', ')
+  const venueDateTime = `${weddingDate} ${weddingMonth}, ${weddingYear} • ${formattedTime}`
 
   // Story Photos (dynamic from Builder)
   const storyPhotos = useMemo(() => {
@@ -134,16 +171,6 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
       : (draftData?.photos || [])
     const active = photos.filter(Boolean)
     return active.length > 0 ? active : [defaultPhoto1, defaultPhoto2, defaultPhoto3]
-  }, [savedData, draftData])
-
-  // Schedule Items (dynamic 1-6 events from Builder)
-  const scheduleItems = useMemo(() => {
-    const items = savedData
-      ? (savedData.scheduleData?.items || [])
-      : (Array.isArray(draftData?.scheduleItems) ? draftData.scheduleItems : [])
-    // If user provided schedule items, use them; otherwise fall back to defaults
-    if (items.length > 0) return items
-    return null // Let RoyalHeirloomSchedule use its built-in defaults
   }, [savedData, draftData])
 
   // Custom RSVP Multi-Link Variants
@@ -156,19 +183,32 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
       { id: 'wedding', title: 'Wedding', date: '20th Dec, 2026', time: '5:00 PM' }
     ]
 
-    // Filter based on the requested variant (1, 2, 3, or 4)
-    if (variant === '2') {
-      return allRsvpEvents.filter(e => ['pooja', 'cocktail', 'haldi'].includes(e.id))
-    }
-    if (variant === '3') {
-      return allRsvpEvents.filter(e => ['cocktail', 'wedding'].includes(e.id))
-    }
-    if (variant === '4') {
-      return allRsvpEvents.filter(e => ['wedding'].includes(e.id))
-    }
-    // Default (Variant 1 or undefined) returns all functions
+    if (variant === '2') return allRsvpEvents.filter(e => ['pooja', 'cocktail', 'haldi'].includes(e.id))
+    if (variant === '3') return allRsvpEvents.filter(e => ['cocktail', 'wedding'].includes(e.id))
+    if (variant === '4') return allRsvpEvents.filter(e => ['cocktail'].includes(e.id))
+    if (variant === '5') return allRsvpEvents.filter(e => ['wedding'].includes(e.id))
     return allRsvpEvents
   }, [variant])
+
+  // Schedule Items (dynamic 1-6 events from Builder)
+  const scheduleItems = useMemo(() => {
+    const items = savedData
+      ? (savedData.scheduleData?.items || [])
+      : (Array.isArray(draftData?.scheduleItems) ? draftData.scheduleItems : [])
+    
+    // If no custom schedule is provided, use default but filter them based on variant!
+    const baseItems = items.length > 0 ? items : [
+      { time: "11:30 AM", title: "Pooja", iconSrc: "/assets/templates/royal-heirloom/icons/bouque.png", date: "13th Dec, 2026" },
+      { time: "08:30 PM", title: "Cocktail", iconSrc: "/assets/templates/royal-heirloom/icons/drinks.png", date: "18th Dec, 2026" },
+      { time: "03:00 PM", title: "Haldi & Mehendi", iconSrc: "/assets/templates/royal-heirloom/icons/engagement.png", date: "19th Dec, 2026" },
+      { time: "05:00 PM", title: "Wedding", iconSrc: "/assets/templates/royal-heirloom/icons/dinner.png", date: "20th Dec, 2026" },
+    ]
+
+    // The schedule represents the breakdown of the Wedding day itself.
+    // Since we already hide the schedule entirely for variants that don't include the wedding,
+    // we can just return the base items here without filtering out the specific sub-events.
+    return baseItems
+  }, [savedData, draftData])
 
   // Filter Full Screen Events based on the variant allowed events
   const filteredFullScreenEvents = useMemo(() => {
@@ -182,7 +222,13 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
   const showHero = sections.showHero !== false
   const showStory = sections.showStory !== false
   const showWelcome = sections.showWelcome !== false
-  const showVenue = sections.showVenue !== false
+  
+  // The main venue and schedule are specifically for the Wedding Day
+  // Hide them if the variant does not include the wedding (variants 2 and 4)
+  const isWeddingIncluded = !['2', '4'].includes(variant)
+  const showVenue = sections.showVenue !== false && isWeddingIncluded
+  const showSchedule = isWeddingIncluded
+  
   const showCountdown = sections.showCountdown !== false
 
   // Show/hide features
@@ -194,21 +240,8 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
             : true))
     : Boolean(draftData?.showGallery ?? true)
 
-  const baseShowSchedule = savedData
-    ? (savedData.invitationData?.showSchedule !== undefined
-        ? Boolean(savedData.invitationData.showSchedule)
-        : (savedData.scheduleData?.showSchedule !== undefined
-            ? Boolean(savedData.scheduleData.showSchedule)
-            : true))
-    : Boolean(draftData?.showSchedule ?? true)
-    
-  const showSchedule = baseShowSchedule && filteredRsvpEvents.some(e => e.id === 'wedding')
-
-  const showRsvp = savedData
-    ? (savedData.invitationData?.hasRsvp !== undefined
-        ? Boolean(savedData.invitationData.hasRsvp)
-        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp))
-    : Boolean(draftData?.hasRsvp)
+  // Remove RSVP entirely based on user request
+  const showRsvp = false
 
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 
@@ -218,16 +251,7 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
   const [hasTriggeredHeroText, setHasTriggeredHeroText] = useState(false)
   const [hasTriggeredHeroBg, setHasTriggeredHeroBg] = useState(false)
   const [isVideoReady, setIsVideoReady] = useState(false)
-  const [showLoadingSplash, setShowLoadingSplash] = useState(true)
   const videoRef = useRef(null)
-
-  // Hide loading splash after 2 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoadingSplash(false)
-    }, 2000)
-    return () => clearTimeout(timer)
-  }, [])
 
   // Music state
   const [isMusicMuted, setIsMusicMuted] = useState(false)
@@ -380,16 +404,15 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
     setActiveStoryIdx(prev => (prev === storyPhotos.length - 1 ? 0 : prev + 1))
   }
 
-  // Handle Cover Opening Tap — start audio MUTED during tap gesture for iOS autoplay
+  // Handle Cover Opening Tap — start audio unmuted along with the video
   const handleOpenCover = () => {
     if (hasOpened || isPlaying) return
     setIsPlaying(true)
 
-    // Start audio muted immediately during the user gesture
-    // This "reserves" the audio playback token on iOS/Android
     if (audioRef.current) {
-      audioRef.current.muted = true
-      audioRef.current.play().catch(() => {})
+      audioRef.current.muted = false
+      audioRef.current.volume = 1
+      audioRef.current.play().catch((e) => console.warn("Audio play prevented:", e))
     }
 
     const vid = videoRef.current
@@ -471,8 +494,7 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
   return (
     <div className="relative min-h-screen bg-[#181311] text-[#4A3326] flex justify-center selection:bg-[#E8C29D]/40">
       
-      {/* ── LOADING SPLASH ── */}
-      <SplashScreen loading={showLoadingSplash} />
+      {/* ── LOADING SPLASH REMOVED ── */}
 
       {/* Mobile/Tablet Screen Constraint Wrapper with exact requested #ECE3D1 background */}
       <main className="relative w-full max-w-[480px] md:max-w-[820px] mx-auto bg-[#ECE3D1] shadow-[0_0_80px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col">
@@ -495,7 +517,7 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
 
         {/* ── SECTION 1: HERO ── */}
         {showHero && (
-        <RoyalHeirloomHero 
+        <CustomRoyalHeirloomHero 
           heroBgMobile={heroBgMobile}
           hasTriggeredHeroBg={hasTriggeredHeroBg}
           hasTriggeredHeroText={hasTriggeredHeroText}
@@ -510,6 +532,9 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
           formattedTime={formattedTime}
           weddingYear={weddingYear}
           fullAddress={fullAddress}
+          invitationText={invitationText}
+          heroTitleTop={heroTitleTop}
+          heroTitleBottom={heroTitleBottom}
         />
         )}
 
@@ -571,6 +596,7 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
           fullAddress={fullAddress}
           qrCodeUrl={qrCodeUrl}
           mapUrl={mapUrl}
+          dateTime={venueDateTime}
         />
         )}
 

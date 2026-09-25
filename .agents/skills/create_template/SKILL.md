@@ -14,6 +14,7 @@ This document outlines the standard order and requirements for creating a new, i
 - **Visual Independence**: All styles, unique layouts, custom animations, and asset declarations must be template-scoped.
 - **UI Differentiation Only**: The templates share identical content schemas (Groom/Bride names, venue details, schedule, countdown target) but present them with unique aesthetics (color palettes, custom font pairings, animations, background textures).
 - **No Side Effects**: Never modify shared components in a way that breaks existing layouts.
+- **Component Modularity**: Each section of a template must be created as a separate JSX component file (e.g., `TemplateNameHero.jsx`, `TemplateNameStory.jsx`) to maximize readability and reusability. These components must be designed to be extensible and flexible.
 
 ---
 
@@ -55,10 +56,10 @@ Follow this sequence to implement and register the new template:
 If you are using Cloudinary for images, list the asset URLs (mobile and desktop versions of backgrounds, textures) and store them in the template configuration. For example:
 - Define mappings in a local JSON config or at the top of the template file.
 
-### Step B: Create the Template Page Component
-- Create a new file: `src/pages/Template[TemplateName].jsx`.
-- Implement both the **Mobile View** (max-width `430px`) and **Desktop View** (full width `md:block`) sequentially within the file, mapping data from `savedData` or the `useDraft` hook.
-- Implement the 6 required sections, importing modular components or writing custom template-scoped components inside the file.
+### Step B: Create the Template Page and Section Components
+- Create a new main file: `src/pages/Template[TemplateName].jsx`.
+- Implement both the **Mobile View** (max-width `430px`) and **Desktop View** (full width `md:block`) sequentially within the layout, mapping data from `savedData` or the `useDraft` hook.
+- For the 6 required sections, **you must create separate, extensible, and reusable JSX component files** for each (e.g., `Template[TemplateName]Hero.jsx`, `Template[TemplateName]Venue.jsx`). Import these individual section components into the main template file.
 
 ### Step C: Register the Template Route
 - Open [TemplateRoute.jsx](file:///e:/Wedding-Website/wedding-invite/src/pages/TemplateRoute.jsx).
