@@ -13,10 +13,9 @@ const fadeAnim = {
 }
 
 const sectionAnim = {
-  hidden: { opacity: 0 },
+  hidden: { },
   visible: { 
-    opacity: 1, 
-    transition: { duration: 1.5, staggerChildren: 0.3 } 
+    transition: { staggerChildren: 0.3 } 
   }
 }
 
@@ -27,10 +26,10 @@ export default function TemplateRoyalHeritageVenue({ data, fontStyles, sectionSt
 
   return (
     <motion.section 
-      style={sectionStyle}
+      style={{...sectionStyle, minHeight: '100svh', height: 'auto', paddingBottom: '50px'}}
       initial="hidden"
       whileInView="visible"
-      viewport={{ amount: 0.3 }}
+      viewport={{ once: true, amount: 0.3 }}
       variants={sectionAnim}
     >
       <img src={venueBg} alt="Venue Background" style={bgStyle} />
@@ -48,6 +47,8 @@ export default function TemplateRoyalHeritageVenue({ data, fontStyles, sectionSt
       </div>
 
       <motion.div variants={fadeAnim} style={{
+        position: 'relative',
+        zIndex: 10,
         textAlign: 'center',
         maxWidth: '340px',
         width: '90%',
@@ -56,14 +57,9 @@ export default function TemplateRoyalHeritageVenue({ data, fontStyles, sectionSt
         <p style={{ ...smallCaps, fontSize: '13px', color: '#8A202A', fontWeight: 'bold' }}>
           CELEBRATION VENUE
         </p>
-        <h3 style={{ fontFamily: "'Cinzel', serif", fontSize: '26px', color: '#4A3E20', margin: '4px 0 12px', fontWeight: 'bold' }}>
-          {data.venue.mahalName}
-        </h3>
-        
-        <div style={{ height: '1px', width: '80px', backgroundColor: '#8A202A', margin: '0 auto 12px', opacity: 0.5 }} />
-
-        <p style={{ ...smallCaps, fontSize: '13px', color: '#4A3E20', marginBottom: '20px', lineHeight: 1.6 }}>
-          {data.venue.venueAddress}, {data.venue.venueCity}, {data.venue.state}
+        <p style={{ ...serif, fontSize: '15px', color: '#4A3E20', marginBottom: '25px', lineHeight: 1.8 }}>
+          <span style={{fontWeight: 'bold', display: 'block', marginBottom: '4px', ...smallCaps, fontSize: '14px'}}>{data.venue.mahalName}</span>
+          {data.venue.venueAddress}, {data.venue.venueCity}
         </p>
 
         {data.venue.mapUrl && (
@@ -92,7 +88,7 @@ export default function TemplateRoyalHeritageVenue({ data, fontStyles, sectionSt
           </div>
         )}
       </motion.div>
-      <div style={{ flex: 1, minHeight: '140px' }} />
+      <div style={{ flex: 1, minHeight: '40px' }} />
     </motion.section>
   )
 }

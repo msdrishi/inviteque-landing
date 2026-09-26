@@ -65,7 +65,7 @@ export default function TemplateRoyalHeritageSchedule({ scheduleItems, weddingDa
   return (
     <section 
       className="relative w-full flex flex-col items-center justify-center px-4 py-12 overflow-hidden"
-      style={{ backgroundColor: '#F9F5EC' }} // Clean background, no bg image
+      style={{ backgroundColor: '#F7E8D2', backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h18v2H22v18H20V20.5z\' fill=\'%238a202a\' fill-opacity=\'0.03\' fill-rule=\'evenodd\'/%3E%3C/svg%3E")' }}
     >
       <div className="relative z-10 w-full flex flex-col items-center text-center pt-2">
         <motion.p initial="hidden" whileInView="visible" variants={fadeAnim} viewport={{amount: 0.3}} style={{ ...smallCaps, marginBottom: '4px' }}>

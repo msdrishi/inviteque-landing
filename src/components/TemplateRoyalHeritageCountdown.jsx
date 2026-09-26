@@ -13,10 +13,9 @@ const fadeAnim = {
 }
 
 const sectionAnim = {
-  hidden: { opacity: 0 },
+  hidden: { },
   visible: { 
-    opacity: 1, 
-    transition: { duration: 1.5, staggerChildren: 0.3 } 
+    transition: { staggerChildren: 0.3 } 
   }
 }
 
@@ -51,30 +50,37 @@ export default function TemplateRoyalHeritageCountdown({ data, fontStyles, secti
 
   return (
     <motion.section 
-      style={sectionStyle}
+      style={{ ...sectionStyle, justifyContent: 'center' }}
       initial="hidden"
       whileInView="visible"
-      viewport={{ amount: 0.3 }}
+      viewport={{ once: true, amount: 0.3 }}
       variants={sectionAnim}
     >
       <img src={countdownBg} alt="Countdown Background" style={bgStyle} />
-      <motion.h2 variants={fadeAnim} style={{ ...smallCaps, fontSize: '24px', marginBottom: '30px' }}>
-        THE COUNTDOWN BEGINS
-      </motion.h2>
-      <motion.div variants={fadeAnim} style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
+      <motion.div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginTop: '-15vh' }}>
+        <motion.div variants={fadeAnim} style={{ textAlign: 'center', marginBottom: '35px' }}>
+          <h2 style={{ ...smallCaps, fontSize: '20px', letterSpacing: '0.25em', margin: 0, color: '#8A202A', lineHeight: 1.4 }}>
+            THE COUNTDOWN
+          </h2>
+          <h2 style={{ ...smallCaps, fontSize: '20px', letterSpacing: '0.25em', margin: 0, color: '#8A202A', lineHeight: 1.4 }}>
+            BEGINS
+          </h2>
+        </motion.div>
+      <motion.div variants={fadeAnim} style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
          {[
            { label: 'DAYS', value: timeLeft.days }, 
            { label: 'HOURS', value: timeLeft.hours }, 
            { label: 'MINS', value: timeLeft.minutes }, 
            { label: 'SECS', value: timeLeft.seconds }
          ].map((item, idx) => (
-           <div key={idx} style={{ textAlign: 'center', width: '50px' }}>
-             <div style={{ ...serif, fontSize: '32px', color: '#8A202A', fontWeight: 'bold', lineHeight: 1 }}>
+           <div key={idx} style={{ textAlign: 'center', minWidth: '45px' }}>
+             <div style={{ ...serif, fontSize: '38px', color: '#8A202A', fontWeight: 'bold', lineHeight: 1 }}>
                {String(item.value).padStart(2, '0')}
              </div>
-             <div style={{ ...smallCaps, fontSize: '10px', marginTop: '5px' }}>{item.label}</div>
+             <div style={{ ...smallCaps, fontSize: '9px', marginTop: '10px', color: '#8A202A', letterSpacing: '0.15em', fontWeight: 'bold' }}>{item.label}</div>
            </div>
          ))}
+      </motion.div>
       </motion.div>
     </motion.section>
   )

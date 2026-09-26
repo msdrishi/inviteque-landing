@@ -9,82 +9,57 @@ This document outlines the standard order and requirements for creating a new, i
 
 ---
 
-## 1. Core Principles of Template Creation
+## 1. Core Principles & Global Rules
 
-- **Visual Independence**: All styles, unique layouts, custom animations, and asset declarations must be template-scoped.
-- **UI Differentiation Only**: The templates share identical content schemas (Groom/Bride names, venue details, schedule, countdown target) but present them with unique aesthetics (color palettes, custom font pairings, animations, background textures).
-- **No Side Effects**: Never modify shared components in a way that breaks existing layouts.
-- **Component Modularity**: Each section of a template must be created as a separate JSX component file (e.g., `TemplateNameHero.jsx`, `TemplateNameStory.jsx`) to maximize readability and reusability. These components must be designed to be extensible and flexible.
+- **Visual Independence**: All styles, layouts, animations, and assets must be template-scoped.
+- **Backgrounds**: The background image must have `width: 100vw`. No overlays or filters directly on background images. Do not animate background images (no fade-in/fade-out on `<img>`). They must remain static while content inside fades in.
+- **Scroll Behavior**: Text should fade in when scrolled into view, but generally should only fade in once (`viewport={{ once: true }}`) to prevent sections like Countdown from "disappearing" unexpectedly when scrolling away.
+- **Assets**: Store in Cloudflare/Cloudinary when possible; local assets must be `.webp`.
 
 ---
 
-## 2. Standard Template Structure (The 6 Sections)
-
-Every template must contain exactly these 6 core sections in sequential order:
+## 2. Section-by-Section Rules
 
 ### I. Hero Section
-- **Content**: Intro text ("Together with their families..."), groom & bride names, marriage subtitle ("Are Getting Married"), date/time, and scroll indicator.
-- **Animations**: Entrance animations must be line-by-line staggered. The couple's names must animate in last after a slight pause to create a cinematic "movie title" feel.
-- **Styling**: Include premium elements such as text gradients, linear sweep glare/glass shine animations on names, and custom typography (cinematic serif/script font pairs).
+- **Content & Layout**: Needs names, "Together with our families", dates, and location. Top content must have sufficient `paddingTop` (e.g., `10vh`) to avoid overlapping top floral borders.
+- **Animations**: The couple's name must have letter-by-letter animations (e.g. `framer-motion` stagger). Give the name text a glassy text-shadow effect. Other text elements must have line animations.
+- **Theme Accents**: Include a falling petal or similar natural SVGs floating in the background, restricted to the left/right edges for a natural "movie title card" effect.
+- **Typography**: The couple's name must use a highly legible, premium script font (like Priestacy) and be perfectly centered. Ensure sizing adjusts per device.
+- **Date Formatting**: Use short abbreviations (SAT, MON, TUE for days; JAN, FEB, MAR for months). The date layout must be neat and stacked if necessary to prevent bad flex wrapping.
+- **Bottom Indicators**: Always include an animated "Swipe Up" chevron or scroll indicator anchored to the absolute bottom of the Hero section.
 
-### II. Photo Cards (Our Moments / Story)
-- **Content**: Grid or layout containing up to 3 story images.
-- **Layout**: Side-by-side columns on desktop view, vertical stack or card slider on mobile view.
+### II. Photo Cards (Our Story / Moments)
+- **Content**: Max 3 story images.
+- **Title Banner**: Place the "OUR STORY" text inside a styled, rounded banner (`borderRadius: '30px'`) with a subtle border and background color to give it depth, instead of plain text floating over the background.
 
-### III. Welcoming Message (Invitation)
-- **Content**: RSVP/Invitation text card, often designed with border decorations or an envelope visual element.
+### III. Welcome Section
+- **Creative Presentation**: Do not use basic text layouts. Implement interesting visuals like a hanging text banner that drops from the top of the section via spring animation when scrolled into view.
+- **Animations**: Use engaging letter-by-letter scatter or random-entry animations for the body text to make the welcome message feel magical and dynamic.
 
-### IV. Venue Section
-- **Content**: Title ("Our Venue"), address details (separated into Line 1 and Line 2), map links, and a QR code generator map card.
-- **Height Constraints**: Must fit the screen fully (`minHeight: '100svh'`) on both mobile and desktop. Do not cap the height using forced aspect ratios or strict `max-height` rules on desktop, as it will crop background images.
-- **Data Fallbacks**: Reference static defaults in `weddingData.js` (e.g. `staticData.venue.venueLine1`) to ensure the page renders default placeholder addresses when user draft inputs are blank.
+### IV. Wedding Schedule (Timeline)
+- **Background & Theme**: Do not use heavy image backgrounds here; use a solid, readable background (e.g., `#F7E8D2`) with a subtle SVG texture overlay.
+- **Layout**: Keep the cascading timeline logic (left/right alternating dots).
 
-### V. Countdown Section
-- **Content**: Live countdown timer showing days, hours, minutes, and seconds remaining until the target ISO wedding date.
+### V. Venue Section
+- **Layout Visibility**: Do not restrict height unconditionally if it cuts off content. Use `minHeight: '100svh'` and `height: 'auto'` with `paddingBottom` so the address/directions button is never hidden.
+- **Address Formatting**: The address must be rendered cleanly in two parts within 2 lines (e.g. Line 1: Location Name (bold), Line 2: Street, City).
+- **Interactivity**: The QR Code must have a clear "Get Directions" anchor button directly below it for mobile users. Include a location/pin icon next to the address.
 
-### VI. Footer
-- **Content**: closing credits ("With Love", couple names, and trademark watermark).
-- **Structure**: The structure and content placement of the footer must remain identical across all templates. Only the color palette (text color, background color/opacity) should be adjusted to match the template's overall theme.
+### VI. Calendar Section
+- **Full Month View**: The calendar must render all days of the respective month (28/30/31 days) accurately based on the target ISO date. Remove address duplicates from this section.
+- **Interactivity**: The calendar should feature a manual "Reveal Date" button. Clicking this should trigger a playful animation (e.g., an arrow shooting from off-screen to strike the date, highlighting the target date with a Heart, followed by a brief confetti/cracker effect).
+
+### VII. Countdown Section
+- **Positioning**: Center the countdown timer near the top area of the section (e.g., `justifyContent: 'flex-start'`, `paddingTop: '15vh'`).
+- **Visibility**: The countdown must only fade in once (`viewport={{ once: true }}`). Do not let it fade out and disappear when the user scrolls slightly past it.
+
+### VIII. Footer
+- **Structure**: The structure and content placement must remain identical across all templates. Only adjust colors to match the theme.
 
 ---
 
 ## 3. Step-by-Step Implementation Workflow
-
-Follow this sequence to implement and register the new template:
-
-### Step A: Define Asset Mapping
-If you are using Cloudinary for images, list the asset URLs (mobile and desktop versions of backgrounds, textures) and store them in the template configuration. For example:
-- Define mappings in a local JSON config or at the top of the template file.
-
-### Step B: Create the Template Page and Section Components
-- Create a new main file: `src/pages/Template[TemplateName].jsx`.
-- Implement both the **Mobile View** (max-width `430px`) and **Desktop View** (full width `md:block`) sequentially within the layout, mapping data from `savedData` or the `useDraft` hook.
-- For the 6 required sections, **you must create separate, extensible, and reusable JSX component files** for each (e.g., `Template[TemplateName]Hero.jsx`, `Template[TemplateName]Venue.jsx`). Import these individual section components into the main template file.
-
-### Step C: Register the Template Route
-- Open [TemplateRoute.jsx](file:///e:/Wedding-Website/wedding-invite/src/pages/TemplateRoute.jsx).
-- Import the new template page.
-- Add the template ID mapping to the `TEMPLATE_MAP` registry:
-  ```javascript
-  const TEMPLATE_MAP = {
-    'new-template-id': TemplateNewTemplate,
-  };
-  ```
-
-### Step D: Register Preloading Assets
-- Add all background images, custom typography fonts, and static vectors to the `TEMPLATE_ASSETS` array in [TemplateRoute.jsx](file:///e:/Wedding-Website/wedding-invite/src/pages/TemplateRoute.jsx):
-  ```javascript
-  const TEMPLATE_ASSETS = {
-    'new-template-id': [
-      "https://res.cloudinary.com/...", // Background images
-      "https://res.cloudinary.com/...", // Custom fonts / vectors
-    ]
-  };
-  ```
-- This ensures the global splash screen waits for all custom layout assets to load, preventing FOUT (flash of unstyled text) and image lag.
-
-### Step E: Verify and Build
-- Run the build tool to ensure everything compiles cleanly:
-  ```bash
-  npm run build
-  ```
+- Map assets in configuration.
+- Create `Template[TemplateName].jsx` and individual `Template[TemplateName][Section].jsx` files.
+- Register in `TemplateRoute.jsx` and `TEMPLATE_ASSETS` for global preloading.
+- Run `npm run build` to verify.

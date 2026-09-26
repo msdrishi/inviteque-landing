@@ -13,10 +13,9 @@ const fadeAnim = {
 }
 
 const sectionAnim = {
-  hidden: { opacity: 0 },
+  hidden: { },
   visible: { 
-    opacity: 1, 
-    transition: { duration: 1.5, staggerChildren: 0.3 } 
+    transition: { staggerChildren: 0.3 } 
   }
 }
 
@@ -38,10 +37,20 @@ export default function TemplateRoyalHeritageStory({ data, fontStyles, sectionSt
     >
       <img src={storyBg} alt="Story Background" style={bgStyle} />
       
-      <div className="relative z-10 w-full flex flex-col items-center pt-8">
-        <motion.h2 variants={fadeAnim} style={{ ...smallCaps, marginBottom: '40px', fontSize: '24px' }}>
-          OUR STORY
-        </motion.h2>
+      <div className="relative z-10 w-full flex flex-col items-center pt-12">
+        <motion.div variants={fadeAnim} style={{
+          backgroundColor: 'rgba(249, 245, 236, 0.85)',
+          padding: '10px 30px',
+          borderRadius: '30px',
+          border: '1px solid rgba(138,32,42,0.4)',
+          marginBottom: '40px',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
+          backdropFilter: 'blur(4px)'
+        }}>
+          <h2 style={{ ...smallCaps, margin: 0, fontSize: '20px', letterSpacing: '0.15em' }}>
+            OUR STORY
+          </h2>
+        </motion.div>
       </div>
 
       <div className="relative z-10 w-full max-w-[430px] my-auto py-2 px-3">

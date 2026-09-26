@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useDraft } from '../context/DraftContext.jsx'
 import { weddingData as staticData } from '../weddingData.js'
 import Footer from '../components/Footer.jsx'
@@ -16,39 +16,48 @@ import TemplateRoyalHeritageCountdown from '../components/TemplateRoyalHeritageC
 
 export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
   const location = useLocation()
+  const navigate = useNavigate()
   const { draftData } = useDraft()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
+  
+  const isPaid = savedData?.isPaid || false
+  const showWatermark = !isPaid
+  const templateId = 'royal-heritage'
 
   const activeData = savedData || (isPreview ? draftData : null)
+  const baseData = activeData || {}
 
-  const data = activeData ? {
+  const data = {
     ...staticData,
     hero: {
-      groomName: (savedData ? savedData.groomName : draftData?.groomName) || 'Groom',
-      brideName: (savedData ? savedData.brideName : draftData?.brideName) || 'Bride',
-      weddingDate: (savedData ? savedData.weddingDate : draftData?.weddingDate) || '14',
-      weddingMonth: (savedData ? savedData.weddingMonth : draftData?.weddingMonth) || 'January',
-      weddingYear: (savedData ? savedData.weddingYear : draftData?.weddingYear) || '2024',
-      mahalName: (savedData ? savedData.mahalName : draftData?.mahalName) || 'Royal Palace',
+      ...staticData.hero,
+      groomName: baseData.groomName || draftData?.groomName || staticData.hero?.groomName || 'Groom',
+      brideName: baseData.brideName || draftData?.brideName || staticData.hero?.brideName || 'Bride',
+      weddingDate: baseData.weddingDate || draftData?.weddingDate || staticData.date?.day || '14',
+      weddingMonth: baseData.weddingMonth || draftData?.weddingMonth || staticData.date?.month || 'January',
+      weddingYear: baseData.weddingYear || draftData?.weddingYear || staticData.date?.year || '2024',
+      mahalName: baseData.mahalName || draftData?.mahalName || staticData.venue?.venueName || 'Royal Palace',
     },
     venue: {
-      mahalName: (savedData ? savedData.mahalName : draftData?.mahalName) || 'Royal Palace',
-      venueCity: (savedData ? savedData.venueCity : draftData?.venueCity) || 'Jaipur',
-      venueAddress: (savedData ? savedData.venueAddress : draftData?.venueAddress) || 'Heritage Road',
-      state: (savedData ? savedData.state : draftData?.state) || 'Rajasthan',
-      mapUrl: (savedData ? savedData.mapLink : draftData?.mapLink) || staticData.venue?.mapUrl || '',
+      ...staticData.venue,
+      mahalName: baseData.mahalName || draftData?.mahalName || staticData.venue?.venueName || 'Royal Palace',
+      venueCity: baseData.venueCity || draftData?.venueCity || staticData.venue?.venueCity || 'Jaipur',
+      venueAddress: baseData.venueAddress || draftData?.venueAddress || staticData.venue?.location || 'Heritage Road',
+      state: baseData.state || draftData?.state || 'Rajasthan',
+      mapUrl: baseData.mapLink || draftData?.mapLink || staticData.venue?.mapUrl || '',
     },
     countdown: {
+      ...staticData.countdown,
       targetDateTimeISO: (() => {
-        const dMonth = (savedData ? savedData.weddingMonth : draftData?.weddingMonth) || 'January'
-        const dDate = (savedData ? savedData.weddingDate : draftData?.weddingDate) || '14'
-        const dYear = (savedData ? savedData.weddingYear : draftData?.weddingYear) || '2024'
+        const dMonth = baseData.weddingMonth || draftData?.weddingMonth || staticData.date?.month || 'January'
+        const dDate = baseData.weddingDate || draftData?.weddingDate || staticData.date?.day || '14'
+        const dYear = baseData.weddingYear || draftData?.weddingYear || staticData.date?.year || '2024'
         const d = new Date(`${dMonth} ${dDate}, ${dYear}`)
         if (!isNaN(d.getTime())) return d.toISOString()
-        return staticData.countdown.targetDateTimeISO
+        return staticData.countdown?.targetDateTimeISO
       })()
     }
-  } : staticData
+  }
 
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 768
@@ -65,10 +74,10 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
 
   const fontStyles = {
     cursive: {
-      fontFamily: "'Parisienne', 'Great Vibes', cursive",
+      fontFamily: "'Modernline', 'Allura', 'Alex Brush', cursive",
       color: '#8A202A',
       fontWeight: 'normal',
-      lineHeight: 1.2,
+      lineHeight: 1.15,
       textShadow: '0 1px 2px rgba(255,255,255,0.4)',
       fontSize: isDesktop ? '80px' : (isTablet ? '90px' : '65px'),
       margin: 0
@@ -81,7 +90,7 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
       textShadow: '0 1px 2px rgba(255,255,255,0.4)',
     },
     smallCaps: {
-      fontFamily: "'Cormorant Garamond', 'Cinzel', serif",
+      fontFamily: "'Cinzel', serif",
       color: '#8A202A',
       textTransform: 'uppercase',
       letterSpacing: '0.2em',
@@ -99,7 +108,7 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'hidden',
+    overflowX: 'hidden',
     backgroundColor: 'transparent'
   }
 
@@ -145,6 +154,13 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
     for (let i = 1; i <= daysInMonth; i++) {
       calendarDays.push({ day: i, isTarget: i === targetDay, isCurrent: true })
     }
+    
+    // Fill remaining slots for complete rows (up to 35 or 42)
+    const remainingSlots = calendarDays.length > 35 ? 42 - calendarDays.length : 35 - calendarDays.length;
+    for (let i = 0; i < remainingSlots; i++) {
+      calendarDays.push({ day: '', isTarget: false, isCurrent: false })
+    }
+
     monthName = targetDateObj.toLocaleString('default', { month: 'long' })
     year = targetDateObj.getFullYear()
   }
@@ -162,8 +178,38 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
     ]
   }
 
+  const Watermark = () => showWatermark ? (
+    <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[100] opacity-[0.25] select-none">
+      {['10%', '50%', '90%'].map(top => (
+        <span
+          key={top}
+          className="absolute left-1/2 -translate-x-1/2 text-[17px] font-medium tracking-[0.2em] text-[#8A202A]"
+          style={{ top, fontFamily: "'Montserrat', sans-serif" }}
+        >
+          preview-inviteque
+        </span>
+      ))}
+    </div>
+  ) : null
+
+  const PreviewNav = () => isPreview ? (
+    <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
+      <div className="flex gap-3">
+        <button onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })} className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[rgba(138,32,42,0.2)] bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#8A202A] shadow-xl hover:scale-105 active:scale-95">
+          Back
+        </button>
+        <button onClick={() => navigate('/payment', { state: { draftData, templateId } })} className="flex-1 flex items-center justify-center gap-3 rounded-full bg-[#8A202A] py-4 text-sm font-bold text-[#F9F5EC] shadow-xl hover:scale-105 active:scale-95">
+          Proceed
+        </button>
+      </div>
+    </div>
+  ) : null
+
   return (
-    <div className="w-full bg-[#F9F5EC] overflow-x-hidden">
+    <div className="w-full bg-[#F9F5EC] overflow-x-hidden relative">
+      <Watermark />
+      <PreviewNav />
+      
       <TemplateRoyalHeritageHero {...commonProps} />
       <TemplateRoyalHeritageStory {...commonProps} />
       <TemplateRoyalHeritageWelcome {...commonProps} />

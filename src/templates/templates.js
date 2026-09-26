@@ -75,7 +75,7 @@ export const templates = [
     name: 'Royal Heritage',
     description: 'A majestic, heritage-rich invitation featuring intricate traditional patterns, gold borders, and royal typography.',
     priceLabel: '₹999',
-    thumbnail: t7,
+    thumbnail: '/assets/templates/royal-heritage/hero-mobile.webp',
     href: '/templates/royal-heritage',
     available: true,
   },
