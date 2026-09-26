@@ -1,23 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useDraft } from '../context/DraftContext.jsx'
-import { weddingData as staticData } from '../weddingData.js'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Footer from '../components/Footer.jsx'
 
-// Import section components
-import TemplateRoyalHeritageCover from '../components/TemplateRoyalHeritageCover.jsx'
-import TemplateRoyalHeritageHero from '../components/TemplateRoyalHeritageHero.jsx'
-import TemplateRoyalHeritageStory from '../components/TemplateRoyalHeritageStory.jsx'
-import TemplateRoyalHeritageWelcome from '../components/TemplateRoyalHeritageWelcome.jsx'
-import TemplateRoyalHeritageSchedule from '../components/TemplateRoyalHeritageSchedule.jsx'
-import TemplateRoyalHeritageVenue from '../components/TemplateRoyalHeritageVenue.jsx'
-import TemplateRoyalHeritageCalendar from '../components/TemplateRoyalHeritageCalendar.jsx'
-import InviteQRSVP from '../components/InviteQRSVP.jsx'
-import TemplateRoyalHeritageCountdown from '../components/TemplateRoyalHeritageCountdown.jsx'
-import bgMusicSrc from '../assets/audio/bg-music-a-thousand-years.mp3'
+import TemplateRoyalHeritageCover from '../../../../components/TemplateRoyalHeritageCover.jsx'
+import TemplateRoyalHeritageHero from '../../../../components/TemplateRoyalHeritageHero.jsx'
+import TemplateRoyalHeritageStory from '../../../../components/TemplateRoyalHeritageStory.jsx'
+import TemplateRoyalHeritageWelcome from '../../../../components/TemplateRoyalHeritageWelcome.jsx'
+import TemplateRoyalHeritageSchedule from '../../../../components/TemplateRoyalHeritageSchedule.jsx'
+import TemplateRoyalHeritageVenue from '../../../../components/TemplateRoyalHeritageVenue.jsx'
+import TemplateRoyalHeritageCalendar from '../../../../components/TemplateRoyalHeritageCalendar.jsx'
+import TemplateRoyalHeritageCountdown from '../../../../components/TemplateRoyalHeritageCountdown.jsx'
+import Footer from '../../../../components/Footer.jsx'
 
-// Simple SVG icon for Music On
+import bgMusicSrc from '../../../../assets/audio/bg-music-a-thousand-years.mp3'
+
+// Icons
 const MusicOnIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
     <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z" />
@@ -25,74 +21,34 @@ const MusicOnIcon = () => (
   </svg>
 )
 
-// Simple SVG icon for Music Off
 const MusicOffIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
     <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM17.78 9.22a.75.75 0 1 0-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 1 0 1.06-1.06L20.56 12l1.72-1.72a.75.75 0 1 0-1.06-1.06l-1.72 1.72-1.72-1.72Z" />
   </svg>
 )
 
-export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { draftData } = useDraft()
-  const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
-  
-  const isPaid = savedData?.isPaid || false
-  const showWatermark = !isPaid
-  const templateId = 'royal-heritage'
+const fadeAnim = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: "easeOut" } },
+}
 
-  const activeData = savedData || (isPreview ? draftData : null)
-  const baseData = activeData || {}
+// Custom Local Components removed per request
 
-  const data = {
-    ...staticData,
-    events: baseData.events && baseData.events.length > 0 ? baseData.events : staticData.events,
-    hero: {
-      ...staticData.hero,
-      groomName: baseData.groomName || draftData?.groomName || staticData.hero?.groomName || 'Groom',
-      brideName: baseData.brideName || draftData?.brideName || staticData.hero?.brideName || 'Bride',
-      weddingDate: baseData.weddingDate || draftData?.weddingDate || staticData.date?.day || '14',
-      weddingMonth: baseData.weddingMonth || draftData?.weddingMonth || staticData.date?.month || 'January',
-      weddingYear: baseData.weddingYear || draftData?.weddingYear || staticData.date?.year || '2024',
-      mahalName: baseData.mahalName || draftData?.mahalName || staticData.venue?.venueName || 'Royal Palace',
-    },
-    venue: {
-      ...staticData.venue,
-      mahalName: baseData.mahalName || draftData?.mahalName || staticData.venue?.venueName || 'Royal Palace',
-      venueCity: baseData.venueCity || draftData?.venueCity || staticData.venue?.venueCity || 'Jaipur',
-      venueAddress: baseData.venueAddress || draftData?.venueAddress || staticData.venue?.location || 'Heritage Road',
-      state: baseData.state || draftData?.state || 'Rajasthan',
-      mapUrl: baseData.mapLink || draftData?.mapLink || staticData.venue?.mapUrl || '',
-    },
-    countdown: {
-      ...staticData.countdown,
-      targetDateTimeISO: (() => {
-        const dMonth = baseData.weddingMonth || draftData?.weddingMonth || staticData.date?.month || 'January'
-        const dDate = baseData.weddingDate || draftData?.weddingDate || staticData.date?.day || '14'
-        const dYear = baseData.weddingYear || draftData?.weddingYear || staticData.date?.year || '2024'
-        const d = new Date(`${dMonth} ${dDate}, ${dYear}`)
-        if (!isNaN(d.getTime())) return d.toISOString()
-        return staticData.countdown?.targetDateTimeISO
-      })()
-    }
-  }
 
-  const [windowWidth, setWindowWidth] = useState(
-    typeof window !== 'undefined' ? window.innerWidth : 768
-  )
+export default function CustomRoyalHeritageNaveenAndPreena() {
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 768)
 
-  // Cover opening & splash state
+  // Cover state
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasOpened, setHasOpened] = useState(false)
   const [hasTriggeredHeroText, setHasTriggeredHeroText] = useState(false)
   const [hasTriggeredHeroBg, setHasTriggeredHeroBg] = useState(false)
   const [isVideoReady, setIsVideoReady] = useState(false)
-  const videoRef = React.useRef(null)
+  const videoRef = useRef(null)
 
   // Music state
   const [isMusicMuted, setIsMusicMuted] = useState(false)
-  const audioRef = React.useRef(null)
+  const audioRef = useRef(null)
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth)
@@ -108,9 +64,7 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
       window.scrollTo(0, 0)
       document.body.style.overflow = ''
     }
-    return () => {
-      document.body.style.overflow = ''
-    }
+    return () => { document.body.style.overflow = '' }
   }, [hasOpened])
 
   useEffect(() => {
@@ -218,32 +172,89 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
 
   const bgStyle = {
     position: 'absolute',
-    top: 0,
-    left: 0,
+    inset: 0,
     width: '100%',
     height: '100%',
     objectFit: 'cover',
-    zIndex: 0
+    zIndex: 0,
+  }
+
+  // --- OVERRIDE DATA ---
+  const customData = {
+    hero: {
+      groomName: "Naveen",
+      brideName: "Preena",
+      weddingDate: "20",
+      weddingMonth: "November",
+      weddingYear: "2026",
+      weddingTime: "3:00 PM",
+      mahalName: "", 
+      hideVenueLocation: true,
+      topMessageLine1: "TOGETHER WITH",
+      topMessageLine2: "THEIR FAMILIES",
+      invitationMessage: "INVITE YOU TO CELEBRATE THEIR WEDDING",
+    },
+    venueChurch: {
+      venueAddress: "Hosur Road, Koramangala",
+      venueCity: "Bengaluru",
+      state: "",
+      mahalName: "ST. ANTHONY’S FRIARY CHURCH",
+      mapUrl: "https://share.google/DHMjraPdiIaBmhv92?utm_source=chatgpt.com",
+      headerSubtitle: "WHERE WE UNITE",
+      headerTitle: "OUR VENUE",
+      headerDescription: "",
+      bgImage: "/assets/custom-orders/naveen-and-preena/church.webp",
+    },
+    venueReception: {
+      venueAddress: "Bannerghatta Main Road",
+      venueCity: "Bengaluru",
+      state: "",
+      mahalName: "ROYALTON LEISURE – JIVA LAWNS",
+      mapUrl: "https://share.google/sQ5TdtSQepbrqFZUO?utm_source=chatgpt.com",
+      headerSubtitle: "WHERE WE UNITE",
+      headerTitle: "OUR VENUE",
+      headerDescription: "",
+      bgImage: "/assets/custom-orders/naveen-and-preena/resort.webp",
+    },
+    events: [
+      {
+        time: "03:00 PM",
+        title: "HOLY MASS",
+        description: "St. Anthony’s Friary Church"
+      },
+      {
+        time: "06:00 PM",
+        title: "WEDDING RECEPTION",
+        description: "Royalton Leisure – Jiva Lawns"
+      }
+    ],
+    storyTitles: ["Where It All Began", "A Beautiful Promise", "Forever & Always"],
+    storyDescriptions: [
+      "A beautiful beginning brought two hearts together.",
+      "A journey filled with love, laughter and cherished moments.",
+      "And now, they begin their forever together."
+    ],
+    welcomeMessage: "Your presence will make our special day even more meaningful.\nWe look forward to celebrating this beautiful beginning with you.",
+    welcomeSignoff: "With love,\nNaveen & Preena"
   }
 
   const commonProps = {
-    data,
     fontStyles,
     sectionStyle,
     bgStyle,
     isDesktop,
-    isTablet
+    isTablet,
   }
 
-  const scheduleItems = data.events || []
-  const fullAddress = `${data.venue?.venueAddress || ''}, ${data.venue?.venueCity || ''}`
+  // --- COMPUTE PROPS ---
+  const scheduleItems = customData.events || []
   
   // Basic Calendar Logic
-  const weddingDateStr = `${data.hero?.weddingDate} ${data.hero?.weddingMonth} ${data.hero?.weddingYear}`
+  const weddingDateStr = `${customData.hero.weddingDate} ${customData.hero.weddingMonth} ${customData.hero.weddingYear}`
   const targetDateObj = new Date(weddingDateStr)
   let calendarDays = []
-  let monthName = data.hero?.weddingMonth
-  let year = data.hero?.weddingYear
+  let monthName = customData.hero.weddingMonth
+  let year = customData.hero.weddingYear
   
   if (!isNaN(targetDateObj.getTime())) {
     const y = targetDateObj.getFullYear()
@@ -259,61 +270,30 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
       calendarDays.push({ day: i, isTarget: i === targetDay, isCurrent: true })
     }
     
-    // Fill remaining slots for complete rows (up to 35 or 42)
     const remainingSlots = calendarDays.length > 35 ? 42 - calendarDays.length : 35 - calendarDays.length;
     for (let i = 0; i < remainingSlots; i++) {
       calendarDays.push({ day: '', isTarget: false, isCurrent: false })
     }
-
     monthName = targetDateObj.toLocaleString('default', { month: 'long' })
     year = targetDateObj.getFullYear()
   }
 
   const calendarData = {
     targetDateStr: weddingDateStr.toUpperCase(),
-    monthName: (monthName || 'JANUARY').toUpperCase(),
-    year: year || '2024',
+    monthName: (monthName || 'NOVEMBER').toUpperCase(),
+    year: year || '2026',
     weekDays: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     calendarDays: calendarDays.length ? calendarDays : [
       { day: '', isCurrent: false }, { day: '', isCurrent: false },
       { day: 1, isCurrent: true }, { day: 2, isCurrent: true }, { day: 3, isCurrent: true }, { day: 4, isCurrent: true }, { day: 5, isCurrent: true },
       { day: 6, isCurrent: true }, { day: 7, isCurrent: true }, { day: 8, isCurrent: true }, { day: 9, isCurrent: true }, { day: 10, isCurrent: true }, { day: 11, isCurrent: true }, { day: 12, isCurrent: true },
-      { day: 13, isCurrent: true }, { day: 14, isTarget: true, isCurrent: true }, { day: 15, isCurrent: true }, { day: 16, isCurrent: true }, { day: 17, isCurrent: true }, { day: 18, isCurrent: true }, { day: 19, isCurrent: true },
+      { day: 13, isCurrent: true }, { day: 14, isCurrent: true }, { day: 15, isCurrent: true }, { day: 16, isCurrent: true }, { day: 17, isCurrent: true }, { day: 18, isCurrent: true }, { day: 19, isCurrent: true },
+      { day: 20, isTarget: true, isCurrent: true }, { day: 21, isCurrent: true }, { day: 22, isCurrent: true }, { day: 23, isCurrent: true }, { day: 24, isCurrent: true }, { day: 25, isCurrent: true },
     ]
   }
 
-  const Watermark = () => showWatermark ? (
-    <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[100] opacity-[0.25] select-none">
-      {['10%', '50%', '90%'].map(top => (
-        <span
-          key={top}
-          className="absolute left-1/2 -translate-x-1/2 text-[17px] font-medium tracking-[0.2em] text-[#8A202A]"
-          style={{ top, fontFamily: "'Montserrat', sans-serif" }}
-        >
-          preview-inviteque
-        </span>
-      ))}
-    </div>
-  ) : null
-
-  const PreviewNav = () => isPreview ? (
-    <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
-      <div className="flex gap-3">
-        <button onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })} className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[rgba(138,32,42,0.2)] bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#8A202A] shadow-xl hover:scale-105 active:scale-95">
-          Back
-        </button>
-        <button onClick={() => navigate('/payment', { state: { draftData, templateId } })} className="flex-1 flex items-center justify-center gap-3 rounded-full bg-[#8A202A] py-4 text-sm font-bold text-[#F9F5EC] shadow-xl hover:scale-105 active:scale-95">
-          Proceed
-        </button>
-      </div>
-    </div>
-  ) : null
-
   return (
     <div className="w-full bg-[#F9F5EC] overflow-x-hidden relative">
-      <Watermark />
-      <PreviewNav />
-      
       <TemplateRoyalHeritageCover
         hasOpened={hasOpened}
         isPlaying={isPlaying}
@@ -326,7 +306,6 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
         handleVideoEnded={handleVideoEnded}
       />
       
-      {/* Background Music Player */}
       <audio
         ref={audioRef}
         src={bgMusicSrc}
@@ -335,7 +314,6 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
         preload="auto"
       />
 
-      {/* Music Toggle Button */}
       {hasOpened && (
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
@@ -348,42 +326,71 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
         </motion.button>
       )}
 
+      {/* Hero */}
       <TemplateRoyalHeritageHero 
         {...commonProps} 
+        data={{ hero: customData.hero, venue: { venueAddress: "" } }}
         hasTriggeredHeroBg={hasTriggeredHeroBg}
         hasTriggeredHeroText={hasTriggeredHeroText}
       />
-      <TemplateRoyalHeritageStory {...commonProps} />
-      <TemplateRoyalHeritageWelcome {...commonProps} />
       
+      {/* Our Story */}
+      <TemplateRoyalHeritageStory 
+        {...commonProps} 
+        data={{ 
+          photos: [
+            "/assets/custom-orders/naveen-and-preena/img_4555.webp",
+            "/assets/custom-orders/naveen-and-preena/img_4557.webp",
+            "/assets/custom-orders/naveen-and-preena/img_4558.webp"
+          ],
+          storyTitles: customData.storyTitles, 
+          storyDescriptions: customData.storyDescriptions 
+        }}
+      />
+      
+      {/* Welcome */}
+      <TemplateRoyalHeritageWelcome 
+        {...commonProps} 
+        data={{ welcomeMessage: customData.welcomeMessage, welcomeSignoff: customData.welcomeSignoff }}
+      />
+      
+      {/* Schedule */}
       <TemplateRoyalHeritageSchedule 
         scheduleItems={scheduleItems}
-        weddingDate={data.hero?.weddingDate}
-        weddingMonth={data.hero?.weddingMonth}
-        weddingYear={data.hero?.weddingYear}
+        weddingDate={customData.hero.weddingDate}
+        weddingMonth={customData.hero.weddingMonth}
+        weddingYear={customData.hero.weddingYear}
         fontStyles={fontStyles}
       />
       
-      <TemplateRoyalHeritageVenue {...commonProps} />
-      
-      <TemplateRoyalHeritageCalendar 
-        calendarData={calendarData}
-        fullAddress={fullAddress}
-        {...commonProps}
+      {/* Venue 1: Church */}
+      <TemplateRoyalHeritageVenue 
+        {...commonProps} 
+        data={{ venue: customData.venueChurch }} 
+      />
+
+      {/* Venue 2: Reception */}
+      <TemplateRoyalHeritageVenue 
+        {...commonProps} 
+        data={{ venue: customData.venueReception }} 
       />
       
-      <div style={{ backgroundColor: '#F9F5EC' }}>
-        <InviteQRSVP
-          events={scheduleItems}
-          weddingCode={savedData?.code}
-          groupSlug={groupSlug}
-          isPreview={!savedData}
-          theme="royal"
-          config={savedData?.rsvpData}
-        />
-      </div>
-
-      <TemplateRoyalHeritageCountdown {...commonProps} />
+      {/* Calendar */}
+      <TemplateRoyalHeritageCalendar 
+        calendarData={calendarData}
+        fullAddress=""
+        {...commonProps} 
+        data={{ hero: customData.hero }}
+      />
+      
+      {/* Countdown */}
+      <TemplateRoyalHeritageCountdown 
+        {...commonProps} 
+        data={{ 
+          hero: customData.hero,
+          countdown: { targetDateTimeISO: new Date(weddingDateStr).toISOString() }
+        }}
+      />
 
       <Footer 
         data={{ id: 'footer' }}

@@ -40,21 +40,29 @@ export default function TemplateRoyalHeritageCalendar({ calendarData, fontStyles
     const targetRect = targetDateRef.current.getBoundingClientRect();
     const sectionRect = sectionRef.current.getBoundingClientRect();
 
-    // Start from the bottom center of the section (the screen)
-    const startX = sectionRect.width / 2;
+    // Start from the bottom left
+    const startX = sectionRect.width * 0.2;
     const startY = sectionRect.height + 50; 
     
     // Target is the center of the date cell
     const endX = targetRect.left + targetRect.width / 2 - sectionRect.left;
     const endY = targetRect.top + targetRect.height / 2 - sectionRect.top;
 
-    // Control points for a swooping, hand-drawn-like curve with a loop from the bottom
-    const cp1x = startX - 150;
-    const cp1y = startY - (startY - endY) * 0.3;
-    const cp2x = endX + 150;
-    const cp2y = startY - (startY - endY) * 0.7;
+    // Control points for a swooping loop: starts bottom-left, goes up to top-right, loops back left, then down to target
+    const cp1x = startX - 50;
+    const cp1y = sectionRect.height * 0.3;
+    const cp2x = sectionRect.width * 0.9;
+    const cp2y = sectionRect.height * 0.05;
+    
+    const midX = sectionRect.width * 0.6;
+    const midY = sectionRect.height * 0.2;
+    
+    const cp3x = sectionRect.width * 0.2;
+    const cp3y = sectionRect.height * 0.3;
+    const cp4x = endX;
+    const cp4y = endY - 60;
 
-    const path = `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${endX} ${endY - 5}`;
+    const path = `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${midX} ${midY} C ${cp3x} ${cp3y}, ${cp4x} ${cp4y}, ${endX} ${endY - 5}`;
     setPathData(path);
   }
 
@@ -97,7 +105,7 @@ export default function TemplateRoyalHeritageCalendar({ calendarData, fontStyles
       setTimeout(() => {
         setShowConfetti(false);
       }, 4000);
-    }, 1500); // Wait for arrow animation to finish
+    }, 2500); // Wait for arrow animation to finish
   }
 
   // A beautiful hand-drawn looking heart path
@@ -155,17 +163,17 @@ export default function TemplateRoyalHeritageCalendar({ calendarData, fontStyles
             offsetAnchor: '100% 0%', // Align the top-right tip of the arrow exactly to the path
             offsetRotate: 'auto 45deg', // The arrow image naturally points at 45 degrees up-right
           }}
-          initial={{ offsetDistance: '0%', opacity: 1, y: 0, rotate: 0 }}
+          initial={{ offsetDistance: '0%', opacity: 1, scale: 1, rotate: 0 }}
           animate={
             animState === 'traveling'
-              ? { offsetDistance: '100%', opacity: 1, y: 0, rotate: 0 }
-              : { offsetDistance: '100%', opacity: 0, y: 150, rotate: 90 } // Break down and fall
+              ? { offsetDistance: '100%', opacity: 1, scale: 1, rotate: 0 }
+              : { offsetDistance: '100%', opacity: 0, scale: [1, 1.4, 0.8, 0], rotate: [0, -10, 10, 0] } // Crunch/thud impact and fade out
           }
           transition={{
-            offsetDistance: { duration: 1.5, ease: "easeInOut" },
-            opacity: { duration: animState === 'traveling' ? 0 : 0.8, ease: "easeIn" },
-            y: { duration: animState === 'traveling' ? 0 : 0.8, ease: "easeIn" },
-            rotate: { duration: animState === 'traveling' ? 0 : 0.8, ease: "easeIn" }
+            offsetDistance: { duration: 2.5, ease: "easeInOut" },
+            opacity: { duration: animState === 'traveling' ? 0 : 0.6, delay: animState === 'traveling' ? 0 : 0.1, ease: "easeOut" },
+            scale: { duration: animState === 'traveling' ? 0 : 0.4 },
+            rotate: { duration: animState === 'traveling' ? 0 : 0.4 }
           }}
         >
           <img src="/assets/templates/royal-heritage/arrow.png" alt="Cupid Arrow" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />

@@ -70,11 +70,18 @@ export default function TemplateRoyalHeritageWelcome({ data, fontStyles, section
         </motion.div>
 
         {/* Welcome Message with Random Letter Animation */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 20px', maxWidth: '300px', textAlign: 'center', marginTop: '10px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 20px', maxWidth: '300px', textAlign: 'center', marginTop: '10px' }}>
           <AnimatedText 
-            text="Your presence adds warmth and joy to our special day. We are truly delighted to have you with us as we begin this beautiful new chapter together." 
+            text={data.welcomeMessage || "Your presence adds warmth and joy to our special day. We are truly delighted to have you with us as we begin this beautiful new chapter together."}
             style={{ ...serif, fontSize: '13px', lineHeight: 1.8, color: '#4A3E20' }} 
           />
+          {data.welcomeSignoff && (
+            <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { delay: 1.5, duration: 1 } } }} style={{ marginTop: '20px' }}>
+              {data.welcomeSignoff.split('\n').map((line, idx, arr) => (
+                <span key={idx} style={{ ...cursive, fontSize: (arr.length > 1 && idx === 0) ? '18px' : '32px', color: '#8A202A', whiteSpace: 'pre-wrap', display: 'block', lineHeight: 1.2 }}>{line}</span>
+              ))}
+            </motion.div>
+          )}
         </div>
 
       </motion.div>

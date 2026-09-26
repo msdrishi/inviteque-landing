@@ -1,65 +1,69 @@
 ---
 name: create_wedding_template
-description: Guidelines and step-by-step instructions for creating, styling, and registering a new independent wedding invitation template in the project.
+description: Guidelines and step-by-step instructions for creating, styling, and registering a new premium wedding invitation template.
 ---
 
 # Instructions for Creating a New Wedding Template
 
-This document outlines the standard order and requirements for creating a new, independent template in this wedding invitation platform. Every new template must be self-contained so that it does not disrupt any existing templates.
+This document outlines the standard order and requirements for creating a new, premium independent template in this wedding invitation platform. Every new template must follow these state-of-the-art cinematic patterns while remaining fully self-contained.
 
 ---
 
 ## 1. Core Principles & Global Rules
 
+- **Cinematic Entry (Tap to Open)**: Every template must feature a "Tap to Open" cover component. This consists of:
+  - An absolute full-screen video (`mp4`) serving as the cover.
+  - A fast-loading poster image (e.g., the first frame of the video) to prevent black screens.
+  - An elegant "Tap to Open" text overlay with floating/glowing SVG elements (e.g., golden stars).
+  - Background music (`<audio>`) that begins playing (unmuted) only when the cover is tapped.
+  - A floating, glassmorphism mute/unmute button (e.g., bottom-right) that appears after opening.
 - **Visual Independence**: All styles, layouts, animations, and assets must be template-scoped.
-- **Backgrounds**: The background image must have `width: 100vw`. No overlays or filters directly on background images. Do not animate background images (no fade-in/fade-out on `<img>`). They must remain static while content inside fades in.
-- **Scroll Behavior**: Text should fade in when scrolled into view, but generally should only fade in once (`viewport={{ once: true }}`) to prevent sections like Countdown from "disappearing" unexpectedly when scrolling away.
-- **Assets**: Store in Cloudflare/Cloudinary when possible; local assets must be `.webp`.
+- **Backgrounds**: The background containers must use `width: 100%` (never `100vw` to avoid horizontal scroll bugs). Background images must be layered correctly behind content.
+- **Scroll Behavior**: Content should fade in when scrolled into view, generally using `viewport={{ once: true, amount: 0.3 }}` to prevent disappearing UI on re-scroll.
 
 ---
 
 ## 2. Section-by-Section Rules
 
-### I. Hero Section
-- **Content & Layout**: Needs names, "Together with our families", dates, and location. Top content must have sufficient `paddingTop` (e.g., `10vh`) to avoid overlapping top floral borders.
-- **Animations**: The couple's name must have letter-by-letter animations (e.g. `framer-motion` stagger). Give the name text a glassy text-shadow effect. Other text elements must have line animations.
-- **Theme Accents**: Include a falling petal or similar natural SVGs floating in the background, restricted to the left/right edges for a natural "movie title card" effect.
-- **Typography**: The couple's name must use a highly legible, premium script font (like Priestacy) and be perfectly centered. Ensure sizing adjusts per device.
-- **Date Formatting**: Use short abbreviations (SAT, MON, TUE for days; JAN, FEB, MAR for months). The date layout must be neat and stacked if necessary to prevent bad flex wrapping.
-- **Bottom Indicators**: Always include an animated "Swipe Up" chevron or scroll indicator anchored to the absolute bottom of the Hero section.
+### I. Hero Section (The Reveal)
+- **Seamless Transition**: The Hero background must not be visible immediately. It must gracefully fade in and scale down (e.g., `scale: 1.14 -> 1.0` over `3s`) *only after* the Tap to Open cover video finishes playing.
+- **Content Coordination**: Text elements and floating accents (like falling flowers) must wait for the background to trigger (`hasTriggeredHeroBg`) before animating in.
+- **Typography & Animations**: The couple's name must have letter-by-letter animations and a glassy glare sweep effect. Use highly legible, premium fonts.
+- **Address Formatting**: The address must be intelligently shortened (removing excess ZIP codes, states, and duplicated hotel names) to present a clean, 3-part elegant location string (e.g., *Diplomatic Enclave, Chanakyapuri, New Delhi*).
 
-### II. Photo Cards (Our Story / Moments)
-- **Content**: Max 3 story images.
-- **Title Banner**: Place the "OUR STORY" text inside a styled, rounded banner (`borderRadius: '30px'`) with a subtle border and background color to give it depth, instead of plain text floating over the background.
+### II. Our Story Section
+- **Clean Aesthetic**: Do NOT wrap the "OUR STORY" header in heavy background boxes or div banners. Use clean, elegant typography.
+- **Background**: Avoid heavy background images. Use a solid, readable background (e.g., `#F7E8D2`) with a subtle, seamless SVG texture overlay.
+- **Focus**: Keep the focus on the photo cards (max 3 images) with staggered, cascading entrance animations. Do not clutter the bottom with excessive story paragraphs unless explicitly requested.
 
-### III. Welcome Section
-- **Creative Presentation**: Do not use basic text layouts. Implement interesting visuals like a hanging text banner that drops from the top of the section via spring animation when scrolled into view.
-- **Animations**: Use engaging letter-by-letter scatter or random-entry animations for the body text to make the welcome message feel magical and dynamic.
+### III. Wedding Schedule (Timeline)
+- **Background & Theme**: Utilize the same solid background and subtle SVG texture overlay as the Story section for visual consistency.
+- **Layout**: Maintain the vertical cascading timeline logic (left/right alternating dots connected by a curved SVG path).
+- **Data Hookup**: Ensure `scheduleItems` dynamically reads from `draftData.events` to reflect real-time preview edits.
 
-### IV. Wedding Schedule (Timeline)
-- **Background & Theme**: Do not use heavy image backgrounds here; use a solid, readable background (e.g., `#F7E8D2`) with a subtle SVG texture overlay.
-- **Layout**: Keep the cascading timeline logic (left/right alternating dots).
+### IV. Venue Section
+- **Layout Visibility**: Use `minHeight: '100svh'` and `height: 'auto'` with sufficient `paddingBottom` so the address and map button are never hidden.
+- **Address Clarity**: Like the Hero section, use the shortened address formatter. Remove redundant labels like "CELEBRATION VENUE" in favor of minimalistic design.
+- **Interactivity**: The QR Code must have a clean UI integration, accompanied by a clear "Get Directions" button if applicable.
 
-### V. Venue Section
-- **Layout Visibility**: Do not restrict height unconditionally if it cuts off content. Use `minHeight: '100svh'` and `height: 'auto'` with `paddingBottom` so the address/directions button is never hidden.
-- **Address Formatting**: The address must be rendered cleanly in two parts within 2 lines (e.g. Line 1: Location Name (bold), Line 2: Street, City).
-- **Interactivity**: The QR Code must have a clear "Get Directions" anchor button directly below it for mobile users. Include a location/pin icon next to the address.
+### V. Calendar Section
+- **Dynamic Reveal Animation**: The calendar must automatically animate when scrolled into view (no manual "Reveal" button).
+- **Cinematic Arrow Path**: The highlight animation (e.g., cupid's arrow) must follow a beautifully calculated, looping cubic-bezier path (e.g., sweeping from the bottom-left, looping over the header, and striking the exact target date).
+- **Impact Effect**: Upon hitting the date, the arrow should NOT fall out of bounds. It should perform a rigid "thud/crunch" scale effect (simulating a solid hit) and gracefully fade out in place, immediately triggering a confetti burst.
 
-### VI. Calendar Section
-- **Full Month View**: The calendar must render all days of the respective month (28/30/31 days) accurately based on the target ISO date. Remove address duplicates from this section.
-- **Interactivity**: The calendar should feature a manual "Reveal Date" button. Clicking this should trigger a playful animation (e.g., an arrow shooting from off-screen to strike the date, highlighting the target date with a Heart, followed by a brief confetti/cracker effect).
+### VI. Countdown Section
+- **Ambient Accents**: Add the same floating/falling elements (e.g., falling flowers) used in the Hero section to the Countdown section for thematic continuity.
+- **Positioning**: Center the countdown timer elegantly within the frame, ensuring it is instantly readable.
 
-### VII. Countdown Section
-- **Positioning**: Center the countdown timer near the top area of the section (e.g., `justifyContent: 'flex-start'`, `paddingTop: '15vh'`).
-- **Visibility**: The countdown must only fade in once (`viewport={{ once: true }}`). Do not let it fade out and disappear when the user scrolls slightly past it.
-
-### VIII. Footer
-- **Structure**: The structure and content placement must remain identical across all templates. Only adjust colors to match the theme.
+### VII. Footer
+- **Structure**: The structure and content placement must remain identical across all templates. Only adjust colors and borders to match the theme.
 
 ---
 
 ## 3. Step-by-Step Implementation Workflow
-- Map assets in configuration.
-- Create `Template[TemplateName].jsx` and individual `Template[TemplateName][Section].jsx` files.
-- Register in `TemplateRoute.jsx` and `TEMPLATE_ASSETS` for global preloading.
-- Run `npm run build` to verify.
+1. Map assets in configuration (ensure videos, posters, and MP3s are available).
+2. Create `Template[TemplateName]Cover.jsx` for the Tap to Open logic.
+3. Create `Template[TemplateName].jsx` (the orchestrator that manages video/audio states, the music toggle, and passes `hasTriggeredHeroBg` to the Hero).
+4. Build individual `Template[TemplateName][Section].jsx` files adhering to the aesthetic rules above.
+5. Register in `TemplateRoute.jsx` and `TEMPLATE_ASSETS` for global preloading.
+6. Run `npm run build` to verify.

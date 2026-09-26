@@ -1,8 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-const storyBg = "/assets/templates/royal-heritage/story-mobile.webp"
-
 const fadeAnim = {
   hidden: { opacity: 0, y: 30 },
   visible: { 
@@ -29,25 +27,20 @@ export default function TemplateRoyalHeritageStory({ data, fontStyles, sectionSt
 
   return (
     <motion.section 
-      style={sectionStyle}
+      style={{ 
+        ...sectionStyle, 
+        paddingBottom: '80px',
+        backgroundColor: '#F7E8D2', 
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h18v2H22v18H20V20.5z\' fill=\'%238a202a\' fill-opacity=\'0.03\' fill-rule=\'evenodd\'/%3E%3C/svg%3E")' 
+      }}
       initial="hidden"
       whileInView="visible"
       viewport={{ amount: 0.3 }}
       variants={sectionAnim}
     >
-      <img src={storyBg} alt="Story Background" style={bgStyle} />
-      
       <div className="relative z-10 w-full flex flex-col items-center pt-12">
-        <motion.div variants={fadeAnim} style={{
-          backgroundColor: 'rgba(249, 245, 236, 0.85)',
-          padding: '10px 30px',
-          borderRadius: '30px',
-          border: '1px solid rgba(138,32,42,0.4)',
-          marginBottom: '40px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
-          backdropFilter: 'blur(4px)'
-        }}>
-          <h2 style={{ ...smallCaps, margin: 0, fontSize: '20px', letterSpacing: '0.15em' }}>
+        <motion.div variants={fadeAnim} style={{ marginBottom: '30px' }}>
+          <h2 style={{ ...smallCaps, margin: 0, fontSize: '24px', letterSpacing: '0.15em' }}>
             OUR STORY
           </h2>
         </motion.div>
@@ -85,7 +78,8 @@ export default function TemplateRoyalHeritageStory({ data, fontStyles, sectionSt
                 <img src={storyPhotos[0]} alt="Moment 1" className="w-full h-full object-cover select-none pointer-events-none" />
               </div>
               <div className="mt-2 text-center">
-                <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>Where It Began</span>
+                <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>{data.storyTitles?.[0] || 'Where It Began'}</span>
+                {data.storyDescriptions?.[0] && <span style={{...serif, fontSize: '11px', display: 'block', opacity: 0.85, marginTop: '4px', lineHeight: '1.4', padding: '0 8px'}}>{data.storyDescriptions[0]}</span>}
               </div>
             </motion.div>
           </div>
@@ -104,7 +98,8 @@ export default function TemplateRoyalHeritageStory({ data, fontStyles, sectionSt
                 <img src={storyPhotos[1]} alt="Moment 2" className="w-full h-full object-cover select-none pointer-events-none" />
               </div>
               <div className="mt-2 text-center">
-                <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>A Timeless Promise</span>
+                <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>{data.storyTitles?.[1] || 'A Timeless Promise'}</span>
+                {data.storyDescriptions?.[1] && <span style={{...serif, fontSize: '11px', display: 'block', opacity: 0.85, marginTop: '4px', lineHeight: '1.4', padding: '0 8px'}}>{data.storyDescriptions[1]}</span>}
               </div>
             </motion.div>
           </div>
@@ -123,7 +118,8 @@ export default function TemplateRoyalHeritageStory({ data, fontStyles, sectionSt
                 <img src={storyPhotos[2]} alt="Moment 3" className="w-full h-full object-cover select-none pointer-events-none" />
               </div>
               <div className="mt-2 text-center">
-                <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>Forever & Always</span>
+                <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>{data.storyTitles?.[2] || 'Forever & Always'}</span>
+                {data.storyDescriptions?.[2] && <span style={{...serif, fontSize: '11px', display: 'block', opacity: 0.85, marginTop: '4px', lineHeight: '1.4', padding: '0 8px'}}>{data.storyDescriptions[2]}</span>}
               </div>
             </motion.div>
           </div>

@@ -19,6 +19,67 @@ const sectionAnim = {
   }
 }
 
+const petalConfig = Array.from({ length: 14 }).map((_, i) => {
+  const isLeft = i % 2 === 0
+  const leftPos = isLeft ? Math.random() * 15 : 85 + Math.random() * 15
+  const duration = 8 + Math.random() * 8
+  const delay = Math.random() * 6
+  const size = 12 + Math.random() * 10
+  const xDrift = (isLeft ? 1 : -1) * (10 + Math.random() * 10)
+  return { left: leftPos, duration, delay, size, xDrift }
+})
+
+const FallingRoyalFlowers = () => {
+  return (
+    <div className="absolute inset-0 pointer-events-none z-[5] overflow-hidden w-full h-full">
+      {petalConfig.map((p, i) => (
+        <motion.div
+          key={i}
+          className="absolute -top-8"
+          style={{ 
+            left: `${p.left}%`, 
+            width: p.size, 
+            height: p.size * 1.35,
+            opacity: 0.85,
+          }}
+          initial={{ y: '-10vh', opacity: 0 }}
+          animate={{
+            y: ['0vh', '110vh'],
+            x: [0, p.xDrift, p.xDrift * 0.4, p.xDrift],
+            rotate: [0, 360],
+            opacity: [0, 0.9, 0.9, 0.5, 0],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+        >
+          <svg viewBox="0 0 24 32" width="100%" height="100%" fill="none" style={{ filter: 'drop-shadow(0 2px 4px rgba(138,32,42,0.3))' }}>
+            <path
+              d="M12 2 C6 7, 3 17, 12 30 C21 17, 18 7, 12 2 Z"
+              fill="#B22222"
+              fillOpacity="0.85"
+              stroke="#8A202A"
+              strokeWidth="0.7"
+            />
+            <path
+              d="M12 4 C11 11, 10 19, 12 28"
+              stroke="#8A202A"
+              strokeWidth="0.6"
+              strokeLinecap="round"
+              opacity="0.8"
+            />
+            <path d="M12 11 Q8 14 6 17" stroke="#8A202A" strokeWidth="0.45" strokeLinecap="round" opacity="0.6" />
+            <path d="M12 16 Q16 19 18 22" stroke="#8A202A" strokeWidth="0.45" strokeLinecap="round" opacity="0.6" />
+          </svg>
+        </motion.div>
+      ))}
+    </div>
+  )
+}
+
 export default function TemplateRoyalHeritageCountdown({ data, fontStyles, sectionStyle, bgStyle }) {
   const { cursive, serif, smallCaps } = fontStyles;
 
@@ -57,6 +118,7 @@ export default function TemplateRoyalHeritageCountdown({ data, fontStyles, secti
       variants={sectionAnim}
     >
       <img src={countdownBg} alt="Countdown Background" style={bgStyle} />
+      <FallingRoyalFlowers />
       <motion.div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginTop: '-15vh' }}>
         <motion.div variants={fadeAnim} style={{ textAlign: 'center', marginBottom: '35px' }}>
           <h2 style={{ ...smallCaps, fontSize: '20px', letterSpacing: '0.25em', margin: 0, color: '#8A202A', lineHeight: 1.4 }}>

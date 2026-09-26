@@ -29,20 +29,20 @@ export default function TemplateRoyalHeritageVenue({ data, fontStyles, sectionSt
       style={{...sectionStyle, minHeight: '100svh', height: 'auto', paddingBottom: '50px'}}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       variants={sectionAnim}
     >
-      <img src={venueBg} alt="Venue Background" style={bgStyle} />
+      <img src={data.venue?.bgImage || venueBg} alt="Venue Background" style={bgStyle} />
       
       <div className="relative z-10 w-full flex flex-col items-center text-center pt-10">
         <motion.p variants={fadeAnim} style={{ ...smallCaps, marginBottom: '4px' }}>
-          WHERE WE UNITE
+          {data.venue.headerSubtitle || 'WHERE WE UNITE'}
         </motion.p>
         <motion.h2 variants={fadeAnim} style={{ ...smallCaps, fontSize: '24px', marginBottom: '8px' }}>
-          OUR VENUE
+          {data.venue.headerTitle || 'OUR VENUE'}
         </motion.h2>
         <motion.p variants={fadeAnim} style={{ ...serif, fontSize: '16px', maxWidth: '300px', margin: '0 auto 20px' }}>
-          A royal architectural heritage where our vows will be celebrated.
+          {data.venue.headerDescription || 'A royal architectural heritage where our vows will be celebrated.'}
         </motion.p>
       </div>
 

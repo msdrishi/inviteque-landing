@@ -23,6 +23,7 @@ import CustomIndianReverieKirtiAndSahil from './pages/custom-orders/indian-rever
 import CustomRoyalHeirloomHemangAndJasmine from './pages/custom-orders/royal-heirloom/HemangAndJasmine/index.jsx'
 import CustomRoyalHeirloomRohitAndManpreet from './pages/custom-orders/royal-heirloom/RohitAndManpreet/index.jsx'
 import CustomRoyalHeirloomSaaranshAndStuti from './pages/custom-orders/royal-heirloom/SaaranshAndStuti/index.jsx'
+import CustomRoyalHeritageNaveenAndPreena from './pages/custom-orders/royal-heritage/NaveenAndPreena/index.jsx'
 import CustomRsvpDashboard from './pages/CustomRsvpDashboard.jsx'
 import { API_URL } from './config'
 
@@ -171,6 +172,10 @@ export default function App() {
           <Route path="/template/royal-heirloom/saaransh-and-stuti/:variant" element={<CustomRoyalHeirloomSaaranshAndStuti />} />
           <Route path="/templates/royal-heirloom/saaransh-and-stuti" element={<CustomRoyalHeirloomSaaranshAndStuti />} />
           <Route path="/templates/royal-heirloom/saaransh-and-stuti/:variant" element={<CustomRoyalHeirloomSaaranshAndStuti />} />
+          
+          {/* Custom Client Template Routes (Naveen & Preena - Royal Heritage) */}
+          <Route path="/template/royal-heritage/naveen-and-preena" element={<CustomRoyalHeritageNaveenAndPreena />} />
+          <Route path="/templates/royal-heritage/naveen-and-preena" element={<CustomRoyalHeritageNaveenAndPreena />} />
           
           {/* Standard & Multi-Link Templates */}
           <Route path="/templates/:templateId" element={<TemplateRoute />} />

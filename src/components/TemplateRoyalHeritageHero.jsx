@@ -173,7 +173,7 @@ const FallingRoyalFlowers = () => {
   )
 }
 
-export default function TemplateRoyalHeritageHero({ data, fontStyles, sectionStyle, bgStyle, isDesktop, isTablet }) {
+export default function TemplateRoyalHeritageHero({ data, fontStyles, sectionStyle, bgStyle, isDesktop, isTablet, hasTriggeredHeroText = true }) {
   const { cursive, serif, smallCaps } = fontStyles;
 
   const dateObj = new Date(`${data.hero.weddingMonth || 'January'} ${data.hero.weddingDate || '14'}, ${data.hero.weddingYear || '2024'}`);
@@ -194,15 +194,15 @@ export default function TemplateRoyalHeritageHero({ data, fontStyles, sectionSty
       <motion.div 
         style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', padding: '0 20px', paddingTop: '8vh' }}
         initial="hidden"
-        whileInView="visible"
+        animate={hasTriggeredHeroText ? "visible" : "hidden"}
         viewport={{ amount: 0.3 }}
         variants={sectionAnim}
       >
         
         {/* Intro text */}
         <motion.div variants={lineAnim} style={{ textAlign: 'center', marginBottom: '35px', marginTop: '-35px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          <span style={{ ...smallCaps, fontSize: '11px', letterSpacing: '0.25em', color: '#8A202A' }}>WEDDING</span>
-          <span style={{ ...smallCaps, fontSize: '11px', letterSpacing: '0.25em', color: '#8A202A' }}>INVITATION</span>
+          <span style={{ ...smallCaps, fontSize: '11px', letterSpacing: '0.25em', color: '#8A202A' }}>{data.hero.topMessageLine1 || 'WEDDING'}</span>
+          <span style={{ ...smallCaps, fontSize: '11px', letterSpacing: '0.25em', color: '#8A202A' }}>{data.hero.topMessageLine2 || 'INVITATION'}</span>
         </motion.div>
 
         {/* Names */}
@@ -216,7 +216,7 @@ export default function TemplateRoyalHeritageHero({ data, fontStyles, sectionSty
 
         <motion.div variants={lineAnim} style={{ textAlign: 'center', marginBottom: '15px', maxWidth: '240px' }}>
           <p style={{ ...smallCaps, fontSize: '8.5px', letterSpacing: '0.18em', lineHeight: '1.5', color: '#4A3E20' }}>
-            TOGETHER WITH THEIR FAMILIES INVITE YOU TO THEIR WEDDING CELEBRATION
+            {data.hero.invitationMessage || 'TOGETHER WITH THEIR FAMILIES INVITE YOU TO THEIR WEDDING CELEBRATION'}
           </p>
         </motion.div>
 
@@ -260,17 +260,19 @@ export default function TemplateRoyalHeritageHero({ data, fontStyles, sectionSty
         </motion.div>
 
         {/* Venue Location Full */}
-        <motion.div variants={lineAnim} style={{ paddingBottom: '10px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: '4px' }}>
-            <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="#8A202A"/>
-          </svg>
-          <span style={{ ...smallCaps, fontSize: '10px', fontWeight: 'bold', color: '#8A202A', marginBottom: '2px', letterSpacing: '0.15em' }}>
-            {data.hero.mahalName}
-          </span>
-          <p style={{ ...smallCaps, fontSize: '8px', color: '#4A3E20', letterSpacing: '0.15em', lineHeight: '1.5', maxWidth: '240px', opacity: 0.9 }}>
-            {data.venue?.venueAddress}, {data.venue?.venueCity}, {data.venue?.state}
-          </p>
-        </motion.div>
+        {(!data.hero.hideVenueLocation) && (
+          <motion.div variants={lineAnim} style={{ paddingBottom: '10px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: '4px' }}>
+              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="#8A202A"/>
+            </svg>
+            <span style={{ ...smallCaps, fontSize: '10px', fontWeight: 'bold', color: '#8A202A', marginBottom: '2px', letterSpacing: '0.15em' }}>
+              {data.hero.mahalName}
+            </span>
+            <p style={{ ...smallCaps, fontSize: '8px', color: '#4A3E20', letterSpacing: '0.15em', lineHeight: '1.5', maxWidth: '240px', opacity: 0.9 }}>
+              {data.venue?.venueAddress}, {data.venue?.venueCity}, {data.venue?.state}
+            </p>
+          </motion.div>
+        )}
 
         <motion.div variants={lineAnim}>
           <span style={{ ...cursive, fontSize: '24px', color: '#8A202A' }}>
