@@ -54,9 +54,15 @@ export default function TemplateRoyalHeritageVenue({ data, fontStyles, sectionSt
         width: '90%',
         marginTop: '20px'
       }}>
-        <p style={{ ...smallCaps, fontSize: '13px', color: '#8A202A', fontWeight: 'bold' }}>
-          CELEBRATION VENUE
-        </p>
+        {data.venue.time ? (
+          <p style={{ ...smallCaps, fontSize: '15px', color: '#8A202A', fontWeight: 'bold', marginBottom: '10px' }}>
+            {data.venue.time}
+          </p>
+        ) : (
+          <p style={{ ...smallCaps, fontSize: '13px', color: '#8A202A', fontWeight: 'bold' }}>
+            CELEBRATION VENUE
+          </p>
+        )}
         <p style={{ ...serif, fontSize: '15px', color: '#4A3E20', marginBottom: '25px', lineHeight: 1.8 }}>
           <span style={{fontWeight: 'bold', display: 'block', marginBottom: '4px', ...smallCaps, fontSize: '14px'}}>{data.venue.mahalName}</span>
           {data.venue.venueAddress}, {data.venue.venueCity}

@@ -62,12 +62,12 @@ export default function MidnightWaltzCalendar({
           <div className="w-16 h-[1px] bg-[#4A3E20]/40"></div>
         </motion.div>
 
-        {/* ARE GETTING MARRIED */}
+        {/* WE ARE GETTING MARRIED */}
         <motion.p
           variants={lineAnim}
           className="font-['Cinzel'] text-[10px] md:text-[12px] tracking-[0.4em] text-[#4A3E20] font-semibold mb-3 uppercase"
         >
-          ARE GETTING MARRIED
+          WE ARE GETTING MARRIED
         </motion.p>
 
         {/* MONTH & YEAR */}

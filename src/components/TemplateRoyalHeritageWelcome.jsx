@@ -78,7 +78,16 @@ export default function TemplateRoyalHeritageWelcome({ data, fontStyles, section
           {data.welcomeSignoff && (
             <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { delay: 1.5, duration: 1 } } }} style={{ marginTop: '20px' }}>
               {data.welcomeSignoff.split('\n').map((line, idx, arr) => (
-                <span key={idx} style={{ ...cursive, fontSize: (arr.length > 1 && idx === 0) ? '18px' : '32px', color: '#8A202A', whiteSpace: 'pre-wrap', display: 'block', lineHeight: 1.2 }}>{line}</span>
+                <span key={idx} style={{ 
+                  ...cursive, 
+                  fontSize: (arr.length > 1 && idx === 0) ? '18px' : '32px', 
+                  color: (idx > 0 && data.welcomeSignoffNamesColor) ? data.welcomeSignoffNamesColor : '#8A202A', 
+                  whiteSpace: 'pre-wrap', 
+                  display: 'block', 
+                  lineHeight: 1.2 
+                }}>
+                  {line}
+                </span>
               ))}
             </motion.div>
           )}

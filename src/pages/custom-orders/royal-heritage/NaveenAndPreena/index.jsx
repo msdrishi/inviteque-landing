@@ -72,7 +72,7 @@ export default function CustomRoyalHeritageNaveenAndPreena() {
       audioRef.current.muted = false
       audioRef.current.volume = 1
       if (audioRef.current.paused) {
-        audioRef.current.play().catch(() => {})
+        audioRef.current.play().catch(() => { })
       }
     }
   }, [hasOpened, isMusicMuted])
@@ -82,7 +82,7 @@ export default function CustomRoyalHeritageNaveenAndPreena() {
     if (audioRef.current) {
       if (isMusicMuted) {
         audioRef.current.muted = false
-        audioRef.current.play().catch(() => {})
+        audioRef.current.play().catch(() => { })
       } else {
         audioRef.current.pause()
       }
@@ -94,13 +94,13 @@ export default function CustomRoyalHeritageNaveenAndPreena() {
     setIsPlaying(true)
     if (audioRef.current) {
       audioRef.current.muted = true
-      audioRef.current.play().catch(() => {})
+      audioRef.current.play().catch(() => { })
     }
     const vid = videoRef.current
     if (vid) {
       const playPromise = vid.play()
       if (playPromise !== undefined) {
-        playPromise.catch(() => {})
+        playPromise.catch(() => { })
       }
     }
   }
@@ -188,11 +188,11 @@ export default function CustomRoyalHeritageNaveenAndPreena() {
       weddingMonth: "November",
       weddingYear: "2026",
       weddingTime: "3:00 PM",
-      mahalName: "", 
+      mahalName: "",
       hideVenueLocation: true,
       topMessageLine1: "TOGETHER WITH",
-      topMessageLine2: "THEIR FAMILIES",
-      invitationMessage: "INVITE YOU TO CELEBRATE THEIR WEDDING",
+      topMessageLine2: "OUR FAMILIES",
+      invitationMessage: "INVITE YOU TO CELEBRATE OUR WEDDING",
     },
     venueChurch: {
       venueAddress: "Hosur Road, Koramangala",
@@ -202,6 +202,7 @@ export default function CustomRoyalHeritageNaveenAndPreena() {
       mapUrl: "https://share.google/DHMjraPdiIaBmhv92?utm_source=chatgpt.com",
       headerSubtitle: "WHERE WE UNITE",
       headerTitle: "OUR VENUE",
+      time: "03:00 PM",
       headerDescription: "",
       bgImage: "/assets/custom-orders/naveen-and-preena/church.webp",
     },
@@ -213,13 +214,14 @@ export default function CustomRoyalHeritageNaveenAndPreena() {
       mapUrl: "https://share.google/sQ5TdtSQepbrqFZUO?utm_source=chatgpt.com",
       headerSubtitle: "WHERE WE UNITE",
       headerTitle: "OUR VENUE",
+      time: "06:00 PM",
       headerDescription: "",
       bgImage: "/assets/custom-orders/naveen-and-preena/resort.webp",
     },
     events: [
       {
         time: "03:00 PM",
-        title: "HOLY MASS",
+        title: "WEDDING MASS",
         description: "St. Anthony’s Friary Church"
       },
       {
@@ -234,7 +236,7 @@ export default function CustomRoyalHeritageNaveenAndPreena() {
       "A journey filled with love, laughter and cherished moments.",
       "And now, they begin their forever together."
     ],
-    welcomeMessage: "Your presence will make our special day even more meaningful.\nWe look forward to celebrating this beautiful beginning with you.",
+    welcomeMessage: "We welcome your presence to make our special day even more meaningful and memorable as we look forward to celebrating this beautiful beginning.",
     welcomeSignoff: "With love,\nNaveen & Preena"
   }
 
@@ -248,28 +250,28 @@ export default function CustomRoyalHeritageNaveenAndPreena() {
 
   // --- COMPUTE PROPS ---
   const scheduleItems = customData.events || []
-  
+
   // Basic Calendar Logic
   const weddingDateStr = `${customData.hero.weddingDate} ${customData.hero.weddingMonth} ${customData.hero.weddingYear}`
   const targetDateObj = new Date(weddingDateStr)
   let calendarDays = []
   let monthName = customData.hero.weddingMonth
   let year = customData.hero.weddingYear
-  
+
   if (!isNaN(targetDateObj.getTime())) {
     const y = targetDateObj.getFullYear()
     const m = targetDateObj.getMonth()
     const targetDay = targetDateObj.getDate()
     const firstDay = new Date(y, m, 1).getDay()
     const daysInMonth = new Date(y, m + 1, 0).getDate()
-    
+
     for (let i = 0; i < firstDay; i++) {
       calendarDays.push({ day: '', isTarget: false, isCurrent: false })
     }
     for (let i = 1; i <= daysInMonth; i++) {
       calendarDays.push({ day: i, isTarget: i === targetDay, isCurrent: true })
     }
-    
+
     const remainingSlots = calendarDays.length > 35 ? 42 - calendarDays.length : 35 - calendarDays.length;
     for (let i = 0; i < remainingSlots; i++) {
       calendarDays.push({ day: '', isTarget: false, isCurrent: false })
@@ -305,7 +307,7 @@ export default function CustomRoyalHeritageNaveenAndPreena() {
         handleTimeUpdate={handleTimeUpdate}
         handleVideoEnded={handleVideoEnded}
       />
-      
+
       <audio
         ref={audioRef}
         src={bgMusicSrc}
@@ -327,78 +329,82 @@ export default function CustomRoyalHeritageNaveenAndPreena() {
       )}
 
       {/* Hero */}
-      <TemplateRoyalHeritageHero 
-        {...commonProps} 
+      <TemplateRoyalHeritageHero
+        {...commonProps}
         data={{ hero: customData.hero, venue: { venueAddress: "" } }}
         hasTriggeredHeroBg={hasTriggeredHeroBg}
         hasTriggeredHeroText={hasTriggeredHeroText}
       />
-      
+
       {/* Our Story */}
-      <TemplateRoyalHeritageStory 
-        {...commonProps} 
-        data={{ 
+      <TemplateRoyalHeritageStory
+        {...commonProps}
+        data={{
           photos: [
             "/assets/custom-orders/naveen-and-preena/img_4555.webp",
             "/assets/custom-orders/naveen-and-preena/img_4557.webp",
             "/assets/custom-orders/naveen-and-preena/img_4558.webp"
           ],
-          storyTitles: customData.storyTitles, 
-          storyDescriptions: customData.storyDescriptions 
+          storyTitles: customData.storyTitles,
+          storyDescriptions: customData.storyDescriptions
         }}
       />
-      
+
       {/* Welcome */}
-      <TemplateRoyalHeritageWelcome 
-        {...commonProps} 
-        data={{ welcomeMessage: customData.welcomeMessage, welcomeSignoff: customData.welcomeSignoff }}
+      <TemplateRoyalHeritageWelcome
+        {...commonProps}
+        data={{ 
+          welcomeMessage: customData.welcomeMessage, 
+          welcomeSignoff: customData.welcomeSignoff,
+          welcomeSignoffNamesColor: '#000000'
+        }}
       />
-      
+
       {/* Schedule */}
-      <TemplateRoyalHeritageSchedule 
+      <TemplateRoyalHeritageSchedule
         scheduleItems={scheduleItems}
         weddingDate={customData.hero.weddingDate}
         weddingMonth={customData.hero.weddingMonth}
         weddingYear={customData.hero.weddingYear}
         fontStyles={fontStyles}
       />
-      
+
       {/* Venue 1: Church */}
-      <TemplateRoyalHeritageVenue 
-        {...commonProps} 
-        data={{ venue: customData.venueChurch }} 
+      <TemplateRoyalHeritageVenue
+        {...commonProps}
+        data={{ venue: customData.venueChurch }}
       />
 
       {/* Venue 2: Reception */}
-      <TemplateRoyalHeritageVenue 
-        {...commonProps} 
-        data={{ venue: customData.venueReception }} 
+      <TemplateRoyalHeritageVenue
+        {...commonProps}
+        data={{ venue: customData.venueReception }}
       />
-      
+
       {/* Calendar */}
-      <TemplateRoyalHeritageCalendar 
+      <TemplateRoyalHeritageCalendar
         calendarData={calendarData}
         fullAddress=""
-        {...commonProps} 
+        {...commonProps}
         data={{ hero: customData.hero }}
       />
-      
+
       {/* Countdown */}
-      <TemplateRoyalHeritageCountdown 
-        {...commonProps} 
-        data={{ 
+      <TemplateRoyalHeritageCountdown
+        {...commonProps}
+        data={{
           hero: customData.hero,
           countdown: { targetDateTimeISO: new Date(weddingDateStr).toISOString() }
         }}
       />
 
-      <Footer 
+      <Footer
         data={{ id: 'footer' }}
         theme={{
           background: '#4A3E20',
           text: '#F9F5EC',
           border: 'rgba(249, 245, 236, 0.2)'
-        }} 
+        }}
       />
     </div>
   )
