@@ -80,7 +80,7 @@ export default function Payment() {
           ? "from-[#4A2A0E] via-[#6B351D] to-[#4A2A0E]"
           : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
 
-  const TEMPLATE_PRICE = 999 // Price in INR
+  const TEMPLATE_PRICE = template?.price || 1999 // Base price in INR based on template config
 
   const isTemplatePaid = Boolean(
     String(draftData.status).toUpperCase() === 'PAID' || 
@@ -231,6 +231,7 @@ export default function Payment() {
       const inviteRequest = {
         code: resolvedDraft.code, // VERY IMPORTANT: Pass code to update instead of creating new
         templateId,
+        coupleNames: `${resolvedDraft.groomName || ''} & ${resolvedDraft.brideName || ''}`.trim(),
         coupleData: {
           groomName: resolvedDraft.groomName,
           brideName: resolvedDraft.brideName,
@@ -262,6 +263,7 @@ export default function Payment() {
         },
         weddingTime: resolvedDraft.weddingTime,
         mahalName: resolvedDraft.mahalName,
+        venueAddress: resolvedDraft.venueAddress,
         venueCity: resolvedDraft.venueCity,
         venueName: resolvedDraft.venueAddress,
         state: resolvedDraft.state,
@@ -269,16 +271,16 @@ export default function Payment() {
         photos: resolvedDraft.photos,
         eventSchedule: resolvedDraft.scheduleItems,
         scheduleData: {
-          showSchedule: resolvedDraft.showSchedule,
-          showGallery: resolvedDraft.showGallery,
+          showSchedule: resolvedDraft.showSchedule !== undefined ? resolvedDraft.showSchedule : true,
+          showGallery: resolvedDraft.showGallery !== undefined ? resolvedDraft.showGallery : true,
           items: resolvedDraft.scheduleItems
         },
         storyData: {
           photos: resolvedDraft.photos
         },
         invitationData: {
-          showGallery: resolvedDraft.showGallery,
-          showSchedule: resolvedDraft.showSchedule,
+          showGallery: resolvedDraft.showGallery !== undefined ? resolvedDraft.showGallery : true,
+          showSchedule: resolvedDraft.showSchedule !== undefined ? resolvedDraft.showSchedule : true,
           hasRsvp: Boolean(resolvedDraft.hasRsvp),
           showFamilySection: resolvedDraft.showFamilySection,
           familyMessage: resolvedDraft.familyMessage,
@@ -665,7 +667,7 @@ export default function Payment() {
                         <span>Template Design</span>
                         <span className="font-semibold text-iqText">
                           {isTemplatePaid ? (
-                            <span className="text-emerald-700 font-bold">₹999 (Already Paid ✓)</span>
+                            <span className="text-emerald-700 font-bold">₹{TEMPLATE_PRICE} (Already Paid ✓)</span>
                           ) : (
                             `₹${TEMPLATE_PRICE}`
                           )}

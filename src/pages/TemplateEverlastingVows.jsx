@@ -133,6 +133,11 @@ function EverlastingVowsHero({ data, isDesktop }) {
     return { day: '18', month: '12', year: '2026' }
   }, [data.dateLine])
 
+  const groomName = data.groomName || '';
+  const brideName = data.brideName || '';
+  const groomScale = Math.min(1, 10 / Math.max(1, groomName.length));
+  const brideScale = Math.min(1, 10 / Math.max(1, brideName.length));
+
   return (
     <section 
       className={`relative overflow-hidden flex flex-col items-center text-center select-none ${
@@ -191,16 +196,19 @@ function EverlastingVowsHero({ data, isDesktop }) {
         {/* Couple Names - Reduced Desktop font size & responsive layout */}
         <motion.h1 
           variants={nameContainerVariant}
-          className="text-[#8A6E1E] uppercase tracking-[0.1em] select-none font-bold mb-4"
+          className="text-[#8A6E1E] uppercase tracking-[0.1em] select-none font-bold mb-4 w-full px-5 box-border break-words"
           style={{ 
             fontFamily: "'Cinzel', serif", 
-            lineHeight: '1.2',
-            fontSize: isDesktop ? 'clamp(2.2rem, 3.8vw, 3.4rem)' : 'clamp(1.8rem, 6.5vw, 2.5rem)'
+            lineHeight: '1.2'
           }}
         >
-          <span className="block mb-0.5 sm:mb-1 relative" style={{ display: 'block', position: 'relative' }}>
+          <span className="block mb-0.5 sm:mb-1 relative mx-auto" style={{ 
+            display: 'block', 
+            position: 'relative',
+            fontSize: isDesktop ? `calc(clamp(2.2rem, 3.8vw, 3.4rem) * ${groomScale})` : `calc(clamp(1.8rem, 6.5vw, 2.5rem) * ${groomScale})`
+          }}>
             <span style={{ position: 'relative', zIndex: 1 }}>
-              {(data.groomName || '').split('').map((char, index) => (
+              {groomName.split('').map((char, index) => (
                 <motion.span 
                   key={`groom-${index}`} 
                   variants={letterAnimVariant} 
@@ -234,7 +242,7 @@ function EverlastingVowsHero({ data, isDesktop }) {
               }}
               aria-hidden="true"
             >
-              {(data.groomName || '').split('').map((char, index) => (
+              {groomName.split('').map((char, index) => (
                 <span key={`groom-glare-${index}`} style={{ display: 'inline-block' }}>
                   {char === ' ' ? '\u00A0' : char}
                 </span>
@@ -247,9 +255,13 @@ function EverlastingVowsHero({ data, isDesktop }) {
           >
             &amp;
           </motion.span>
-          <span className="block mt-0.5 sm:mt-1 relative" style={{ display: 'block', position: 'relative' }}>
+          <span className="block mt-0.5 sm:mt-1 relative mx-auto" style={{ 
+            display: 'block', 
+            position: 'relative',
+            fontSize: isDesktop ? `calc(clamp(2.2rem, 3.8vw, 3.4rem) * ${brideScale})` : `calc(clamp(1.8rem, 6.5vw, 2.5rem) * ${brideScale})`
+          }}>
             <span style={{ position: 'relative', zIndex: 1 }}>
-              {(data.brideName || '').split('').map((char, index) => (
+              {brideName.split('').map((char, index) => (
                 <motion.span 
                   key={`bride-${index}`} 
                   variants={letterAnimVariant} 
@@ -283,7 +295,7 @@ function EverlastingVowsHero({ data, isDesktop }) {
               }}
               aria-hidden="true"
             >
-              {(data.brideName || '').split('').map((char, index) => (
+              {brideName.split('').map((char, index) => (
                 <span key={`bride-glare-${index}`} style={{ display: 'inline-block' }}>
                   {char === ' ' ? '\u00A0' : char}
                 </span>

@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useDraft } from '../context/DraftContext.jsx'
-import { weddingData as staticData } from '../weddingData.js'
+import { useDraft } from '../../context/DraftContext.jsx'
+import { weddingData as staticData } from '../../weddingData.js'
 import { motion, AnimatePresence } from 'framer-motion'
-import Footer from '../components/Footer.jsx'
+import Footer from '../../components/Footer.jsx'
+import InviteQRSVP from '../../components/InviteQRSVP.jsx'
+import bgMusicSrc from '../../assets/audio/bg-music-a-thousand-years.mp3'
 
-// Import section components
-import TemplateRoyalHeritageCover from '../components/TemplateRoyalHeritageCover.jsx'
-import TemplateRoyalHeritageHero from '../components/TemplateRoyalHeritageHero.jsx'
-import TemplateRoyalHeritageStory from '../components/TemplateRoyalHeritageStory.jsx'
-import TemplateRoyalHeritageWelcome from '../components/TemplateRoyalHeritageWelcome.jsx'
-import TemplateRoyalHeritageSchedule from '../components/TemplateRoyalHeritageSchedule.jsx'
-import TemplateRoyalHeritageVenue from '../components/TemplateRoyalHeritageVenue.jsx'
-import TemplateRoyalHeritageCalendar from '../components/TemplateRoyalHeritageCalendar.jsx'
-import InviteQRSVP from '../components/InviteQRSVP.jsx'
-import TemplateRoyalHeritageCountdown from '../components/TemplateRoyalHeritageCountdown.jsx'
-import bgMusicSrc from '../assets/audio/bg-music-a-thousand-years.mp3'
+// Import Pink Blossom section components (all self-contained in this folder)
+import { COLORS, ASSETS, getFontStyles, sectionStyle, bgStyle } from './theme'
+import PinkBlossomCover from './PinkBlossomCover.jsx'
+import PinkBlossomHero from './PinkBlossomHero.jsx'
+import PinkBlossomStory from './PinkBlossomStory.jsx'
+import PinkBlossomWelcome from './PinkBlossomWelcome.jsx'
+import PinkBlossomSchedule from './PinkBlossomSchedule.jsx'
+import PinkBlossomVenue from './PinkBlossomVenue.jsx'
+import PinkBlossomCalendar from './PinkBlossomCalendar.jsx'
+import PinkBlossomCountdown from './PinkBlossomCountdown.jsx'
 
-// Simple SVG icon for Music On
+// ─── Music Icons ──────────────────────────────────────────────
 const MusicOnIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
     <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z" />
@@ -25,14 +26,14 @@ const MusicOnIcon = () => (
   </svg>
 )
 
-// Simple SVG icon for Music Off
 const MusicOffIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
     <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM17.78 9.22a.75.75 0 1 0-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 1 0 1.06-1.06L20.56 12l1.72-1.72a.75.75 0 1 0-1.06-1.06l-1.72 1.72-1.72-1.72Z" />
   </svg>
 )
 
-export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
+// ─── Main Template Orchestrator ───────────────────────────────
+export default function TemplatePinkBlossom({ savedData, groupSlug }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { draftData } = useDraft()
@@ -44,13 +45,14 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
   const showWatermark = !isPaid
-  const templateId = 'royal-heritage'
+  const templateId = 'pink-blossom'
 
   const activeData = savedData || (isPreview ? draftData : null)
   const baseData = activeData || {}
 
   const data = {
     ...staticData,
+    ...baseData, // Allows any root-level overrides from custom data
     events: (() => {
       const draftEvents = Array.isArray(draftData?.scheduleItems) ? draftData.scheduleItems : []
       const savedEvents = savedData ? (savedData.scheduleData?.items || savedData.scheduleItems || []) : []
@@ -125,9 +127,7 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
       window.scrollTo(0, 0)
       document.body.style.overflow = ''
     }
-    return () => {
-      document.body.style.overflow = ''
-    }
+    return () => { document.body.style.overflow = '' }
   }, [hasOpened])
 
   useEffect(() => {
@@ -193,55 +193,7 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
   const isDesktop = windowWidth > 1024
   const isTablet = windowWidth > 600 && windowWidth <= 1024
 
-  const fontStyles = {
-    cursive: {
-      fontFamily: "'Modernline', 'Allura', 'Alex Brush', cursive",
-      color: '#8A202A',
-      fontWeight: 'normal',
-      lineHeight: 1.15,
-      textShadow: '0 1px 2px rgba(255,255,255,0.4)',
-      fontSize: isDesktop ? '80px' : (isTablet ? '90px' : '65px'),
-      margin: 0
-    },
-    serif: {
-      fontFamily: "'Cormorant Garamond', serif",
-      color: '#4A3E20',
-      fontSize: isDesktop ? '18px' : '15px',
-      lineHeight: 1.6,
-      textShadow: '0 1px 2px rgba(255,255,255,0.4)',
-    },
-    smallCaps: {
-      fontFamily: "'Cinzel', serif",
-      color: '#8A202A',
-      textTransform: 'uppercase',
-      letterSpacing: '0.2em',
-      fontSize: isDesktop ? '14px' : (isTablet ? '16px' : '11px'),
-      fontWeight: '600',
-      textShadow: '0 1px 2px rgba(255,255,255,0.4)',
-    }
-  }
-
-  const sectionStyle = {
-    position: 'relative',
-    width: '100%',
-    minHeight: '100svh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflowX: 'hidden',
-    backgroundColor: 'transparent'
-  }
-
-  const bgStyle = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    zIndex: 0
-  }
+  const fontStyles = getFontStyles(isDesktop, isTablet)
 
   const commonProps = {
     data,
@@ -255,7 +207,7 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
   const scheduleItems = data.events || []
   const fullAddress = `${data.venue?.venueAddress || ''}, ${data.venue?.venueCity || ''}`
   
-  // Basic Calendar Logic
+  // Calendar Logic
   const weddingDateStr = `${data.hero?.weddingDate} ${data.hero?.weddingMonth} ${data.hero?.weddingYear}`
   const targetDateObj = new Date(weddingDateStr)
   let calendarDays = []
@@ -276,8 +228,7 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
       calendarDays.push({ day: i, isTarget: i === targetDay, isCurrent: true })
     }
     
-    // Fill remaining slots for complete rows (up to 35 or 42)
-    const remainingSlots = calendarDays.length > 35 ? 42 - calendarDays.length : 35 - calendarDays.length;
+    const remainingSlots = calendarDays.length > 35 ? 42 - calendarDays.length : 35 - calendarDays.length
     for (let i = 0; i < remainingSlots; i++) {
       calendarDays.push({ day: '', isTarget: false, isCurrent: false })
     }
@@ -304,8 +255,8 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
       {['10%', '50%', '90%'].map(top => (
         <span
           key={top}
-          className="absolute left-1/2 -translate-x-1/2 text-[17px] font-medium tracking-[0.2em] text-[#8A202A]"
-          style={{ top, fontFamily: "'Montserrat', sans-serif" }}
+          className="absolute left-1/2 -translate-x-1/2 text-[17px] font-medium tracking-[0.2em]"
+          style={{ top, fontFamily: "'Montserrat', sans-serif", color: COLORS.primary }}
         >
           preview-inviteque
         </span>
@@ -316,10 +267,10 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
   const PreviewNav = () => isPreview ? (
     <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
       <div className="flex gap-3">
-        <button onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })} className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[rgba(138,32,42,0.2)] bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#8A202A] shadow-xl hover:scale-105 active:scale-95">
+        <button onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })} className="flex-1 flex items-center justify-center gap-2 rounded-full bg-white/95 backdrop-blur-md py-4 text-sm font-bold shadow-xl hover:scale-105 active:scale-95" style={{ border: `1px solid rgba(200,25,94,0.2)`, color: COLORS.primary }}>
           Back
         </button>
-        <button onClick={() => navigate('/payment', { state: { draftData, templateId } })} className="flex-1 flex items-center justify-center gap-3 rounded-full bg-[#8A202A] py-4 text-sm font-bold text-[#F9F5EC] shadow-xl hover:scale-105 active:scale-95">
+        <button onClick={() => navigate('/payment', { state: { draftData, templateId } })} className="flex-1 flex items-center justify-center gap-3 rounded-full py-4 text-sm font-bold shadow-xl hover:scale-105 active:scale-95" style={{ backgroundColor: COLORS.primary, color: COLORS.ivory }}>
           Proceed
         </button>
       </div>
@@ -327,17 +278,17 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
   ) : null
 
   return (
-    <div className="w-full bg-[#F9F5EC] overflow-x-hidden relative">
+    <div className="w-full overflow-x-hidden relative" style={{ backgroundColor: COLORS.ivory }}>
       <Watermark />
       <PreviewNav />
       
-      <TemplateRoyalHeritageCover
+      <PinkBlossomCover
         hasOpened={hasOpened}
         isPlaying={isPlaying}
         isVideoReady={isVideoReady}
         videoRef={videoRef}
-        coverVideoSrc="/assets/templates/royal-heritage/cover-video.mp4"
-        coverPosterSrc="/assets/templates/royal-heritage/entrance-video-frame.webp"
+        coverVideoSrc={ASSETS.coverVideo}
+        coverPosterSrc={ASSETS.coverPoster}
         handleOpenCover={handleOpenCover}
         handleTimeUpdate={handleTimeUpdate}
         handleVideoEnded={handleVideoEnded}
@@ -359,21 +310,26 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
           onClick={toggleMusic}
-          className="fixed bottom-6 right-4 z-50 p-3 rounded-full bg-[#8A202A]/80 backdrop-blur-sm text-[#F9F5EC] border border-[#F9F5EC]/30 shadow-[0_4px_15px_rgba(0,0,0,0.4)] transition-all hover:scale-105 active:scale-95 hover:bg-[#8A202A]"
+          className="fixed bottom-6 right-4 z-50 p-3 rounded-full backdrop-blur-sm shadow-[0_4px_15px_rgba(0,0,0,0.4)] transition-all hover:scale-105 active:scale-95"
+          style={{ 
+            backgroundColor: `${COLORS.primary}CC`, 
+            color: COLORS.ivory, 
+            border: `1px solid ${COLORS.ivory}4D` 
+          }}
         >
           {isMusicMuted ? <MusicOffIcon /> : <MusicOnIcon />}
         </motion.button>
       )}
 
-      <TemplateRoyalHeritageHero 
+      <PinkBlossomHero 
         {...commonProps} 
         hasTriggeredHeroBg={hasTriggeredHeroBg}
         hasTriggeredHeroText={hasTriggeredHeroText}
       />
-      <TemplateRoyalHeritageStory {...commonProps} />
-      <TemplateRoyalHeritageWelcome {...commonProps} />
+      <PinkBlossomStory {...commonProps} />
+      <PinkBlossomWelcome {...commonProps} />
       
-      <TemplateRoyalHeritageSchedule 
+      <PinkBlossomSchedule 
         scheduleItems={scheduleItems}
         weddingDate={data.hero?.weddingDate}
         weddingMonth={data.hero?.weddingMonth}
@@ -381,33 +337,92 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
         fontStyles={fontStyles}
       />
       
-      <TemplateRoyalHeritageVenue {...commonProps} />
+      <PinkBlossomVenue {...commonProps} />
       
-      <TemplateRoyalHeritageCalendar 
+      <PinkBlossomCalendar 
         calendarData={calendarData}
         fullAddress={fullAddress}
         {...commonProps}
       />
       
-      <div style={{ backgroundColor: '#F9F5EC' }}>
-        <InviteQRSVP
-          events={scheduleItems}
-          weddingCode={savedData?.code}
-          groupSlug={groupSlug}
-          isPreview={!savedData}
-          theme="royal"
-          config={savedData?.rsvpData}
-        />
+      <div style={{ backgroundColor: COLORS.ivory }}>
+        {baseData.rsvpUrl ? (
+          <section 
+            className="min-h-[100svh] px-4 flex flex-col items-center justify-center text-center py-20 relative"
+            style={{
+              backgroundImage: `url('/assets/templates/pinkblossom/PinkBlossom-light-background.webp')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <p style={{ ...fontStyles.smallCaps, fontSize: '11px', letterSpacing: '0.2em', color: COLORS.textDark, marginBottom: '8px' }}>
+              JOIN OUR CELEBRATION
+            </p>
+            <h2 style={{ ...fontStyles.smallCaps, fontSize: '28px', color: COLORS.primaryDark, marginBottom: '16px' }}>
+              RSVP & CONTACT
+            </h2>
+            <p style={{ ...fontStyles.serif, fontSize: '15px', color: COLORS.textDark, maxWidth: '340px', marginBottom: '36px', lineHeight: 1.6 }}>
+              We would be absolutely thrilled to have you join us in celebrating our special day. Please confirm your presence or reach out to us below.
+            </p>
+            <div className="flex flex-col gap-5 w-full max-w-[260px]">
+              <a 
+                href={baseData.rsvpUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs shadow-[0_4px_14px_rgba(200,25,94,0.3)] transition-all hover:-translate-y-0.5 active:translate-y-0"
+                style={{ backgroundColor: COLORS.primary, color: COLORS.ivory, fontFamily: fontStyles.smallCaps.fontFamily }}
+              >
+                RSVP Here
+              </a>
+              {baseData.whatsappNumber && (
+                <a 
+                  href={`https://wa.me/${baseData.whatsappNumber}?text=${encodeURIComponent(baseData.whatsappMessage || 'Hello!')}`}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs shadow-[0_4px_14px_rgba(37,211,102,0.3)] transition-all hover:-translate-y-0.5 active:translate-y-0"
+                  style={{ backgroundColor: '#25D366', color: '#fff', fontFamily: fontStyles.smallCaps.fontFamily }}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                  WhatsApp
+                </a>
+              )}
+            </div>
+          </section>
+        ) : (
+          <InviteQRSVP
+            events={scheduleItems}
+            weddingCode={savedData?.code}
+            groupSlug={groupSlug}
+            isPreview={!savedData}
+            theme="pink-blossom"
+            config={savedData?.rsvpData}
+          />
+        )}
       </div>
 
-      <TemplateRoyalHeritageCountdown {...commonProps} />
+      <PinkBlossomCountdown {...commonProps} />
+
+      {/* Floating WhatsApp Button - Show ONLY if there is no rsvpUrl */}
+      {baseData.whatsappNumber && !baseData.rsvpUrl && (
+        <a 
+          href={`https://wa.me/${baseData.whatsappNumber}?text=${encodeURIComponent(baseData.whatsappMessage || 'Hello, I have a query regarding the wedding invitation.')}`}
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="fixed bottom-24 right-4 z-50 p-3 rounded-full bg-[#25D366] text-white shadow-[0_4px_15px_rgba(37,211,102,0.4)] transition-all hover:scale-105 active:scale-95 flex items-center justify-center"
+          aria-label="Contact on WhatsApp"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+          </svg>
+        </a>
+      )}
 
       <Footer 
         data={{ id: 'footer' }}
         theme={{
-          background: '#4A3E20',
-          text: '#F9F5EC',
-          border: 'rgba(249, 245, 236, 0.2)'
+          background: COLORS.primaryDark,
+          text: COLORS.ivory,
+          border: `rgba(250, 243, 228, 0.2)`
         }} 
       />
     </div>

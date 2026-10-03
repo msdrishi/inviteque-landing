@@ -792,7 +792,11 @@ export default function Landing() {
                   </Link>
                   <div className="absolute left-4 top-4 flex items-center gap-2">
                     <PricePill label={t.priceLabel} />
-                    {t.popular ? (
+                    {t.isNew ? (
+                      <span className="inline-flex items-center rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">
+                        Recently Launched
+                      </span>
+                    ) : t.popular ? (
                       <span className="inline-flex items-center rounded-full bg-iqText px-3 py-1 text-xs font-semibold text-iqCard">
                         Popular
                       </span>
@@ -825,7 +829,7 @@ export default function Landing() {
                     <button
                       onClick={() => {
                         if (!t.available) return
-                        resetDraft()
+                        resetDraft(t.id)
                         if (user) navigate(`/builder/${t.id}`)
                         else navigate('/login')
                       }}
@@ -937,7 +941,7 @@ export default function Landing() {
                     <button
                       onClick={() => {
                         if (!t.available) return
-                        resetDraft()
+                        resetDraft(t.id)
                         if (user) navigate(`/builder/${t.id}`)
                         else navigate('/login')
                       }}

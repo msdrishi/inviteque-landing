@@ -183,9 +183,13 @@ export default function TemplateRoyalHeritageHero({ data, fontStyles, sectionSty
     dayStr = dateObj.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
     monthStr = dateObj.toLocaleDateString('en-US', { month: 'long' }).toUpperCase();
   }
+  const groomName = data.hero.groomName || '';
+  const brideName = data.hero.brideName || '';
+  const groomScale = Math.min(1, 10 / Math.max(1, groomName.length));
+  const brideScale = Math.min(1, 10 / Math.max(1, brideName.length));
   
-  const nameSize = isDesktop ? '70px' : (isTablet ? '80px' : '55px');
-
+  const groomNameSize = isDesktop ? `calc(70px * ${groomScale})` : (isTablet ? `calc(80px * ${groomScale})` : `calc(55px * ${groomScale})`);
+  const brideNameSize = isDesktop ? `calc(70px * ${brideScale})` : (isTablet ? `calc(80px * ${brideScale})` : `calc(55px * ${brideScale})`);
   return (
     <section style={sectionStyle}>
       <img src={heroBg} alt="Hero Background" style={bgStyle} />
@@ -206,13 +210,13 @@ export default function TemplateRoyalHeritageHero({ data, fontStyles, sectionSty
         </motion.div>
 
         {/* Names */}
-        <AnimatedCoupleName name={data.hero.groomName} style={{ ...cursive, fontSize: nameSize }} variants={letterContainer} />
+        <AnimatedCoupleName name={groomName} style={{ ...cursive, fontSize: groomNameSize }} variants={letterContainer} />
         
         <motion.div variants={lineAnim} style={{ margin: '2px 0' }}>
           <span style={{ ...cursive, fontSize: '30px', color: '#8A202A' }}>&amp;</span>
         </motion.div>
         
-        <AnimatedCoupleName name={data.hero.brideName} style={{ ...cursive, fontSize: nameSize, marginBottom: '12px' }} variants={letterContainer} />
+        <AnimatedCoupleName name={brideName} style={{ ...cursive, fontSize: brideNameSize, marginBottom: '12px' }} variants={letterContainer} />
 
         <motion.div variants={lineAnim} style={{ textAlign: 'center', marginBottom: '15px', maxWidth: '240px' }}>
           <p style={{ ...smallCaps, fontSize: '8.5px', letterSpacing: '0.18em', lineHeight: '1.5', color: '#4A3E20' }}>

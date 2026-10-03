@@ -202,6 +202,11 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
 
   if (!data) return null
 
+  const groomName = data.groomName || '';
+  const brideName = data.brideName || '';
+  const groomScale = Math.min(1, 10 / Math.max(1, groomName.length));
+  const brideScale = Math.min(1, 10 / Math.max(1, brideName.length));
+
   const currentHeroBg = isDesktop
     ? "/assets/templates/aura-of-elegance/hero-arch.webp"
     : heroBg
@@ -272,21 +277,21 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         </div>
 
         {/* ── Groom name ── */}
-        <motion.div variants={nameReveal} style={{ marginTop: isDesktop ? 26 : 10, position: 'relative' }}>
+        <motion.div variants={nameReveal} style={{ marginTop: isDesktop ? 26 : 10, position: 'relative', width: '100%', padding: '0 20px', boxSizing: 'border-box' }}>
           <motion.span
             variants={nameLetters}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 8svh, 44px)',
+              fontSize: isDesktop ? `calc(clamp(55px, 6.5vw, 90px) * ${groomScale})` : `calc(clamp(20px, 8svh, 44px) * ${groomScale})`,
               fontWeight: 100,
               lineHeight: 0.92,
               color: '#7B0F1A',
               display: 'block',
               textShadow: '0 2px 14px rgba(123,15,26,0.13)',
-              whiteSpace: 'nowrap',
+              wordWrap: 'break-word',
             }}
           >
-            {String(data.groomName || '')
+            {groomName
               .split('')
               .map((ch, idx) => (
                 <motion.span
@@ -305,7 +310,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             transition={{ repeat: Infinity, duration: 7, ease: 'linear' }}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 8svh, 44px)',
+              fontSize: isDesktop ? `calc(clamp(55px, 6.5vw, 90px) * ${groomScale})` : `calc(clamp(20px, 8svh, 44px) * ${groomScale})`,
               fontWeight: 100,
               lineHeight: 0.92,
               whiteSpace: 'nowrap',
@@ -324,7 +329,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             }}
             aria-hidden="true"
           >
-            {String(data.groomName || '')
+            {groomName
               .split('')
               .map((ch, idx) => (
                 <span
@@ -353,21 +358,21 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
         </motion.div>
 
         {/* ── Bride name ── */}
-        <motion.div variants={nameReveal} style={{ marginTop: isDesktop ? 10 : 6, position: 'relative' }}>
+        <motion.div variants={nameReveal} style={{ marginTop: isDesktop ? 10 : 6, position: 'relative', width: '100%', padding: '0 20px', boxSizing: 'border-box' }}>
           <motion.span
             variants={nameLetters}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 8svh, 44px)',
+              fontSize: isDesktop ? `calc(clamp(55px, 6.5vw, 90px) * ${brideScale})` : `calc(clamp(20px, 8svh, 44px) * ${brideScale})`,
               fontWeight: 100,
               lineHeight: 0.92,
               color: '#7B0F1A',
               display: 'block',
               textShadow: '0 2px 14px rgba(123,15,26,0.13)',
-              whiteSpace: 'nowrap',
+              wordWrap: 'break-word',
             }}
           >
-            {String(data.brideName || '')
+            {brideName
               .split('')
               .map((ch, idx) => (
                 <motion.span
@@ -386,7 +391,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             transition={{ repeat: Infinity, duration: 7, ease: 'linear', delay: 1 }}
             style={{
               fontFamily: "'Cintarini', 'Parisienne', 'Spectral', cursive",
-              fontSize: isDesktop ? 'clamp(55px, 6.5vw, 90px)' : 'clamp(20px, 8svh, 44px)',
+              fontSize: isDesktop ? `calc(clamp(55px, 6.5vw, 90px) * ${brideScale})` : `calc(clamp(20px, 8svh, 44px) * ${brideScale})`,
               fontWeight: 100,
               lineHeight: 0.92,
               whiteSpace: 'nowrap',
@@ -405,7 +410,7 @@ export default function Hero({ data, scrollContainerRef, isDesktop }) {
             }}
             aria-hidden="true"
           >
-            {String(data.brideName || '')
+            {brideName
               .split('')
               .map((ch, idx) => (
                 <span

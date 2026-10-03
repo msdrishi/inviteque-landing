@@ -11,6 +11,7 @@ import TemplateModernHearth from './TemplateModernHearth.jsx'
 import TemplateMidnightWaltz from './TemplateMidnightWaltz.jsx'
 import TemplateRoyalHeirloom from './TemplateRoyalHeirloom.jsx'
 import TemplateRoyalHeritage from './TemplateRoyalHeritage.jsx'
+import TemplatePinkBlossom from '../templates/pink-blossom/index.jsx'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 
@@ -43,6 +44,7 @@ const TEMPLATE_MAP = {
   'midnight-waltz': TemplateMidnightWaltz,
   'royal-heirloom': TemplateRoyalHeirloom,
   'royal-heritage': TemplateRoyalHeritage,
+  'pink-blossom': TemplatePinkBlossom,
 }
 
 const TEMPLATE_ASSETS = {
@@ -51,6 +53,13 @@ const TEMPLATE_ASSETS = {
     "/assets/templates/royal-heirloom/hero-bg-mobile.webp",
   ],
   'royal-heritage': [
+    "/assets/templates/royal-heritage/hero-mobile.webp",
+    "/assets/templates/royal-heritage/story-mobile.webp",
+    "/assets/templates/royal-heritage/welcome-section-mobile.webp",
+    "/assets/templates/royal-heritage/venue-mobile.webp",
+    "/assets/templates/royal-heritage/countdown-mobile.webp",
+  ],
+  'pink-blossom': [
     "/assets/templates/royal-heritage/hero-mobile.webp",
     "/assets/templates/royal-heritage/story-mobile.webp",
     "/assets/templates/royal-heritage/welcome-section-mobile.webp",

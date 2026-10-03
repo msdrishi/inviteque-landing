@@ -251,6 +251,11 @@ function BlossomWhisperHero({ data }) {
     return { day: '22', month: 'October', year: '2026' }
   }, [data.dateLine])
 
+  const groomName = data.groomName || 'Rohan';
+  const brideName = data.brideName || 'Anaya';
+  const groomScale = Math.min(1, 10 / Math.max(1, groomName.length));
+  const brideScale = Math.min(1, 10 / Math.max(1, brideName.length));
+
   return (
     <section 
       className="relative min-h-[100svh] flex flex-col items-center justify-between text-center py-14 px-6 overflow-hidden bg-cover bg-top"
@@ -280,11 +285,11 @@ function BlossomWhisperHero({ data }) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
-          className="text-4xl sm:text-5xl font-normal tracking-[0.04em] uppercase text-[#D4AF37] flex flex-col items-center"
+          className="font-normal tracking-[0.04em] uppercase text-[#D4AF37] flex flex-col items-center w-full px-5 box-border break-words"
           style={{ fontFamily: "'Cinzel', serif" }}
         >
-          <span className="block relative">
-            {data.groomName}
+          <span className="block relative" style={{ fontSize: `calc(clamp(36px, 8vw, 48px) * ${groomScale})` }}>
+            {groomName}
             {/* Elegant Shine overlay */}
             <motion.span
               animate={{ backgroundPosition: ['150% center', '-150% center'] }}
@@ -299,14 +304,14 @@ function BlossomWhisperHero({ data }) {
               }}
               aria-hidden="true"
             >
-              {data.groomName}
+              {groomName}
             </motion.span>
           </span>
 
           <span className="block my-2 text-2xl font-normal font-parisienne lowercase text-[#EAD8B1]/85">&amp;</span>
 
-          <span className="block relative">
-            {data.brideName}
+          <span className="block relative" style={{ fontSize: `calc(clamp(36px, 8vw, 48px) * ${brideScale})` }}>
+            {brideName}
             <motion.span
               animate={{ backgroundPosition: ['150% center', '-150% center'] }}
               transition={{ repeat: Infinity, duration: 6, ease: 'linear', delay: 3 }}
@@ -320,7 +325,7 @@ function BlossomWhisperHero({ data }) {
               }}
               aria-hidden="true"
             >
-              {data.brideName}
+              {brideName}
             </motion.span>
           </span>
         </motion.h1>

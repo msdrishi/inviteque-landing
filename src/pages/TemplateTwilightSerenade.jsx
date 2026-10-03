@@ -141,6 +141,11 @@ function TwilightSerenadeHero({ data, isDesktop }) {
     return { day: '18', month: '12', year: '2026' }
   }, [data.dateLine])
 
+  const groomName = data.groomName || '';
+  const brideName = data.brideName || '';
+  const groomScale = Math.min(1, 10 / Math.max(1, groomName.length));
+  const brideScale = Math.min(1, 10 / Math.max(1, brideName.length));
+
   return (
     <section 
       className={`relative overflow-hidden flex flex-col items-center text-center select-none ${
@@ -200,13 +205,13 @@ function TwilightSerenadeHero({ data, isDesktop }) {
         <motion.h1 
           variants={nameContainerVariant}
           className={`text-[#3D5236] uppercase tracking-[0.06em] select-none font-bold ${
-            isDesktop ? 'text-4xl md:text-5xl mb-2' : 'text-2xl sm:text-3xl mb-1.5'
+            isDesktop ? 'mb-2' : 'mb-1.5'
           }`}
-          style={{ fontFamily: "'Cinzel', serif", lineHeight: '1.2' }}
+          style={{ fontFamily: "'Cinzel', serif", lineHeight: '1.2', width: '100%', padding: '0 20px', boxSizing: 'border-box', wordWrap: 'break-word' }}
         >
-          <span className="block mb-0.5 sm:mb-1 relative" style={{ display: 'block', position: 'relative' }}>
+          <span className="block mb-0.5 sm:mb-1 relative mx-auto" style={{ display: 'block', position: 'relative', fontSize: isDesktop ? `calc(clamp(36px, 3.5vw, 48px) * ${groomScale})` : `calc(clamp(24px, 7vw, 32px) * ${groomScale})` }}>
             <span style={{ position: 'relative', zIndex: 1 }}>
-              {(data.groomName || '').split('').map((char, index) => (
+              {groomName.split('').map((char, index) => (
                 <motion.span 
                   key={`groom-${index}`} 
                   variants={letterAnimVariant} 
@@ -240,7 +245,7 @@ function TwilightSerenadeHero({ data, isDesktop }) {
               }}
               aria-hidden="true"
             >
-              {(data.groomName || '').split('').map((char, index) => (
+              {groomName.split('').map((char, index) => (
                 <span key={`groom-glare-${index}`} style={{ display: 'inline-block' }}>
                   {char === ' ' ? '\u00A0' : char}
                 </span>
@@ -253,9 +258,13 @@ function TwilightSerenadeHero({ data, isDesktop }) {
           >
             &amp;
           </motion.span>
-          <span className="block mt-0.5 sm:mt-1 relative" style={{ display: 'block', position: 'relative' }}>
+          <span className="block mt-0.5 sm:mt-1 relative mx-auto" style={{ 
+            display: 'block', 
+            position: 'relative',
+            fontSize: isDesktop ? `calc(clamp(36px, 3.5vw, 48px) * ${brideScale})` : `calc(clamp(24px, 7vw, 32px) * ${brideScale})`
+          }}>
             <span style={{ position: 'relative', zIndex: 1 }}>
-              {(data.brideName || '').split('').map((char, index) => (
+              {brideName.split('').map((char, index) => (
                 <motion.span 
                   key={`bride-${index}`} 
                   variants={letterAnimVariant} 
@@ -289,7 +298,7 @@ function TwilightSerenadeHero({ data, isDesktop }) {
               }}
               aria-hidden="true"
             >
-              {(data.brideName || '').split('').map((char, index) => (
+              {brideName.split('').map((char, index) => (
                 <span key={`bride-glare-${index}`} style={{ display: 'inline-block' }}>
                   {char === ' ' ? '\u00A0' : char}
                 </span>

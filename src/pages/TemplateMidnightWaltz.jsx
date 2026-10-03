@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDraft } from '../context/DraftContext.jsx'
 import Countdown from '../components/Countdown.jsx'
@@ -10,7 +10,23 @@ import VenueMidnightWaltz from '../components/VenueMidnightWaltz.jsx'
 import CustomSection from '../components/CustomSection.jsx'
 import InviteQRSVP from '../components/InviteQRSVP.jsx'
 import { weddingData as staticData } from '../weddingData.js'
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import MidnightWaltzCover from '../components/MidnightWaltzCover.jsx'
+import bgMusicSrc from '../assets/audio/Anbil Avan.mp3'
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion'
+
+// ── Music Icons ───────────────────────────────────────────────
+const MusicOnIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z" />
+    <path d="M15.932 7.757a.75.75 0 0 1 1.061 0 6 6 0 0 1 0 8.486.75.75 0 0 1-1.06-1.061 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.06Z" />
+  </svg>
+)
+
+const MusicOffIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM17.78 9.22a.75.75 0 1 0-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 1 0 1.06-1.06L20.56 12l1.72-1.72a.75.75 0 1 0-1.06-1.06l-1.72 1.72-1.72-1.72Z" />
+  </svg>
+)
 
 // ── Background asset URLs (local Vercel CDN) ────────────────────────────────────────
 const desktopHeroBg      = "/assets/templates/midnight-waltz/hero-desktop.webp"
@@ -226,6 +242,11 @@ function MidnightWaltzHero({ data, isDesktop }) {
     gold:      '#B09060',   // antique gold — ornament, "and"
   }
 
+  const groomName = data.groomName || 'Abhishek';
+  const brideName = data.brideName || 'Kanika';
+  const groomScale = Math.min(1, 10 / Math.max(1, groomName.length));
+  const brideScale = Math.min(1, 10 / Math.max(1, brideName.length));
+
   return (
     <section
       id="hero"
@@ -312,22 +333,26 @@ function MidnightWaltzHero({ data, isDesktop }) {
         {/* 3. GROOM NAME — Religath */}
         <motion.div
           variants={lineAnim}
-          aria-label={data.groomName || 'Groom'}
+          aria-label={groomName}
           style={{
             fontFamily: "'Religath', serif",
             fontSize: isDesktop
-              ? 'clamp(2.5rem, 4.2vw, 3.6rem)'
-              : (isTablet ? 'clamp(4.2rem, 6.5vw, 5.2rem)' : 'clamp(2.5rem, 4.5vw, 4.0rem)'),
+              ? `calc(clamp(2.5rem, 4.2vw, 3.6rem) * ${groomScale})`
+              : (isTablet ? `calc(clamp(4.2rem, 6.5vw, 5.2rem) * ${groomScale})` : `calc(clamp(2.5rem, 4.5vw, 4.0rem) * ${groomScale})`),
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
             color: C.primary,
             lineHeight: 1.0,
             position: 'relative',
+            width: '100%',
+            padding: '0 20px',
+            boxSizing: 'border-box',
+            wordWrap: 'break-word',
           }}
         >
           <span style={{ position: 'relative', display: 'block' }}>
             <span style={{ position: 'relative', zIndex: 1 }}>
-              {(data.groomName || 'Abhishek')}
+              {groomName}
             </span>
             {/* Gold glare sweep */}
             <motion.span
@@ -352,7 +377,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
                 zIndex: 2,
               }}
             >
-              {(data.groomName || 'Abhishek')}
+              {groomName}
             </motion.span>
           </span>
         </motion.div>
@@ -377,22 +402,26 @@ function MidnightWaltzHero({ data, isDesktop }) {
         {/* 5. BRIDE NAME — Religath */}
         <motion.div
           variants={lineAnim}
-          aria-label={data.brideName || 'Bride'}
+          aria-label={brideName}
           style={{
             fontFamily: "'Religath', serif",
             fontSize: isDesktop
-              ? 'clamp(2.5rem, 4.2vw, 3.6rem)'
-              : (isTablet ? 'clamp(4.2rem, 6.5vw, 5.2rem)' : 'clamp(2.5rem, 4.5vw, 4.0rem)'),
+              ? `calc(clamp(2.5rem, 4.2vw, 3.6rem) * ${brideScale})`
+              : (isTablet ? `calc(clamp(4.2rem, 6.5vw, 5.2rem) * ${brideScale})` : `calc(clamp(2.5rem, 4.5vw, 4.0rem) * ${brideScale})`),
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
             color: C.primary,
             lineHeight: 1.0,
             position: 'relative',
+            width: '100%',
+            padding: '0 20px',
+            boxSizing: 'border-box',
+            wordWrap: 'break-word',
           }}
         >
           <span style={{ position: 'relative', display: 'block' }}>
             <span style={{ position: 'relative', zIndex: 1 }}>
-              {(data.brideName || 'Kanika')}
+              {brideName}
             </span>
             {/* Gold glare sweep (offset from groom's) */}
             <motion.span
@@ -417,7 +446,7 @@ function MidnightWaltzHero({ data, isDesktop }) {
                 zIndex: 2,
               }}
             >
-              {(data.brideName || 'Kanika')}
+              {brideName}
             </motion.span>
           </span>
         </motion.div>
@@ -704,6 +733,64 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
   const showWatermark = !isPaid
   const activeData = savedData || (isPreview ? draftData : null)
 
+  // Cover opening & splash state
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [hasOpened, setHasOpened] = useState(false)
+  const videoRef = useRef(null)
+
+  // Music state
+  const [isMusicMuted, setIsMusicMuted] = useState(false)
+  const audioRef = useRef(null)
+
+  useEffect(() => {
+    if (hasOpened && audioRef.current && !isMusicMuted) {
+      audioRef.current.muted = false
+      audioRef.current.volume = 1
+      if (audioRef.current.paused) {
+        audioRef.current.play().catch(() => {})
+      }
+    }
+  }, [hasOpened, isMusicMuted])
+
+  const toggleMusic = () => {
+    setIsMusicMuted(!isMusicMuted)
+    if (audioRef.current) {
+      if (isMusicMuted) {
+        audioRef.current.muted = false
+        audioRef.current.play().catch(() => {})
+      } else {
+        audioRef.current.pause()
+      }
+    }
+  }
+
+  const handleOpenCover = () => {
+    if (hasOpened || isPlaying) return
+    setIsPlaying(true)
+    if (videoRef.current) {
+      videoRef.current.play().catch(console.error)
+    }
+    if (audioRef.current) {
+      audioRef.current.muted = true
+      audioRef.current.play().catch(() => {})
+    }
+  }
+
+  const handleTimeUpdate = () => {
+    const vid = videoRef.current
+    if (vid) {
+      if (vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
+        if (!hasOpened) {
+          setHasOpened(true)
+        }
+      }
+    }
+  }
+
+  const handleVideoEnded = () => {
+    setHasOpened(true)
+  }
+
   // ── Data assembly ─────────────────────────────────────────────
   const data = activeData ? {
     ...staticData,
@@ -945,6 +1032,45 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
   // ── Render ────────────────────────────────────────────────────
   return (
     <div className="relative min-h-screen bg-[#FDFBF7] text-[#4A3E20]">
+      
+      {/* Background Music Player */}
+      <audio
+        ref={audioRef}
+        src={bgMusicSrc}
+        loop
+        playsInline
+        preload="auto"
+      />
+
+      {/* Floating Music Button */}
+      {hasOpened && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          onClick={toggleMusic}
+          className="fixed bottom-6 right-4 z-50 p-3 rounded-full backdrop-blur-sm shadow-[0_4px_15px_rgba(0,0,0,0.4)] transition-all hover:scale-105 active:scale-95"
+          style={{ 
+            backgroundColor: `#4A3E20CC`, 
+            color: '#FDFBF7', 
+            border: `1px solid #FDFBF74D` 
+          }}
+        >
+          {isMusicMuted ? <MusicOffIcon /> : <MusicOnIcon />}
+        </motion.button>
+      )}
+
+      <MidnightWaltzCover
+        hasOpened={hasOpened}
+        isPlaying={isPlaying}
+        isVideoReady={true}
+        videoRef={videoRef}
+        coverVideoSrc="/assets/templates/midnight-waltz/taptoopenvideo.mp4"
+        coverPosterSrc="/assets/templates/midnight-waltz/hero-mobile.webp"
+        handleOpenCover={handleOpenCover}
+        handleTimeUpdate={handleTimeUpdate}
+        handleVideoEnded={handleVideoEnded}
+      />
 
       {/* ── MOBILE & TABLET VIEW ── */}
       <div className="lg:hidden flex justify-center items-start min-h-screen bg-[#F0E8D8]">

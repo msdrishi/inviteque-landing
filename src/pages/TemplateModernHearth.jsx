@@ -325,10 +325,16 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
             <motion.p variants={itemVariants} className="text-[10px] sm:text-[12px] md:text-[16px] md:tracking-[0.15em] font-semibold tracking-widest text-[#456B2B] uppercase mb-0.5" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               You are warmly invited to our
             </motion.p>
-            <motion.h1 variants={itemVariants} className="text-[#6B351D] select-none leading-[1.1] w-[85%] mb-0.5 text-[38px] sm:text-6xl md:text-[72px] font-bold font-heading" style={{ fontFamily: "'Priestacy', serif" }}>
+            <motion.h1 variants={itemVariants} className="text-[#6B351D] select-none leading-[1.1] w-full px-5 box-border break-words mb-0.5 font-bold font-heading mx-auto" style={{ 
+              fontFamily: "'Priestacy', serif", 
+              fontSize: `calc(clamp(38px, 10vw, 72px) * ${data.hero.functionTitleScale || 1})`
+            }}>
               {data.hero.functionTitle || 'House Warming'}
             </motion.h1>
-            <motion.p variants={itemVariants} className="text-[18px] sm:text-[28px] md:text-[40px] text-[#B77A16] font-bold select-none leading-none mb-1 font-heading !mt-8 md:!mt-14" style={{ fontFamily: "'PrimorStylish', serif" }}>
+            <motion.p variants={itemVariants} className="text-[#B77A16] font-bold select-none leading-none mb-1 font-heading !mt-8 md:!mt-14 w-full px-5 box-border break-words mx-auto" style={{ 
+              fontFamily: "'PrimorStylish', serif",
+              fontSize: `calc(clamp(18px, 6vw, 40px) * ${data.hero.houseNameScale || 1})`
+            }}>
               {data.hero.houseName || 'Karthik Nest'}
             </motion.p>
             <motion.p variants={itemVariants} className="text-[11px] sm:text-[13px] md:text-[18px] leading-relaxed max-w-[280px] md:max-w-[480px] text-[#776653] font-medium px-2 mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>
@@ -366,10 +372,16 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
             <motion.p variants={itemVariants} className="text-[0.8vw] xl:text-[0.7vw] font-semibold tracking-widest text-[#456B2B] uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               You are warmly invited to our
             </motion.p>
-            <motion.h1 variants={itemVariants} className="text-[3.8vw] xl:text-[3.2vw] text-[#6B351D] font-bold my-1 drop-shadow-sm select-none leading-none font-heading" style={{ fontFamily: "'Priestacy', serif" }}>
+            <motion.h1 variants={itemVariants} className="text-[#6B351D] font-bold my-1 drop-shadow-sm select-none leading-none font-heading w-full px-5 box-border break-words mx-auto" style={{ 
+              fontFamily: "'Priestacy', serif",
+              fontSize: `calc(clamp(3.2vw, 3.8vw, 4vw) * ${data.hero.functionTitleScale || 1})`
+            }}>
               {data.hero.functionTitle || 'House Warming'}
             </motion.h1>
-            <motion.p variants={itemVariants} className="text-[2.6vw] xl:text-[2.2vw] text-[#B77A16] font-bold mb-2 drop-shadow-sm select-none leading-none font-heading" style={{ fontFamily: "'PrimorStylish', serif", marginTop: '64px' }}>
+            <motion.p variants={itemVariants} className="text-[#B77A16] font-bold mb-2 drop-shadow-sm select-none leading-none font-heading w-full px-5 box-border break-words mx-auto" style={{ 
+              fontFamily: "'PrimorStylish', serif", marginTop: '64px',
+              fontSize: `calc(clamp(2.2vw, 2.6vw, 3vw) * ${data.hero.houseNameScale || 1})`
+            }}>
               {data.hero.houseName || 'Karthik Nest'}
             </motion.p>
             <motion.p variants={itemVariants} className="text-[0.9vw] xl:text-[0.8vw] leading-relaxed max-w-[420px] text-[#776653] font-medium mt-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>

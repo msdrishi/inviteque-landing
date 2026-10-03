@@ -255,6 +255,24 @@ export default function InviteQRSVP({
           checkCircle: 'bg-[#8A4B58] text-white',
           uncheckCircle: 'border-[#8A4B58]/30 text-transparent',
         }
+      case 'pink-blossom':
+        return {
+          fontFamily: "'Cinzel', serif",
+          bodyFont: "'Montserrat', sans-serif",
+          cardBg: 'bg-[#FBF6ED] border-[#C8195E]/20 shadow-[0_20px_50px_rgba(200,25,94,0.08)]',
+          headerText: 'text-[#C8195E]',
+          bodyText: 'text-[#4A6741]',
+          accentText: 'text-[#C8195E]',
+          accentBtn: 'bg-[#C8195E] text-[#FBF6ED] hover:bg-[#8B1848] shadow-md',
+          secondaryBtn: 'border-[#C8195E]/30 text-[#C8195E] hover:bg-[#C8195E]/10',
+          activeChoice: 'bg-[#C8195E] text-white border-[#C8195E]',
+          inactiveChoice: 'bg-white text-[#C8195E]/80 border-[#C8195E]/20 hover:border-[#C8195E]',
+          inputBg: 'bg-white border-[#C8195E]/25 focus:border-[#C8195E] text-[#4A6741]',
+          divider: 'bg-[#C8195E]/20',
+          badgeBg: 'bg-[#C8195E]/10 text-[#C8195E]',
+          checkCircle: 'bg-[#C8195E] text-white',
+          uncheckCircle: 'border-[#C8195E]/30 text-transparent',
+        }
       case 'terracotta': // Modern Hearth
         return {
           fontFamily: "'Playfair Display', serif",

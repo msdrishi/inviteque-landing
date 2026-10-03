@@ -174,6 +174,9 @@ export default function RoyalHeirloomHero({
   weddingYear,
   fullAddress,
 }) {
+  const groomScale = Math.min(1, 10 / Math.max(1, (groomName || '').length));
+  const brideScale = Math.min(1, 10 / Math.max(1, (brideName || '').length));
+
   return (
     <section className="relative w-full min-h-[100svh] flex flex-col items-center justify-center text-center overflow-hidden bg-[#ECE3D1]">
       <motion.div
@@ -211,12 +214,14 @@ export default function RoyalHeirloomHero({
         {/* Couple Names in signature calligraphy with super slow majestic reveal */}
         <div className="flex flex-col items-center justify-center w-full my-3 md:my-6 overflow-visible">
           <div className="flex flex-col items-center">
-            <AnimatedCoupleName 
-              name={groomName} 
-              isTriggered={hasTriggeredHeroText || hasOpened}
-              delay={0.3} 
-              fontSizeClass="text-[48px] sm:text-[56px] md:text-[80px]" 
-            />
+            <div style={{ zoom: groomScale }}>
+              <AnimatedCoupleName 
+                name={groomName} 
+                isTriggered={hasTriggeredHeroText || hasOpened}
+                delay={0.3} 
+                fontSizeClass="text-[48px] sm:text-[56px] md:text-[80px]" 
+              />
+            </div>
             {groomFamily && (
               <motion.p
                 initial={{ opacity: 0, y: 5 }}
@@ -247,12 +252,14 @@ export default function RoyalHeirloomHero({
           </motion.div>
 
           <div className="flex flex-col items-center">
-            <AnimatedCoupleName 
-              name={brideName} 
-              isTriggered={hasTriggeredHeroText || hasOpened}
-              delay={1.2} 
-              fontSizeClass="text-[48px] sm:text-[56px] md:text-[80px]" 
-            />
+            <div style={{ zoom: brideScale }}>
+              <AnimatedCoupleName 
+                name={brideName} 
+                isTriggered={hasTriggeredHeroText || hasOpened}
+                delay={1.2} 
+                fontSizeClass="text-[48px] sm:text-[56px] md:text-[80px]" 
+              />
+            </div>
             {brideFamily && (
               <motion.p
                 initial={{ opacity: 0, y: 5 }}

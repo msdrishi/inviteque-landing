@@ -24,6 +24,7 @@ import CustomRoyalHeirloomHemangAndJasmine from './pages/custom-orders/royal-hei
 import CustomRoyalHeirloomRohitAndManpreet from './pages/custom-orders/royal-heirloom/RohitAndManpreet/index.jsx'
 import CustomRoyalHeirloomSaaranshAndStuti from './pages/custom-orders/royal-heirloom/SaaranshAndStuti/index.jsx'
 import CustomRoyalHeritageNaveenAndPreena from './pages/custom-orders/royal-heritage/NaveenAndPreena/index.jsx'
+import CustomPinkBlossomAlinaAndTanmay from './pages/custom-orders/pink-blossom/AlinaAndTanmay/index.jsx'
 import CustomRsvpDashboard from './pages/CustomRsvpDashboard.jsx'
 import { API_URL } from './config'
 
@@ -176,6 +177,10 @@ export default function App() {
           {/* Custom Client Template Routes (Naveen & Preena - Royal Heritage) */}
           <Route path="/template/royal-heritage/naveen-and-preena" element={<CustomRoyalHeritageNaveenAndPreena />} />
           <Route path="/templates/royal-heritage/naveen-and-preena" element={<CustomRoyalHeritageNaveenAndPreena />} />
+
+          {/* Custom Client Template Routes (Alina & Tanmay - Pink Blossom) */}
+          <Route path="/template/pink-blossom/alina-and-tanmay" element={<CustomPinkBlossomAlinaAndTanmay />} />
+          <Route path="/templates/pink-blossom/alina-and-tanmay" element={<CustomPinkBlossomAlinaAndTanmay />} />
           
           {/* Standard & Multi-Link Templates */}
           <Route path="/templates/:templateId" element={<TemplateRoute />} />

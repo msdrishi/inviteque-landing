@@ -233,6 +233,8 @@ function RoyalPalaceHero({ data, isDesktop }) {
 
   const groomNameText = toPascalCase(data.groomName || "Rohan")
   const brideNameText = toPascalCase(data.brideName || "Anaya")
+  const groomScale = Math.min(1, 10 / Math.max(1, groomNameText.length));
+  const brideScale = Math.min(1, 10 / Math.max(1, brideNameText.length));
 
   return (
     <section
@@ -331,8 +333,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
             initial="hidden"
             animate="show"
             variants={groomContainerVariants}
-            className="text-[#5A2C16] font-normal leading-tight tracking-[0.03em] text-[38px] sm:text-[44px] md:text-[50px] lg:text-[56px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.1em]"
-            style={{ fontFamily: "'PrimorStylish', serif" }}
+            className="text-[#5A2C16] font-normal leading-tight tracking-[0.03em] text-[38px] sm:text-[44px] md:text-[50px] lg:text-[56px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.1em] w-full px-5 box-border break-words"
+            style={{ 
+              fontFamily: "'PrimorStylish', serif",
+              fontSize: isDesktop ? `calc(56px * ${groomScale})` : `calc(38px * ${groomScale})`
+            }}
           >
             <span className="relative z-10 flex justify-center items-center flex-wrap">
               {groomNameText.split('').map((char, index) => (
@@ -388,8 +393,11 @@ function RoyalPalaceHero({ data, isDesktop }) {
             initial="hidden"
             animate="show"
             variants={brideContainerVariants}
-            className="text-[#5A2C16] font-normal leading-tight tracking-[0.03em] text-[38px] sm:text-[44px] md:text-[50px] lg:text-[56px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.1em]"
-            style={{ fontFamily: "'PrimorStylish', serif" }}
+            className="text-[#5A2C16] font-normal leading-tight tracking-[0.03em] text-[38px] sm:text-[44px] md:text-[50px] lg:text-[56px] relative flex justify-center items-center flex-wrap h-auto min-h-[1.1em] w-full px-5 box-border break-words"
+            style={{ 
+              fontFamily: "'PrimorStylish', serif",
+              fontSize: isDesktop ? `calc(56px * ${brideScale})` : `calc(38px * ${brideScale})`
+            }}
           >
             <span className="relative z-10 flex justify-center items-center flex-wrap">
               {brideNameText.split('').map((char, index) => (
