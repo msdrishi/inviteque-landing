@@ -171,7 +171,7 @@ export default function WelcomeMidnightWaltz({
             maxWidth: '100%',
           }}
         >
-          {data.message || 'Your presence is a cherished part of our celebration. Join us as we gather with love, laughter, and blessings to celebrate the beginning of our beautiful journey together.'}
+          {data.message !== undefined && data.message !== null ? data.message : 'Your presence is a cherished part of our celebration. Join us as we gather with love, laughter, and blessings to celebrate the beginning of our beautiful journey together.'}
         </motion.p>
 
         {/* Lotus divider */}

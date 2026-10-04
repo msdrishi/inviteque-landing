@@ -602,6 +602,7 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
     },
     invitation: {
       ...staticData.invitation,
+      message: activeData ? (savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) : '',
       groomName: savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName,
       brideName: savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName,
     }
@@ -617,21 +618,12 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
     }
   }
 
-  const showGallery = savedData
-    ? (savedData.invitationData?.showGallery !== undefined 
-        ? Boolean(savedData.invitationData.showGallery)
-        : (savedData.scheduleData?.showGallery !== undefined
-            ? Boolean(savedData.scheduleData.showGallery)
-            : true))
-    : (draftData?.showGallery !== undefined ? Boolean(draftData.showGallery) : true)
-
-  const showSchedule = savedData
-    ? (savedData.invitationData?.showSchedule !== undefined 
-        ? Boolean(savedData.invitationData.showSchedule)
-        : (savedData.scheduleData?.showSchedule !== undefined
-            ? Boolean(savedData.scheduleData.showSchedule)
-            : true))
-    : (draftData?.showSchedule !== undefined ? Boolean(draftData.showSchedule) : true)
+  const isGalleryView = !activeData;
+  const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
+  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
+  const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
+  const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
+  const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
 
   const customSectionData = savedData ? (savedData.invitationData || {}) : (draftData || {})
   const showRsvp = savedData 
@@ -639,14 +631,6 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
         ? Boolean(savedData.invitationData.hasRsvp) 
         : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp !== false)) 
     : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
-
-  const showCountdown = savedData
-    ? (savedData.invitationData?.showCountdown !== undefined
-        ? Boolean(savedData.invitationData.showCountdown)
-        : (savedData.countdownData?.showCountdown !== undefined
-            ? Boolean(savedData.countdownData.showCountdown)
-            : true))
-    : (draftData?.showCountdown !== undefined ? Boolean(draftData.showCountdown) : true)
 
   return (
     <div className="relative min-h-screen bg-[#FBF7F0] text-[#3D5236]">
@@ -691,8 +675,8 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
           <TwilightSerenadeHero data={data.hero} isDesktop={false} />
           <CustomSection photoBgDesktop={photoBgDesktop} photoBgMobile={photoBgMobile} data={customSectionData} />
           {showGallery && <Story data={data.story} bgImage={photoBgMobile} />}
-          <Invitation data={data.invitation} bgImage={messageBgMobile} />
-          <Venue data={data.venue} bgImage={locationBgMobile} theme="green" />
+          {showWelcome && <Invitation data={data.invitation} bgImage={messageBgMobile} />}
+          {showVenue && <Venue data={data.venue} bgImage={locationBgMobile} theme="green" />}
           {showSchedule && <Events data={data.events} theme="green" bgImage={photoBgMobile} />}
           {showRsvp && (
             <InviteQRSVP
@@ -752,12 +736,16 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
             <Story data={data.story} isDesktop={true} bgImage={photoBgDesktop} />
           </div>
         )}
-        <div className="w-full">
-          <Invitation data={data.invitation} isDesktop={true} bgImage={messageBgDesktop} />
-        </div>
-        <div className="w-full">
-          <Venue data={data.venue} isDesktop={true} bgImage={locationBgDesktop} theme="green" />
-        </div>
+        {showWelcome && (
+          <div className="w-full">
+            <Invitation data={data.invitation} isDesktop={true} bgImage={messageBgDesktop} />
+          </div>
+        )}
+        {showVenue && (
+          <div className="w-full">
+            <Venue data={data.venue} isDesktop={true} bgImage={locationBgDesktop} theme="green" />
+          </div>
+        )}
         {showSchedule && (
           <div className="w-full">
             <Events data={data.events} isDesktop={true} theme="green" bgImage={photoBgDesktop} />

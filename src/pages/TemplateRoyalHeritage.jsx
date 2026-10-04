@@ -92,8 +92,22 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
         if (!isNaN(d.getTime())) return d.toISOString()
         return staticData.countdown?.targetDateTimeISO
       })()
-    }
+    },
+    photos: (() => {
+      const photos = savedData
+        ? (savedData.storyData?.photos || savedData.photos || [])
+        : (draftData?.photos || [])
+      const activePhotos = photos.filter(Boolean)
+      return activePhotos.length > 0 ? activePhotos : null
+    })()
   }
+
+  const isGalleryView = !activeData;
+  const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
+  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
+  const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
+  const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
+  const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
 
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 768
@@ -370,18 +384,28 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
         hasTriggeredHeroBg={hasTriggeredHeroBg}
         hasTriggeredHeroText={hasTriggeredHeroText}
       />
-      <TemplateRoyalHeritageStory {...commonProps} />
-      <TemplateRoyalHeritageWelcome {...commonProps} />
       
-      <TemplateRoyalHeritageSchedule 
-        scheduleItems={scheduleItems}
-        weddingDate={data.hero?.weddingDate}
-        weddingMonth={data.hero?.weddingMonth}
-        weddingYear={data.hero?.weddingYear}
-        fontStyles={fontStyles}
-      />
+      {showGallery && (
+        <TemplateRoyalHeritageStory {...commonProps} />
+      )}
       
-      <TemplateRoyalHeritageVenue {...commonProps} />
+      {showWelcome && (
+        <TemplateRoyalHeritageWelcome {...commonProps} />
+      )}
+      
+      {showSchedule && (
+        <TemplateRoyalHeritageSchedule 
+          scheduleItems={scheduleItems}
+          weddingDate={data.hero?.weddingDate}
+          weddingMonth={data.hero?.weddingMonth}
+          weddingYear={data.hero?.weddingYear}
+          fontStyles={fontStyles}
+        />
+      )}
+      
+      {showVenue && (
+        <TemplateRoyalHeritageVenue {...commonProps} />
+      )}
       
       <TemplateRoyalHeritageCalendar 
         calendarData={calendarData}
@@ -400,7 +424,9 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
         />
       </div>
 
-      <TemplateRoyalHeritageCountdown {...commonProps} />
+      {showCountdown && (
+        <TemplateRoyalHeritageCountdown {...commonProps} />
+      )}
 
       <Footer 
         data={{ id: 'footer' }}

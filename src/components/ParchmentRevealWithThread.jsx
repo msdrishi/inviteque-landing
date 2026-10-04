@@ -145,35 +145,29 @@ export default function ParchmentRevealWithThread({ children }) {
               style={{ transformOrigin: 'top center' }}
               className="flex flex-col items-center cursor-grab active:cursor-grabbing"
             >
-              {/* Thread line connecting to the top (Extends way off-screen so it never disconnects when dragged) */}
+              {/* Thread line connecting to the top (Extends off-screen but shorter) */}
               <div
-                className="w-[6px] sm:w-[8px] shadow-[0_4px_10px_rgba(0,0,0,0.3)] z-10"
+                className="w-[3px] sm:w-[4px] shadow-[0_4px_10px_rgba(0,0,0,0.3)] z-10"
                 style={{
-                  height: '1000px',
-                  marginTop: '-920px', // Leaves exactly 80px of the cord visible initially (shorter)
+                  height: '400px', // Reduced height for shorter thread
+                  marginTop: '-360px', // Leaves 40px visible
                   background: 'repeating-linear-gradient(45deg, #C8195E, #C8195E 4px, #8B1848 4px, #8B1848 8px)',
                   borderRadius: '999px',
-                  borderLeft: '1px solid rgba(255,255,255,0.3)',
-                  borderRight: '1px solid rgba(0,0,0,0.3)',
                 }}
               />
 
-              <img
-                src="/assets/templates/pinkblossom/Ivory Floral Tassel Ornament.png"
-                alt="Floral Tassel Ornament"
-                className="w-40 sm:w-56 h-auto drop-shadow-[0_15px_30px_rgba(0,0,0,0.6)] select-none -mt-4 z-20"
-                draggable={false}
-              />
+              {/* Removed the large floral tassel ornament as per user request to keep only the arrow indication */}
 
               {/* Simple arrow indicator with circular highlight */}
               <motion.div
-                className="mt-4 flex items-center justify-center z-10 cursor-grab bg-[#FAF3E4]/95 backdrop-blur-md w-12 h-12 rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.2)] relative"
+                className="mt-2 flex items-center justify-center z-10 cursor-grab bg-[#FAF3E4]/95 backdrop-blur-md w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(200,25,94,0.4)] relative"
                 animate={{ opacity: [0.8, 1, 0.8], y: [0, 8, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ border: '2px solid rgba(200,25,94,0.6)' }}
               >
                 {/* Thin inner gold ring for elegance */}
-                <div className="absolute inset-[3px] rounded-full border border-[#d4af37]/50 pointer-events-none" />
-                <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 mt-0.5" stroke="#C8195E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <div className="absolute inset-[3px] rounded-full border border-[#d4af37]/60 pointer-events-none" />
+                <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7 mt-0.5" stroke="#C8195E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M6 9l6 6 6-6" />
                 </svg>
               </motion.div>

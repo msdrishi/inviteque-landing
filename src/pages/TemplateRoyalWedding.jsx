@@ -176,26 +176,18 @@ export default function TemplateRoyalWedding({ savedData, groupSlug: propGroupSl
     },
     invitation: {
       ...staticData.invitation,
+      message: activeData ? (savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) : '',
       groomName: savedData ? savedData.coupleData?.groomName : draftData.groomName,
       brideName: savedData ? savedData.coupleData?.brideName : draftData.brideName,
     }
   } : staticData
 
-  const showGallery = savedData
-    ? (savedData.invitationData?.showGallery !== undefined 
-        ? Boolean(savedData.invitationData.showGallery)
-        : (savedData.scheduleData?.showGallery !== undefined
-            ? Boolean(savedData.scheduleData.showGallery)
-            : true))
-    : Boolean(draftData.showGallery)
-
-  const showSchedule = savedData
-    ? (savedData.invitationData?.showSchedule !== undefined 
-        ? Boolean(savedData.invitationData.showSchedule)
-        : (savedData.scheduleData?.showSchedule !== undefined
-            ? Boolean(savedData.scheduleData.showSchedule)
-            : true))
-    : Boolean(draftData.showSchedule)
+  const isGalleryView = !activeData;
+  const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
+  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
+  const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
+  const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
+  const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
 
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
   const showRsvp = savedData 
@@ -263,9 +255,8 @@ export default function TemplateRoyalWedding({ savedData, groupSlug: propGroupSl
         {/* Photo Gallery is optional (Mapped to Story component) */}
         {showGallery && <Story data={data.story} />}
 
-        <Invitation data={data.invitation} />
-
-        <Venue data={data.venue} />
+        {showWelcome && <Invitation data={data.invitation} />}
+        {showVenue && <Venue data={data.venue} />}
 
         {/* Wedding Schedule is optional */}
         {showSchedule && <Events data={data.events} />}

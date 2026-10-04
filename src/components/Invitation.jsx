@@ -67,10 +67,10 @@ export default function Invitation({ data, bgImage, theme }) {
     bg: '#fff6f2',
   }
 
-  // Fallback text if data.message is empty
+  // Fallback text if data.message is undefined
   const defaultMessage = "We are excited to invite you to celebrate our wedding with us. This special day would not be complete without your presence."
 
-  const paragraphs = String(data.message || defaultMessage)
+  const paragraphs = String(data.message !== undefined && data.message !== null ? data.message : defaultMessage)
     .split('\n')
     .map((p) => p.trim())
     .filter(Boolean)

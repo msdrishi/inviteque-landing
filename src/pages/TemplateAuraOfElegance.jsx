@@ -179,26 +179,18 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
     },
     invitation: {
       ...staticData.invitation,
+      message: activeData ? (savedData ? savedData.invitationData?.welcomeMessage : draftData.welcomeMessage) : '',
       groomName: savedData ? savedData.coupleData?.groomName : draftData.groomName,
       brideName: savedData ? savedData.coupleData?.brideName : draftData.brideName,
     }
   } : staticData
 
-  const showGallery = savedData
-    ? (savedData.invitationData?.showGallery !== undefined 
-        ? Boolean(savedData.invitationData.showGallery)
-        : (savedData.scheduleData?.showGallery !== undefined
-            ? Boolean(savedData.scheduleData.showGallery)
-            : true))
-    : Boolean(draftData.showGallery)
-
-  const showSchedule = savedData
-    ? (savedData.invitationData?.showSchedule !== undefined 
-        ? Boolean(savedData.invitationData.showSchedule)
-        : (savedData.scheduleData?.showSchedule !== undefined
-            ? Boolean(savedData.scheduleData.showSchedule)
-            : true))
-    : Boolean(draftData.showSchedule)
+  const isGalleryView = !activeData;
+  const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
+  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
+  const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
+  const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
+  const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
 
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
   const showRsvp = savedData 
@@ -252,8 +244,8 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
           <Hero data={data.hero} />
           <CustomSection photoBgDesktop="/assets/templates/aura-of-elegance/texture-pink.webp" photoBgMobile="/assets/templates/aura-of-elegance/texture-pink.webp" data={customSectionData} />
           {showGallery && <Story data={data.story} />}
-          <Invitation data={data.invitation} />
-          <Venue data={data.venue} />
+          {showWelcome && <Invitation data={data.invitation} />}
+          {showVenue && <Venue data={data.venue} />}
           {showSchedule && <Events data={data.events} bgImage="/assets/templates/aura-of-elegance/texture-pink.webp" />}
           {showRsvp && (
             <InviteQRSVP
@@ -320,14 +312,18 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
         )}
 
         {/* 3) Our Story, Our Journey Section (Envelope Card centered) */}
-        <div className="w-full py-16 bg-[#fff6f2]">
-          <Invitation data={data.invitation} isDesktop={true} />
-        </div>
+        {showWelcome && (
+          <div className="w-full py-16 bg-[#fff6f2]">
+            <Invitation data={data.invitation} isDesktop={true} />
+          </div>
+        )}
 
         {/* 4) Venue Section (Details + QR Code map card side-by-side) */}
-        <div className="w-full">
-          <Venue data={data.venue} isDesktop={true} bgImage="/assets/templates/aura-of-elegance/venue-bg.webp" />
-        </div>
+        {showVenue && (
+          <div className="w-full">
+            <Venue data={data.venue} isDesktop={true} bgImage="/assets/templates/aura-of-elegance/venue-bg.webp" />
+          </div>
+        )}
 
         {/* 5) Wedding Schedule Section (Reception, Haldi, Wedding Vows side-by-side) */}
         {showSchedule && (

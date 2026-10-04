@@ -247,6 +247,15 @@ export default function TemplateRoute() {
           const res = await fetch(`${API_URL}/api/invites/${code}`);
           if (res.ok) {
             fetchedData = await res.json();
+            
+            // Enforce that the URL template ID matches the purchased/saved template theme
+            if (fetchedData.theme && fetchedData.theme.toLowerCase() !== templateId.toLowerCase()) {
+              if (active) {
+                navigate(`/templates/${fetchedData.theme.toLowerCase()}/${code}`, { replace: true });
+              }
+              return;
+            }
+
             if (active) setInviteData(fetchedData);
           } else {
             if (active) navigate('/', { replace: true });

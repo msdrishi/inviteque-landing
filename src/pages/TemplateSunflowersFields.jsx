@@ -1010,6 +1010,17 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
               letterSpacing: '0.12em',
             }}
           />
+          
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="mt-6 px-4"
+          >
+            <p className="font-['Montserrat',_sans-serif] text-[12px] sm:text-[14px] text-[#5A2C16]/90 leading-relaxed font-medium tracking-[0.03em] whitespace-pre-wrap">
+              {data.message}
+            </p>
+          </motion.div>
         </div>
       </div>
 
@@ -1628,7 +1639,7 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
       ...staticData.invitation,
       groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
       brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
-      message: savedData ? savedData.invitationData?.message : draftData.message,
+      message: savedData ? savedData.invitationData?.welcomeMessage : draftData.welcomeMessage,
     },
     events: {
       ...staticData.events,
@@ -1665,21 +1676,12 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
     }
   }
 
-  const showGallery = savedData
-    ? (savedData.invitationData?.showGallery !== undefined 
-        ? Boolean(savedData.invitationData.showGallery)
-        : (savedData.scheduleData?.showGallery !== undefined
-            ? Boolean(savedData.scheduleData.showGallery)
-            : true))
-    : Boolean(draftData.showGallery)
-
-  const showSchedule = savedData
-    ? (savedData.invitationData?.showSchedule !== undefined 
-        ? Boolean(savedData.invitationData.showSchedule)
-        : (savedData.scheduleData?.showSchedule !== undefined
-            ? Boolean(savedData.scheduleData.showSchedule)
-            : true))
-    : Boolean(draftData.showSchedule)
+  const isGalleryView = !activeData;
+  const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
+  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
+  const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
+  const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
+  const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
 
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
   const showRsvp = savedData 
@@ -1754,8 +1756,8 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
             <SunflowerSVG className="absolute -bottom-12 -right-12 w-64 h-64 text-[#5A2C16] opacity-[0.06] select-none pointer-events-none" />
           </CustomSection>
           {showGallery && <RoyalPalaceStory data={data.story} isDesktop={false} />}
-          <RoyalPalaceInvitation data={data.invitation} isDesktop={false} />
-          <RoyalPalaceVenue data={data.venue} isDesktop={false} />
+          {showWelcome && <RoyalPalaceInvitation data={data.invitation} isDesktop={false} />}
+          {showVenue && <RoyalPalaceVenue data={data.venue} isDesktop={false} />}
           {showSchedule && (
             <Events data={data.events} isDesktop={false} theme="gold" style={warmGoldBgStyle}>
               {eventsWatermarks}
@@ -1771,7 +1773,7 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
               config={savedData?.rsvpData}
             />
           )}
-          <RoyalPalaceCountdown data={data.countdown} isDesktop={false} />
+          {showCountdown && <RoyalPalaceCountdown data={data.countdown} isDesktop={false} />}
           <Footer data={data.footer} theme="gold" />
         </div>
       </div>
@@ -1832,12 +1834,16 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
             <RoyalPalaceStory data={data.story} isDesktop={true} />
           </div>
         )}
-        <div className="w-full">
-          <RoyalPalaceInvitation data={data.invitation} isDesktop={true} />
-        </div>
-        <div className="w-full">
-          <RoyalPalaceVenue data={data.venue} isDesktop={true} />
-        </div>
+        {showWelcome && (
+          <div className="w-full">
+            <RoyalPalaceInvitation data={data.invitation} isDesktop={true} />
+          </div>
+        )}
+        {showVenue && (
+          <div className="w-full">
+            <RoyalPalaceVenue data={data.venue} isDesktop={true} />
+          </div>
+        )}
         {showSchedule && (
           <div className="w-full">
             <Events data={data.events} isDesktop={true} theme="gold" style={warmGoldBgStyle}>
@@ -1857,9 +1863,11 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
             />
           </div>
         )}
-        <div className="w-full">
-          <RoyalPalaceCountdown data={data.countdown} isDesktop={true} />
-        </div>
+        {showCountdown && (
+          <div className="w-full">
+            <RoyalPalaceCountdown data={data.countdown} isDesktop={true} />
+          </div>
+        )}
         <div className="w-full">
           <Footer data={data.footer} theme="gold" />
         </div>

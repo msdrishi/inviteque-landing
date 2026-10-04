@@ -138,29 +138,16 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   }, [savedData, draftData])
 
   // Section visibility toggles
-  const sections = savedData?.sections || draftData?.sections || {}
-  const showHero = sections.showHero !== false
-  const showStory = sections.showStory !== false
-  const showWelcome = sections.showWelcome !== false
-  const showVenue = sections.showVenue !== false
-  const showCountdown = sections.showCountdown !== false
+  const activeData = savedData || (isPreview ? draftData : null);
+  const isGalleryView = !activeData;
 
-  // Show/hide features
-  const showGallery = savedData
-    ? (savedData.invitationData?.showGallery !== undefined
-        ? Boolean(savedData.invitationData.showGallery)
-        : (savedData.scheduleData?.showGallery !== undefined
-            ? Boolean(savedData.scheduleData.showGallery)
-            : true))
-    : Boolean(draftData?.showGallery ?? true)
+  const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
+  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
+  const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
+  const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
+  const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
+  const welcomeMessage = isGalleryView ? '' : (savedData ? (savedData.invitationData?.welcomeMessage || savedData.welcomeMessage || '') : (draftData?.welcomeMessage || ''));
 
-  const showSchedule = savedData
-    ? (savedData.invitationData?.showSchedule !== undefined
-        ? Boolean(savedData.invitationData.showSchedule)
-        : (savedData.scheduleData?.showSchedule !== undefined
-            ? Boolean(savedData.scheduleData.showSchedule)
-            : true))
-    : Boolean(draftData?.showSchedule ?? true)
 
   const showRsvp = savedData
     ? (savedData.invitationData?.hasRsvp !== undefined
@@ -471,6 +458,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
         <RoyalHeirloomStoryText 
           brideName={brideName}
           groomName={groomName}
+          welcomeMessage={welcomeMessage}
         />
         )}
 

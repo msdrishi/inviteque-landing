@@ -900,6 +900,7 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
     },
     invitation: {
       ...staticData.invitation,
+      message: activeData ? (savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) : '',
       groomName: (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || 'Abhishek',
       brideName: (savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName) || 'Kanika',
     },
@@ -938,6 +939,7 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
     },
     invitation: {
       ...staticData.invitation,
+      message: '',
       groomName: 'Abhishek',
       brideName: 'Kanika',
     },
@@ -945,21 +947,12 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
 
   const groomPhoto  = (savedData ? (savedData.coupleData?.groomPhoto || null) : (draftData?.groomPhoto || null)) || "/backgrounds/Midnight Waltz/groom.png"
   const bridePhoto  = (savedData ? (savedData.coupleData?.bridePhoto || null) : (draftData?.bridePhoto || null)) || "/backgrounds/Midnight Waltz/bride.png"
-  const showGallery = savedData
-    ? (savedData.invitationData?.showGallery !== undefined 
-        ? Boolean(savedData.invitationData.showGallery)
-        : (savedData.scheduleData?.showGallery !== undefined
-            ? Boolean(savedData.scheduleData.showGallery)
-            : true))
-    : Boolean(draftData?.showGallery)
-
-  const showSchedule = savedData
-    ? (savedData.invitationData?.showSchedule !== undefined 
-        ? Boolean(savedData.invitationData.showSchedule)
-        : (savedData.scheduleData?.showSchedule !== undefined
-            ? Boolean(savedData.scheduleData.showSchedule)
-            : true))
-    : Boolean(draftData?.showSchedule)
+  const isGalleryView = !activeData;
+  const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
+  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
+  const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
+  const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
+  const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
 
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
   const showRsvp = savedData 

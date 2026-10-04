@@ -97,27 +97,15 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
   // Active data selection
   const activeData = savedData || (isPreview ? draftData : null)
 
-  const showFamilySection = activeData 
-    ? (activeData.showFamilySection !== undefined ? activeData.showFamilySection : activeData.invitationData?.showFamilySection)
-    : true
-  const showSchedule = activeData
-    ? (activeData.showSchedule !== undefined 
-        ? activeData.showSchedule 
-        : (activeData.scheduleData?.showSchedule !== undefined 
-            ? activeData.scheduleData.showSchedule 
-            : activeData.invitationData?.showSchedule))
-    : true
-  const showCountdown = activeData
-    ? (activeData.showCountdown !== undefined 
-        ? activeData.showCountdown 
-        : (activeData.countdownData?.showCountdown !== undefined 
-            ? activeData.countdownData.showCountdown 
-            : (activeData.invitationData?.showCountdown !== undefined
-                ? activeData.invitationData.showCountdown
-                : true)))
-    : true
+  const isGalleryView = !activeData;
+  const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
+  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
+  const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
+  const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
+  const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
+
   const familyMessage = activeData 
-    ? (activeData.familyMessage || activeData.invitationData?.familyMessage || '')
+    ? (savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) || (activeData.familyMessage || activeData.invitationData?.familyMessage || '')
     : ''
   const familyPhoto = activeData 
     ? (activeData.familyPhoto || activeData.invitationData?.familyPhoto)
@@ -417,7 +405,7 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
 )}
 
         {/* Family Section */}
-        {showFamilySection && (
+        {showWelcome && (
           <>
             <div className="xl:hidden">
               <HW1FamilySection message={familyMessage} photo={familyPhoto} bgImage={scheduleBgMobile} />
@@ -429,14 +417,18 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
         )}
 
         {/* Welcome Section (Clean Backgrounds with color reveal & falling flowers) */}
-        <section className="xl:hidden relative overflow-hidden min-h-[100svh]">
-          <img src={welcomeBgMobile} alt="Welcome Mobile" className="absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none" />
-          <FallingFlowers />
-        </section>
-        <section className="hidden xl:block relative overflow-hidden min-h-[100svh]">
-          <img src={welcomeBgDesktop} alt="Welcome Desktop" className="absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none" />
-          <FallingFlowers />
-        </section>
+        {showWelcome && (
+          <>
+            <section className="xl:hidden relative overflow-hidden min-h-[100svh]">
+              <img src={welcomeBgMobile} alt="Welcome Mobile" className="absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none" />
+              <FallingFlowers />
+            </section>
+            <section className="hidden xl:block relative overflow-hidden min-h-[100svh]">
+              <img src={welcomeBgDesktop} alt="Welcome Desktop" className="absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none" />
+              <FallingFlowers />
+            </section>
+          </>
+        )}
 
         {/* Timing Section */}
         {showSchedule && (
@@ -451,12 +443,16 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
         )}
 
         {/* Location Section */}
-        <div className="xl:hidden">
-          <HW1Venue data={data.venue} bgImage={locationBgMobile} />
-        </div>
-        <div className="hidden xl:block">
-          <HW1Venue data={data.venue} bgImage={locationBgDesktop} isDesktop={true} />
-        </div>
+        {showVenue && (
+          <>
+            <div className="xl:hidden">
+              <HW1Venue data={data.venue} bgImage={locationBgMobile} />
+            </div>
+            <div className="hidden xl:block">
+              <HW1Venue data={data.venue} bgImage={locationBgDesktop} isDesktop={true} />
+            </div>
+          </>
+        )}
 
         {/* RSVP Section */}
         {showRsvp && (

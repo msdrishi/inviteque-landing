@@ -47,7 +47,12 @@ export function DraftProvider({ children }) {
   useEffect(() => {
     // Listen for route changes (a bit hacky since it's outside router, but window location works or we just check every render/interval)
     const handleLocationChange = () => {
-      const match = window.location.pathname.match(/\/(?:builder|template|templates)\/([^\/]+)/)
+      const path = window.location.pathname
+      // Do not change template context during checkout flow so we retain pending files in memory
+      if (path.startsWith('/payment') || path.startsWith('/payment-confirmation')) {
+        return
+      }
+      const match = path.match(/\/(?:builder|template|templates)\/([^\/]+)/)
       const newId = match ? match[1] : 'default'
       if (newId !== currentTemplateId) {
         setCurrentTemplateId(newId)

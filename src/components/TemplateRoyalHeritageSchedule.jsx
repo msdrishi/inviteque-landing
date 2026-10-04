@@ -23,13 +23,25 @@ export default function TemplateRoyalHeritageSchedule({ scheduleItems, weddingDa
 
   const events = useMemo(() => {
     if (Array.isArray(scheduleItems) && scheduleItems.length > 0) {
-      return scheduleItems.map((item, idx) => ({
-        time: item.time || "10:30 AM",
-        title: item.title || item.name || "Celebration",
-        description: item.description || null,
-        iconSrc: item.iconSrc || defaultIconList[idx % defaultIconList.length],
-        dateStr: item.date || `${String(weddingMonth || 'Nov').slice(0, 3)} ${weddingDate || '28'}, ${weddingYear || '2026'}`
-      }))
+      return scheduleItems.map((item, idx) => {
+        let formattedTime = "10:30 AM";
+        if (typeof item.time === 'object' && item.time !== null) {
+          formattedTime = item.time.startTime || "10:30 AM";
+          if (item.time.endTime && item.time.endTime.trim() !== "" && item.time.endTime !== "undefined") {
+            formattedTime += ` - ${item.time.endTime}`;
+          }
+        } else if (item.time) {
+          formattedTime = item.time;
+        }
+
+        return {
+          time: formattedTime,
+          title: item.title || item.name || "Celebration",
+          description: item.description || null,
+          iconSrc: item.iconSrc || defaultIconList[idx % defaultIconList.length],
+          dateStr: item.date || "" // Bugfix: Do not show default date if left empty
+        };
+      })
     }
     return [
       { time: "10:30 AM", title: "Haldi", iconSrc: defaultIconList[0], dateStr: `${String(weddingMonth || 'Nov').slice(0, 3)} ${weddingDate || '28'}, ${weddingYear || '2026'}` },

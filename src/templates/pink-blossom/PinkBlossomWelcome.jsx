@@ -49,7 +49,7 @@ export default function PinkBlossomWelcome({ data, fontStyles, isDesktop, isTabl
     <section style={{ position: 'relative', width: '100%', backgroundColor: 'transparent' }}>
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
         <div style={{ position: 'sticky', top: 0, width: '100%', height: '100vh', overflow: 'hidden' }}>
-          <img src={ASSETS.welcomeBg} alt="Welcome Background" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(4px) brightness(0.95)' }} />
+          <img src={ASSETS.welcomeBg} alt="Welcome Background" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(8px) brightness(0.85)' }} />
         </div>
       </div>
       

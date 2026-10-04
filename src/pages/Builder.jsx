@@ -89,15 +89,15 @@ function parseTimeRange(timeRangeString) {
 // Function to format start and end parts into a time range string
 function formatTimeRange(sh, sm, sa, eh, em, ea) {
   let start = ''
-  if (sh || sm) {
-    const h = sh || '12'
+  if (sh) {
+    const h = sh
     const m = sm || '00'
     start = `${h}:${m} ${sa}`
   }
   
   let end = ''
-  if (eh || em) {
-    const h = eh || '12'
+  if (eh) {
+    const h = eh
     const m = em || '00'
     end = `${h}:${m} ${ea}`
   }
@@ -233,6 +233,10 @@ export default function Builder() {
     customSectionLocation: '',
     customSectionContent: '',
     customSectionPosition: 'top-center',
+    showWelcome: true,
+    showVenue: true,
+    showCountdown: true,
+    welcomeMessage: '',
     hasRsvp: false,
     _pendingPhotoFiles: {},
     _pendingFamilyPhotoFile: null,
@@ -297,6 +301,10 @@ export default function Builder() {
       customSectionLocation: draftData.customSectionLocation || '',
       customSectionContent: draftData.customSectionContent || '',
       customSectionPosition: draftData.customSectionPosition || 'top-center',
+      showWelcome: draftData.showWelcome !== undefined ? draftData.showWelcome : true,
+      showVenue: draftData.showVenue !== undefined ? draftData.showVenue : true,
+      showCountdown: draftData.showCountdown !== undefined ? draftData.showCountdown : true,
+      welcomeMessage: draftData.welcomeMessage || '',
       _pendingPhotoFiles: draftData._pendingPhotoFiles || {},
       _pendingFamilyPhotoFile: draftData._pendingFamilyPhotoFile || null
     }
@@ -437,7 +445,11 @@ export default function Builder() {
               customSectionDate: data.invitationData?.customSectionDate || '',
               customSectionLocation: data.invitationData?.customSectionLocation || '',
               customSectionContent: data.invitationData?.customSectionContent || '',
-              customSectionPosition: data.invitationData?.customSectionPosition || 'top-center'
+              customSectionPosition: data.invitationData?.customSectionPosition || 'top-center',
+              showWelcome: data.invitationData?.showWelcome !== undefined ? data.invitationData.showWelcome : true,
+              showVenue: data.invitationData?.showVenue !== undefined ? data.invitationData.showVenue : true,
+              showCountdown: data.invitationData?.showCountdown !== undefined ? data.invitationData.showCountdown : true,
+              welcomeMessage: data.invitationData?.welcomeMessage || ''
             }
             setFormData(mappedData)
             updateDraft(mappedData)
@@ -759,6 +771,10 @@ export default function Builder() {
           invitationData: {
             showGallery: resolvedDraft.showGallery !== undefined ? resolvedDraft.showGallery : true,
             showSchedule: resolvedDraft.showSchedule !== undefined ? resolvedDraft.showSchedule : true,
+            showWelcome: resolvedDraft.showWelcome !== undefined ? resolvedDraft.showWelcome : true,
+            showVenue: resolvedDraft.showVenue !== undefined ? resolvedDraft.showVenue : true,
+            showCountdown: resolvedDraft.showCountdown !== undefined ? resolvedDraft.showCountdown : true,
+            welcomeMessage: resolvedDraft.welcomeMessage,
             hasRsvp: Boolean(resolvedDraft.hasRsvp),
             showFamilySection: resolvedDraft.showFamilySection,
             familyMessage: resolvedDraft.familyMessage,
@@ -1500,21 +1516,9 @@ export default function Builder() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                      {/* Hero Section Toggle */}
-                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
-                        <span className="text-xs font-bold">1. Hero Entrance Section</span>
-                        <input
-                          type="checkbox"
-                          name="showHero"
-                          checked={formData.showHero !== false}
-                          onChange={(e) => setFormData(prev => ({ ...prev, showHero: e.target.checked }))}
-                          className="h-4 w-4 rounded accent-black"
-                        />
-                      </label>
-
                       {/* Photo Moments Toggle */}
                       <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
-                        <span className="text-xs font-bold">2. Our Moments / Photo Cards</span>
+                        <span className="text-xs font-bold">1. Our Moments / Photo Cards</span>
                         <input
                           type="checkbox"
                           name="showGallery"
@@ -1526,7 +1530,7 @@ export default function Builder() {
 
                       {/* Welcome Message Toggle */}
                       <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
-                        <span className="text-xs font-bold">3. Welcome Invitation Message</span>
+                        <span className="text-xs font-bold">2. Welcome Invitation Message</span>
                         <input
                           type="checkbox"
                           name="showWelcome"
@@ -1535,10 +1539,24 @@ export default function Builder() {
                           className="h-4 w-4 rounded accent-black"
                         />
                       </label>
+                      
+                      {formData.showWelcome !== false && (
+                        <div className="col-span-1 sm:col-span-2 space-y-2 mt-2 ml-4">
+                          <label className="text-xs font-bold uppercase tracking-wider opacity-50">Custom Welcome Message (Optional)</label>
+                          <textarea
+                            name="welcomeMessage"
+                            rows={3}
+                            value={formData.welcomeMessage || ''}
+                            onChange={handleChange}
+                            placeholder="e.g. Together with our families, we joyfully invite you..."
+                            className="w-full rounded-xl border border-iqBorder bg-white px-4 py-3 text-sm outline-none focus:border-iqText transition-colors resize-none leading-relaxed"
+                          />
+                        </div>
+                      )}
 
                       {/* Schedule Toggle */}
-                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
-                        <span className="text-xs font-bold">4. Event Schedule &amp; Timelines</span>
+                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors mt-2">
+                        <span className="text-xs font-bold">3. Event Schedule &amp; Timelines</span>
                         <input
                           type="checkbox"
                           name="showSchedule"
@@ -1549,8 +1567,8 @@ export default function Builder() {
                       </label>
 
                       {/* Venue Section Toggle */}
-                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
-                        <span className="text-xs font-bold">5. Venue Details &amp; QR Map</span>
+                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors mt-2">
+                        <span className="text-xs font-bold">4. Venue Details &amp; QR Map</span>
                         <input
                           type="checkbox"
                           name="showVenue"
@@ -1561,8 +1579,8 @@ export default function Builder() {
                       </label>
 
                       {/* Countdown Toggle */}
-                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
-                        <span className="text-xs font-bold">6. Live Countdown Timer</span>
+                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors mt-2">
+                        <span className="text-xs font-bold">5. Live Countdown Timer</span>
                         <input
                           type="checkbox"
                           name="showCountdown"

@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { SectionHeader } from './RoyalHeirloomShared.jsx'
 import { useMemo } from 'react'
 
-export default function RoyalHeirloomStoryText({ brideName, groomName }) {
+export default function RoyalHeirloomStoryText({ brideName, groomName, welcomeMessage }) {
   // Generate random hearts for background texture
   const randomHearts = useMemo(() => {
     const hearts = [];
@@ -31,6 +31,10 @@ export default function RoyalHeirloomStoryText({ brideName, groomName }) {
     }
     return pts
   }, [])
+
+  const finalMessage = welcomeMessage !== undefined && welcomeMessage !== null
+    ? welcomeMessage
+    : "“What started as an ordinary afternoon turned into a timeless bond. Through quiet shared laughter, heartfelt conversations over endless cups of chai, and unspoken understanding, we realized that home was never a place — it was each other.”"
 
   return (
     <section 
@@ -129,8 +133,8 @@ export default function RoyalHeirloomStoryText({ brideName, groomName }) {
                 ** THE BEGINNING **
               </h3>
 
-              <p className="font-['Cormorant_Garamond'] text-[18px] sm:text-[20px] text-[#5A3825] leading-[1.6] italic mb-6 font-normal">
-                “What started as an ordinary afternoon turned into a timeless bond. Through quiet shared laughter, heartfelt conversations over endless cups of chai, and unspoken understanding, we realized that home was never a place — it was each other.”
+              <p className="font-['Cormorant_Garamond'] text-[18px] sm:text-[20px] text-[#5A3825] leading-[1.6] italic mb-6 font-normal whitespace-pre-wrap">
+                {finalMessage}
               </p>
 
               <div className="w-full border-t-2 border-dotted border-[#C2B29D] my-3" />

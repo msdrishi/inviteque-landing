@@ -124,26 +124,18 @@ export default function TemplateBlossomWhisper({ savedData, groupSlug: propGroup
     },
     invitation: {
       ...staticData.invitation,
+      message: activeData ? (savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) : '',
       groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
       brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
     }
   } : staticData
 
-  const showGallery = savedData
-    ? (savedData.invitationData?.showGallery !== undefined 
-        ? Boolean(savedData.invitationData.showGallery)
-        : (savedData.scheduleData?.showGallery !== undefined
-            ? Boolean(savedData.scheduleData.showGallery)
-            : true))
-    : Boolean(draftData.showGallery)
-
-  const showSchedule = savedData
-    ? (savedData.invitationData?.showSchedule !== undefined 
-        ? Boolean(savedData.invitationData.showSchedule)
-        : (savedData.scheduleData?.showSchedule !== undefined
-            ? Boolean(savedData.scheduleData.showSchedule)
-            : true))
-    : Boolean(draftData.showSchedule)
+  const isGalleryView = !activeData;
+  const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
+  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
+  const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
+  const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
+  const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
 
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
   const showRsvp = savedData 
@@ -204,10 +196,10 @@ export default function TemplateBlossomWhisper({ savedData, groupSlug: propGroup
         {showGallery && <BlossomWhisperStory data={data.story} />}
 
         {/* ── SECTION 3: HEART MESSAGE (Palace arch theme) ── */}
-        <BlossomWhisperMessage data={data.invitation} />
+        {showWelcome && <BlossomWhisperMessage data={data.invitation} />}
 
         {/* ── SECTION 4: LOCATION / VENUE (Animated Map compass/pin & QR code) ── */}
-        <BlossomWhisperVenue data={data.venue} />
+        {showVenue && <BlossomWhisperVenue data={data.venue} />}
 
         {/* ── SECTION 5: TIMELINE SCHEDULE ── */}
         {showSchedule && (
@@ -229,7 +221,7 @@ export default function TemplateBlossomWhisper({ savedData, groupSlug: propGroup
         )}
 
         {/* ── SECTION 6: COUNTDOWN ── */}
-        <BlossomWhisperCountdown data={data.countdown} />
+        {showCountdown && <BlossomWhisperCountdown data={data.countdown} />}
 
         {/* ── SECTION 7: FOOTER ── */}
         <Footer data={data.footer} theme="red" />
@@ -504,8 +496,8 @@ function BlossomWhisperMessage({ data }) {
           Dearest Friends &amp; Family,
         </h3>
 
-        <p className="text-[11px] sm:text-xs text-[#2E0004]/90 font-serif leading-relaxed tracking-[0.03em] mt-3">
-          Two hearts, two families, one love. We joyfully invite you to celebrate the beginning of our forever. Your presence will make our special day even more memorable.
+        <p className="text-[11px] sm:text-xs text-[#2E0004]/90 font-serif leading-relaxed tracking-[0.03em] mt-3 whitespace-pre-wrap">
+          {data.message !== undefined && data.message !== null ? data.message : "Two hearts, two families, one love. We joyfully invite you to celebrate the beginning of our forever. Your presence will make our special day even more memorable."}
         </p>
 
         <p className="text-[11px] sm:text-xs text-[#2E0004]/90 font-serif leading-relaxed tracking-[0.03em] mt-3.5 font-semibold">
