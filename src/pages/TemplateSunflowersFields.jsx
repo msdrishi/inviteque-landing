@@ -1466,7 +1466,8 @@ function RoyalPalaceFooter({ data }) {
 export default function TemplateSunflowersFields({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
-  const { draftData } = useDraft()
+  const { draftData: _rawDraft } = useDraft();
+  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -1474,9 +1475,6 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
   const sections = savedData?.sections || draftData?.sections || {}
   const showHero = sections.showHero !== false
   const showStory = sections.showStory !== false
-  const showWelcome = sections.showWelcome !== false
-  const showVenue = sections.showVenue !== false
-  const showCountdown = sections.showCountdown !== false
 
   const warmGoldBgStyle = {
     backgroundColor: '#FEF1D6',
@@ -1639,7 +1637,7 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
       ...staticData.invitation,
       groomName: savedData ? savedData.coupleData.groomName : draftData.groomName,
       brideName: savedData ? savedData.coupleData.brideName : draftData.brideName,
-      message: savedData ? savedData.invitationData?.welcomeMessage : draftData.welcomeMessage,
+      message: (savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) || staticData.invitation.message,
     },
     events: {
       ...staticData.events,
@@ -1688,7 +1686,7 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
     ? (savedData.invitationData?.hasRsvp !== undefined 
         ? Boolean(savedData.invitationData.hasRsvp) 
         : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
-    : Boolean(draftData?.hasRsvp)
+    : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
 
   const sunflowerStoryBgStyle = {
     backgroundColor: '#FEF1D6',

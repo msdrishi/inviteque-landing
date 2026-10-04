@@ -720,7 +720,8 @@ function MidnightWaltzHero({ data, isDesktop }) {
 export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupSlug }) {
   const location    = useLocation()
   const { templateId } = useParams()
-  const { draftData }  = useDraft()
+  const { draftData: _rawDraft } = useDraft();
+  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
   const navigate    = useNavigate()
   const isPreview   = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug   = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -959,7 +960,7 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
     ? (savedData.invitationData?.hasRsvp !== undefined 
         ? Boolean(savedData.invitationData.hasRsvp) 
         : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
-    : Boolean(draftData?.hasRsvp)
+    : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
 
   const userPhotos = savedData
     ? (savedData.storyData?.photos || savedData.photos || [])
@@ -968,9 +969,6 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
   const sections = savedData?.sections || draftData?.sections || {}
   const showHero = sections.showHero !== false
   const showStory = sections.showStory !== false
-  const showWelcome = sections.showWelcome !== false
-  const showVenue = sections.showVenue !== false
-  const showCountdown = sections.showCountdown !== false
 
   // ── Watermark ─────────────────────────────────────────────────
   const WatermarkMobile = () => showWatermark ? (

@@ -281,7 +281,11 @@ export default function Payment() {
         invitationData: {
           showGallery: resolvedDraft.showGallery !== undefined ? resolvedDraft.showGallery : true,
           showSchedule: resolvedDraft.showSchedule !== undefined ? resolvedDraft.showSchedule : true,
+          showWelcome: resolvedDraft.showWelcome !== undefined ? resolvedDraft.showWelcome : true,
+          showVenue: resolvedDraft.showVenue !== undefined ? resolvedDraft.showVenue : true,
+          showCountdown: resolvedDraft.showCountdown !== undefined ? resolvedDraft.showCountdown : true,
           hasRsvp: Boolean(resolvedDraft.hasRsvp),
+          welcomeMessage: resolvedDraft.welcomeMessage,
           showFamilySection: resolvedDraft.showFamilySection,
           familyMessage: resolvedDraft.familyMessage,
           familyPhoto: resolvedDraft.familyPhoto,

@@ -249,9 +249,9 @@ export default function TemplateRoute() {
             fetchedData = await res.json();
             
             // Enforce that the URL template ID matches the purchased/saved template theme
-            if (fetchedData.theme && fetchedData.theme.toLowerCase() !== templateId.toLowerCase()) {
+            if (fetchedData.templateId && fetchedData.templateId.toLowerCase() !== templateId.toLowerCase()) {
               if (active) {
-                navigate(`/templates/${fetchedData.theme.toLowerCase()}/${code}`, { replace: true });
+                navigate(`/templates/${fetchedData.templateId.toLowerCase()}/${code}`, { replace: true });
               }
               return;
             }

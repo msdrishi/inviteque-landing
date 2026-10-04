@@ -35,7 +35,8 @@ const MusicOffIcon = () => (
 export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
   const location = useLocation()
   const navigate = useNavigate()
-  const { draftData } = useDraft()
+  const { draftData: _rawDraft } = useDraft();
+  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   
   const isPaid = savedData && (
@@ -73,6 +74,7 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
       weddingMonth: (typeof baseData.weddingDate === 'object' ? baseData.weddingDate?.month : baseData.weddingMonth) || draftData?.weddingMonth || staticData.date?.month || 'January',
       weddingYear: (typeof baseData.weddingDate === 'object' ? baseData.weddingDate?.year : baseData.weddingYear) || draftData?.weddingYear || staticData.date?.year || '2024',
       mahalName: baseData.mahalName || draftData?.mahalName || staticData.venue?.venueName || 'Royal Palace',
+      weddingTime: baseData.weddingTime || draftData?.weddingTime || staticData.hero?.weddingTime || '09:00 AM - 10:30 AM',
     },
     venue: {
       ...staticData.venue,
@@ -99,7 +101,8 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
         : (draftData?.photos || [])
       const activePhotos = photos.filter(Boolean)
       return activePhotos.length > 0 ? activePhotos : null
-    })()
+    })(),
+    welcomeMessage: activeData ? ((savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) || staticData.invitation.message) : staticData.invitation.message,
   }
 
   const isGalleryView = !activeData;
@@ -108,6 +111,12 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
   const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
   const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
   const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
+
+  const showRsvp = savedData 
+    ? (savedData.invitationData?.hasRsvp !== undefined 
+        ? Boolean(savedData.invitationData.hasRsvp) 
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
+    : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
 
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 768
@@ -413,16 +422,18 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
         {...commonProps}
       />
       
-      <div style={{ backgroundColor: '#F9F5EC' }}>
-        <InviteQRSVP
-          events={scheduleItems}
-          weddingCode={savedData?.code}
-          groupSlug={groupSlug}
-          isPreview={!savedData}
-          theme="royal"
-          config={savedData?.rsvpData}
-        />
-      </div>
+      {showRsvp && (
+        <div style={{ backgroundColor: '#F9F5EC' }}>
+          <InviteQRSVP
+            events={scheduleItems}
+            weddingCode={savedData?.code}
+            groupSlug={groupSlug}
+            isPreview={!savedData}
+            theme="royal"
+            config={savedData?.rsvpData}
+          />
+        </div>
+      )}
 
       {showCountdown && (
         <TemplateRoyalHeritageCountdown {...commonProps} />

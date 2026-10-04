@@ -78,7 +78,8 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
   const location = useLocation()
   const navigate = useNavigate()
   const { templateId } = useParams()
-  const { draftData } = useDraft()
+  const { draftData: _rawDraft } = useDraft();
+  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
@@ -115,7 +116,7 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
     ? (savedData.invitationData?.hasRsvp !== undefined 
         ? Boolean(savedData.invitationData.hasRsvp) 
         : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
-    : Boolean(draftData?.hasRsvp)
+    : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
 
   const data = useMemo(() => {
     if (!activeData) return staticData

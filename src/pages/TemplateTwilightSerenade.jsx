@@ -443,7 +443,8 @@ function TwilightSerenadeHero({ data, isDesktop }) {
 export default function TemplateTwilightSerenade({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
-  const { draftData } = useDraft()
+  const { draftData: _rawDraft } = useDraft();
+  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -602,7 +603,7 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
     },
     invitation: {
       ...staticData.invitation,
-      message: activeData ? (savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) : '',
+      message: activeData ? ((savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) || staticData.invitation.message) : staticData.invitation.message,
       groomName: savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName,
       brideName: savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName,
     }

@@ -65,64 +65,70 @@ export default function TemplateRoyalHeritageStory({ data, fontStyles, sectionSt
         <div className="relative w-full flex flex-col items-center gap-0">
           
           {/* Card 1 */}
-          <div className="w-full flex justify-start pl-1 sm:pl-4 z-10">
-            <motion.div
-              initial={{ opacity: 0, x: -24, rotate: -8, scale: 0.94 }}
-              whileInView={{ opacity: 1, x: 0, rotate: -5, scale: 1 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ scale: 1.04, rotate: 0, zIndex: 40 }}
-              className="w-[195px] sm:w-[215px] bg-[#F9F5EC] p-2.5 pb-4 rounded-[4px] shadow-xl border border-[rgba(138,32,42,0.3)] cursor-pointer select-none transition-shadow relative"
-            >
-              <div className="w-full aspect-[4/4.3] overflow-hidden rounded-[2px] bg-[#E8DDD0]">
-                <img src={storyPhotos[0]} alt="Moment 1" className="w-full h-full object-cover select-none pointer-events-none" />
-              </div>
-              <div className="mt-2 text-center">
-                <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>{data.storyTitles?.[0] || 'Where It Began'}</span>
-                {data.storyDescriptions?.[0] && <span style={{...serif, fontSize: '11px', display: 'block', opacity: 0.85, marginTop: '4px', lineHeight: '1.4', padding: '0 8px'}}>{data.storyDescriptions[0]}</span>}
-              </div>
-            </motion.div>
-          </div>
+          {storyPhotos[0] && (
+            <div className="w-full flex justify-start pl-1 sm:pl-4 z-10">
+              <motion.div
+                initial={{ opacity: 0, x: -24, rotate: -8, scale: 0.94 }}
+                whileInView={{ opacity: 1, x: 0, rotate: -5, scale: 1 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ scale: 1.04, rotate: 0, zIndex: 40 }}
+                className="w-[195px] sm:w-[215px] bg-[#F9F5EC] p-2.5 pb-4 rounded-[4px] shadow-xl border border-[rgba(138,32,42,0.3)] cursor-pointer select-none transition-shadow relative"
+              >
+                <div className="w-full aspect-[4/4.3] overflow-hidden rounded-[2px] bg-[#E8DDD0]">
+                  <img src={storyPhotos[0]} alt="Moment 1" className="w-full h-full object-cover select-none pointer-events-none" />
+                </div>
+                <div className="mt-2 text-center">
+                  <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>{data.storyTitles?.[0] || 'Where It Began'}</span>
+                  {data.storyDescriptions?.[0] && <span style={{...serif, fontSize: '11px', display: 'block', opacity: 0.85, marginTop: '4px', lineHeight: '1.4', padding: '0 8px'}}>{data.storyDescriptions[0]}</span>}
+                </div>
+              </motion.div>
+            </div>
+          )}
 
           {/* Card 2 */}
-          <div className="w-full flex justify-end pr-1 sm:pr-4 -mt-10 sm:-mt-12 z-20">
-            <motion.div
-              initial={{ opacity: 0, x: 24, rotate: 10, scale: 0.94 }}
-              whileInView={{ opacity: 1, x: 0, rotate: 6, scale: 1 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 1.4, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ scale: 1.04, rotate: 0, zIndex: 40 }}
-              className="w-[200px] sm:w-[220px] bg-[#F9F5EC] p-2.5 pb-4 rounded-[4px] shadow-xl border border-[rgba(138,32,42,0.3)] cursor-pointer select-none transition-shadow relative"
-            >
-              <div className="w-full aspect-[4/4.3] overflow-hidden rounded-[2px] bg-[#E8DDD0]">
-                <img src={storyPhotos[1]} alt="Moment 2" className="w-full h-full object-cover select-none pointer-events-none" />
-              </div>
-              <div className="mt-2 text-center">
-                <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>{data.storyTitles?.[1] || 'A Timeless Promise'}</span>
-                {data.storyDescriptions?.[1] && <span style={{...serif, fontSize: '11px', display: 'block', opacity: 0.85, marginTop: '4px', lineHeight: '1.4', padding: '0 8px'}}>{data.storyDescriptions[1]}</span>}
-              </div>
-            </motion.div>
-          </div>
+          {storyPhotos[1] && (
+            <div className="w-full flex justify-end pr-1 sm:pr-4 -mt-10 sm:-mt-12 z-20">
+              <motion.div
+                initial={{ opacity: 0, x: 24, rotate: 10, scale: 0.94 }}
+                whileInView={{ opacity: 1, x: 0, rotate: 6, scale: 1 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 1.4, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ scale: 1.04, rotate: 0, zIndex: 40 }}
+                className="w-[200px] sm:w-[220px] bg-[#F9F5EC] p-2.5 pb-4 rounded-[4px] shadow-xl border border-[rgba(138,32,42,0.3)] cursor-pointer select-none transition-shadow relative"
+              >
+                <div className="w-full aspect-[4/4.3] overflow-hidden rounded-[2px] bg-[#E8DDD0]">
+                  <img src={storyPhotos[1]} alt="Moment 2" className="w-full h-full object-cover select-none pointer-events-none" />
+                </div>
+                <div className="mt-2 text-center">
+                  <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>{data.storyTitles?.[1] || 'A Timeless Promise'}</span>
+                  {data.storyDescriptions?.[1] && <span style={{...serif, fontSize: '11px', display: 'block', opacity: 0.85, marginTop: '4px', lineHeight: '1.4', padding: '0 8px'}}>{data.storyDescriptions[1]}</span>}
+                </div>
+              </motion.div>
+            </div>
+          )}
 
           {/* Card 3 */}
-          <div className="w-full flex justify-start pl-3 sm:pl-7 -mt-10 sm:-mt-12 z-30">
-            <motion.div
-              initial={{ opacity: 0, y: 28, rotate: -8, scale: 0.94 }}
-              whileInView={{ opacity: 1, y: 0, rotate: -4, scale: 1 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 1.4, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ scale: 1.04, rotate: 0, zIndex: 40 }}
-              className="w-[195px] sm:w-[215px] bg-[#F9F5EC] p-2.5 pb-4 rounded-[4px] shadow-xl border border-[rgba(138,32,42,0.3)] cursor-pointer select-none transition-shadow relative"
-            >
-              <div className="w-full aspect-[4/4.3] overflow-hidden rounded-[2px] bg-[#E8DDD0]">
-                <img src={storyPhotos[2]} alt="Moment 3" className="w-full h-full object-cover select-none pointer-events-none" />
-              </div>
-              <div className="mt-2 text-center">
-                <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>{data.storyTitles?.[2] || 'Forever & Always'}</span>
-                {data.storyDescriptions?.[2] && <span style={{...serif, fontSize: '11px', display: 'block', opacity: 0.85, marginTop: '4px', lineHeight: '1.4', padding: '0 8px'}}>{data.storyDescriptions[2]}</span>}
-              </div>
-            </motion.div>
-          </div>
+          {storyPhotos[2] && (
+            <div className="w-full flex justify-start pl-3 sm:pl-7 -mt-10 sm:-mt-12 z-30">
+              <motion.div
+                initial={{ opacity: 0, y: 28, rotate: -8, scale: 0.94 }}
+                whileInView={{ opacity: 1, y: 0, rotate: -4, scale: 1 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 1.4, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ scale: 1.04, rotate: 0, zIndex: 40 }}
+                className="w-[195px] sm:w-[215px] bg-[#F9F5EC] p-2.5 pb-4 rounded-[4px] shadow-xl border border-[rgba(138,32,42,0.3)] cursor-pointer select-none transition-shadow relative"
+              >
+                <div className="w-full aspect-[4/4.3] overflow-hidden rounded-[2px] bg-[#E8DDD0]">
+                  <img src={storyPhotos[2]} alt="Moment 3" className="w-full h-full object-cover select-none pointer-events-none" />
+                </div>
+                <div className="mt-2 text-center">
+                  <span style={{...serif, fontSize: '14px', fontStyle: 'italic', display: 'block', fontWeight: 'bold'}}>{data.storyTitles?.[2] || 'Forever & Always'}</span>
+                  {data.storyDescriptions?.[2] && <span style={{...serif, fontSize: '11px', display: 'block', opacity: 0.85, marginTop: '4px', lineHeight: '1.4', padding: '0 8px'}}>{data.storyDescriptions[2]}</span>}
+                </div>
+              </motion.div>
+            </div>
+          )}
 
         </div>
       </div>

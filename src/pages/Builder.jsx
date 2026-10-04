@@ -1529,29 +1529,33 @@ export default function Builder() {
                       </label>
 
                       {/* Welcome Message Toggle */}
-                      <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors">
-                        <span className="text-xs font-bold">2. Welcome Invitation Message</span>
-                        <input
-                          type="checkbox"
-                          name="showWelcome"
-                          checked={formData.showWelcome !== false}
-                          onChange={(e) => setFormData(prev => ({ ...prev, showWelcome: e.target.checked }))}
-                          className="h-4 w-4 rounded accent-black"
-                        />
-                      </label>
-                      
-                      {formData.showWelcome !== false && (
-                        <div className="col-span-1 sm:col-span-2 space-y-2 mt-2 ml-4">
-                          <label className="text-xs font-bold uppercase tracking-wider opacity-50">Custom Welcome Message (Optional)</label>
-                          <textarea
-                            name="welcomeMessage"
-                            rows={3}
-                            value={formData.welcomeMessage || ''}
-                            onChange={handleChange}
-                            placeholder="e.g. Together with our families, we joyfully invite you..."
-                            className="w-full rounded-xl border border-iqBorder bg-white px-4 py-3 text-sm outline-none focus:border-iqText transition-colors resize-none leading-relaxed"
-                          />
-                        </div>
+                      {!['twilight-serenade', 'sunflower-fields', 'everlastingvows'].includes(templateId) && (
+                        <>
+                          <label className="flex items-center justify-between p-3 rounded-xl border border-iqBorder hover:bg-iqBg/20 cursor-pointer transition-colors mt-2">
+                            <span className="text-xs font-bold">2. Welcome Invitation Message</span>
+                            <input
+                              type="checkbox"
+                              name="showWelcome"
+                              checked={formData.showWelcome !== false}
+                              onChange={(e) => setFormData(prev => ({ ...prev, showWelcome: e.target.checked }))}
+                              className="h-4 w-4 rounded accent-black"
+                            />
+                          </label>
+                          
+                          {formData.showWelcome !== false && (
+                            <div className="col-span-1 sm:col-span-2 space-y-2 mt-2 ml-4">
+                              <label className="text-xs font-bold uppercase tracking-wider opacity-50">Custom Welcome Message (Optional)</label>
+                              <textarea
+                                name="welcomeMessage"
+                                rows={3}
+                                value={formData.welcomeMessage || ''}
+                                onChange={handleChange}
+                                placeholder="e.g. Together with our families, we joyfully invite you..."
+                                className="w-full rounded-xl border border-iqBorder bg-white px-4 py-3 text-sm outline-none focus:border-iqText transition-colors resize-none leading-relaxed"
+                              />
+                            </div>
+                          )}
+                        </>
                       )}
 
                       {/* Schedule Toggle */}

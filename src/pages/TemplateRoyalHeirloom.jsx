@@ -49,7 +49,8 @@ const defaultPhoto3 = "/assets/templates/royal-heirloom/photo-3.webp"
 export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
-  const { draftData } = useDraft()
+  const { draftData: _rawDraft } = useDraft();
+  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -146,6 +147,8 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
   const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
   const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
+  const showHero = isGalleryView ? true : (savedData ? (savedData.invitationData?.showHero ?? savedData.showHero ?? true) : (draftData?.showHero ?? true));
+  const showStory = isGalleryView ? true : (savedData ? (savedData.invitationData?.showStory ?? savedData.showStory ?? true) : (draftData?.showStory ?? true));
   const welcomeMessage = isGalleryView ? '' : (savedData ? (savedData.invitationData?.welcomeMessage || savedData.welcomeMessage || '') : (draftData?.welcomeMessage || ''));
 
 
@@ -153,7 +156,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     ? (savedData.invitationData?.hasRsvp !== undefined
         ? Boolean(savedData.invitationData.hasRsvp)
         : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp))
-    : Boolean(draftData?.hasRsvp)
+    : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
 
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
 

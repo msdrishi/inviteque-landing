@@ -8,7 +8,7 @@ import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
  * Every time this section scrolls into view, the parchment resets to 
  * its closed state, and the user can pull the thread again to reveal.
  */
-export default function ParchmentRevealWithThread({ children }) {
+export default function ParchmentRevealWithThread({ children, ornamentImage = null }) {
   const containerRef = useRef(null)
   const [isRevealed, setIsRevealed] = useState(false)
   const [hasBeenInView, setHasBeenInView] = useState(false)
@@ -156,21 +156,29 @@ export default function ParchmentRevealWithThread({ children }) {
                 }}
               />
 
-              {/* Removed the large floral tassel ornament as per user request to keep only the arrow indication */}
-
-              {/* Simple arrow indicator with circular highlight */}
-              <motion.div
-                className="mt-2 flex items-center justify-center z-10 cursor-grab bg-[#FAF3E4]/95 backdrop-blur-md w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(200,25,94,0.4)] relative"
-                animate={{ opacity: [0.8, 1, 0.8], y: [0, 8, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                style={{ border: '2px solid rgba(200,25,94,0.6)' }}
-              >
-                {/* Thin inner gold ring for elegance */}
-                <div className="absolute inset-[3px] rounded-full border border-[#d4af37]/60 pointer-events-none" />
-                <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7 mt-0.5" stroke="#C8195E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </motion.div>
+              {ornamentImage ? (
+                <motion.div
+                  className="z-10 cursor-grab flex flex-col items-center justify-center"
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                  style={{ filter: 'drop-shadow(0px 8px 12px rgba(0,0,0,0.25))', marginTop: '-10px' }}
+                >
+                  <img src={ornamentImage} alt="Drag to open" className="w-[120px] sm:w-[150px] object-contain pointer-events-none" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  className="mt-2 flex items-center justify-center z-10 cursor-grab bg-[#FAF3E4]/95 backdrop-blur-md w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(200,25,94,0.4)] relative"
+                  animate={{ opacity: [0.8, 1, 0.8], y: [0, 8, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                  style={{ border: '2px solid rgba(200,25,94,0.6)' }}
+                >
+                  {/* Thin inner gold ring for elegance */}
+                  <div className="absolute inset-[3px] rounded-full border border-[#d4af37]/60 pointer-events-none" />
+                  <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7 mt-0.5" stroke="#C8195E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </motion.div>
+              )}
             </motion.div>
           </motion.div>
         )}

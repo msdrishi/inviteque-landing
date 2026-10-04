@@ -75,12 +75,26 @@ export default function PhotoCardsMidnightWaltz({
     "Two hearts, one soul, a lifetime of beautiful moments."
   ]
 
-  const items = [0, 1, 2].map(i => {
-    const rawPhoto = photos && photos[i]
-    const photoUrl = typeof rawPhoto === 'string' ? rawPhoto : (rawPhoto?.image || null)
-    return {
-      image: (photoUrl && photoUrl.trim() !== '') ? photoUrl : defaultImages[i],
-      quote: (typeof rawPhoto === 'object' && rawPhoto?.quote) ? rawPhoto.quote : defaultQuotes[i]
+  const userProvidedPhotos = (photos || []).filter(p => {
+    const url = typeof p === 'string' ? p : p?.image
+    return url && url.trim() !== ''
+  })
+  const hasUserPhotos = userProvidedPhotos.length > 0
+  const activeItemsCount = hasUserPhotos ? userProvidedPhotos.length : 3
+
+  const items = Array.from({ length: activeItemsCount }).map((_, i) => {
+    if (hasUserPhotos) {
+      const rawPhoto = userProvidedPhotos[i]
+      const photoUrl = typeof rawPhoto === 'string' ? rawPhoto : rawPhoto.image
+      return {
+        image: photoUrl,
+        quote: (typeof rawPhoto === 'object' && rawPhoto?.quote) ? rawPhoto.quote : defaultQuotes[i] || defaultQuotes[0]
+      }
+    } else {
+      return {
+        image: defaultImages[i],
+        quote: defaultQuotes[i]
+      }
     }
   })
 

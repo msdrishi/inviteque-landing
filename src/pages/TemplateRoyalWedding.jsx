@@ -15,7 +15,8 @@ import { weddingData as staticData } from '../weddingData.js'
 export default function TemplateRoyalWedding({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
-  const { draftData } = useDraft()
+  const { draftData: _rawDraft } = useDraft();
+  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -23,9 +24,7 @@ export default function TemplateRoyalWedding({ savedData, groupSlug: propGroupSl
   const sections = savedData?.sections || draftData?.sections || {}
   const showHero = sections.showHero !== false
   const showStory = sections.showStory !== false
-  const showWelcome = sections.showWelcome !== false
-  const showVenue = sections.showVenue !== false
-  const showCountdown = sections.showCountdown !== false
+
 
   // Watermark is shown unless the invitation has been paid
   const isPaid = savedData && (
@@ -176,7 +175,7 @@ export default function TemplateRoyalWedding({ savedData, groupSlug: propGroupSl
     },
     invitation: {
       ...staticData.invitation,
-      message: activeData ? (savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) : '',
+      message: activeData ? ((savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) || staticData.invitation.message) : staticData.invitation.message,
       groomName: savedData ? savedData.coupleData?.groomName : draftData.groomName,
       brideName: savedData ? savedData.coupleData?.brideName : draftData.brideName,
     }
@@ -194,7 +193,7 @@ export default function TemplateRoyalWedding({ savedData, groupSlug: propGroupSl
     ? (savedData.invitationData?.hasRsvp !== undefined 
         ? Boolean(savedData.invitationData.hasRsvp) 
         : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
-    : Boolean(draftData?.hasRsvp)
+    : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
 
   return (
     <div className="flex justify-center items-start min-h-screen bg-[#1a1a1a]">

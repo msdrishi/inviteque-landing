@@ -53,7 +53,7 @@ export default function PinkBlossomWelcome({ data, fontStyles, isDesktop, isTabl
         </div>
       </div>
       
-      <ParchmentRevealWithThread>
+      <ParchmentRevealWithThread ornamentImage={ASSETS.ornament}>
         <motion.div 
           style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}
           initial="hidden"

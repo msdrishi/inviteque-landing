@@ -441,7 +441,8 @@ function EverlastingVowsHero({ data, isDesktop }) {
 export default function TemplateEverlastingVows({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
-  const { draftData } = useDraft()
+  const { draftData: _rawDraft } = useDraft();
+  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -449,9 +450,6 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
   const sections = savedData?.sections || draftData?.sections || {}
   const showHero = sections.showHero !== false
   const showStory = sections.showStory !== false
-  const showWelcome = sections.showWelcome !== false
-  const showVenue = sections.showVenue !== false
-  const showCountdown = sections.showCountdown !== false
 
   // Watermark status
   const isPaid = savedData && (
@@ -683,7 +681,7 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
     ? (savedData.invitationData?.hasRsvp !== undefined 
         ? Boolean(savedData.invitationData.hasRsvp) 
         : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
-    : Boolean(draftData?.hasRsvp)
+    : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
 
   return (
     <div className="relative min-h-screen bg-[#FFFDF2] text-[#8A6E1E]">

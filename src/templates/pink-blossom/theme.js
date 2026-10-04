@@ -38,6 +38,7 @@ export const ASSETS = {
   countdownBg: '/assets/templates/pinkblossom/PinkBlossom-countdown-mobile.webp',
   thumbnail: '/assets/templates/pinkblossom/PinkBlossom-landing-thumbnail.webp',
   arrow: '/assets/templates/royal-heritage/arrow.png',  // reuse existing arrow asset
+  ornament: '/assets/templates/pinkblossom/Ivory Floral Tassel Ornament.png',
 }
 
 // ─── Font Style Presets (responsive — call with isDesktop, isTablet) ───
