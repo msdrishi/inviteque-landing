@@ -1,32 +1,45 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { DraftProvider } from './context/DraftContext.jsx'
 import Landing from './pages/Landing.jsx'
-import TemplateRoute from './pages/TemplateRoute.jsx'
-import Builder from './pages/Builder.jsx'
-import Payment from './pages/Payment.jsx'
-import PaymentConfirmation from './pages/PaymentConfirmation.jsx'
-import Login from './pages/Login.jsx'
-import Signup from './pages/Signup.jsx'
-import LoginSuccess from './pages/LoginSuccess.jsx'
-import Account from './pages/Account.jsx'
-import InviteDetails from './pages/InviteDetails.jsx'
-import AdminLogin from './pages/AdminLogin.jsx'
-import AdminDashboard from './pages/AdminDashboard.jsx'
-import CustomerRsvpDashboard from './pages/CustomerRsvpDashboard.jsx'
-import CustomMidnightWaltzPavitraSri from './pages/custom/CustomMidnightWaltzPavitraSri.jsx'
-import CustomEverlastingVowsShradha from './pages/custom/CustomEverlastingVowsShradha.jsx'
-import CustomMidnightWaltzSharanRajAndShanteriyga from './pages/custom-orders/midnight-waltz/SharanRajAndShanteriyga/index.jsx'
-import CustomMidnightWaltzRanjithAndMylisha from './pages/custom-orders/midnight-waltz/RanjithAndMylisha/index.jsx'
-import CustomIndianReverieKirtiAndSahil from './pages/custom-orders/indian-reverie/KirtiAndSahil/index.jsx'
-import CustomRoyalHeirloomHemangAndJasmine from './pages/custom-orders/royal-heirloom/HemangAndJasmine/index.jsx'
-import CustomRoyalHeirloomRohitAndManpreet from './pages/custom-orders/royal-heirloom/RohitAndManpreet/index.jsx'
-import CustomRoyalHeirloomSaaranshAndStuti from './pages/custom-orders/royal-heirloom/SaaranshAndStuti/index.jsx'
-import CustomRoyalHeritageNaveenAndPreena from './pages/custom-orders/royal-heritage/NaveenAndPreena/index.jsx'
-import CustomPinkBlossomAlinaAndTanmay from './pages/custom-orders/pink-blossom/AlinaAndTanmay/index.jsx'
-import CustomRsvpDashboard from './pages/CustomRsvpDashboard.jsx'
 import { API_URL } from './config'
+
+// Lazy load major pages
+const TemplateRoute = lazy(() => import('./pages/TemplateRoute.jsx'))
+const Builder = lazy(() => import('./pages/Builder.jsx'))
+const Payment = lazy(() => import('./pages/Payment.jsx'))
+const PaymentConfirmation = lazy(() => import('./pages/PaymentConfirmation.jsx'))
+const Login = lazy(() => import('./pages/Login.jsx'))
+const Signup = lazy(() => import('./pages/Signup.jsx'))
+const LoginSuccess = lazy(() => import('./pages/LoginSuccess.jsx'))
+const Account = lazy(() => import('./pages/Account.jsx'))
+const InviteDetails = lazy(() => import('./pages/InviteDetails.jsx'))
+const AdminLogin = lazy(() => import('./pages/AdminLogin.jsx'))
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard.jsx'))
+const CustomerRsvpDashboard = lazy(() => import('./pages/CustomerRsvpDashboard.jsx'))
+const CustomRsvpDashboard = lazy(() => import('./pages/CustomRsvpDashboard.jsx'))
+
+// Custom client templates (Lazy loaded)
+const CustomMidnightWaltzPavitraSri = lazy(() => import('./pages/custom/CustomMidnightWaltzPavitraSri.jsx'))
+const CustomEverlastingVowsShradha = lazy(() => import('./pages/custom/CustomEverlastingVowsShradha.jsx'))
+const CustomMidnightWaltzSharanRajAndShanteriyga = lazy(() => import('./pages/custom-orders/midnight-waltz/SharanRajAndShanteriyga/index.jsx'))
+const CustomMidnightWaltzRanjithAndMylisha = lazy(() => import('./pages/custom-orders/midnight-waltz/RanjithAndMylisha/index.jsx'))
+const CustomIndianReverieKirtiAndSahil = lazy(() => import('./pages/custom-orders/indian-reverie/KirtiAndSahil/index.jsx'))
+const CustomRoyalHeirloomHemangAndJasmine = lazy(() => import('./pages/custom-orders/royal-heirloom/HemangAndJasmine/index.jsx'))
+const CustomRoyalHeirloomRohitAndManpreet = lazy(() => import('./pages/custom-orders/royal-heirloom/RohitAndManpreet/index.jsx'))
+const CustomRoyalHeirloomSaaranshAndStuti = lazy(() => import('./pages/custom-orders/royal-heirloom/SaaranshAndStuti/index.jsx'))
+const CustomRoyalHeritageNaveenAndPreena = lazy(() => import('./pages/custom-orders/royal-heritage/NaveenAndPreena/index.jsx'))
+const CustomPinkBlossomAlinaAndTanmay = lazy(() => import('./pages/custom-orders/pink-blossom/AlinaAndTanmay/index.jsx'))
+
+const PageLoader = () => (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#FDFCFB]">
+    <div className="relative h-12 w-12">
+      <div className="absolute inset-0 rounded-full border-[3px] border-[#D4AF37]/20"></div>
+      <div className="absolute inset-0 rounded-full border-t-[3px] border-[#D4AF37] animate-spin"></div>
+    </div>
+  </div>
+)
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -104,8 +117,9 @@ export default function App() {
       <DraftProvider>
         <ScrollToTop />
         <AnalyticsTracker />
-        <Routes>
-          <Route path="/" element={<Landing />} />
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login-success" element={<LoginSuccess />} />
@@ -196,8 +210,9 @@ export default function App() {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </DraftProvider>
     </AuthProvider>
   )

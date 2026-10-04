@@ -161,6 +161,7 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
     }
     const vid = videoRef.current
     if (vid) {
+      vid.currentTime = 0
       const playPromise = vid.play()
       if (playPromise !== undefined) {
         playPromise.catch(() => {})

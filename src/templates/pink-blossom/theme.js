@@ -13,31 +13,31 @@
 
 // ─── Palette ──────────────────────────────────────────────────
 export const COLORS = {
-  primary:       '#C8195E',   // hot pink — headings, names, accents
-  primaryDark:   '#8B1848',   // deep magenta — gradients, buttons
-  ivory:         '#FAF3E4',   // warm ivory — main background
-  ivoryLight:    '#FBF6ED',   // lighter ivory — card backgrounds
-  gold:          '#B8963E',   // gold — decorative borders & icons
-  textDark:      '#4A6741',   // dark olive green — body text
-  leafGreen:     '#3D5A3A',   // deeper green — SVG leaf strokes
-  white:         '#FFFFFF',
-  cardBg:        '#FBF6ED',   // story card & calendar card bg
-  sectionBg:     '#FBF6ED',   // story / schedule solid bg
+  primary: '#C8195E',   // hot pink — headings, names, accents
+  primaryDark: '#8B1848',   // deep magenta — gradients, buttons
+  ivory: '#FAF3E4',   // warm ivory — main background
+  ivoryLight: '#FBF6ED',   // lighter ivory — card backgrounds
+  gold: '#B8963E',   // gold — decorative borders & icons
+  textDark: '#4A6741',   // dark olive green — body text
+  leafGreen: '#3D5A3A',   // deeper green — SVG leaf strokes
+  white: '#FFFFFF',
+  cardBg: '#FBF6ED',   // story card & calendar card bg
+  sectionBg: '#FBF6ED',   // story / schedule solid bg
 }
 
 // ─── Asset Paths (public/assets/templates/pinkblossom) ─────────
 export const ASSETS = {
-  coverVideo:     '/assets/templates/pinkblossom/PinkBlossom-envelope.mp4',
-  coverPoster:    '/assets/templates/pinkblossom/PinkBlossom-landing-thumbnail.webp',
-  heroBg:         '/assets/templates/pinkblossom/PinkBlossom-hero-mobile.webp',
-  storyBg:        '/assets/templates/pinkblossom/PinkBlossom-light-background.webp',
-  welcomeBg:      '/assets/templates/pinkblossom/PinkBlossom-background-mobile.webp',
-  scheduleBg:     '/assets/templates/pinkblossom/PinkBlossom-light-background.webp',
-  venueBg:        '/assets/templates/pinkblossom/PinkBlossom-venue-mobile.webp',
-  calendarBg:     '/assets/templates/pinkblossom/PinkBlossom-background-mobile.webp',
-  countdownBg:    '/assets/templates/pinkblossom/PinkBlossom-countdown-mobile.webp',
-  thumbnail:      '/assets/templates/pinkblossom/PinkBlossom-landing-thumbnail.webp',
-  arrow:          '/assets/templates/royal-heritage/arrow.png',  // reuse existing arrow asset
+  coverVideo: '/assets/templates/pinkblossom/PinkBlossom-envelope.mp4',
+  coverPoster: '/assets/templates/pinkblossom/PinkBlossom-envelope-poster.webp',
+  heroBg: '/assets/templates/pinkblossom/PinkBlossom-hero-mobile.webp',
+  storyBg: '/assets/templates/pinkblossom/PinkBlossom-light-background.webp',
+  welcomeBg: '/assets/templates/pinkblossom/PinkBlossom-background-mobile.webp',
+  scheduleBg: '/assets/templates/pinkblossom/PinkBlossom-light-background.webp',
+  venueBg: '/assets/templates/pinkblossom/PinkBlossom-venue-mobile.webp',
+  calendarBg: '/assets/templates/pinkblossom/PinkBlossom-background-mobile.webp',
+  countdownBg: '/assets/templates/pinkblossom/PinkBlossom-countdown-mobile.webp',
+  thumbnail: '/assets/templates/pinkblossom/PinkBlossom-landing-thumbnail.webp',
+  arrow: '/assets/templates/royal-heritage/arrow.png',  // reuse existing arrow asset
 }
 
 // ─── Font Style Presets (responsive — call with isDesktop, isTablet) ───

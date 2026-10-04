@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import { Navigate, useParams, useNavigate, useLocation } from 'react-router-dom'
-import TemplateRoyalWedding from './TemplateRoyalWedding.jsx'
-import TemplateAuraOfElegance from './TemplateAuraOfElegance.jsx'
-import TemplateTwilightSerenadeOld from './TemplateTwilightSerenade.jsx'
-import TemplateTwilightSerenadeNew from '../templates/TwilightSerenade/index.jsx'
-import TemplateBlossomWhisper from './TemplateBlossomWhisper.jsx'
-import TemplateEverlastingVows from './TemplateEverlastingVows.jsx'
-import TemplateSunflowersFields from './TemplateSunflowersFields.jsx'
-import TemplateModernHearth from './TemplateModernHearth.jsx'
-import TemplateMidnightWaltz from './TemplateMidnightWaltz.jsx'
-import TemplateRoyalHeirloom from './TemplateRoyalHeirloom.jsx'
-import TemplateRoyalHeritage from './TemplateRoyalHeritage.jsx'
-import TemplatePinkBlossom from '../templates/pink-blossom/index.jsx'
+
+const TemplateRoyalWedding = lazy(() => import('./TemplateRoyalWedding.jsx'))
+const TemplateAuraOfElegance = lazy(() => import('./TemplateAuraOfElegance.jsx'))
+const TemplateTwilightSerenadeOld = lazy(() => import('./TemplateTwilightSerenade.jsx'))
+const TemplateTwilightSerenadeNew = lazy(() => import('../templates/TwilightSerenade/index.jsx'))
+const TemplateBlossomWhisper = lazy(() => import('./TemplateBlossomWhisper.jsx'))
+const TemplateEverlastingVows = lazy(() => import('./TemplateEverlastingVows.jsx'))
+const TemplateSunflowersFields = lazy(() => import('./TemplateSunflowersFields.jsx'))
+const TemplateModernHearth = lazy(() => import('./TemplateModernHearth.jsx'))
+const TemplateMidnightWaltz = lazy(() => import('./TemplateMidnightWaltz.jsx'))
+const TemplateRoyalHeirloom = lazy(() => import('./TemplateRoyalHeirloom.jsx'))
+const TemplateRoyalHeritage = lazy(() => import('./TemplateRoyalHeritage.jsx'))
+const TemplatePinkBlossom = lazy(() => import('../templates/pink-blossom/index.jsx'))
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 
@@ -312,7 +313,9 @@ export default function TemplateRoute() {
     <div className="relative w-full min-h-screen">
       {/* Template Component is mounted when loading finishes or immediately in preview */}
       {(!loading || isPreview) && (
-        <TemplateComponent savedData={inviteData} groupSlug={groupSlug} />
+        <Suspense fallback={null}>
+          <TemplateComponent savedData={inviteData} groupSlug={groupSlug} />
+        </Suspense>
       )}
 
       {/* Splash Screen overlay (fixed on top, fades out when loading finishes) */}

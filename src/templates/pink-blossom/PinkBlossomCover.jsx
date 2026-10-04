@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { COLORS } from './theme'
 
@@ -12,6 +13,63 @@ export default function PinkBlossomCover({
   handleTimeUpdate,
   handleVideoEnded,
 }) {
+  const canvasRef = useRef(null)
+  const [posterReady, setPosterReady] = useState(false)
+  const [posterDataUrl, setPosterDataUrl] = useState(null)
+
+  // Capture the first frame of the video onto a canvas as soon as it loads
+  useEffect(() => {
+    const vid = videoRef.current
+    if (!vid) return
+
+    const captureFirstFrame = () => {
+      try {
+        const canvas = canvasRef.current
+        if (!canvas || posterReady) return
+
+        canvas.width = vid.videoWidth || 1080
+        canvas.height = vid.videoHeight || 1920
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(vid, 0, 0, canvas.width, canvas.height)
+        
+        // Convert to data URL for the poster image
+        const dataUrl = canvas.toDataURL('image/webp', 0.9)
+        setPosterDataUrl(dataUrl)
+        setPosterReady(true)
+        
+        // Pause and reset after capturing frame
+        vid.pause()
+        vid.currentTime = 0
+      } catch (e) {
+        // Fallback: use the static poster image
+        setPosterReady(true)
+      }
+    }
+
+    // Try to capture when video data is loaded enough
+    const onLoadedData = () => {
+      // Seek to the very start to ensure first frame is rendered
+      vid.currentTime = 0.001
+    }
+
+    const onSeeked = () => {
+      captureFirstFrame()
+    }
+
+    // If video is already loaded (cached), try immediately
+    if (vid.readyState >= 2) {
+      vid.currentTime = 0.001
+    }
+
+    vid.addEventListener('loadeddata', onLoadedData)
+    vid.addEventListener('seeked', onSeeked)
+
+    return () => {
+      vid.removeEventListener('loadeddata', onLoadedData)
+      vid.removeEventListener('seeked', onSeeked)
+    }
+  }, [videoRef, posterReady])
+
   return (
     <AnimatePresence>
       {!hasOpened && (
@@ -23,7 +81,20 @@ export default function PinkBlossomCover({
           onClick={handleOpenCover}
         >
           <div className="w-full h-full relative overflow-hidden">
-            {/* Always mounted video element for immediate playback */}
+            {/* Hidden canvas for first frame capture */}
+            <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+            {/* First frame poster image — shown until video plays */}
+            {!isPlaying && (
+              <img
+                src={posterDataUrl || coverPosterSrc}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none scale-[1.04] z-[1]"
+                style={{ opacity: 1 }}
+              />
+            )}
+
+            {/* Video element — always mounted for preloading, shown when playing */}
             <video
               ref={videoRef}
               src={`${coverVideoSrc}#t=0.001`}
@@ -33,9 +104,17 @@ export default function PinkBlossomCover({
               preload="auto"
               muted
               controls={false}
+              poster={coverPosterSrc}
               onTimeUpdate={handleTimeUpdate}
               onEnded={handleVideoEnded}
               className="w-full h-full object-cover select-none pointer-events-none scale-[1.04]"
+              style={{ 
+                opacity: isPlaying ? 1 : 0,
+                position: isPlaying ? 'relative' : 'absolute',
+                top: 0,
+                left: 0,
+                zIndex: isPlaying ? 2 : 0,
+              }}
             />
 
             {/* Floating star animations */}

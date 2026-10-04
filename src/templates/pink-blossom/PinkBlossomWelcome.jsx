@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { COLORS, ASSETS } from './theme'
-import ParchmentReveal from '../../components/ParchmentReveal'
+import ParchmentRevealWithThread from '../../components/ParchmentRevealWithThread'
 
 const sectionAnim = {
   hidden: { },
@@ -49,11 +49,11 @@ export default function PinkBlossomWelcome({ data, fontStyles, isDesktop, isTabl
     <section style={{ position: 'relative', width: '100%', backgroundColor: 'transparent' }}>
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
         <div style={{ position: 'sticky', top: 0, width: '100%', height: '100vh', overflow: 'hidden' }}>
-          <img src={ASSETS.welcomeBg} alt="Welcome Background" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img src={ASSETS.welcomeBg} alt="Welcome Background" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(4px) brightness(0.95)' }} />
         </div>
       </div>
       
-      <ParchmentReveal>
+      <ParchmentRevealWithThread>
         <motion.div 
           style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}
           initial="hidden"
@@ -93,7 +93,7 @@ export default function PinkBlossomWelcome({ data, fontStyles, isDesktop, isTabl
             </motion.div>
           )}
         </motion.div>
-      </ParchmentReveal>
+      </ParchmentRevealWithThread>
     </section>
   )
 }
