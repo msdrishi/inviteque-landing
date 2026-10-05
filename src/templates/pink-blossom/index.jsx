@@ -36,7 +36,8 @@ const MusicOffIcon = () => (
 export default function TemplatePinkBlossom({ savedData, groupSlug }) {
   const location = useLocation()
   const navigate = useNavigate()
-  const { draftData } = useDraft()
+  const { draftData: _rawDraft } = useDraft()
+  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   
   const isPaid = savedData && (
@@ -117,7 +118,7 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
     ? (savedData.invitationData?.hasRsvp !== undefined 
         ? Boolean(savedData.invitationData.hasRsvp) 
         : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
-    : Boolean(draftData?.hasRsvp)
+    : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
 
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 768

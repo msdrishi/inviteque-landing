@@ -344,7 +344,7 @@ export default function Payment() {
             inviteCode: savedInvite.code,
             amountPaid: 0,
             couponCode: appliedCoupon ? appliedCoupon.code : null,
-            inviteRequest: { ...inviteRequest, status: 'PAID', couponCode: appliedCoupon ? appliedCoupon.code : null }
+            inviteRequest: { ...inviteRequest, status: 'PAID', code: savedInvite.code, couponCode: appliedCoupon ? appliedCoupon.code : null }
           })
         })
 
@@ -399,7 +399,7 @@ export default function Payment() {
           body: JSON.stringify({
             inviteCode: savedInvite.code,
             amountPaid: (draftData.amountPaid || 0) + finalPrice,
-            inviteRequest: { ...inviteRequest, status: 'PAID' }
+            inviteRequest: { ...inviteRequest, status: 'PAID', code: savedInvite.code }
           })
         })
 
@@ -467,7 +467,7 @@ export default function Payment() {
                 razorpaySignature: response.razorpay_signature,
                 amountPaid: finalPrice,
                 couponCode: appliedCoupon ? appliedCoupon.code : null,
-                inviteRequest: { ...inviteRequest, status: 'PAID', couponCode: appliedCoupon ? appliedCoupon.code : null }
+                inviteRequest: { ...inviteRequest, status: 'PAID', code: savedInvite.code, couponCode: appliedCoupon ? appliedCoupon.code : null }
               })
             })
 

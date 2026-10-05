@@ -783,7 +783,7 @@ export default function Landing() {
                 className="overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury"
               >
                 <div className="relative">
-                  <Link to={t.available ? t.href : '#templates'} className="block">
+                  <Link to={t.available ? `${t.href}?preview=true` : '#templates'} className="block">
                     <LazyImage
                       src={t.thumbnail}
                       alt={t.name}
@@ -814,7 +814,7 @@ export default function Landing() {
 
                   <div className="mt-5 flex flex-wrap gap-2">
                     <a
-                      href={t.available ? t.href : '#templates'}
+                      href={t.available ? `${t.href}?preview=true` : '#templates'}
                       target={t.available ? '_blank' : undefined}
                       rel={t.available ? 'noopener noreferrer' : undefined}
                       className={[
@@ -899,7 +899,7 @@ export default function Landing() {
                 className="overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury"
               >
                 <div className="relative">
-                  <Link to={t.available ? t.href : '#house-warming-templates'} className="block">
+                  <Link to={t.available ? `${t.href}?preview=true` : '#house-warming-templates'} className="block">
                     <LazyImage
                       src={t.thumbnail}
                       alt={t.name}
@@ -926,7 +926,7 @@ export default function Landing() {
 
                   <div className="mt-5 flex flex-wrap gap-2">
                     <a
-                      href={t.available ? t.href : '#house-warming-templates'}
+                      href={t.available ? `${t.href}?preview=true` : '#house-warming-templates'}
                       target={t.available ? '_blank' : undefined}
                       rel={t.available ? 'noopener noreferrer' : undefined}
                       className={[
