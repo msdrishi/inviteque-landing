@@ -70,28 +70,28 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
     })(),
     hero: {
       ...staticData.hero,
-      groomName: baseData.groomName || draftData?.groomName || staticData.hero?.groomName || 'Groom',
-      brideName: baseData.brideName || draftData?.brideName || staticData.hero?.brideName || 'Bride',
-      weddingDate: (typeof baseData.weddingDate === 'object' ? baseData.weddingDate?.day : baseData.weddingDate) || draftData?.weddingDate || staticData.date?.day || '14',
-      weddingMonth: (typeof baseData.weddingDate === 'object' ? baseData.weddingDate?.month : baseData.weddingMonth) || draftData?.weddingMonth || staticData.date?.month || 'January',
-      weddingYear: (typeof baseData.weddingDate === 'object' ? baseData.weddingDate?.year : baseData.weddingYear) || draftData?.weddingYear || staticData.date?.year || '2024',
-      mahalName: baseData.mahalName || draftData?.mahalName || staticData.venue?.venueName || 'Royal Palace',
-      weddingTime: baseData.weddingTime || draftData?.weddingTime || staticData.hero?.weddingTime || '09:00 AM - 10:30 AM',
+      groomName: (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || staticData.hero?.groomName || 'Groom',
+      brideName: (savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName) || staticData.hero?.brideName || 'Bride',
+      weddingDate: (savedData ? (typeof savedData.heroData?.weddingDate === 'object' ? savedData.heroData?.weddingDate?.day : savedData.heroData?.weddingDate || savedData.weddingDate) : (typeof draftData?.weddingDate === 'object' ? draftData?.weddingDate?.day : draftData?.weddingDate)) || staticData.date?.day || '14',
+      weddingMonth: (savedData ? (typeof savedData.heroData?.weddingDate === 'object' ? savedData.heroData?.weddingDate?.month : savedData.heroData?.weddingMonth || savedData.weddingMonth) : (typeof draftData?.weddingDate === 'object' ? draftData?.weddingDate?.month : draftData?.weddingMonth)) || staticData.date?.month || 'January',
+      weddingYear: (savedData ? (typeof savedData.heroData?.weddingDate === 'object' ? savedData.heroData?.weddingDate?.year : savedData.heroData?.weddingYear || savedData.weddingYear) : (typeof draftData?.weddingDate === 'object' ? draftData?.weddingDate?.year : draftData?.weddingYear)) || staticData.date?.year || '2024',
+      mahalName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || staticData.venue?.venueName || 'Royal Palace',
+      weddingTime: (savedData ? (savedData.heroData?.weddingTime || savedData.weddingTime) : draftData?.weddingTime) || staticData.hero?.weddingTime || '09:00 AM - 10:30 AM',
     },
     venue: {
       ...staticData.venue,
-      mahalName: baseData.mahalName || draftData?.mahalName || staticData.venue?.venueName || 'Royal Palace',
-      venueCity: baseData.venueCity || draftData?.venueCity || staticData.venue?.venueCity || 'Jaipur',
-      venueAddress: baseData.venueAddress || draftData?.venueAddress || staticData.venue?.location || 'Heritage Road',
-      state: baseData.state || draftData?.state || 'Rajasthan',
-      mapUrl: baseData.mapLink || draftData?.mapLink || staticData.venue?.mapUrl || '',
+      mahalName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || staticData.venue?.venueName || 'Royal Palace',
+      venueCity: (savedData ? (savedData.venueData?.venueCity || savedData.venueCity) : draftData?.venueCity) || staticData.venue?.venueCity || 'Jaipur',
+      venueAddress: (savedData ? (savedData.venueData?.venueAddress || savedData.venueAddress) : draftData?.venueAddress) || staticData.venue?.location || 'Heritage Road',
+      state: (savedData ? (savedData.venueData?.state || savedData.state) : draftData?.state) || 'Rajasthan',
+      mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData?.mapLink) || staticData.venue?.mapUrl || '',
     },
     countdown: {
       ...staticData.countdown,
       targetDateTimeISO: (() => {
-        const dMonth = (typeof baseData.weddingDate === 'object' ? baseData.weddingDate?.month : baseData.weddingMonth) || draftData?.weddingMonth || staticData.date?.month || 'January'
-        const dDate = (typeof baseData.weddingDate === 'object' ? baseData.weddingDate?.day : baseData.weddingDate) || draftData?.weddingDate || staticData.date?.day || '14'
-        const dYear = (typeof baseData.weddingDate === 'object' ? baseData.weddingDate?.year : baseData.weddingYear) || draftData?.weddingYear || staticData.date?.year || '2024'
+        const dMonth = (savedData ? (typeof savedData.heroData?.weddingDate === 'object' ? savedData.heroData?.weddingDate?.month : savedData.heroData?.weddingMonth || savedData.weddingMonth) : (typeof draftData?.weddingDate === 'object' ? draftData?.weddingDate?.month : draftData?.weddingMonth)) || staticData.date?.month || 'January'
+        const dDate = (savedData ? (typeof savedData.heroData?.weddingDate === 'object' ? savedData.heroData?.weddingDate?.day : savedData.heroData?.weddingDate || savedData.weddingDate) : (typeof draftData?.weddingDate === 'object' ? draftData?.weddingDate?.day : draftData?.weddingDate)) || staticData.date?.day || '14'
+        const dYear = (savedData ? (typeof savedData.heroData?.weddingDate === 'object' ? savedData.heroData?.weddingDate?.year : savedData.heroData?.weddingYear || savedData.weddingYear) : (typeof draftData?.weddingDate === 'object' ? draftData?.weddingDate?.year : draftData?.weddingYear)) || staticData.date?.year || '2024'
         const d = new Date(`${dMonth} ${dDate}, ${dYear}`)
         if (!isNaN(d.getTime())) return d.toISOString()
         return staticData.countdown?.targetDateTimeISO
