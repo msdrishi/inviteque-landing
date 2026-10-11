@@ -3,15 +3,15 @@ import { useLocation } from 'react-router-dom'
 import { weddingDataComplete, weddingDataCustom, weddingDataHindu } from './data.js'
 
 import RajasthaniVowsCover from '../../../../templates/rajasthani-vows/RajasthaniVowsCover.jsx'
-import RajasthaniVowsHero from '../../../../templates/rajasthani-vows/RajasthaniVowsHero.jsx'
+import RishikaHero from './components/RishikaHero.jsx'
 import RishikaWelcome from './components/RishikaWelcome.jsx'
+import RishikaStory from './components/RishikaStory.jsx'
 import RishikaEventSection from './components/RishikaEventSection.jsx'
-import RajasthaniVowsStory from '../../../../templates/rajasthani-vows/RajasthaniVowsStory.jsx'
-import RajasthaniVowsSchedule from '../../../../templates/rajasthani-vows/RajasthaniVowsSchedule.jsx'
-import RajasthaniVowsVenue from '../../../../templates/rajasthani-vows/RajasthaniVowsVenue.jsx'
+import RishikaSchedule from './components/RishikaSchedule.jsx'
+import RishikaWarmRegards from './components/RishikaWarmRegards.jsx'
 import RajasthaniVowsCountdown from '../../../../templates/rajasthani-vows/RajasthaniVowsCountdown.jsx'
 import Footer from '../../../../components/Footer.jsx'
-import bgMusicSrc from '../../../../assets/audio/bg-music-a-thousand-years.mp3'
+import rishikaBgMusic from './components/audio/ik-onkar-the-wedding-version_sxms83Cp.mp3'
 
 export default function RishikaAndJaskaranTemplate() {
   const location = useLocation()
@@ -45,8 +45,6 @@ export default function RishikaAndJaskaranTemplate() {
 
   useEffect(() => {
     if (hasOpened && audioRef.current && !isMusicMuted) {
-      audioRef.current.muted = false
-      audioRef.current.volume = 1
       if (audioRef.current.paused) {
         audioRef.current.play().catch(() => {})
       }
@@ -54,29 +52,35 @@ export default function RishikaAndJaskaranTemplate() {
   }, [hasOpened, isMusicMuted])
 
   const toggleMusic = () => {
-    setIsMusicMuted(!isMusicMuted)
+    const nextMuted = !isMusicMuted
+    setIsMusicMuted(nextMuted)
     if (audioRef.current) {
-      if (isMusicMuted) {
-        audioRef.current.muted = false
-        audioRef.current.play().catch(() => {})
-      } else {
+      if (nextMuted) {
         audioRef.current.pause()
+      } else {
+        audioRef.current.play().catch(() => {})
       }
     }
   }
 
+  // Tap to open: music starts playing IMMEDIATELY parallely with the opening video
   const handleOpenCover = () => {
     if (hasOpened || isPlaying) return
     setIsPlaying(true)
 
-    // Pre-arm audio token on user tap gesture
+    // Unmute & start audio playback on direct user gesture
     if (audioRef.current) {
-      audioRef.current.muted = true
-      audioRef.current.play().catch(() => {})
+      audioRef.current.muted = false
+      audioRef.current.volume = 1
+      audioRef.current.currentTime = 0
+      audioRef.current.play().catch((err) => {
+        console.warn("Audio play prevented:", err)
+      })
     }
 
     const vid = videoRef.current
     if (vid) {
+      vid.muted = true
       const playPromise = vid.play()
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
@@ -120,15 +124,17 @@ export default function RishikaAndJaskaranTemplate() {
   const messageBgDesktop = "/assets/templates/rajestani-vows/welcome-mobile.webp"
   const messageBgMobile = "/assets/templates/rajestani-vows/welcome-mobile.webp"
   const sangeetBg = "/assets/templates/rajestani-vows/sangeet.webp"
-  const anandKarajBg = "/assets/templates/rajestani-vows/anand karaj.webp"
   const receptionBg = "/assets/templates/rajestani-vows/reception.webp"
+
+  const haldiEvent = activeData.events.items.find(e => e.id === "haldi") || activeData.events.items[0]
+  const receptionEvent = activeData.events.items.find(e => e.id === "reception") || activeData.events.items[1]
 
   return (
     <>
-      {/* Background Music Audio Element */}
+      {/* Background Music Audio Element — ik-onkar-the-wedding-version */}
       <audio
         ref={audioRef}
-        src={bgMusicSrc}
+        src={rishikaBgMusic}
         loop
         preload="auto"
       />
@@ -189,8 +195,8 @@ export default function RishikaAndJaskaranTemplate() {
       />
 
       <main className="bg-[#FAF6EE] min-h-screen overflow-x-hidden">
-        {/* 1. Hero Section (Water spread bloom, falling flowers, Ganesha emblem, couple in Modernline) */}
-        <RajasthaniVowsHero
+        {/* 1. Hero Section: Hiragenda font, movie title letter animation, light glare, #HeartsOnDuty, 6, 7 date */}
+        <RishikaHero
           data={activeData.hero}
           isDesktop={isDesktop}
           hasTriggeredHeroBg={hasTriggeredHeroBg}
@@ -198,7 +204,7 @@ export default function RishikaAndJaskaranTemplate() {
           hasOpened={hasOpened}
         />
 
-        {/* 2. Welcome Section */}
+        {/* 2. Welcome Section: Exact requested text, no bold for Swadesh Sharma, bold for couple, prominent D/o S/o, 60-70% middle area */}
         <RishikaWelcome
           data={activeData.welcome}
           isDesktop={isDesktop}
@@ -206,88 +212,67 @@ export default function RishikaAndJaskaranTemplate() {
           bgImageMobile={messageBgMobile}
         />
 
-        {/* 3. Our Moments / Photo Cards Section (Directly below Welcome section) */}
-        <RajasthaniVowsStory
+        {/* 3. Photo Cards Section: Photos 1, 2, 3 in order, no Moment 1, 2, 3 text */}
+        <RishikaStory
           data={activeData.story}
-          userPhotos={activeData.story?.photos?.map(p => p.image)}
           isDesktop={isDesktop}
         />
 
-        {/* 4. Custom Sangeet / Haldi Section (Middle area, middle 60% width) */}
-        {activeData.events.items[0] && (
+        {/* 4. Event Section: Haldi (with 6th superscript) */}
+        {haldiEvent && (
           <RishikaEventSection
-            title={activeData.events.items[0].name || activeData.events.items[0].title}
-            date={activeData.events.items[0].date}
-            time={activeData.events.items[0].time}
-            location={activeData.events.items[0].venue}
-            mapLink={activeData.events.items[0].mapLink}
+            title={haldiEvent.name || haldiEvent.title}
+            date={haldiEvent.date}
+            time={haldiEvent.time}
+            location={haldiEvent.venue}
+            mapLink={haldiEvent.mapLink}
             bgImage={sangeetBg}
             position="middle"
             isDesktop={isDesktop}
           />
         )}
 
-        {/* 5. Custom Anand Karaj Section (Top area, framed by floral arch) */}
-        {activeData.events.items.find(e => e.name === "Anand Karaj") && (
+        {/* 5. Event Section: Wedding Reception (Sundowner Pheras line 1 big + wedding reception small, with 7th superscript) */}
+        {receptionEvent && (
           <RishikaEventSection
-            title="Anand Karaj"
-            date="7th December 2026"
-            time="10:00 AM"
-            location="Gurudwara Sahib Sardar Bazar, Delhi Cantt"
-            mapLink="https://maps.app.goo.gl/j6neZVbWhRoXf2Av7?g_st=ic"
-            bgImage={anandKarajBg}
-            position="top"
-            isDesktop={isDesktop}
-          />
-        )}
-
-        {/* 6. Custom Reception Section (Top area, framed by open watercolor sky above mandap) */}
-        {activeData.events.items.find(e => e.name === "Wedding Reception & Dinner") && (
-          <RishikaEventSection
-            title="Wedding Reception"
-            date="7th December 2026"
-            time="7:00 PM Onwards"
-            location="28 The Mall, Delhi Cantonment, Abdul Hamid Dwar, Lawn 1 Akanksha"
-            mapLink="https://maps.app.goo.gl/WLdJv6QiDoZ2oURW7?g_st=ic"
+            titleLine1={receptionEvent.titleLine1 || "Sundowner Pheras"}
+            connectorText={receptionEvent.connector || "followed by"}
+            titleLine2={receptionEvent.titleLine2 || "Wedding Reception"}
+            date={receptionEvent.date}
+            time={receptionEvent.time}
+            location={receptionEvent.venue}
+            mapLink={receptionEvent.mapLink}
             bgImage={receptionBg}
             position="top"
             isDesktop={isDesktop}
           />
         )}
 
-        {/* 7. Wedding Schedule Section (Original S-curve timeline with separate icon badges & text banners) */}
-        <RajasthaniVowsSchedule
-          scheduleItems={activeData.events.items}
+        {/* 6. Wedding Schedule: Only 2 events (4:30 pm sundowner pheras, 7 pm wedding reception) */}
+        <RishikaSchedule
+          scheduleItems={activeData.events.schedule}
           isDesktop={isDesktop}
         />
 
-        {/* 8. Venue Section */}
-        <RajasthaniVowsVenue
-          data={{
-            venueName: "28 The Mall, Delhi Cantonment",
-            venueLine1: "Abdul Hamid Dwar, Lawn 1 Akanksha",
-            venueLine2: "Delhi Cantt, New Delhi",
-            venueAddress: "28 The Mall, Delhi Cantonment, Abdul Hamid Dwar, Lawn 1 Akanksha",
-            venueCity: "Delhi Cantt",
-            state: "New Delhi",
-            mapUrl: "https://maps.app.goo.gl/WLdJv6QiDoZ2oURW7?g_st=ic",
-          }}
+        {/* 7. Warm Regards Section: Replaces Venue with blessings message and Kashyap’s signoff */}
+        <RishikaWarmRegards
+          data={activeData.regards}
           isDesktop={isDesktop}
         />
 
-        {/* 9. Countdown Section (Original with falling flower petals & royal glass boxes) */}
+        {/* 8. Countdown Section */}
         <RajasthaniVowsCountdown
           data={{ targetDateTimeISO: "2026-12-06T16:00:00.000Z" }}
           isDesktop={isDesktop}
         />
 
-        {/* 10. Footer */}
+        {/* 9. Footer */}
         <Footer
           data={{
             id: 'footer',
-            gratitude: activeData.footer?.closingMessage || "As we celebrate the new beginnings, your presence and blessings will make this day unforgettable and truly special.",
-            family: activeData.footer?.familyMessage || "With warm regards,\nKashyap’s",
-            names: "Rishika & Major Jaskaran",
+            gratitude: activeData.footer?.closingMessage,
+            family: activeData.footer?.familyMessage,
+            names: activeData.footer?.names || "Rishika weds Major Jaskaran",
           }}
           theme="rajasthani"
           isDesktop={isDesktop}
