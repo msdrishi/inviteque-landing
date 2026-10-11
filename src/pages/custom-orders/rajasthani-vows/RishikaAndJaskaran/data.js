@@ -79,23 +79,27 @@ const receptionEvent = {
   mapLink: "https://maps.app.goo.gl/WLdJv6QiDoZ2oURW7?g_st=ic"
 };
 
+import photo1 from './components/photos/photo_1_2026-10-10_23-33-37.webp'
+import photo2 from './components/photos/photo_2_2026-10-10_23-33-37.webp'
+import photo3 from './components/photos/photo_3_2026-10-10_23-33-37.webp'
+
 const baseStory = {
   subtitle: "CHAPTERS OF LOVE",
   title: "OUR MOMENTS",
   description: "Cherished moments from our pre-wedding journey.",
   photos: [
     {
-      image: "https://pub-4ca73fd30e93414984c8221837b12dc5.r2.dev/rajasthani-vows/1791655962106-photo_1_2026-10-10_23-33-37.webp",
+      image: photo1,
       title: "Where It Began",
       momentTag: "MOMENT 01"
     },
     {
-      image: "https://pub-4ca73fd30e93414984c8221837b12dc5.r2.dev/rajasthani-vows/1791655977055-photo_2_2026-10-10_23-33-37.webp",
+      image: photo2,
       title: "A Timeless Promise",
       momentTag: "MOMENT 02"
     },
     {
-      image: "https://pub-4ca73fd30e93414984c8221837b12dc5.r2.dev/rajasthani-vows/1791655985459-photo_3_2026-10-10_23-33-37.webp",
+      image: photo3,
       title: "Forever & Always",
       momentTag: "MOMENT 03"
     }

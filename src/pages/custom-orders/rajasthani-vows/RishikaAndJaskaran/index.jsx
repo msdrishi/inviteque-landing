@@ -133,6 +133,29 @@ export default function RishikaAndJaskaranTemplate() {
         preload="auto"
       />
 
+      {/* Preview Watermark Overlay */}
+      {isDesktop ? (
+        <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.16] select-none flex flex-col justify-around items-center text-[#54121B]">
+          {['preview-inviteque', 'preview-inviteque', 'preview-inviteque'].map((t, i) => (
+            <span key={i} className="text-[28px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              {t}
+            </span>
+          ))}
+        </div>
+      ) : (
+        <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.25] select-none">
+          {['8%', '35%', '65%', '92%'].map(top => (
+            <span
+              key={top}
+              className="absolute left-1/2 -translate-x-1/2 text-[16px] font-medium tracking-[0.22em] text-[#54121B]"
+              style={{ top, fontFamily: "'Montserrat', sans-serif" }}
+            >
+              preview-inviteque
+            </span>
+          ))}
+        </div>
+      )}
+
       {/* Floating Music Control Button */}
       {hasOpened && (
         <button

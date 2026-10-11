@@ -57,7 +57,7 @@ export default function RishikaEventSection({
         }}
       />
 
-      {/* Middle 60% Width Content Container */}
+      {/* Content Container */}
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -66,7 +66,7 @@ export default function RishikaEventSection({
           hidden: {},
           show: { transition: { staggerChildren: 0.16 } },
         }}
-        className="relative z-10 w-[60%] max-w-[420px] md:max-w-[480px] mx-auto text-center flex flex-col items-center py-6 px-3"
+        className="relative z-10 w-[82%] sm:w-[72%] max-w-[460px] md:max-w-[520px] mx-auto text-center flex flex-col items-center py-6 px-3"
         style={{
           marginTop: !isTop ? (isDesktop ? '-10vh' : '-8svh') : 0,
         }}
@@ -74,7 +74,7 @@ export default function RishikaEventSection({
         {/* Title — Cinzel Bold */}
         <motion.h2
           variants={lineAnim}
-          className="font-['Cinzel'] text-[#7A1228] text-[17px] sm:text-[20px] md:text-[22px] font-bold uppercase tracking-[0.08em] leading-snug mb-2 drop-shadow-[0_1px_2px_rgba(122,18,40,0.15)]"
+          className="font-['Cinzel'] text-[#7A1228] text-[22px] sm:text-[25px] md:text-[28px] font-bold uppercase tracking-[0.08em] leading-snug mb-2 drop-shadow-[0_1px_2px_rgba(122,18,40,0.15)]"
         >
           {title}
         </motion.h2>
@@ -83,7 +83,7 @@ export default function RishikaEventSection({
         {date && (
           <motion.p
             variants={lineAnim}
-            className="font-['Cinzel'] text-[#8A1D33] text-[11.5px] sm:text-[13px] font-semibold uppercase tracking-[0.16em] mb-1"
+            className="font-['Cinzel'] text-[#8A1D33] text-[13.5px] sm:text-[15.5px] md:text-[17px] font-semibold uppercase tracking-[0.16em] mb-1.5"
           >
             {date}
           </motion.p>
@@ -93,7 +93,7 @@ export default function RishikaEventSection({
         {time && (
           <motion.p
             variants={lineAnim}
-            className="font-['Cinzel'] text-[#C59A4E] text-[11px] sm:text-[12px] font-medium uppercase tracking-[0.12em] mb-2.5"
+            className="font-['Cinzel'] text-[#C59A4E] text-[13px] sm:text-[14.5px] md:text-[16px] font-medium uppercase tracking-[0.12em] mb-2.5"
           >
             {time}
           </motion.p>
@@ -101,16 +101,16 @@ export default function RishikaEventSection({
 
         {/* Ornamental divider */}
         <motion.div variants={lineAnim} className="flex items-center gap-2 mb-3 opacity-75">
-          <div className="w-8 h-[0.8px] bg-[#C59A4E]" />
-          <span className="text-[7px] text-[#C59A4E]">✦</span>
-          <div className="w-8 h-[0.8px] bg-[#C59A4E]" />
+          <div className="w-10 h-[0.8px] bg-[#C59A4E]" />
+          <span className="text-[8px] text-[#C59A4E]">✦</span>
+          <div className="w-10 h-[0.8px] bg-[#C59A4E]" />
         </motion.div>
 
         {/* Location — Cinzel Semibold */}
         {location && (
           <motion.p
             variants={lineAnim}
-            className="font-['Cinzel'] text-[#7A1228] text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.08em] leading-relaxed mb-4 max-w-[320px]"
+            className="font-['Cinzel'] text-[#7A1228] text-[13px] sm:text-[14.5px] md:text-[15.5px] font-semibold uppercase tracking-[0.08em] leading-relaxed mb-4 max-w-[380px]"
           >
             {location}
           </motion.p>
@@ -123,11 +123,11 @@ export default function RishikaEventSection({
             href={mapLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-[#C59A4E]/60 text-[#7A1228] text-[10px] sm:text-[11px] font-['Cinzel'] uppercase font-bold tracking-[0.14em] shadow-[0_4px_12px_rgba(122,18,40,0.08)] hover:bg-[#FAF5EB] transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-[#C59A4E]/60 text-[#7A1228] text-[12px] sm:text-[13px] font-['Cinzel'] uppercase font-bold tracking-[0.14em] shadow-[0_4px_12px_rgba(122,18,40,0.08)] hover:bg-[#FAF5EB] transition-colors"
           >
-            <span className="text-[9px] text-[#C59A4E]">✦</span>
+            <span className="text-[10px] text-[#C59A4E]">✦</span>
             View Location
-            <span className="text-[9px] text-[#C59A4E]">✦</span>
+            <span className="text-[10px] text-[#C59A4E]">✦</span>
           </motion.a>
         )}
       </motion.div>

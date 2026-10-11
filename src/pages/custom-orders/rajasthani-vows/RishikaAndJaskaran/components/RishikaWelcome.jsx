@@ -62,8 +62,8 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
           position: 'relative',
           zIndex: 2,
           textAlign: 'center',
-          width: '75%',
-          maxWidth: isDesktop ? '340px' : '285px',
+          width: '88%',
+          maxWidth: isDesktop ? '440px' : '360px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -72,22 +72,22 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
         {/* Subtle Welcome Header */}
         <motion.span
           variants={lineAnim}
-          className="font-['Cinzel'] text-[11px] sm:text-[12px] tracking-[0.32em] uppercase text-[#C59A4E] font-bold block mb-2"
+          className="font-['Cinzel'] text-[13px] sm:text-[15px] tracking-[0.32em] uppercase text-[#C59A4E] font-bold block mb-2"
         >
           WELCOME
         </motion.span>
 
         {/* Small gold diamond divider */}
         <motion.div variants={lineAnim} className="flex items-center gap-2 mb-2.5 opacity-75">
-          <div className="w-7 h-[0.7px] bg-[#C59A4E]" />
-          <span className="text-[6px] text-[#C59A4E]">✦</span>
-          <div className="w-7 h-[0.7px] bg-[#C59A4E]" />
+          <div className="w-8 h-[0.8px] bg-[#C59A4E]" />
+          <span className="text-[7px] text-[#C59A4E]">✦</span>
+          <div className="w-8 h-[0.8px] bg-[#C59A4E]" />
         </motion.div>
 
         {/* Cordial Invitation Intro — beloved granddaughter content */}
         <motion.p
           variants={lineAnim}
-          className="font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.08em] uppercase text-[#8A1D33]/90 leading-relaxed mb-2.5 max-w-[265px]"
+          className="font-['Cinzel'] text-[12px] sm:text-[13.5px] tracking-[0.08em] uppercase text-[#8A1D33]/90 leading-relaxed mb-2.5 max-w-[340px]"
         >
           {data.introText || "cordially invite you to the Wedding of the beloved granddaughter of"}
         </motion.p>
@@ -96,7 +96,7 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
         {data.headingLine1 && (
           <motion.p
             variants={lineAnim}
-            className="font-['Cinzel'] text-[12px] sm:text-[13px] tracking-[0.14em] uppercase text-[#7A1228] font-semibold mb-0.5"
+            className="font-['Cinzel'] text-[15px] sm:text-[17px] tracking-[0.14em] uppercase text-[#7A1228] font-bold mb-0.5"
           >
             {data.headingLine1}
           </motion.p>
@@ -105,7 +105,7 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
         {data.headingLine2 && (
           <motion.p
             variants={lineAnim}
-            className="font-['Cinzel'] text-[9px] sm:text-[9.5px] tracking-[0.10em] uppercase text-[#8A1D33]/80 mb-2.5 max-w-[265px]"
+            className="font-['Cinzel'] text-[11.5px] sm:text-[13px] tracking-[0.10em] uppercase text-[#8A1D33]/85 mb-2.5 max-w-[340px]"
           >
             {data.headingLine2}
           </motion.p>
@@ -113,9 +113,9 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
 
         {/* Small gold diamond divider */}
         <motion.div variants={lineAnim} className="flex items-center gap-2 mb-2.5 opacity-75">
-          <div className="w-7 h-[0.7px] bg-[#C59A4E]" />
-          <span className="text-[6px] text-[#C59A4E]">✦</span>
-          <div className="w-7 h-[0.7px] bg-[#C59A4E]" />
+          <div className="w-8 h-[0.8px] bg-[#C59A4E]" />
+          <span className="text-[7px] text-[#C59A4E]">✦</span>
+          <div className="w-8 h-[0.8px] bg-[#C59A4E]" />
         </motion.div>
 
         {/* COUPLE TEXT: Normal Font Style (Cinzel) */}
@@ -125,47 +125,47 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
         >
           {/* Bride Name — Cinzel Bold Normal Font Style */}
           <span
-            className="font-['Cinzel'] font-bold text-[18px] sm:text-[21px] tracking-[0.14em] uppercase text-[#7A1228] leading-tight block"
+            className="font-['Cinzel'] font-bold text-[24px] sm:text-[28px] tracking-[0.12em] uppercase text-[#7A1228] leading-tight block"
           >
             Rishika
           </span>
-          <span className="font-['Cinzel'] italic text-[9.5px] sm:text-[10.5px] text-[#C59A4E] tracking-[0.10em] mt-0.5 mb-1.5 block max-w-[265px]">
+          <span className="font-['Cinzel'] italic text-[12px] sm:text-[13.5px] text-[#C59A4E] tracking-[0.08em] mt-1 mb-2 block max-w-[340px]">
             (D/o Bindu and Ashutosh Kashyap)
           </span>
 
           {/* with */}
-          <span className="font-['Cinzel'] italic text-[11px] sm:text-[12px] text-[#A87B32] my-0.5 block">
+          <span className="font-['Cinzel'] italic text-[13px] sm:text-[15px] text-[#A87B32] my-0.5 block">
             with
           </span>
 
           {/* Groom Name — Cinzel Bold Normal Font Style */}
           <span
-            className="font-['Cinzel'] font-bold text-[18px] sm:text-[21px] tracking-[0.14em] uppercase text-[#7A1228] leading-tight block mt-1"
+            className="font-['Cinzel'] font-bold text-[24px] sm:text-[28px] tracking-[0.12em] uppercase text-[#7A1228] leading-tight block mt-1.5"
           >
             Major Jaskaran
           </span>
-          <span className="font-['Cinzel'] italic text-[9.5px] sm:text-[10.5px] text-[#C59A4E] tracking-[0.08em] mt-0.5 block max-w-[265px] leading-tight">
+          <span className="font-['Cinzel'] italic text-[12px] sm:text-[13.5px] text-[#C59A4E] tracking-[0.08em] mt-1 block max-w-[340px] leading-snug">
             (S/o Sukhwinder Kaur and Hon. Capt Rajinder Pal Singh (Retd))
           </span>
         </motion.div>
 
         {/* Warm Blessings & Regard Message */}
-        <motion.div variants={lineAnim} className="mt-3 flex flex-col items-center max-w-[265px]">
+        <motion.div variants={lineAnim} className="mt-3.5 flex flex-col items-center max-w-[340px]">
           {/* Small gold diamond divider */}
           <div className="flex items-center gap-2 mb-2 opacity-70">
-            <div className="w-6 h-[0.6px] bg-[#C59A4E]" />
-            <span className="text-[6px] text-[#C59A4E]">✦</span>
-            <div className="w-6 h-[0.6px] bg-[#C59A4E]" />
+            <div className="w-8 h-[0.8px] bg-[#C59A4E]" />
+            <span className="text-[7px] text-[#C59A4E]">✦</span>
+            <div className="w-8 h-[0.8px] bg-[#C59A4E]" />
           </div>
 
-          <p className="font-['Cinzel'] text-[9.5px] sm:text-[10.5px] tracking-[0.05em] uppercase text-[#8A1D33]/90 leading-relaxed text-center mb-2">
+          <p className="font-['Cinzel'] text-[12px] sm:text-[13.5px] tracking-[0.05em] uppercase text-[#8A1D33]/90 leading-relaxed text-center mb-2.5">
             {data.closingMessage || "As we celebrate the new beginnings, your presence and blessings will make this day unforgettable and truly special"}
           </p>
 
-          <p className="font-['Cinzel'] italic text-[10px] sm:text-[10.5px] text-[#C59A4E] tracking-[0.08em] text-center">
+          <p className="font-['Cinzel'] italic text-[12px] sm:text-[13.5px] text-[#C59A4E] tracking-[0.08em] text-center">
             {data.warmRegards || "With warm regards,"}
           </p>
-          <p className="font-['Cinzel'] font-bold text-[11px] sm:text-[12px] tracking-[0.14em] uppercase text-[#7A1228] text-center mt-0.5">
+          <p className="font-['Cinzel'] font-bold text-[14px] sm:text-[16px] tracking-[0.14em] uppercase text-[#7A1228] text-center mt-1">
             {data.familySignoff || "Kashyap’s family"}
           </p>
         </motion.div>
