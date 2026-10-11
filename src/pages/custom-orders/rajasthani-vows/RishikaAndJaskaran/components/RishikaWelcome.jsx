@@ -28,8 +28,8 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        paddingTop: isDesktop ? '4svh' : '5svh',
-        paddingBottom: '36px',
+        paddingTop: isDesktop ? '3.5svh' : '2.5svh',
+        paddingBottom: '24px',
         userSelect: 'none',
         backgroundColor: '#FAF6EE',
       }}
@@ -54,105 +54,187 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
       <motion.div
         initial="hidden"
         whileInView="show"
-        viewport={{ once: false, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.25 }}
         variants={{
           hidden: {},
-          show: { transition: { staggerChildren: 0.14, delayChildren: 0.1 } },
+          show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
         }}
         style={{
           position: 'relative',
           zIndex: 2,
           textAlign: 'center',
-          width: '68%',
-          maxWidth: isDesktop ? '440px' : '380px',
+          width: isDesktop ? '68%' : '78%',
+          maxWidth: isDesktop ? '420px' : '360px',
           margin: '0 auto',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
-        {/* Line 1: Shree Ganeshay Namah — Dark bold/dignified color, NOT yellow */}
+        {/* Line 1: Shree Ganeshay Namah — Dark dignified color, camel case */}
         <motion.p
           variants={lineAnim}
-          className="font-['Cinzel'] text-[13.5px] sm:text-[15.5px] tracking-[0.24em] uppercase text-[#54121B] font-semibold mb-1.5"
+          style={{
+            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+            fontSize: '15.5px',
+            letterSpacing: '0.06em',
+            color: '#54121B',
+            fontWeight: 600,
+            marginBottom: '4px',
+            textTransform: 'none',
+          }}
         >
           {data?.line1 || "Shree Ganeshay Namah"}
         </motion.p>
 
         {/* Small ruby diamond ornament divider */}
-        <motion.div variants={lineAnim} className="flex items-center gap-2 mb-3 opacity-60">
-          <div className="w-8 h-[0.8px] bg-[#7A1228]" />
-          <span className="text-[7px] text-[#7A1228]">✦</span>
-          <div className="w-8 h-[0.8px] bg-[#7A1228]" />
+        <motion.div variants={lineAnim} className="flex items-center gap-1.5 mb-2 opacity-60">
+          <div className="w-7 h-[0.8px] bg-[#7A1228]" />
+          <span className="text-[6.5px] text-[#7A1228]">✦</span>
+          <div className="w-7 h-[0.8px] bg-[#7A1228]" />
         </motion.div>
 
-        {/* Line 2: Smt Swadesh Sharma (NO BOLD as requested, dark color) */}
+        {/* Line 2: Smt Swadesh Sharma (same font size as cordially, NO BOLD, camel case) */}
         <motion.p
           variants={lineAnim}
-          className="font-['Cinzel'] text-[15px] sm:text-[17px] tracking-[0.14em] uppercase text-[#7A1228] font-normal mb-0.5"
+          style={{
+            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+            fontSize: '14px',
+            letterSpacing: '0.03em',
+            color: '#7A1228',
+            fontWeight: 500,
+            marginBottom: '1px',
+            textTransform: 'none',
+          }}
         >
           {data?.line2 || "Smt Swadesh Sharma"}
         </motion.p>
 
-        {/* Line 3: (W/O Sh. Upender Prakash Kashyap) — Dark color */}
+        {/* Line 3: (W/O Sh. Upender Prakash Kashyap) — Dark color, camel case */}
         <motion.p
           variants={lineAnim}
-          className="font-['Cinzel'] text-[11.5px] sm:text-[13px] tracking-[0.08em] uppercase text-[#54121B] font-normal mb-3"
+          style={{
+            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+            fontSize: '12px',
+            letterSpacing: '0.02em',
+            color: '#54121B',
+            fontWeight: 400,
+            marginBottom: '5px',
+            textTransform: 'none',
+          }}
         >
           {data?.line3 || "(W/O Sh. Upender Prakash Kashyap)"}
         </motion.p>
 
-        {/* Line 4: cordially invite you to the Wedding of their beloved grandaughter — Dark color */}
+        {/* Line 4: cordially invite you to the Wedding of their beloved grandaughter — Dark color, camel case */}
         <motion.p
           variants={lineAnim}
-          className="font-['Cinzel'] text-[12px] sm:text-[13.5px] tracking-[0.07em] uppercase text-[#7A1228] font-normal leading-relaxed mb-3 max-w-[340px]"
+          style={{
+            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+            fontSize: '14px',
+            letterSpacing: '0.02em',
+            color: '#7A1228',
+            fontWeight: 500,
+            lineHeight: 1.35,
+            marginBottom: '5px',
+            maxWidth: '320px',
+            textTransform: 'none',
+          }}
         >
           {data?.line4 || "cordially invite you to the Wedding of their beloved grandaughter"}
         </motion.p>
 
         {/* Small ruby diamond divider */}
-        <motion.div variants={lineAnim} className="flex items-center gap-2 mb-3 opacity-60">
-          <div className="w-8 h-[0.8px] bg-[#7A1228]" />
-          <span className="text-[7px] text-[#7A1228]">✦</span>
-          <div className="w-8 h-[0.8px] bg-[#7A1228]" />
+        <motion.div variants={lineAnim} className="flex items-center gap-1.5 mb-2 opacity-60">
+          <div className="w-7 h-[0.8px] bg-[#7A1228]" />
+          <span className="text-[6.5px] text-[#7A1228]">✦</span>
+          <div className="w-7 h-[0.8px] bg-[#7A1228]" />
         </motion.div>
 
-        {/* Line 5: Rishika (BOLD ONLY, dark royal crimson) */}
+        {/* Line 5: Rishika (BOLD ONLY, dark royal crimson, camel case) */}
         <motion.span
           variants={lineAnim}
-          className="font-['Cinzel'] font-bold text-[25px] sm:text-[29px] tracking-[0.14em] uppercase text-[#7A1228] leading-tight block"
+          style={{
+            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+            fontSize: '25px',
+            letterSpacing: '0.04em',
+            color: '#7A1228',
+            fontWeight: 700,
+            lineHeight: 1.15,
+            display: 'block',
+            textTransform: 'none',
+          }}
         >
           {data?.bride || "Rishika"}
         </motion.span>
 
-        {/* Line 6: (D/o Bindu and Ashutosh Kashyap) — Dark, prominent, crisp, NOT yellow! */}
+        {/* Line 6: (D/o Bindu and Ashutosh Kashyap) — Dark, prominent, crisp, camel case */}
         <motion.p
           variants={lineAnim}
-          className="font-['Cinzel'] font-semibold text-[13px] sm:text-[14.5px] text-[#54121B] tracking-[0.08em] uppercase mt-1 mb-2.5 max-w-[340px]"
+          style={{
+            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+            fontSize: '13px',
+            letterSpacing: '0.02em',
+            color: '#54121B',
+            fontWeight: 600,
+            marginTop: '2px',
+            marginBottom: '4px',
+            maxWidth: '340px',
+            textTransform: 'none',
+          }}
         >
           {data?.brideParent || "(D/o Bindu and Ashutosh Kashyap)"}
         </motion.p>
 
-        {/* Line 7: With — Dark color, NOT yellow! */}
+        {/* Line 7: With — Dark color, italic, camel case */}
         <motion.p
           variants={lineAnim}
-          className="font-['Cinzel'] italic text-[13.5px] sm:text-[15.5px] text-[#7A1228] font-medium tracking-[0.12em] my-1 uppercase"
+          style={{
+            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+            fontSize: '14px',
+            fontStyle: 'italic',
+            letterSpacing: '0.04em',
+            color: '#7A1228',
+            fontWeight: 500,
+            margin: '3px 0',
+            textTransform: 'none',
+          }}
         >
           {data?.conjunction || "With"}
         </motion.p>
 
-        {/* Line 8: Major Jaskaran (BOLD ONLY, dark royal crimson) */}
+        {/* Line 8: Major Jaskaran (BOLD ONLY, dark royal crimson, camel case) */}
         <motion.span
           variants={lineAnim}
-          className="font-['Cinzel'] font-bold text-[25px] sm:text-[29px] tracking-[0.14em] uppercase text-[#7A1228] leading-tight block mt-1"
+          style={{
+            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+            fontSize: '25px',
+            letterSpacing: '0.04em',
+            color: '#7A1228',
+            fontWeight: 700,
+            lineHeight: 1.15,
+            display: 'block',
+            marginTop: '2px',
+            textTransform: 'none',
+          }}
         >
           {data?.groom || "Major Jaskaran"}
         </motion.span>
 
-        {/* Line 9: (S/o Sukhwinder Kaur and Hon. Capt Rajinder Pal Singh (Retd) ) — Dark, prominent, crisp, NOT yellow! */}
+        {/* Line 9: (S/o Sukhwinder Kaur and Hon. Capt Rajinder Pal Singh (Retd) ) — Dark, prominent, crisp, camel case */}
         <motion.p
           variants={lineAnim}
-          className="font-['Cinzel'] font-semibold text-[13px] sm:text-[14.5px] text-[#54121B] tracking-[0.08em] uppercase mt-1 max-w-[340px] leading-snug"
+          style={{
+            fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+            fontSize: '12.5px',
+            letterSpacing: '0.02em',
+            color: '#54121B',
+            fontWeight: 600,
+            marginTop: '2px',
+            maxWidth: '340px',
+            lineHeight: 1.35,
+            textTransform: 'none',
+          }}
         >
           {data?.groomParent || "(S/o Sukhwinder Kaur and Hon. Capt Rajinder Pal Singh (Retd) )"}
         </motion.p>

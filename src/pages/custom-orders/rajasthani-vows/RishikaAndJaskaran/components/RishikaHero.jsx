@@ -218,99 +218,84 @@ export default function RishikaHero({
           />
         </motion.div>
 
-        {/* ── Couple Name: Exactly in 3 Lines (Bride, weds, Groom) in Bigger Font with Zero Line Wrapping ── */}
+        {/* ── Couple Name: Exactly in 3 Lines (Bride, weds, Groom) in Refined Font with Full-Cover Glare ── */}
         <div
           className="relative flex flex-col items-center justify-center my-0.5 select-none w-full"
           style={{
             fontFamily: "'Hiragenda', serif",
-            lineHeight: 1.05,
+            lineHeight: 1.2,
           }}
         >
-          {/* Line 1: Bride Name (Rishika) in Bigger Font */}
+          {/* Line 1: Bride Name (Rishika) — Exact same font size as Groom */}
           <motion.div
             variants={nameReveal}
             style={{
               position: 'relative',
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
+              display: 'inline-block',
               whiteSpace: 'nowrap',
-              marginBottom: isDesktop ? 4 : 2,
+              marginBottom: isDesktop ? 3 : 1,
             }}
           >
-            <motion.span
-              variants={nameLetters}
+            {/* Base text: 100% solid, fully visible at all times */}
+            <span
               style={{
                 fontFamily: "'Hiragenda', serif",
                 fontSize: isDesktop
-                  ? 'clamp(3.6rem, 5.6vw, 5.0rem)'
-                  : (isTablet ? 'clamp(3.1rem, 6.2vw, 3.9rem)' : 'clamp(2.7rem, 8.8vw, 3.5rem)'),
+                  ? 'clamp(2.8rem, 4.4vw, 3.8rem)'
+                  : (isTablet ? 'clamp(2.2rem, 4.6vw, 2.8rem)' : 'clamp(22px, 6.2vw, 27px)'),
                 color: colors.primary,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: 'inline-block',
                 whiteSpace: 'nowrap',
-                lineHeight: 1.05,
-                textShadow: '0 2px 14px rgba(122,18,40,0.18)',
+                lineHeight: 1.2,
                 letterSpacing: '0.04em',
+                textShadow: '0 2px 14px rgba(122,18,40,0.18)',
               }}
             >
-              {brideName.split('').map((ch, idx) => (
-                <motion.span
-                  key={`bride-${ch}-${idx}`}
-                  variants={nameLetter}
-                  style={{ display: 'inline-block' }}
-                >
-                  {ch === ' ' ? '\u00A0' : ch}
-                </motion.span>
-              ))}
-            </motion.span>
+              {brideName}
+            </span>
 
-            {/* Line 1 Aura of Elegance Glassy reflection glare overlay */}
+            {/* Crystal reflection glare overlay — reflects strictly within font */}
             <motion.span
-              animate={{ backgroundPosition: ['100% center', '-200% center'] }}
-              transition={{ repeat: Infinity, duration: 6.5, ease: 'linear' }}
+              animate={{ backgroundPosition: ['150% center', '-150% center'] }}
+              transition={{ repeat: Infinity, duration: 5.5, ease: 'linear' }}
               style={{
                 fontFamily: "'Hiragenda', serif",
                 fontSize: isDesktop
-                  ? 'clamp(3.6rem, 5.6vw, 5.0rem)'
-                  : (isTablet ? 'clamp(3.1rem, 6.2vw, 3.9rem)' : 'clamp(2.7rem, 8.8vw, 3.5rem)'),
+                  ? 'clamp(2.8rem, 4.4vw, 3.8rem)'
+                  : (isTablet ? 'clamp(2.2rem, 4.6vw, 2.8rem)' : 'clamp(22px, 6.2vw, 27px)'),
                 letterSpacing: '0.04em',
-                lineHeight: 1.05,
+                lineHeight: 1.2,
                 whiteSpace: 'nowrap',
                 position: 'absolute',
-                inset: 0,
+                left: 0,
+                top: 0,
+                width: '100%',
+                height: '100%',
                 pointerEvents: 'none',
                 background:
-                  'linear-gradient(120deg, transparent 38%, rgba(255, 255, 255, 0.72) 50%, transparent 62%)',
-                backgroundSize: '200% 250%',
+                  'linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%)',
+                backgroundSize: '200% 200%',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
                 color: 'transparent',
                 zIndex: 2,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: 'inline-block',
               }}
               aria-hidden="true"
             >
-              {brideName.split('').map((ch, idx) => (
-                <span key={`glare-b-${ch}-${idx}`} style={{ display: 'inline-block' }}>
-                  {ch === ' ' ? '\u00A0' : ch}
-                </span>
-              ))}
+              {brideName}
             </motion.span>
           </motion.div>
 
           {/* Line 2: weds with comfortable breathing room */}
-          <motion.div variants={fadeUp} style={{ margin: isDesktop ? '8px 0' : '6px 0', whiteSpace: 'nowrap' }}>
+          <motion.div variants={fadeUp} style={{ margin: isDesktop ? '6px 0' : '4px 0', whiteSpace: 'nowrap' }}>
             <span
               style={{
                 fontFamily: "'Hiragenda', serif",
                 fontSize: isDesktop
-                  ? 'clamp(1.45rem, 1.8vw, 1.75rem)'
-                  : (isTablet ? 'clamp(1.3rem, 2.5vw, 1.5rem)' : 'clamp(1.15rem, 3.8vw, 1.4rem)'),
+                  ? 'clamp(1.2rem, 1.5vw, 1.45rem)'
+                  : (isTablet ? 'clamp(1.1rem, 2.0vw, 1.3rem)' : 'clamp(1.0rem, 3.2vw, 1.2rem)'),
                 color: colors.primary,
                 opacity: 0.92,
                 letterSpacing: '0.12em',
@@ -323,80 +308,65 @@ export default function RishikaHero({
             </span>
           </motion.div>
 
-          {/* Line 3: Groom Name (Major Jaskaran) in Bigger Font with nowrap — NEVER breaks into 2 lines! */}
+          {/* Line 3: Groom Name (Major Jaskaran) — Solid visible font with crystal glare overlay */}
           <motion.div
             variants={nameReveal}
             style={{
               position: 'relative',
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
+              display: 'inline-block',
               whiteSpace: 'nowrap',
-              marginTop: isDesktop ? 4 : 2,
+              marginTop: isDesktop ? 3 : 1,
             }}
           >
-            <motion.span
-              variants={nameLetters}
+            {/* Base text: 100% solid, fully visible at all times */}
+            <span
               style={{
                 fontFamily: "'Hiragenda', serif",
                 fontSize: isDesktop
-                  ? 'clamp(3.5rem, 5.4vw, 4.8rem)'
-                  : (isTablet ? 'clamp(2.7rem, 5.6vw, 3.4rem)' : 'clamp(26px, 7.6vw, 33px)'),
+                  ? 'clamp(2.8rem, 4.4vw, 3.8rem)'
+                  : (isTablet ? 'clamp(2.2rem, 4.6vw, 2.8rem)' : 'clamp(22px, 6.2vw, 27px)'),
                 color: colors.primary,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: 'inline-block',
                 whiteSpace: 'nowrap',
-                lineHeight: 1.05,
-                textShadow: '0 2px 14px rgba(122,18,40,0.18)',
+                lineHeight: 1.2,
                 letterSpacing: '0.04em',
+                textShadow: '0 2px 14px rgba(122,18,40,0.18)',
               }}
             >
-              {groomName.split('').map((ch, idx) => (
-                <motion.span
-                  key={`groom-${ch}-${idx}`}
-                  variants={nameLetter}
-                  style={{ display: 'inline-block' }}
-                >
-                  {ch === ' ' ? '\u00A0' : ch}
-                </motion.span>
-              ))}
-            </motion.span>
+              {groomName}
+            </span>
 
-            {/* Line 3 Aura of Elegance Glassy reflection glare overlay */}
+            {/* Crystal reflection glare overlay — reflects strictly within font */}
             <motion.span
-              animate={{ backgroundPosition: ['100% center', '-200% center'] }}
-              transition={{ repeat: Infinity, duration: 6.5, ease: 'linear' }}
+              animate={{ backgroundPosition: ['150% center', '-150% center'] }}
+              transition={{ repeat: Infinity, duration: 5.5, ease: 'linear' }}
               style={{
                 fontFamily: "'Hiragenda', serif",
                 fontSize: isDesktop
-                  ? 'clamp(3.5rem, 5.4vw, 4.8rem)'
-                  : (isTablet ? 'clamp(2.7rem, 5.6vw, 3.4rem)' : 'clamp(26px, 7.6vw, 33px)'),
+                  ? 'clamp(2.8rem, 4.4vw, 3.8rem)'
+                  : (isTablet ? 'clamp(2.2rem, 4.6vw, 2.8rem)' : 'clamp(22px, 6.2vw, 27px)'),
                 letterSpacing: '0.04em',
-                lineHeight: 1.05,
+                lineHeight: 1.2,
                 whiteSpace: 'nowrap',
                 position: 'absolute',
-                inset: 0,
+                left: 0,
+                top: 0,
+                width: '100%',
+                height: '100%',
                 pointerEvents: 'none',
                 background:
-                  'linear-gradient(120deg, transparent 38%, rgba(255, 255, 255, 0.72) 50%, transparent 62%)',
-                backgroundSize: '200% 250%',
+                  'linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%)',
+                backgroundSize: '200% 200%',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
                 color: 'transparent',
                 zIndex: 2,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: 'inline-block',
               }}
               aria-hidden="true"
             >
-              {groomName.split('').map((ch, idx) => (
-                <span key={`glare-g-${ch}-${idx}`} style={{ display: 'inline-block' }}>
-                  {ch === ' ' ? '\u00A0' : ch}
-                </span>
-              ))}
+              {groomName}
             </motion.span>
           </motion.div>
         </div>
