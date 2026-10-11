@@ -12,7 +12,7 @@ import RajasthaniVowsSchedule from './RajasthaniVowsSchedule.jsx'
 import RajasthaniVowsVenue from './RajasthaniVowsVenue.jsx'
 import RajasthaniVowsCountdown from './RajasthaniVowsCountdown.jsx'
 import defaultTemplateData from './rajasthaniVowsData.json'
-import bgMusicSrc from '../../assets/audio/Anbil Avan.mp3'
+import bgMusicSrc from '../../assets/audio/bg-music-a-thousand-years.mp3'
 import { motion } from 'framer-motion'
 
 // ── Music Icons ───────────────────────────────────────────────
@@ -314,7 +314,7 @@ export default function TemplateRajasthaniVows({ savedData, groupSlug: propGroup
       {/* Background Music Player */}
       <audio
         ref={audioRef}
-        src={bgMusicSrc}
+        src={data?.musicUrl || data?.music || bgMusicSrc}
         loop
         playsInline
         preload="auto"

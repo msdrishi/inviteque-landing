@@ -11,6 +11,7 @@ import RajasthaniVowsSchedule from '../../../../templates/rajasthani-vows/Rajast
 import RajasthaniVowsVenue from '../../../../templates/rajasthani-vows/RajasthaniVowsVenue.jsx'
 import RajasthaniVowsCountdown from '../../../../templates/rajasthani-vows/RajasthaniVowsCountdown.jsx'
 import Footer from '../../../../components/Footer.jsx'
+import bgMusicSrc from '../../../../assets/audio/bg-music-a-thousand-years.mp3'
 
 export default function RishikaAndJaskaranTemplate() {
   const location = useLocation()
@@ -127,7 +128,7 @@ export default function RishikaAndJaskaranTemplate() {
       {/* Background Music Audio Element */}
       <audio
         ref={audioRef}
-        src="/assets/templates/rajestani-vows/Anbil Avan.mp3"
+        src={bgMusicSrc}
         loop
         preload="auto"
       />
