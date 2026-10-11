@@ -37,8 +37,8 @@ export const ASSETS = {
   calendarBg: '/assets/templates/pinkblossom/PinkBlossom-background-mobile.webp',
   countdownBg: '/assets/templates/pinkblossom/PinkBlossom-countdown-mobile.webp',
   thumbnail: '/assets/templates/pinkblossom/PinkBlossom-landing-thumbnail.webp',
-  arrow: '/assets/templates/royal-heritage/arrow.png',  // reuse existing arrow asset
-  ornament: '/assets/templates/pinkblossom/Ivory Floral Tassel Ornament.png',
+  arrow: '/assets/templates/royal-heritage/arrow.webp',  // reuse existing arrow asset
+  ornament: '/assets/templates/pinkblossom/Ivory Floral Tassel Ornament.webp',
 }
 
 // ─── Font Style Presets (responsive — call with isDesktop, isTablet) ───

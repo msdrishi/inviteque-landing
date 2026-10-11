@@ -16,7 +16,8 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData: _rawDraft } = useDraft();
-  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
+  const isCustomPreview = new URLSearchParams(location.search).get('customPreview') === 'true';
+  const draftData = isCustomPreview ? (_rawDraft || {}) : {};
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -32,10 +33,10 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
     savedData.isPaid === true ||
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
-  const showWatermark = !isPaid
+  const showWatermark = isPreview || isCustomPreview || !isPaid
 
   // Determine which data to use: Saved DB data > Local Draft data > Static Fallback
-  const activeData = savedData || (isPreview ? draftData : null)
+  const activeData = savedData || (isCustomPreview ? draftData : null)
 
   const data = activeData ? {
     ...staticData,
@@ -219,7 +220,7 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
           )}
 
           {/* Floating Continue Button for Preview */}
-          {isPreview && (
+          {isCustomPreview && (
             <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
               <div className="flex gap-3">
                 <button
@@ -278,7 +279,7 @@ export default function TemplateAuraOfElegance({ savedData, groupSlug: propGroup
         )}
 
         {/* Floating Continue Button for Preview on Desktop */}
-        {isPreview && (
+        {isCustomPreview && (
           <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
             <button
               onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}

@@ -1,4 +1,4 @@
-const logo = "/assets/logo/inviteq-logo.png"
+const logo = "/assets/logo/inviteq-logo.webp"
 
 export default function SplashScreen({ loading = true }) {
   if (!loading) return null

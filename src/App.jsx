@@ -31,6 +31,7 @@ const CustomRoyalHeirloomRohitAndManpreet = lazy(() => import('./pages/custom-or
 const CustomRoyalHeirloomSaaranshAndStuti = lazy(() => import('./pages/custom-orders/royal-heirloom/SaaranshAndStuti/index.jsx'))
 const CustomRoyalHeritageNaveenAndPreena = lazy(() => import('./pages/custom-orders/royal-heritage/NaveenAndPreena/index.jsx'))
 const CustomPinkBlossomAlinaAndTanmay = lazy(() => import('./pages/custom-orders/pink-blossom/AlinaAndTanmay/index.jsx'))
+const CustomRajasthaniVowsRishikaAndJaskaran = lazy(() => import('./pages/custom-orders/rajasthani-vows/RishikaAndJaskaran/index.jsx'))
 
 const PageLoader = () => (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#FDFCFB]">
@@ -175,6 +176,10 @@ export default function App() {
           <Route path="/template/royal-heirloom/rohit-and-manpreet" element={<CustomRoyalHeirloomRohitAndManpreet />} />
           <Route path="/template/royal-heirloom/RohitAndManpreet" element={<CustomRoyalHeirloomRohitAndManpreet />} />
           <Route path="/template/royal-heirloom/rohit-and-manpreet/RSVP" element={<CustomRsvpDashboard weddingCode="ROHITMAN" coupleName="Rohit & Manpreet" />} />
+
+          {/* Custom Client Template Routes (Rishika & Jaskaran - Rajasthani Vows) */}
+          <Route path="/template/rajasthani-vows/rishika-and-jaskaran" element={<CustomRajasthaniVowsRishikaAndJaskaran />} />
+          <Route path="/template/rajasthani-vows/RishikaAndJaskaran" element={<CustomRajasthaniVowsRishikaAndJaskaran />} />
 
           {/* Custom Client Template Routes (Hemang & Jasmine - Royal Heirloom) */}
           <Route path="/template/royal-heirloom/hemang-and-jasmine" element={<CustomRoyalHeirloomHemangAndJasmine />} />

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-const logo = "/assets/logo/inviteq-watermark.png"
+const logo = "/assets/logo/inviteq-watermark.webp"
 
 /* ── Animation helpers ── */
 const stagger = {
@@ -149,6 +149,16 @@ export default function Footer({ data, theme }) {
     bg: '#ECE3D1',
     bgSvg: 'rgba(74, 40, 16, 0.05)',
     bgSvgSecondary: 'rgba(74, 40, 16, 0.03)'
+  } : theme === 'rajasthani' ? {
+    primary: '#54121B',
+    primaryDark: '#3A0B12',
+    primaryLight: 'rgba(84, 18, 27, 0.75)',
+    border: 'rgba(184, 134, 11, 0.35)',
+    borderHover: 'rgba(184, 134, 11, 0.65)',
+    bgHover: 'rgba(84, 18, 27, 0.05)',
+    bg: '#FAF6EE',
+    bgSvg: 'rgba(84, 18, 27, 0.05)',
+    bgSvgSecondary: 'rgba(184, 134, 11, 0.03)'
   } : theme === 'traditional' ? {
     primary: '#2B3B25',
     primaryDark: '#1E2B18',

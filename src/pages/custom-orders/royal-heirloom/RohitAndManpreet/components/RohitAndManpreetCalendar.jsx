@@ -6,7 +6,7 @@ export default function RohitAndManpreetCalendar({
   calendarData, 
   fullAddress,
 }) {
-  const aeroplaneImg = "/assets/templates/royal-heirloom/aeroplane-savethedate.png"
+  const aeroplaneImg = "/assets/templates/royal-heirloom/aeroplane-savethedate.webp"
   const sectionRef = useRef(null)
   const isSectionInView = useInView(sectionRef, { once: false, amount: 0.15 })
 

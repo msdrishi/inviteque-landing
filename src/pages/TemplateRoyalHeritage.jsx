@@ -36,7 +36,8 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { draftData: _rawDraft } = useDraft();
-  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
+  const isCustomPreview = new URLSearchParams(location.search).get('customPreview') === 'true';
+  const draftData = isCustomPreview ? (_rawDraft || {}) : {};
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   
   const isPaid = savedData && (
@@ -44,10 +45,10 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
     savedData.isPaid === true ||
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
-  const showWatermark = !isPaid
+  const showWatermark = isPreview || isCustomPreview || !isPaid
   const templateId = 'royal-heritage'
 
-  const activeData = savedData || (isPreview ? draftData : null)
+  const activeData = savedData || (isCustomPreview ? draftData : null)
   const baseData = activeData || {}
 
   const data = {
@@ -336,7 +337,7 @@ export default function TemplateRoyalHeritage({ savedData, groupSlug }) {
     </div>
   ) : null
 
-  const PreviewNav = () => isPreview ? (
+  const PreviewNav = () => isCustomPreview ? (
     <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
       <div className="flex gap-3">
         <button onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })} className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[rgba(138,32,42,0.2)] bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#8A202A] shadow-xl hover:scale-105 active:scale-95">

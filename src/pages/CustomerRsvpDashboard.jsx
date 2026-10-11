@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext.jsx'
 import { API_URL } from '../config.js'
 
-const logo = "/assets/logo/inviteq-logo.png"
+const logo = "/assets/logo/inviteq-logo.webp"
 
 export default function CustomerRsvpDashboard() {
   const { templateId, code: paramCode } = useParams()

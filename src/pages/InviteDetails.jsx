@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
-const logo = "/assets/logo/inviteq-watermark.png"
+const logo = "/assets/logo/inviteq-watermark.webp"
 import { fadeUp } from '../motionVariants'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'

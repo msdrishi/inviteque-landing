@@ -6,12 +6,9 @@ import { useLazyLoad } from '../hooks/useLazyLoad'
  * Usage: <LazyImage src={imageSrc} alt="description" className="w-full" />
  */
 export function LazyImage({ src, alt, className = '', ...props }) {
-  const { ref, isVisible } = useLazyLoad()
-
   return (
     <img
-      ref={ref}
-      src={isVisible ? src : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3C/svg%3E'}
+      src={src}
       alt={alt}
       className={className}
       loading="lazy"

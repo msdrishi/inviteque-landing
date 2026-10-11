@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 const heroBg = "/assets/templates/aura-of-elegance/hero-bg.webp"
-const petalImg = "/assets/decorations/rose-petal.png"
+const petalImg = "/assets/decorations/rose-petal.webp"
 
 /* ─────────────────────────────────────────
    Animation variants

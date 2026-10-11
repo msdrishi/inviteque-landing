@@ -2,11 +2,11 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 const defaultIconList = [
-  "/assets/templates/royal-heirloom/icons/bouque.png",
-  "/assets/templates/royal-heirloom/icons/photo-session.png",
-  "/assets/templates/royal-heirloom/icons/engagement.png",
-  "/assets/templates/royal-heirloom/icons/drinks.png",
-  "/assets/templates/royal-heirloom/icons/dinner.png",
+  "/assets/templates/royal-heirloom/icons/bouque.webp",
+  "/assets/templates/royal-heirloom/icons/photo-session.webp",
+  "/assets/templates/royal-heirloom/icons/engagement.webp",
+  "/assets/templates/royal-heirloom/icons/drinks.webp",
+  "/assets/templates/royal-heirloom/icons/dinner.webp",
 ]
 
 const fadeAnim = {

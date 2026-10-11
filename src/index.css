@@ -115,6 +115,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Mercedes Signature';
+  src: url('./assets/fonts/mercedes-signature.regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

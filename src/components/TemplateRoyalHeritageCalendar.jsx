@@ -176,7 +176,7 @@ export default function TemplateRoyalHeritageCalendar({ calendarData, fontStyles
             rotate: { duration: animState === 'traveling' ? 0 : 0.4 }
           }}
         >
-          <img src="/assets/templates/royal-heritage/arrow.png" alt="Cupid Arrow" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          <img src="/assets/templates/royal-heritage/arrow.webp" alt="Cupid Arrow" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </motion.div>
       )}
 

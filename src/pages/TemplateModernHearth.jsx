@@ -23,8 +23,8 @@ const scheduleBgDesktop = "/assets/templates/modern-hearth/schedule-desktop.webp
 
 const countdownBgMobile = "/assets/templates/modern-hearth/countdown-mobile.webp"
 const countdownBgDesktop = "/assets/templates/modern-hearth/countdown-desktop.webp"
-const scissorPng = "/assets/decorations/hw1-scissor.png"
-const ribbonPng = "/assets/decorations/hw1-ribbon.png"
+const scissorPng = "/assets/decorations/hw1-scissor.webp"
+const ribbonPng = "/assets/decorations/hw1-ribbon.webp"
 
 // Slow staggered animation variants (hero section)
 const containerVariants = {
@@ -79,7 +79,8 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
   const navigate = useNavigate()
   const { templateId } = useParams()
   const { draftData: _rawDraft } = useDraft();
-  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
+  const isCustomPreview = new URLSearchParams(location.search).get('customPreview') === 'true';
+  const draftData = isCustomPreview ? (_rawDraft || {}) : {};
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
 
@@ -89,14 +90,14 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
     savedData.isPaid === true ||
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
-  const showWatermark = !isPaid
+  const showWatermark = isPreview || isCustomPreview || !isPaid
 
   // Ribbon cut state
   const [isRibbonCut, setIsRibbonCut] = useState(false)
   const [showRibbonOverlay, setShowRibbonOverlay] = useState(true)
 
   // Active data selection
-  const activeData = savedData || (isPreview ? draftData : null)
+  const activeData = savedData || (isCustomPreview ? draftData : null)
 
   const isGalleryView = !activeData;
   const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
@@ -501,7 +502,7 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
       )}
 
       {/* Preview Action Buttons */}
-      {isPreview && (
+      {isCustomPreview && (
         <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
           <div className="flex gap-3">
             <button

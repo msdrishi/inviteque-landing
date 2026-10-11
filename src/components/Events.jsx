@@ -77,6 +77,14 @@ export default function Events({ data, isDesktop, theme, bgImage, style, childre
     textAccent: '#4E6540',
     bg: '#FDFBF7',
     gold: '#C09D5C',
+  } : theme === 'rajasthani' ? {
+    primary: '#4A3E20',
+    primaryDark: '#2A1F0D',
+    accentBg: 'transparent',
+    border: 'rgba(74, 62, 32, 0.2)',
+    textAccent: '#7A6840',
+    bg: 'transparent',
+    gold: '#4A3E20',
   } : {
     primary: '#8B1E2D',
     primaryDark: '#5C0A14',

@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-const dividerFlowersMobile = "/assets/decorations/divider-flowers-mobile.png"
+const dividerFlowersMobile = "/assets/decorations/divider-flowers-mobile.webp"
 
 const letterContainer = {
   hidden: { opacity: 0 },

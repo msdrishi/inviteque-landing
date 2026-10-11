@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-const logo = "/assets/logo/inviteq-watermark.png"
+const logo = "/assets/logo/inviteq-watermark.webp"
 
 const stagger = {
   hidden: {},

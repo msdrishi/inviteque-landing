@@ -43,7 +43,7 @@ const locationBgMobile   = "/assets/templates/midnight-waltz/venue-mobile.webp"
 const countdownBgDesktop = "/assets/templates/midnight-waltz/countdown-desktop.webp"
 const countdownBgMobile  = "/assets/templates/midnight-waltz/countdown-mobile.webp"
 const stageBg            = "/assets/templates/midnight-waltz/stage-bg.webp"
-const rosePetalSrc       = "/assets/decorations/midnight-waltz-rosePetal.png"
+const rosePetalSrc       = "/assets/decorations/midnight-waltz-rosePetal.webp"
 
 // ── Petal configs — computed once at module level ────────────────
 // Use a seeded-like approach for consistent rendering

@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import ganeshaLogo from '../../../../../templates/royal-heirloom/ganesha-logo.png'
+import ganeshaLogo from '../../../../../templates/royal-heirloom/ganesha-logo.webp'
 
 // ── Falling Leaves / Petals Component (Aura of Elegance Style — delicate, smaller, pinkish blush matching bg) ──
 const petalConfig = Array.from({ length: 16 }).map((_, i) => {

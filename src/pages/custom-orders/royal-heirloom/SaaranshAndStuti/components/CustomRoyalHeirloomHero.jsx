@@ -1,14 +1,13 @@
-import { useMemo, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
-// ── Falling Leaves / Petals Component (Aura of Elegance Style — delicate, smaller, pinkish blush matching bg) ──
+// ── Falling Leaves / Petals Component (Aura of Elegance Style) ──
 const petalConfig = Array.from({ length: 16 }).map((_, i) => {
   const isLeft = i % 2 === 0
-  const leftPos = isLeft ? Math.random() * 14 : 86 + Math.random() * 14 // strictly outer edges (0-14% or 86-100%)
-  const duration = 7 + Math.random() * 7 // slow realistic floating
+  const leftPos = isLeft ? Math.random() * 14 : 86 + Math.random() * 14
+  const duration = 7 + Math.random() * 7
   const delay = Math.random() * 5
-  const size = 10 + Math.random() * 8 // smaller delicate leaf size (10px to 18px)
-  const xDrift = (isLeft ? 1 : -1) * (10 + Math.random() * 14) // contained drift so it never reaches center
+  const size = 10 + Math.random() * 8
+  const xDrift = (isLeft ? 1 : -1) * (10 + Math.random() * 14)
   return { left: leftPos, duration, delay, size, xDrift }
 })
 
@@ -39,7 +38,6 @@ export const FallingRoyalFlowers = () => {
             ease: 'linear',
           }}
         >
-          {/* Realistic delicate leaf matching background floral illustration in vintage dusty rose / blush */}
           <svg viewBox="0 0 24 32" width="100%" height="100%" fill="none" className="drop-shadow-[0_1px_3px_rgba(120,60,50,0.2)]">
             <path
               d="M12 2 C6 7, 3 17, 12 30 C21 17, 18 7, 12 2 Z"
@@ -71,113 +69,32 @@ export const FallingRoyalFlowers = () => {
   )
 }
 
-// Letter-by-Letter Couple Name with 3-4s slow fade-in letter animation (Hero ONLY)
-export const AnimatedCoupleName = ({ name, isTriggered, delay = 0.2, fontSizeClass = "text-[50px] sm:text-[58px]" }) => {
-  const letters = useMemo(() => Array.from(String(name || '')), [name])
-  const [showGlare, setShowGlare] = useState(false)
-
-  useEffect(() => {
-    if (isTriggered) {
-      // Reveal the shiny glare sweep only after letters finish fading in
-      const timer = setTimeout(() => {
-        setShowGlare(true)
-      }, (delay + letters.length * 0.14 + 3.0) * 1000)
-      return () => clearTimeout(timer)
-    } else {
-      setShowGlare(false)
-    }
-  }, [isTriggered, delay, letters.length])
-
-  return (
-    <div className="relative inline-flex items-center justify-center select-none overflow-visible px-2 my-0">
-      <span className="relative z-10 flex items-center justify-center overflow-visible">
-        {letters.map((char, i) => (
-          <motion.span
-            key={i}
-            initial={{ opacity: 0, y: 22, scale: 0.82, filter: 'blur(8px)' }}
-            animate={isTriggered ? {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              filter: 'blur(0px)'
-            } : {
-              opacity: 0,
-              y: 22,
-              scale: 0.82,
-              filter: 'blur(8px)'
-            }}
-            transition={{
-              duration: 3.5,
-              delay: delay + i * 0.15,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className={`font-['Modernline',_'Allura',_'Alex_Brush',_cursive] ${fontSizeClass} leading-[1.15] inline-block font-normal overflow-visible`}
-            style={{
-              display: 'inline-block',
-              whiteSpace: char === ' ' ? 'pre' : 'normal',
-              color: '#4A2810',
-              textShadow: '0 1px 1px rgba(255,255,255,0.6)',
-              filter: 'drop-shadow(0px 1px 2px rgba(80, 40, 15, 0.25))',
-            }}
-          >
-            {char}
-          </motion.span>
-        ))}
-      </span>
-
-      {showGlare && (
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: 1,
-            backgroundPosition: ['200% center', '-200% center']
-          }}
-          transition={{
-            opacity: { duration: 1.0 },
-            backgroundPosition: {
-              repeat: Infinity,
-              duration: 7.5,
-              ease: 'easeInOut',
-              repeatDelay: 3.0
-            }
-          }}
-          aria-hidden="true"
-          className={`absolute inset-0 pointer-events-none z-20 flex items-center justify-center font-['Modernline',_'Allura',_'Alex_Brush',_cursive] ${fontSizeClass} leading-[1.15] overflow-visible select-none`}
-          style={{
-            background: 'linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.9) 47%, rgba(255,230,150,0.98) 50%, rgba(255,255,255,0.9) 53%, transparent 75%)',
-            backgroundSize: '300% 100%',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
-        >
-          {name}
-        </motion.span>
-      )}
-    </div>
-  )
-}
-
 export default function CustomRoyalHeirloomHero({
   heroBgMobile,
   hasTriggeredHeroBg,
   hasTriggeredHeroText,
   hasOpened,
-  brideName,
-  brideFamily,
-  groomName,
-  groomFamily,
-  weddingMonth,
-  dayOfWeek,
-  weddingDate,
-  formattedTime,
-  weddingYear,
-  fullAddress,
-  heroTitleTop = "WEDDING",
-  heroTitleBottom = "INVITATION",
+  brideName = "Stuti",
+  brideFamily = "Daughter of Mrs Meenakshi & Rajiv Puri",
+  groomName = "Saaransh",
+  groomFamily = "Son of Mrs Sapna & Nitin Chopra",
+  weddingDate = "20",
+  weddingMonth = "December",
+  weddingYear = "2026",
 }) {
+  const isTriggered = hasTriggeredHeroText || hasOpened
+  const formattedHeroDate = (() => {
+    const d = parseInt(weddingDate, 10)
+    let suffix = 'TH'
+    if (d % 10 === 1 && d !== 11) suffix = 'ST'
+    else if (d % 10 === 2 && d !== 12) suffix = 'ND'
+    else if (d % 10 === 3 && d !== 13) suffix = 'RD'
+    return `${d}${suffix} ${weddingMonth.toUpperCase()} ${weddingYear}`
+  })()
+
   return (
-    <section className="relative w-full min-h-[100svh] flex flex-col items-center justify-center text-center overflow-hidden bg-[#ECE3D1]">
+    <section className="relative w-full min-h-[100svh] flex flex-col items-center justify-between text-center overflow-hidden bg-[#ECE3D1] px-6">
+      {/* Background Architectural/Floral Mural */}
       <motion.div
         initial={{ scale: 1.14, opacity: 0 }}
         animate={hasTriggeredHeroBg || hasOpened ? { scale: 1.0, opacity: 1 } : { scale: 1.14, opacity: 0 }}
@@ -191,54 +108,60 @@ export default function CustomRoyalHeirloomHero({
         }}
       />
 
-      {/* Falling Royal Flower Petals from top */}
+      {/* Falling Royal Flower Petals */}
       {(hasTriggeredHeroBg || hasOpened) && <FallingRoyalFlowers />}
 
-      <div className="relative z-10 w-full h-full flex flex-col justify-center items-center py-6 px-6 text-[#4A3223]">
-        {/* Header: Dynamic Hero Title */}
+      {/* Top Spacer: Exactly sized to place content below the top arch scalloped curve */}
+      <div className="h-[14svh] sm:h-[16svh] min-h-[85px] w-full pointer-events-none" />
+
+      {/* Main Content Container: Perfectly centered within the inner clear arch area */}
+      <div className="relative z-10 w-full flex flex-col justify-center items-center text-[#4A3223] my-auto max-w-[340px]">
+        {/* Intro Tag */}
         <motion.div
-          initial={{ opacity: 0, y: 16, filter: 'blur(6px)' }}
-          animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 16, filter: 'blur(6px)' }}
-          transition={{ duration: 3.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center gap-0.5 mb-3 md:mb-5"
+          initial={{ opacity: 0, y: 12, filter: 'blur(4px)' }}
+          animate={isTriggered ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 12, filter: 'blur(4px)' }}
+          transition={{ duration: 2.0, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center mb-3 sm:mb-4"
         >
-          <span className="font-['Cinzel'] text-[12px] sm:text-[14px] md:text-[18px] tracking-[0.36em] uppercase text-[#6B4330] font-semibold leading-tight">
-            {heroTitleTop}
-          </span>
-          <span className="font-['Cinzel'] text-[12px] sm:text-[14px] md:text-[18px] tracking-[0.36em] uppercase text-[#6B4330] font-semibold leading-tight">
-            {heroTitleBottom}
+          <span className="font-['Cinzel'] text-[11px] sm:text-[12px] md:text-[13px] tracking-[0.24em] uppercase text-[#6B4330] font-semibold text-center leading-relaxed">
+            Celebrating the coming together of
           </span>
         </motion.div>
 
-        {/* Couple Names in signature calligraphy with super slow majestic reveal */}
-        <div className="flex flex-col items-center justify-center w-full my-3 md:my-6 overflow-visible">
-          <div className="flex flex-col items-center">
-            <AnimatedCoupleName
-              name={groomName}
-              isTriggered={hasTriggeredHeroText || hasOpened}
-              delay={0.3}
-              fontSizeClass="text-[48px] sm:text-[56px] md:text-[80px]"
-            />
+        {/* Couple Names & Family Details */}
+        <div className="flex flex-col items-center justify-center w-full my-1 sm:my-2 overflow-visible">
+          {/* Groom */}
+          <motion.div 
+            initial={{ opacity: 0, y: 16, filter: 'blur(5px)' }}
+            animate={isTriggered ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 16, filter: 'blur(5px)' }}
+            transition={{ duration: 2.2, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-center"
+          >
+            <h1 
+              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[44px] sm:text-[50px] md:text-[62px] leading-[1.1] text-[#4A2810] font-normal drop-shadow-sm select-none"
+              style={{
+                textShadow: '0 1px 2px rgba(255,255,255,0.6)',
+                filter: 'drop-shadow(0px 1px 2px rgba(80, 40, 15, 0.25))',
+              }}
+            >
+              {groomName}
+            </h1>
             {groomFamily && (
-              <motion.p
-                initial={{ opacity: 0, y: 5 }}
-                animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0 } : { opacity: 0, y: 5 }}
-                transition={{ duration: 2.5, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="font-['Cinzel'] text-[10px] sm:text-[12px] md:text-[14px] tracking-[0.15em] uppercase text-[#6B4734] font-medium mt-3 md:mt-4 text-center"
-              >
-                {groomFamily}
-              </motion.p>
+              <p className="font-['Cinzel'] text-[9.5px] sm:text-[10.5px] md:text-[11.5px] tracking-[0.16em] uppercase text-[#6B4734] font-medium mt-2.5 sm:mt-3 text-center">
+                {groomFamily.startsWith('(') ? groomFamily : `(${groomFamily})`}
+              </p>
             )}
-          </div>
+          </motion.div>
 
+          {/* Connector & */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.7 }}
-            transition={{ duration: 3.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="my-1 md:my-2 text-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={isTriggered ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+            transition={{ duration: 1.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="my-1.5 sm:my-2.5 text-center"
           >
             <span
-              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[28px] sm:text-[34px] md:text-[50px] leading-none inline-block select-none font-normal"
+              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[26px] sm:text-[30px] md:text-[36px] leading-none inline-block select-none font-normal"
               style={{
                 color: '#6B401D',
                 filter: 'drop-shadow(0px 1px 2px rgba(90, 45, 15, 0.25))',
@@ -248,96 +171,85 @@ export default function CustomRoyalHeirloomHero({
             </span>
           </motion.div>
 
-          <div className="flex flex-col items-center">
-            <AnimatedCoupleName
-              name={brideName}
-              isTriggered={hasTriggeredHeroText || hasOpened}
-              delay={1.2}
-              fontSizeClass="text-[48px] sm:text-[56px] md:text-[80px]"
-            />
-            {brideFamily && (
-              <motion.p
-                initial={{ opacity: 0, y: 5 }}
-                animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0 } : { opacity: 0, y: 5 }}
-                transition={{ duration: 2.5, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                className="font-['Cinzel'] text-[10px] sm:text-[12px] md:text-[14px] tracking-[0.15em] uppercase text-[#6B4734] font-medium mt-3 md:mt-4 text-center"
-              >
-                {brideFamily}
-              </motion.p>
-            )}
-          </div>
-        </div>
-
-        {/* Subtext, Date Module & Mumbai Address */}
-        <div className="flex flex-col items-center w-full max-w-[340px] md:max-w-[500px] px-2 gap-2 md:gap-4 mt-3 md:mt-6">
-
-
-          <motion.div
-            initial={{ opacity: 0, y: 14, filter: 'blur(5px)' }}
-            animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(5px)' }}
-            transition={{ duration: 3.6, delay: 2.0, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center w-full max-w-[280px] md:max-w-[400px] pt-1 pb-1"
+          {/* Bride */}
+          <motion.div 
+            initial={{ opacity: 0, y: 16, filter: 'blur(5px)' }}
+            animate={isTriggered ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 16, filter: 'blur(5px)' }}
+            transition={{ duration: 2.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-center"
           >
-            <span className="font-['Cinzel'] text-[11px] sm:text-[12px] md:text-[16px] tracking-[0.3em] uppercase text-[#543625] font-bold">
-              {weddingMonth.toUpperCase()}
-            </span>
-
-            <div className="flex items-center justify-between w-full my-1 md:my-3 gap-2">
-              <div className="flex-1 flex flex-col justify-center">
-                <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mb-1 md:mb-2" />
-                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[13px] tracking-[0.2em] uppercase text-[#6B4330] font-semibold text-center">
-                  {dayOfWeek}
-                </span>
-                <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mt-1 md:mt-2" />
-              </div>
-
-              <div className="px-2 md:px-4">
-                <span className="font-['Bodoni_Moda',_'Cinzel',_serif] text-[34px] sm:text-[38px] md:text-[54px] leading-none font-bold text-[#4F301D] tracking-tight">
-                  {weddingDate}
-                </span>
-              </div>
-
-              <div className="flex-1 flex flex-col justify-center">
-                <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mb-1 md:mb-2" />
-                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[13px] tracking-[0.16em] uppercase text-[#6B4330] font-semibold text-center whitespace-nowrap">
-                  {formattedTime}
-                </span>
-                <div className="h-[0.8px] md:h-[1.5px] w-full bg-[#8C6044]/70 mt-1 md:mt-2" />
-              </div>
-            </div>
-
-            <span className="font-['Cinzel'] text-[10px] sm:text-[11px] md:text-[15px] tracking-[0.28em] text-[#543625] font-semibold">
-              {weddingYear}
-            </span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
-            animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(4px)' }}
-            transition={{ duration: 3.6, delay: 2.3, ease: [0.16, 1, 0.3, 1] }}
-            className="font-['Cinzel'] text-[8.5px] sm:text-[9.5px] md:text-[12.5px] tracking-[0.2em] uppercase text-[#73503D] opacity-90 max-w-[270px] md:max-w-[400px] leading-[1.45] md:leading-relaxed"
-          >
-            {fullAddress}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
-            animate={hasTriggeredHeroText || hasOpened ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { opacity: 0, y: 14, filter: 'blur(4px)' }}
-            transition={{ duration: 3.6, delay: 2.6, ease: [0.16, 1, 0.3, 1] }}
-            className="pt-0.5 md:pt-3"
-          >
-            <span
-              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[26px] sm:text-[30px] md:text-[42px] leading-none select-none"
+            <h1 
+              className="font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[44px] sm:text-[50px] md:text-[62px] leading-[1.1] text-[#4A2810] font-normal drop-shadow-sm select-none"
               style={{
-                color: '#6E4424',
-                filter: 'drop-shadow(0px 1px 1px rgba(90, 45, 15, 0.2))'
+                textShadow: '0 1px 2px rgba(255,255,255,0.6)',
+                filter: 'drop-shadow(0px 1px 2px rgba(80, 40, 15, 0.25))',
               }}
             >
-              Save the Date
-            </span>
+              {brideName}
+            </h1>
+            {brideFamily && (
+              <p className="font-['Cinzel'] text-[9.5px] sm:text-[10.5px] md:text-[11.5px] tracking-[0.16em] uppercase text-[#6B4734] font-medium mt-2.5 sm:mt-3 text-center">
+                {brideFamily.startsWith('(') ? brideFamily : `(${brideFamily})`}
+              </p>
+            )}
           </motion.div>
         </div>
+
+        {/* Wedding Date as requested: "keep the date as well" */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={isTriggered ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+          transition={{ duration: 2.0, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex items-center justify-center gap-2.5 my-3 sm:my-3.5"
+        >
+          <div className="h-[0.8px] w-6 bg-[#8C5D38]/50" />
+          <span className="font-['Cinzel'] text-[11px] sm:text-[12px] md:text-[13px] tracking-[0.22em] uppercase text-[#543625] font-bold">
+            {formattedHeroDate}
+          </span>
+          <div className="h-[0.8px] w-6 bg-[#8C5D38]/50" />
+        </motion.div>
+
+        {/* Blessings Section with comfortable line spacing */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={isTriggered ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+          transition={{ duration: 2.2, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center mt-2.5 text-center max-w-[340px]"
+        >
+          <span className="font-['Cinzel'] text-[10px] sm:text-[11px] md:text-[11.5px] tracking-[0.24em] uppercase text-[#8C5D38] font-bold mb-1.5">
+            With blessings of -
+          </span>
+          <span className="font-['Cinzel'] text-[10px] sm:text-[11px] md:text-[11.5px] tracking-[0.14em] uppercase text-[#543625] font-semibold leading-[1.7]">
+            Veena &amp; Late ND Chopra
+          </span>
+          <span className="font-['Cinzel'] text-[10px] sm:text-[11px] md:text-[11.5px] tracking-[0.14em] uppercase text-[#543625] font-semibold leading-[1.7] mt-0.5">
+            Santosh &amp; Late LB Nanda
+          </span>
+        </motion.div>
       </div>
+
+      {/* Bottom Scroll Down Arrow: Placed comfortably ABOVE the bottom corner floral bouquets */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={isTriggered ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 1.5, delay: 1.2 }}
+        className="relative z-10 flex flex-col items-center justify-center gap-1 select-none pointer-events-none mt-2 pb-[8svh] sm:pb-[10svh]"
+      >
+        <span className="font-['Cinzel'] text-[8.5px] tracking-[0.3em] uppercase text-[#6B4330] font-bold opacity-80">
+          Scroll Down
+        </span>
+        <motion.svg
+          animate={{ y: [0, 4, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          className="w-3.5 h-3.5 text-[#6B4330]"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </motion.svg>
+      </motion.div>
     </section>
   )
 }

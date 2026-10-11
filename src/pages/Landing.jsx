@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, memo } from 'react'
 import { motion, useTime, useTransform, useInView } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
-const logo = "/assets/logo/inviteq-watermark.png"
+const logo = "/assets/logo/inviteq-watermark.webp"
 import { templates, houseWarmingTemplates } from '../templates/templates.js'
 import { fadeUp, staggerChildren, viewportOnce } from '../motionVariants.js'
 import { useAuth } from '../context/AuthContext'
@@ -560,11 +560,91 @@ export default function Landing() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const carouselTemplates = templates.length >= 10 ? templates : [...templates, ...templates]
-  const initialDisplay = isMobile ? 3 : 6
-  const incrementBy = isMobile ? 3 : 6
+  // Fixed to 12 templates so gaps and animations remain consistent when templates are added
+  const carouselTemplates = templates.slice(0, 12)
+  const initialDisplay = 6
+  const incrementBy = 6
   const currentDisplay = displayCount ?? initialDisplay
   const visibleTemplates = templates.slice(0, currentDisplay)
+
+  const renderTemplateCard = (t, index, isMobileView = false, fallbackSection = '#templates') => (
+    <article
+      key={t.id}
+      className={[
+        'overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury flex flex-col',
+        isMobileView ? 'snap-center min-w-[265px] max-w-[275px] flex-shrink-0' : 'h-full'
+      ].join(' ')}
+    >
+      <div className="relative">
+        <Link to={t.available ? `${t.href}?preview=true` : fallbackSection} className="block">
+          <LazyImage
+            src={t.thumbnail}
+            alt={t.name}
+            className="aspect-[3/4] w-full object-cover"
+          />
+        </Link>
+        <div className="absolute left-3.5 top-3.5 flex items-center gap-1.5">
+          <PricePill label={t.priceLabel} />
+          {t.isNew ? (
+            <span className="inline-flex items-center rounded-full bg-emerald-600 px-2.5 py-0.5 text-[11px] font-semibold text-white">
+              Recently Launched
+            </span>
+          ) : t.popular ? (
+            <span className="inline-flex items-center rounded-full bg-iqText px-2.5 py-0.5 text-[11px] font-semibold text-iqCard">
+              Popular
+            </span>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="p-4 sm:p-5 md:p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <h3 className="text-sm font-bold md:text-base leading-snug">{t.name}</h3>
+          <p className="mt-1 text-xs text-iqText/70 line-clamp-2 leading-relaxed">{t.description}</p>
+
+          {t.available ? null : (
+            <div className="mt-2.5 flex flex-wrap items-center gap-2">
+              <ComingSoonPill />
+            </div>
+          )}
+        </div>
+
+        <div className="mt-3.5 flex gap-2">
+          <a
+            href={t.available ? `${t.href}?preview=true` : fallbackSection}
+            target={t.available ? '_blank' : undefined}
+            rel={t.available ? 'noopener noreferrer' : undefined}
+            className={[
+              'flex-1 inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold transition',
+              t.available
+                ? 'bg-black text-white hover:scale-105 hover:bg-black/90 active:scale-95 shadow-md'
+                : 'cursor-not-allowed bg-black/50 text-white/50 pointer-events-none'
+            ].join(' ')}
+          >
+            Preview
+          </a>
+          <button
+            onClick={() => {
+              if (!t.available) return
+              resetDraft(t.id)
+              if (user) navigate(`/builder/${t.id}`)
+              else navigate('/login')
+            }}
+            disabled={!t.available}
+            className={[
+              'flex-1 inline-flex items-center justify-center rounded-full border px-4 py-2 text-xs font-semibold transition',
+              t.available
+                ? 'border-iqBorder bg-iqCard text-iqText hover:bg-iqText/5'
+                : 'cursor-not-allowed border-iqBorder bg-iqCard text-iqText/40',
+            ].join(' ')}
+            aria-disabled={!t.available}
+          >
+            Use Template
+          </button>
+        </div>
+      </div>
+    </article>
+  )
 
   return (
     <main className="min-h-[100svh] w-full bg-iqBg font-saas text-iqText">
@@ -771,87 +851,21 @@ export default function Landing() {
             </motion.p>
           </motion.div>
 
-          <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-14">
-            {visibleTemplates.map((t, index) => (
-              <motion.article
-                key={t.id}
-                variants={templateCardPop}
-                custom={index}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.3 }}
-                className="overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury"
-              >
-                <div className="relative">
-                  <Link to={t.available ? `${t.href}?preview=true` : '#templates'} className="block">
-                    <LazyImage
-                      src={t.thumbnail}
-                      alt={t.name}
-                      className="aspect-[3/4] w-full object-cover"
-                    />
-                  </Link>
-                  <div className="absolute left-4 top-4 flex items-center gap-2">
-                    <PricePill label={t.priceLabel} />
-                    {t.isNew ? (
-                      <span className="inline-flex items-center rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">
-                        Recently Launched
-                      </span>
-                    ) : t.popular ? (
-                      <span className="inline-flex items-center rounded-full bg-iqText px-3 py-1 text-xs font-semibold text-iqCard">
-                        Popular
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
+          {/* Mobile: Horizontal Swipe Carousel (Shows all templates naturally without clicking Show More) */}
+          <div className="mt-6 flex md:hidden gap-3.5 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-5 pt-1 -mx-5 px-5">
+            {templates.map((t, index) => renderTemplateCard(t, index, true, '#templates'))}
+          </div>
+          <div className="flex md:hidden items-center justify-center gap-1.5 text-[11px] font-medium text-iqText/40 -mt-2 mb-2">
+            <span>← Swipe to explore all {templates.length} templates →</span>
+          </div>
 
-                <div className="p-6 md:p-8">
-                  <h3 className="text-sm font-bold md:text-base">{t.name}</h3>
-                  <p className="mt-1 text-xs text-iqText/70 line-clamp-2">{t.description}</p>
-
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    {t.available ? null : <ComingSoonPill />}
-                  </div>
-
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    <a
-                      href={t.available ? `${t.href}?preview=true` : '#templates'}
-                      target={t.available ? '_blank' : undefined}
-                      rel={t.available ? 'noopener noreferrer' : undefined}
-                      className={[
-                        'inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition',
-                        t.available
-                          ? 'bg-black text-white hover:scale-105 hover:bg-black/90 active:scale-95 shadow-xl'
-                          : 'cursor-not-allowed bg-black/50 text-white/50 pointer-events-none'
-                      ].join(' ')}
-                    >
-                      Preview
-                    </a>
-                    <button
-                      onClick={() => {
-                        if (!t.available) return
-                        resetDraft(t.id)
-                        if (user) navigate(`/builder/${t.id}`)
-                        else navigate('/login')
-                      }}
-                      disabled={!t.available}
-                      className={[
-                        'inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition',
-                        t.available
-                          ? 'border-iqBorder bg-iqCard text-iqText hover:bg-iqText/5'
-                          : 'cursor-not-allowed border-iqBorder bg-iqCard text-iqText/40',
-                      ].join(' ')}
-                      aria-disabled={!t.available}
-                    >
-                      Use Template
-                    </button>
-                  </div>
-                </div>
-              </motion.article>
-            ))}
+          {/* Desktop: Grid Layout */}
+          <div className="mt-16 hidden md:grid md:grid-cols-3 md:gap-14">
+            {visibleTemplates.map((t, index) => renderTemplateCard(t, index, false, '#templates'))}
           </div>
 
           {currentDisplay < templates.length ? (
-            <motion.div variants={fadeUp} initial="hidden" whileInView="show" className="mt-12 flex justify-center">
+            <motion.div variants={fadeUp} initial="hidden" whileInView="show" className="mt-12 hidden md:flex justify-center">
               <button
                 onClick={() => setDisplayCount(currentDisplay + incrementBy)}
                 className="group flex items-center gap-2 rounded-full border border-iqBorder bg-white px-8 py-3 text-sm font-bold text-iqText shadow-luxury transition hover:bg-iqText hover:text-white"
@@ -887,79 +901,17 @@ export default function Landing() {
             </motion.p>
           </motion.div>
 
-          <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-14">
-            {houseWarmingTemplates.map((t, index) => (
-              <motion.article
-                key={t.id}
-                variants={templateCardPop}
-                custom={index}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.3 }}
-                className="overflow-hidden rounded-card border border-iqBorder bg-iqCard shadow-luxury"
-              >
-                <div className="relative">
-                  <Link to={t.available ? `${t.href}?preview=true` : '#house-warming-templates'} className="block">
-                    <LazyImage
-                      src={t.thumbnail}
-                      alt={t.name}
-                      className="aspect-[3/4] w-full object-cover"
-                    />
-                  </Link>
-                  <div className="absolute left-4 top-4 flex items-center gap-2">
-                    <PricePill label={t.priceLabel} />
-                    {t.popular ? (
-                      <span className="inline-flex items-center rounded-full bg-iqText px-3 py-1 text-xs font-semibold text-iqCard">
-                        Popular
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
+          {/* Mobile: Horizontal Swipe Carousel */}
+          <div className="mt-6 flex md:hidden gap-3.5 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-5 pt-1 -mx-5 px-5">
+            {houseWarmingTemplates.map((t, index) => renderTemplateCard(t, index, true, '#house-warming-templates'))}
+          </div>
+          <div className="flex md:hidden items-center justify-center gap-1.5 text-[11px] font-medium text-iqText/40 -mt-2 mb-2">
+            <span>← Swipe to explore all {houseWarmingTemplates.length} templates →</span>
+          </div>
 
-                <div className="p-6 md:p-8">
-                  <h3 className="text-sm font-bold md:text-base">{t.name}</h3>
-                  <p className="mt-1 text-xs text-iqText/70 line-clamp-2">{t.description}</p>
-
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    {t.available ? null : <ComingSoonPill />}
-                  </div>
-
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    <a
-                      href={t.available ? `${t.href}?preview=true` : '#house-warming-templates'}
-                      target={t.available ? '_blank' : undefined}
-                      rel={t.available ? 'noopener noreferrer' : undefined}
-                      className={[
-                        'inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition',
-                        t.available
-                          ? 'bg-black text-white hover:scale-105 hover:bg-black/90 active:scale-95 shadow-xl'
-                          : 'cursor-not-allowed bg-black/50 text-white/50 pointer-events-none'
-                      ].join(' ')}
-                    >
-                      Preview
-                    </a>
-                    <button
-                      onClick={() => {
-                        if (!t.available) return
-                        resetDraft(t.id)
-                        if (user) navigate(`/builder/${t.id}`)
-                        else navigate('/login')
-                      }}
-                      disabled={!t.available}
-                      className={[
-                        'inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition',
-                        t.available
-                          ? 'border-iqBorder bg-iqCard text-iqText hover:bg-iqText/5'
-                          : 'cursor-not-allowed border-iqBorder bg-iqCard text-iqText/40',
-                      ].join(' ')}
-                      aria-disabled={!t.available}
-                    >
-                      Use Template
-                    </button>
-                  </div>
-                </div>
-              </motion.article>
-            ))}
+          {/* Desktop: Grid Layout */}
+          <div className="mt-16 hidden md:grid md:grid-cols-3 md:gap-14">
+            {houseWarmingTemplates.map((t, index) => renderTemplateCard(t, index, false, '#house-warming-templates'))}
           </div>
         </div>
       </section>
@@ -1359,8 +1311,8 @@ export default function Landing() {
               <h3 className="text-lg font-bold uppercase tracking-widest text-iqText/50">Template Pricing</h3>
               <div className="mt-6 flex flex-col items-center justify-center">
                 <div className="flex items-baseline justify-center gap-2">
-                  <span className="text-xl md:text-2xl font-bold text-iqText/30 line-through">₹2,999</span>
-                  <span className="text-5xl md:text-6xl font-extrabold text-iqText">₹999</span>
+                  <span className="text-xl md:text-2xl font-bold text-iqText/30 line-through">₹5,999</span>
+                  <span className="text-5xl md:text-6xl font-extrabold text-iqText">₹1,999</span>
                 </div>
                 <span className="text-[10px] font-bold tracking-wider text-green-700 bg-green-50 px-3 py-1 rounded-full mt-2.5">66% OFF — LIMITED LAUNCH OFFER</span>
                 <span className="text-xs font-medium text-iqText/40 mt-2">one-time flat fee</span>
@@ -1453,7 +1405,7 @@ export default function Landing() {
               },
               {
                 q: 'Are there any recurring monthly subscription fees?',
-                a: 'No. We believe in complete transparency. There are absolutely no subscriptions, hidden fees, or monthly hosting costs. You pay a simple, one-time flat fee of ₹999 per template, which includes 6 months of premium hosting and unlimited updates.',
+                a: 'No. We believe in complete transparency. There are absolutely no subscriptions, hidden fees, or monthly hosting costs. You pay a simple, one-time flat fee of ₹1,999 per template, which includes 6 months of premium hosting and unlimited updates.',
               },
               {
                 q: 'Can I upload our personal photos to the website?',

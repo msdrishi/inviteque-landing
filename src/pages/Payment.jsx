@@ -6,7 +6,7 @@ import { useDraft } from '../context/DraftContext'
 import { API_URL } from '../config'
 import { compressImageForUpload } from '../utils/imageCompression'
 import { uploadToR2 } from '../utils/r2Upload'
-const logo = "/assets/logo/inviteq-watermark.png"
+const logo = "/assets/logo/inviteq-watermark.webp"
 import { fadeUp } from '../motionVariants'
 import { templates, houseWarmingTemplates } from '../templates/templates'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'

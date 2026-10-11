@@ -5,6 +5,13 @@ export const customData = {
   groomFamily: 'Son of Mrs Sapna & Nitin Chopra',
   brideName: 'Stuti',
   brideFamily: 'Daughter of Mrs Meenakshi & Rajiv Puri',
+  blessings: {
+    title: 'With blessings of -',
+    elders: [
+      'Veena & Late ND Chopra',
+      'Santosh & Late LB Nanda'
+    ]
+  },
   heroData: {
     weddingDate: '20',
     weddingMonth: 'December',
@@ -17,7 +24,8 @@ export const customData = {
     venueAddress: '16, Bandh Rd, Chattarpur',
     venueCity: 'Delhi',
     state: '',
-    mapLink: 'https://maps.app.goo.gl/tQaYREQqVQ21111V6?g_st=ic'
+    mapLink: 'https://maps.app.goo.gl/tQaYREQqVQ21111V6?g_st=ic',
+    bestRegards: 'Anu & Sumeet Chopra'
   },
   storyData: {
     photos: [] 
@@ -27,54 +35,68 @@ export const customData = {
       id: "pooja",
       title: "Pooja",
       date: "13th Dec, 2026",
-      time: "11:30 AM",
-      message: "Auspicious start to the event",
+      time: "3:00 PM Onwards",
+      message: "Auspicious start to the celebrations",
       venueName: "E-2420, Palam Vihar",
       venueCity: "Gurgaon",
-      mapLink: "https://maps.app.goo.gl/5vq8cidzAw3TkDcA9?g_st=ic"
+      mapLink: "https://maps.app.goo.gl/5vq8cidzAw3TkDcA9?g_st=ic",
+      bestRegards: "Mamta \n&\nAnil Sachdeva"
     },
     {
       id: "cocktail",
       title: "Cocktail",
       date: "18th Dec, 2026",
-      time: "8:30 PM onwards",
+      time: "8:30 PM Onwards",
       message: "Join us for an evening of drinks, dance and celebration.",
       venueName: "Amarai Farms",
       venueCity: "Delhi Ggn Rd, Kapas Hera, New Delhi",
-      mapLink: "https://maps.app.goo.gl/2iquCoZgx6heyMmVA?g_st=ic"
+      mapLink: "https://maps.app.goo.gl/2iquCoZgx6heyMmVA?g_st=ic",
+      bestRegards: "Shikha & Rishi Seth"
     },
     {
       id: "haldi",
       title: "Haldi & Mehendi",
       date: "19th Dec, 2026",
-      time: "3:00 PM",
+      time: "3:00 PM Onwards",
+      dressCode: "Dress Code - Hues of Blue",
       message: "Vibrant colors, love, and laughter.",
       venueName: "E-2420, Palam Vihar",
       venueCity: "Gurgaon",
-      mapLink: "https://maps.app.goo.gl/5vq8cidzAw3TkDcA9?g_st=ic"
+      mapLink: "https://maps.app.goo.gl/5vq8cidzAw3TkDcA9?g_st=ic",
+      bestRegards: "Ruhee & Sidharth Nanda"
     }
   ],
   scheduleData: {
     items: [
-      { time: "03:00 PM", title: "Assembly of Baraat", desc: "Join us at Morbagh, Chattarpur" },
-      { time: "05:00 PM", title: "Wedding Vows", desc: "The sacred ceremony" },
-      { time: "08:00 PM", title: "Reception Dinner", desc: "Dinner, drinks & dancing" }
+      { time: "03:00 PM Onwards", title: "Assembly of Baraat", desc: "Join us at Morbagh, Chattarpur" },
+      { time: "05:00 PM Onwards", title: "Wedding Vows", desc: "The sacred ceremony" },
+      { time: "08:00 PM Onwards", title: "Reception Dinner", desc: "Dinner, drinks & dancing" }
     ],
     showSchedule: true,
-    showGallery: true
+    showGallery: false
+  },
+  thankYouData: {
+    title: "Adding Love to the Celebration",
+    groups: [
+      "Saadhvi, Sidharth, Sumiti, Sumer",
+      "Mahima, Yash, Abhinav & Pranavya",
+      "Tanisha, Vanya & Aarika"
+    ]
   },
   rsvpData: {
-    enabled: true,
-    collectHeadcount: true,
+    enabled: false,
+    collectHeadcount: false,
     collectEvents: false,
-    collectMessage: true,
+    collectMessage: false,
   },
   sections: {
     showHero: true,
-    showStory: false, // Turn off default story if not needed, they didn't provide photos
+    showStory: false,
     showWelcome: true,
-    showVenue: true, // we can keep the main venue at the end
-    showCountdown: true
+    showVenue: true,
+    showCalendar: false, // Page 8 removed
+    showCountdown: true,
+    showThankYou: true
   },
   footer: {
     coupleText: 'Stuti & Saaransh',

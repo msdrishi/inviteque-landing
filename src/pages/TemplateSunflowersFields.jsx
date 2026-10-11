@@ -14,9 +14,9 @@ import InviteQRSVP from '../components/InviteQRSVP.jsx'
 const firstFrameDesktop = cMapping['hero-first-frame-desktop.jpg'] || "/assets/templates/sunflower-fields/hero-first-frame-desktop.webp"
 const firstFrameMobile = cMapping['hero-first-frame-mobile.jpg'] || "/assets/templates/sunflower-fields/hero-first-frame-mobile.webp"
 const venueBgDesktop = cMapping['venue-desktop.png'] || "/assets/templates/sunflower-fields/venue-desktop.webp"
-const venueBgMobile = cMapping['venue-mobile.png'] || "/assets/templates/sunflower-fields/venue-mobile.webp"
+const venueBgMobile = cMapping['venue-mobile.webp'] || "/assets/templates/sunflower-fields/venue-mobile.webp"
 const countdownBgDesktop = cMapping['countdown-deskotp.png'] || "/assets/templates/sunflower-fields/countdown-desktop.webp"
-const countdownBgMobile = cMapping['countdown-mobile.png'] || "/assets/templates/sunflower-fields/countdown-mobile.webp"
+const countdownBgMobile = cMapping['countdown-mobile.webp'] || "/assets/templates/sunflower-fields/countdown-mobile.webp"
 
 const fallbackPhoto1 = cMapping['sunflower-1.png'] || "/assets/templates/sunflower-fields/sunflower-1.webp"
 const fallbackPhoto2 = cMapping['sunflower-2.png'] || "/assets/templates/sunflower-fields/sunflower-2.webp"
@@ -953,8 +953,8 @@ function RoyalPalaceInvitation({ data, isDesktop }) {
   const bannerScale = useTransform(scrollYProgress, [0.15, 0.50], [0.9, 1.15])
   const bannerRotateX = useTransform(scrollYProgress, [0.15, 0.50], [12, 0])
 
-  const bgImage = isDesktop ? (cMapping['welcome-desktop.png'] || "/assets/templates/sunflower-fields/welcome-desktop.webp") : (cMapping['welcome-mobile.png'] || "/assets/templates/sunflower-fields/welcome-mobile.webp")
-  const dividerFlowersMobile = "/assets/decorations/divider-flowers-mobile.png"
+  const bgImage = isDesktop ? (cMapping['welcome-desktop.png'] || "/assets/templates/sunflower-fields/welcome-desktop.webp") : (cMapping['welcome-mobile.webp'] || "/assets/templates/sunflower-fields/welcome-mobile.webp")
+  const dividerFlowersMobile = "/assets/decorations/divider-flowers-mobile.webp"
 
   return (
     <section
@@ -1467,7 +1467,8 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData: _rawDraft } = useDraft();
-  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
+  const isCustomPreview = new URLSearchParams(location.search).get('customPreview') === 'true';
+  const draftData = isCustomPreview ? (_rawDraft || {}) : {};
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -1498,10 +1499,10 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
     savedData.isPaid === true ||
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
-  const showWatermark = !isPaid
+  const showWatermark = isPreview || isCustomPreview || !isPaid
 
   // Select active data set
-  const activeData = savedData || (isPreview ? draftData : null)
+  const activeData = savedData || (isCustomPreview ? draftData : null)
 
   const data = activeData ? {
     ...staticData,
@@ -1720,7 +1721,7 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
           )}
 
           {/* Floating Controls for Preview */}
-          {isPreview && (
+          {isCustomPreview && (
             <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
               <div className="flex gap-3">
                 <button
@@ -1792,7 +1793,7 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
         )}
 
         {/* Floating Controls for Preview */}
-        {isPreview && (
+        {isCustomPreview && (
           <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
             <button
               onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}

@@ -199,6 +199,25 @@ export default function InviteQRSVP({
           checkCircle: 'bg-[#5C0A14] text-white',
           uncheckCircle: 'border-[#D4AF37]/40 text-transparent',
         }
+      case 'rajasthani':
+      case 'rajasthani-vows':
+        return {
+          fontFamily: "'Cinzel', serif",
+          bodyFont: "'Cinzel', serif",
+          cardBg: 'bg-[#FAF6EE] border-2 border-[#C59A4E]/50 shadow-[0_20px_50px_rgba(122,18,40,0.14)]',
+          headerText: 'text-[#7A1228]',
+          bodyText: 'text-[#8A1D33]/90',
+          accentText: 'text-[#7A1228]',
+          accentBtn: 'bg-[#7A1228] text-[#FAF6EE] hover:bg-[#600C1E] shadow-md font-bold tracking-wider',
+          secondaryBtn: 'border-[#C59A4E]/60 text-[#7A1228] hover:bg-[#7A1228]/10',
+          activeChoice: 'bg-[#7A1228] text-white border-[#7A1228]',
+          inactiveChoice: 'bg-white text-[#7A1228]/85 border-[#C59A4E]/40 hover:border-[#7A1228]',
+          inputBg: 'bg-white border-[#C59A4E]/40 focus:border-[#7A1228] text-[#7A1228]',
+          divider: 'bg-[#C59A4E]/30',
+          badgeBg: 'bg-[#7A1228]/10 text-[#7A1228]',
+          checkCircle: 'bg-[#7A1228] text-white',
+          uncheckCircle: 'border-[#C59A4E]/60 text-transparent',
+        }
       case 'traditional':
       case 'midnight': // Midnight Waltz
         return {

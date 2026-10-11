@@ -8,14 +8,14 @@ import InviteQRSVP from '../../../../components/InviteQRSVP.jsx'
 import CustomSection from '../../../../components/CustomSection.jsx'
 
 // Section Components
-import RoyalHeirloomCover from '../../../../templates/royal-heirloom/RoyalHeirloomCover.jsx'
+import CustomCover from './components/CustomCover.jsx'
 import CustomRoyalHeirloomHero from './components/CustomRoyalHeirloomHero.jsx'
 import RoyalHeirloomStory from '../../../../templates/royal-heirloom/RoyalHeirloomStory.jsx'
 import StoryText from './components/StoryText.jsx'
-import RoyalHeirloomVenue from '../../../../templates/royal-heirloom/RoyalHeirloomVenue.jsx'
-import RoyalHeirloomSchedule from '../../../../templates/royal-heirloom/RoyalHeirloomSchedule.jsx'
-import RoyalHeirloomCalendar from '../../../../templates/royal-heirloom/RoyalHeirloomCalendar.jsx'
-import RoyalHeirloomCountdown from '../../../../templates/royal-heirloom/RoyalHeirloomCountdown.jsx'
+import WeddingVenuePage from './components/WeddingVenuePage.jsx'
+import CustomSchedule from './components/CustomSchedule.jsx'
+import CustomCountdown from './components/CustomCountdown.jsx'
+import ThankYouSection from './components/ThankYouSection.jsx'
 import bgMusicSrc from '../../../../assets/audio/Annie Ahluwalia.mp4'
 
 import { customData } from './data.js'
@@ -198,10 +198,10 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
     
     // If no custom schedule is provided, use default but filter them based on variant!
     const baseItems = items.length > 0 ? items : [
-      { time: "11:30 AM", title: "Pooja", iconSrc: "/assets/templates/royal-heirloom/icons/bouque.png", date: "13th Dec, 2026" },
-      { time: "08:30 PM", title: "Cocktail", iconSrc: "/assets/templates/royal-heirloom/icons/drinks.png", date: "18th Dec, 2026" },
-      { time: "03:00 PM", title: "Haldi & Mehendi", iconSrc: "/assets/templates/royal-heirloom/icons/engagement.png", date: "19th Dec, 2026" },
-      { time: "05:00 PM", title: "Wedding", iconSrc: "/assets/templates/royal-heirloom/icons/dinner.png", date: "20th Dec, 2026" },
+      { time: "11:30 AM", title: "Pooja", iconSrc: "/assets/templates/royal-heirloom/icons/bouque.webp", date: "13th Dec, 2026" },
+      { time: "08:30 PM", title: "Cocktail", iconSrc: "/assets/templates/royal-heirloom/icons/drinks.webp", date: "18th Dec, 2026" },
+      { time: "03:00 PM", title: "Haldi & Mehendi", iconSrc: "/assets/templates/royal-heirloom/icons/engagement.webp", date: "19th Dec, 2026" },
+      { time: "05:00 PM", title: "Wedding", iconSrc: "/assets/templates/royal-heirloom/icons/dinner.webp", date: "20th Dec, 2026" },
     ]
 
     // The schedule represents the breakdown of the Wedding day itself.
@@ -406,7 +406,14 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
 
   // Handle Cover Opening Tap — start audio unmuted along with the video
   const handleOpenCover = () => {
-    if (hasOpened || isPlaying) return
+    if (hasOpened) return
+    if (isPlaying) {
+      // If user taps again while opening, allow tap-to-skip
+      setHasOpened(true)
+      setHasTriggeredHeroBg(true)
+      setHasTriggeredHeroText(true)
+      return
+    }
     setIsPlaying(true)
 
     if (audioRef.current) {
@@ -417,19 +424,16 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
 
     const vid = videoRef.current
     if (vid) {
+      vid.playbackRate = 1.0
       const playPromise = vid.play()
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
           console.warn("Video play interrupted/prevented:", err)
-          // Only skip forcefully if it's a fatal error like NotSupportedError
-          if (err.name !== 'AbortError') {
-            setHasOpened(true)
-            setHasTriggeredHeroBg(true)
-            setHasTriggeredHeroText(true)
-          }
+          setHasOpened(true)
+          setHasTriggeredHeroBg(true)
+          setHasTriggeredHeroText(true)
         })
       }
-      // Removed the 5.5s hardcoded timeout to guarantee 100% video flow
     } else {
       setHasTriggeredHeroText(true)
       setHasTriggeredHeroBg(true)
@@ -440,15 +444,8 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
   const handleTimeUpdate = () => {
     const vid = videoRef.current
     if (vid) {
-      if (vid.currentTime > 0.1 && !isVideoReady) {
+      if (vid.currentTime > 0.05 && !isVideoReady) {
         setIsVideoReady(true)
-      }
-      if (vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
-        if (!hasOpened) {
-          setHasOpened(true)
-          setHasTriggeredHeroBg(true)
-          setHasTriggeredHeroText(true)
-        }
       }
     }
   }
@@ -503,7 +500,7 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
         <PreviewNav />
         
         {/* ── 1. COVER OPENING / SPLASH SCREEN ── */}
-        <RoyalHeirloomCover 
+        <CustomCover 
           hasOpened={hasOpened}
           isPlaying={isPlaying}
           isVideoReady={isVideoReady}
@@ -515,7 +512,7 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
           handleVideoEnded={handleVideoEnded}
         />
 
-        {/* ── SECTION 1: HERO ── */}
+        {/* ── PAGE 1: HERO ── */}
         {showHero && (
         <CustomRoyalHeirloomHero 
           heroBgMobile={heroBgMobile}
@@ -526,29 +523,13 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
           brideFamily={brideFamily}
           groomName={groomName}
           groomFamily={groomFamily}
-          weddingMonth={weddingMonth}
-          dayOfWeek={dayOfWeek}
           weddingDate={weddingDate}
-          formattedTime={formattedTime}
+          weddingMonth={weddingMonth}
           weddingYear={weddingYear}
-          fullAddress={fullAddress}
-          invitationText={invitationText}
-          heroTitleTop={heroTitleTop}
-          heroTitleBottom={heroTitleBottom}
         />
         )}
 
-        {/* ── SECTION 1.5: CUSTOM SECTION ── */}
-        <CustomSection 
-          photoBgDesktop={storyBgMobile} 
-          photoBgMobile={storyBgMobile} 
-          data={customSectionData} 
-          titleFontClass="font-['Cinzel']"
-          bodyFontClass="font-['Cormorant_Garamond']"
-          accentColorClass="text-[#8C5D38]"
-        />
-
-        {/* ── SECTION 2: OUR STORY (NEW NARRATIVE SECTION) ── */}
+        {/* ── PAGE 2: OUR STORY (RECEIPT) ── */}
         {showWelcome && (
         <StoryText 
           brideName={brideName}
@@ -557,30 +538,25 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
         />
         )}
 
-        {/* ── CUSTOM SECTION: FULL SCREEN EVENTS ── */}
+        {/* ── PAGES 3, 4, 5: FULL SCREEN EVENTS (Pooja, Cocktail, Haldi & Mehendi) ── */}
         {filteredFullScreenEvents.map((evt, idx) => (
           <FullScreenEvent key={evt.id || idx} event={evt} />
         ))}
 
-        {/* ── SECTION 3: OUR MOMENTS (PHOTO CARDS) ── */}
-        {showStory && showGallery && (
-        <RoyalHeirloomStory 
-          ourPhotoBgMobile={storyBgMobile}
-          storyPhotos={storyPhotos}
-          defaultPhoto1={defaultPhoto1}
-          defaultPhoto2={defaultPhoto2}
-          defaultPhoto3={defaultPhoto3}
-          brideName={brideName}
-          groomName={groomName}
-          weddingDate={weddingDate}
-          weddingMonth={weddingMonth}
-          weddingYear={weddingYear}
+        {/* ── PAGE 6: WEDDING VENUE (before Schedule) ── */}
+        {showVenue && (
+        <WeddingVenuePage 
+          bgImage={ourVenueBgMobile}
+          venueTitle={venueTitle}
+          venueAddress={venueAddress}
+          mapUrl={mapUrl}
+          bestRegards={savedData?.venueData?.bestRegards || "Anu & Sumeet Chopra"}
         />
         )}
 
-        {/* ── SECTION 4: WEDDING SCHEDULE (DYNAMIC 1-6 EVENTS + S-CURVE) ── */}
+        {/* ── PAGE 7: WEDDING SCHEDULE ── */}
         {showSchedule && (
-        <RoyalHeirloomSchedule 
+        <CustomSchedule 
           scheduleItems={scheduleItems}
           weddingDate={weddingDate}
           weddingMonth={weddingMonth}
@@ -588,43 +564,18 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
         />
         )}
 
-        {/* ── SECTION 5: OUR VENUE ── */}
-        {showVenue && (
-        <RoyalHeirloomVenue 
-          ourVenueBgMobile={ourVenueBgMobile}
-          venueTitle={venueTitle}
-          fullAddress={fullAddress}
-          qrCodeUrl={qrCodeUrl}
-          mapUrl={mapUrl}
-          dateTime={venueDateTime}
-        />
-        )}
+        {/* ── PAGE 8: MARK YOUR CALENDAR (REMOVED AS REQUESTED) ── */}
 
-        {/* ── SECTION 6: WEDDING CALENDAR ── */}
-        <RoyalHeirloomCalendar 
-          calendarData={calendarData}
-          fullAddress={fullAddress}
-        />
-
-        {/* ── SECTION 7: RSVP (via shared InviteQRSVP component) ── */}
-        {showRsvp && (
-          <InviteQRSVP
-            events={filteredRsvpEvents}
-            weddingCode={savedData?.code}
-            groupSlug={groupSlug}
-            isPreview={!savedData?.code}
-            theme="royal"
-            config={savedData?.rsvpData}
-          />
-        )}
-
-        {/* ── SECTION 8: COUNTDOWN ── */}
+        {/* ── PAGE 9: COUNTDOWN ── */}
         {showCountdown && (
-        <RoyalHeirloomCountdown 
+        <CustomCountdown 
           countdownBgMobile={countdownBgMobile}
           timeLeft={timeLeft}
         />
         )}
+
+        {/* ── PAGE 10: THANK YOU ── */}
+        <ThankYouSection />
 
         {/* ── SECTION 9: THEMED ROYAL FOOTER ── */}
         <Footer 

@@ -1,0 +1,117 @@
+{
+  "hero": {
+    "ganeshaLogo": "/assets/templates/rajestani-vows/ganesha-logo.webp",
+    "groomName": "Abhishek",
+    "andText": "and",
+    "brideName": "Kanika",
+    "subtitle": "ARE GETTING MARRIED",
+    "weddingMonth": "DEC",
+    "weddingDate": "18",
+    "weddingYear": "2026",
+    "dayOfWeek": "FRIDAY",
+    "weddingTime": "09:00 AM - 10:30 AM",
+    "venueName": "THE LEELA PALACE",
+    "addressLines": [
+      "DIPLOMATIC ENCLAVE",
+      "CHANAKYAPURI",
+      "NEW DELHI, DELHI"
+    ],
+    "bgImageMobile": "/assets/templates/rajestani-vows/hero-mobile.webp",
+    "bgImageDesktop": "/assets/templates/rajestani-vows/hero-mobile.webp"
+  },
+  "welcome": {
+    "badge": "Welcome",
+    "headingLine1": "DEAR FRIENDS",
+    "headingLine2": "& FAMILY,",
+    "message": "Your presence is a cherished part of our celebration. Join us as we gather with love, laughter, and blessings to celebrate the beginning of our beautiful journey together.",
+    "bgImageMobile": "/assets/templates/rajestani-vows/welcome-mobile.webp",
+    "bgImageDesktop": "/assets/templates/rajestani-vows/welcome-mobile.webp"
+  },
+  "story": {
+    "subtitle": "CHAPTERS OF LOVE",
+    "title": "OUR MOMENTS",
+    "description": "Cherished moments from our pre-wedding journey.",
+    "photos": [
+      {
+        "image": "/assets/templates/rajestani-vows/photo-1.webp",
+        "title": "Where It Began",
+        "momentTag": "MOMENT 01"
+      },
+      {
+        "image": "/assets/templates/rajestani-vows/photo-2.webp",
+        "title": "A Timeless Promise",
+        "momentTag": "MOMENT 02"
+      },
+      {
+        "image": "/assets/templates/rajestani-vows/photo-3.webp",
+        "title": "Forever & Always",
+        "momentTag": "MOMENT 03"
+      }
+    ],
+    "footerSignature": "Forever in Love",
+    "bgImageMobile": "/assets/templates/rajestani-vows/background-general.webp",
+    "bgImageDesktop": "/assets/templates/rajestani-vows/background-general.webp"
+  },
+  "schedule": {
+    "subtitle": "TIMELINE OF EVENTS",
+    "title": "WEDDING SCHEDULE",
+    "description": "Follow the rhythm of our sacred moments and festivities.",
+    "items": [
+      {
+        "time": "10:30 AM",
+        "title": "Haldi & Phoolon Ki Holi",
+        "date": "18 DEC, 2026",
+        "iconSrc": "/assets/templates/royal-heirloom/icons/bouque.webp"
+      },
+      {
+        "time": "04:30 PM",
+        "title": "Varmala & Ring Ceremony",
+        "date": "18 DEC, 2026",
+        "iconSrc": "/assets/templates/royal-heirloom/icons/engagement.webp"
+      },
+      {
+        "time": "07:30 PM",
+        "title": "Welcome Cocktails & Sangeet",
+        "date": "18 DEC, 2026",
+        "iconSrc": "/assets/templates/royal-heirloom/icons/drinks.webp"
+      },
+      {
+        "time": "09:30 PM",
+        "title": "Grand Royal Feast & Dinner",
+        "date": "18 DEC, 2026",
+        "iconSrc": "/assets/templates/royal-heirloom/icons/dinner.webp"
+      }
+    ],
+    "bgImageMobile": "/assets/templates/rajestani-vows/background-general.webp",
+    "bgImageDesktop": "/assets/templates/rajestani-vows/background-general.webp"
+  },
+  "venue": {
+    "subtitle": "CELEBRATION VENUE",
+    "title": "THE VENUE",
+    "venueName": "The Leela Palace",
+    "venueLine1": "Diplomatic Enclave, Chanakyapuri",
+    "venueLine2": "New Delhi, Delhi 110021",
+    "mapUrl": "https://maps.google.com/?q=The+Leela+Palace+New+Delhi",
+    "buttonText": "Get Directions",
+    "bgImageMobile": "/assets/templates/rajestani-vows/venue-mobile.webp",
+    "bgImageDesktop": "/assets/templates/rajestani-vows/venue-mobile.webp"
+  },
+  "countdown": {
+    "title": "COUNTING DOWN TO",
+    "subtitle": "THE BIG DAY",
+    "targetDate": "2026-12-18T09:00:00",
+    "labels": {
+      "days": "DAYS",
+      "hours": "HOURS",
+      "minutes": "MIN",
+      "seconds": "SEC"
+    },
+    "bgImageMobile": "/assets/templates/rajestani-vows/countdown-mobile.webp",
+    "bgImageDesktop": "/assets/templates/rajestani-vows/countdown-mobile.webp"
+  },
+  "footer": {
+    "gratitude": "With warm regards & blessings",
+    "family": "The Royal Families",
+    "brand": "INVITEQUE"
+  }
+}

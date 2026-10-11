@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-const logo = "/assets/logo/inviteq-logo.png"
+const logo = "/assets/logo/inviteq-logo.webp"
 import { useDraft } from '../context/DraftContext'
 import { templates, houseWarmingTemplates } from '../templates/templates'
 
@@ -804,7 +804,7 @@ export default function Builder() {
       if (editCode) {
         navigate(`/account/${editCode}`)
       } else {
-        navigate(`/templates/${templateId}?preview=true`)
+        navigate(`/templates/${templateId}?customPreview=true`)
       }
     } catch (err) {
       console.error('Save failed:', err)

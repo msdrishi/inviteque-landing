@@ -14,6 +14,18 @@ const t12 = "/assets/templates/previews/template-12-coastal.webp"
 
 export const templates = [
   {
+    id: 'rajasthani-vows',
+    isNew: true,
+    name: 'Rajasthani Vows',
+    description: 'A majestic royal Rajasthani invitation with authentic cultural motifs, regal heritage aesthetics, and elegant golden celebrations.',
+    price: 2499,
+    priceLabel: '₹2499',
+    thumbnail: '/assets/templates/rajestani-vows/landingpage-preview.webp',
+    href: '/templates/rajasthani-vows',
+    available: true,
+    popular: true,
+  },
+  {
     id: 'royal-heritage',
     isNew: true,
     name: 'Royal Heritage',

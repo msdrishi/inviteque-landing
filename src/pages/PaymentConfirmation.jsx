@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-const logo = "/assets/logo/inviteq-logo.png"
+const logo = "/assets/logo/inviteq-logo.webp"
 import { fadeUp } from '../motionVariants'
 
 export default function PaymentConfirmation() {

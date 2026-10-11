@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
-const logo = "/assets/logo/inviteq-logo.png"
+const logo = "/assets/logo/inviteq-logo.webp"
 import { fadeUp } from '../motionVariants'
 import { API_URL } from '../config'
 

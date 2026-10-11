@@ -34,8 +34,8 @@ export default function StoryText({ brideName, groomName, customMessage }) {
 
   return (
     <section 
-      className="relative w-full min-h-[100svh] flex flex-col items-center justify-start px-6 py-12 bg-[#F6EBD8] border-t border-[#E6D6C0] overflow-hidden"
-      style={{ backgroundColor: '#F6EBD8' }}
+      className="relative w-full min-h-[100svh] flex flex-col items-center justify-start px-6 py-10 bg-[#ECE3D1] overflow-hidden"
+      style={{ backgroundColor: '#ECE3D1' }}
     >
       {/* Background Hearts Texture */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -135,15 +135,9 @@ export default function StoryText({ brideName, groomName, customMessage }) {
 
               <div className="w-full border-t-2 border-dotted border-[#C2B29D] my-3" />
 
-              {/* Receipt Footer / Data */}
-              <p className="font-['Courier_Prime',_'Courier_New',_monospace] text-[12px] sm:text-[13px] tracking-[0.1em] uppercase text-[#7A5034] font-bold leading-loose mt-2 w-full text-left px-1">
-                ITEM: FOREVER <span className="float-right">100%</span><br/>
-                STATUS: SOULMATES <span className="float-right">CONFIRMED</span>
-              </p>
-
               {/* Signature calligraphic accent */}
-              <div className="mt-8 mb-2 text-[#8C5D38] font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[30px] sm:text-[34px] leading-none text-right w-full pr-1">
-                {groomName || "Rohan"} &amp; {brideName || "Ananya"}
+              <div className="mt-6 mb-2 text-[#8C5D38] font-['Modernline',_'Allura',_'Alex_Brush',_cursive] text-[30px] sm:text-[34px] leading-none text-right w-full pr-1">
+                {groomName || "Saaransh"} &amp; {brideName || "Stuti"}
               </div>
             </div>
 
@@ -157,7 +151,6 @@ export default function StoryText({ brideName, groomName, customMessage }) {
         </motion.div>
 
       </div>
-
     </section>
   )
 }

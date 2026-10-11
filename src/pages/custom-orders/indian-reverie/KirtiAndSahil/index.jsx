@@ -132,7 +132,7 @@ export default function CustomIndianReverieKirtiAndSahil() {
                 <div className="relative h-15 w-15 flex items-center justify-center">
                   <div className="absolute inset-0 rounded-full border-[5px] border-[#D4AF37]/10"></div>
                   <div className="absolute inset-0 rounded-full border-t-[5px] border-[#D4AF37] animate-spin"></div>
-                  <img src="/assets/logo/inviteq-logo.png" alt="Inviteque" className="h-14 w-14 object-contain rounded-full relative z-10" />
+                  <img src="/assets/logo/inviteq-logo.webp" alt="Inviteque" className="h-14 w-14 object-contain rounded-full relative z-10" />
                 </div>
                 <div className="mt-2 text-center">
                   <h2 className="font-parisienne text-2xl font-normal opacity-80">Inviteque</h2>

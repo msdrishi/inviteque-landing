@@ -27,28 +27,28 @@ export const alinaTanmayData = {
       title: "Engagement & Sangeet",
       date: "26th Feb, 2027",
       venue: "Grand Ballroom, Resort & Spa",
-      iconSrc: "/assets/templates/royal-heirloom/icons/engagement.png"
+      iconSrc: "/assets/templates/royal-heirloom/icons/engagement.webp"
     },
     {
       time: "10:00 AM",
       title: "Haldi Ceremony",
       date: "27th Feb, 2027",
       venue: "Poolside Lawns",
-      iconSrc: "/assets/templates/royal-heirloom/icons/bouque.png"
+      iconSrc: "/assets/templates/royal-heirloom/icons/bouque.webp"
     },
     {
       time: "09:00 AM",
       title: "Wedding Ceremony",
       date: "28th Feb, 2027",
       venue: "The Heritage Mandap",
-      iconSrc: "/assets/templates/royal-heirloom/icons/dinner.png"
+      iconSrc: "/assets/templates/royal-heirloom/icons/dinner.webp"
     },
     {
       time: "07:30 PM",
       title: "Reception",
       date: "28th Feb, 2027",
       venue: "Grand Ballroom, Resort & Spa",
-      iconSrc: "/assets/templates/royal-heirloom/icons/drinks.png"
+      iconSrc: "/assets/templates/royal-heirloom/icons/drinks.webp"
     }
   ],
 

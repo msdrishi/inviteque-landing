@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-const letterImg = "/assets/decorations/invitation-letter-bg.png"
+const letterImg = "/assets/decorations/invitation-letter-bg.webp"
 
 const letterContainer = {
   hidden: { opacity: 0 },

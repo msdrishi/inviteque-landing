@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { templates, houseWarmingTemplates } from '../templates/templates'
 import ExpenseTracker from '../components/admin/ExpenseTracker'
 
-const logo = "/assets/logo/inviteq-logo.png"
+const logo = "/assets/logo/inviteq-logo.webp"
 
 const CANONICAL_TEMPLATE_ID = (id) => {
   if (!id) return null
@@ -809,8 +809,8 @@ export default function AdminDashboard() {
       if (pct > 0 && pct < 100) {
         roi.discountGiven += (p.amountPaid || 0) * (pct / (100 - pct))
       } else {
-        // Infer discount assuming standard base price of 2999
-        const basePrice = 2999.0
+        // Infer discount assuming standard base price of 5999
+        const basePrice = 5999.0
         const diff = Math.max(0, basePrice - (p.amountPaid || 0))
         roi.discountGiven += diff
       }

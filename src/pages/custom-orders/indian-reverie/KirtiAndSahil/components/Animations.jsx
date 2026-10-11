@@ -140,7 +140,7 @@ export const BlurText = ({ text, className, style, delay = 0 }) => {
   );
 };
 
-const petalImg = "/assets/decorations/rose-petal.png";
+const petalImg = "/assets/decorations/rose-petal.webp";
 const petalConfig = Array.from({ length: 14 }).map((_, i) => {
   const isLeft = i % 2 === 0;
   const leftPos = isLeft ? Math.random() * 20 : 80 + Math.random() * 20;

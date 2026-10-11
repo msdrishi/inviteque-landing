@@ -442,7 +442,8 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData: _rawDraft } = useDraft();
-  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
+  const isCustomPreview = new URLSearchParams(location.search).get('customPreview') === 'true';
+  const draftData = isCustomPreview ? (_rawDraft || {}) : {};
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -457,10 +458,10 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
     savedData.isPaid === true ||
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
-  const showWatermark = !isPaid
+  const showWatermark = isPreview || isCustomPreview || !isPaid
 
   // Active data
-  const activeData = savedData || (isPreview ? draftData : (draftData?.groomName ? draftData : null))
+  const activeData = savedData || (isCustomPreview ? draftData : null)
 
   const data = activeData ? {
     ...staticData,
@@ -704,7 +705,7 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
           )}
 
           {/* Back/Proceed Controls */}
-          {isPreview && (
+          {isCustomPreview && (
             <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
               <div className="flex gap-3">
                 <button
@@ -763,7 +764,7 @@ export default function TemplateEverlastingVows({ savedData, groupSlug: propGrou
           </div>
         )}
 
-        {isPreview && (
+        {isCustomPreview && (
           <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
             <button
               onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}

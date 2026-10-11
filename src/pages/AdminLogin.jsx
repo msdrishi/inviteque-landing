@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { API_URL } from '../config'
 
-const logo = "/assets/logo/inviteq-logo.png"
+const logo = "/assets/logo/inviteq-logo.webp"
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('')

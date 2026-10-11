@@ -27,7 +27,7 @@ const twilightPhoto1 = "/assets/templates/twilight-serenade/twilight-photo-1.web
 const twilightPhoto2 = "/assets/templates/twilight-serenade/twilight-photo-2.webp"
 const twilightPhoto3 = "/assets/templates/twilight-serenade/twilight-photo-3.webp"
 
-const leafImg = "/assets/decorations/rose-petal.png"
+const leafImg = "/assets/decorations/rose-petal.webp"
 
 const leafConfig = Array.from({ length: 14 }).map((_, i) => {
   const isLeft = i % 2 === 0;
@@ -444,7 +444,8 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData: _rawDraft } = useDraft();
-  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
+  const isCustomPreview = new URLSearchParams(location.search).get('customPreview') === 'true';
+  const draftData = isCustomPreview ? (_rawDraft || {}) : {};
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -455,10 +456,10 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
     savedData.isPaid === true ||
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
-  const showWatermark = !isPaid
+  const showWatermark = isPreview || isCustomPreview || !isPaid
 
   // Determine active data source
-  const activeData = savedData || (isPreview ? draftData : null)
+  const activeData = savedData || (isCustomPreview ? draftData : null)
 
   const data = activeData ? {
     ...staticData,
@@ -654,7 +655,7 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
           )}
 
           {/* Back/Proceed Controls */}
-          {isPreview && (
+          {isCustomPreview && (
             <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
               <div className="flex gap-3">
                 <button
@@ -709,7 +710,7 @@ export default function TemplateTwilightSerenade({ savedData, groupSlug: propGro
           </div>
         )}
 
-        {isPreview && (
+        {isCustomPreview && (
           <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
             <button
               onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}

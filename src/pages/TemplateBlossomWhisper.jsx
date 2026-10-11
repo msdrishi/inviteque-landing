@@ -10,16 +10,17 @@ import { weddingData as staticData } from '../weddingData.js'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
 // Local Theme Assets
-import heroBg from '../assets/themes/template3/hero_bg.png'
-import messageBg from '../assets/themes/template3/message_bg.png'
-import venueBg from '../assets/themes/template3/venue_bg.png'
-import desktopBg from '../assets/themes/template3/desktop_bg.png'
+import heroBg from '../assets/themes/template3/hero_bg.webp'
+import messageBg from '../assets/themes/template3/message_bg.webp'
+import venueBg from '../assets/themes/template3/venue_bg.webp'
+import desktopBg from '../assets/themes/template3/desktop_bg.webp'
 
 export default function TemplateBlossomWhisper({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
   const { templateId } = useParams()
   const { draftData: _rawDraft } = useDraft();
-  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
+  const isCustomPreview = new URLSearchParams(location.search).get('customPreview') === 'true';
+  const draftData = isCustomPreview ? (_rawDraft || {}) : {};
   const navigate = useNavigate()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -30,10 +31,10 @@ export default function TemplateBlossomWhisper({ savedData, groupSlug: propGroup
     savedData.isPaid === true ||
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
-  const showWatermark = !isPaid
+  const showWatermark = isPreview || isCustomPreview || !isPaid
 
   // Determine active dataset
-  const activeData = savedData || (isPreview ? draftData : null)
+  const activeData = savedData || (isCustomPreview ? draftData : null)
 
   const data = activeData ? {
     ...staticData,
@@ -168,7 +169,7 @@ export default function TemplateBlossomWhisper({ savedData, groupSlug: propGroup
         )}
 
         {/* Action Buttons for Preview State */}
-        {isPreview && (
+        {isCustomPreview && (
           <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
             <div className="flex gap-3">
               <button

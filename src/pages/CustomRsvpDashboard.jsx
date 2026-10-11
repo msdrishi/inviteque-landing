@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 // removed useAuth
 import { API_URL } from '../config.js'
 
-const logo = "/assets/logo/inviteq-logo.png"
+const logo = "/assets/logo/inviteq-logo.webp"
 
 export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
   const { templateId, code: paramCode } = useParams()

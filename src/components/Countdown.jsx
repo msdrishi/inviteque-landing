@@ -121,9 +121,10 @@ export default function Countdown({ data, isDesktop, bgImage, theme, centerText,
   const isGold = theme === 'gold'
   const isNavy = theme === 'navy'
   const isTraditional = theme === 'traditional'
-  const textColor = isGreen ? '#3D5236' : isGold ? '#8A6E1E' : isNavy ? '#C5A880' : isTraditional ? '#2B3B25' : '#7B0F1A'
-  const labelColor = isGreen ? '#5F7C56' : isGold ? '#B0923E' : isNavy ? '#E5C158' : isTraditional ? '#4E6540' : '#9C5E67'
-  const bevelColor = isGreen ? '#2B3B25' : isGold ? '#705915' : isNavy ? '#131B35' : isTraditional ? '#F5EFE6' : '#5C0A14'
+  const isRajasthani = theme === 'rajasthani'
+  const textColor = isGreen ? '#3D5236' : isGold ? '#8A6E1E' : isNavy ? '#C5A880' : isTraditional ? '#2B3B25' : isRajasthani ? '#4A3E20' : '#7B0F1A'
+  const labelColor = isGreen ? '#5F7C56' : isGold ? '#B0923E' : isNavy ? '#E5C158' : isTraditional ? '#4E6540' : isRajasthani ? '#7A6840' : '#9C5E67'
+  const bevelColor = isGreen ? '#2B3B25' : isGold ? '#705915' : isNavy ? '#131B35' : isTraditional ? '#F5EFE6' : isRajasthani ? '#2A1F0D' : '#5C0A14'
 
   return (
     <section

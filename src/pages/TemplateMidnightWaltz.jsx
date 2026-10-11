@@ -39,7 +39,7 @@ const locationBgDesktop  = "/assets/templates/midnight-waltz/venue-desktop.webp"
 const locationBgMobile   = "/assets/templates/midnight-waltz/venue-mobile.webp"
 const countdownBgDesktop = "/assets/templates/midnight-waltz/countdown-desktop.webp"
 const countdownBgMobile  = "/assets/templates/midnight-waltz/countdown-mobile.webp"
-const rosePetalSrc       = "/assets/decorations/midnight-waltz-rosePetal.png"
+const rosePetalSrc       = "/assets/decorations/midnight-waltz-rosePetal.webp"
 
 // ── Petal configs — computed once at module level ────────────────
 // Use a seeded-like approach for consistent rendering
@@ -721,7 +721,8 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
   const location    = useLocation()
   const { templateId } = useParams()
   const { draftData: _rawDraft } = useDraft();
-  const draftData = new URLSearchParams(location.search).get('preview') === 'true' ? (_rawDraft || {}) : {};
+  const isCustomPreview = new URLSearchParams(location.search).get('customPreview') === 'true';
+  const draftData = isCustomPreview ? (_rawDraft || {}) : {};
   const navigate    = useNavigate()
   const isPreview   = new URLSearchParams(location.search).get('preview') === 'true'
   const groupSlug   = propGroupSlug || new URLSearchParams(location.search).get('group')
@@ -731,8 +732,8 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
     savedData.isPaid === true ||
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
-  const showWatermark = !isPaid
-  const activeData = savedData || (isPreview ? draftData : null)
+  const showWatermark = isPreview || isCustomPreview || !isPaid
+  const activeData = savedData || (isCustomPreview ? draftData : null)
 
   // Cover opening & splash state
   const [isPlaying, setIsPlaying] = useState(false)
@@ -996,7 +997,7 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
   ) : null
 
   // ── Preview nav ───────────────────────────────────────────────
-  const PreviewNavMobile = () => isPreview ? (
+  const PreviewNavMobile = () => isCustomPreview ? (
     <div className="fixed bottom-8 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
       <div className="flex gap-3">
         <button onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })} className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#4A3E20]/20 bg-white/95 backdrop-blur-md py-4 text-sm font-bold text-[#4A3E20] shadow-xl hover:scale-105 active:scale-95">
@@ -1009,7 +1010,7 @@ export default function TemplateMidnightWaltz({ savedData, groupSlug: propGroupS
     </div>
   ) : null
 
-  const PreviewNavDesktop = () => isPreview ? (
+  const PreviewNavDesktop = () => isCustomPreview ? (
     <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
       <button onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })} className="px-8 py-4 rounded-full border border-[#4A3E20]/25 bg-white/95 backdrop-blur-md text-sm font-bold text-[#4A3E20] shadow-xl hover:scale-105 active:scale-95">
         ← Back to Edit

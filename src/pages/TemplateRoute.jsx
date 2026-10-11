@@ -13,16 +13,17 @@ const TemplateMidnightWaltz = lazy(() => import('./TemplateMidnightWaltz.jsx'))
 const TemplateRoyalHeirloom = lazy(() => import('./TemplateRoyalHeirloom.jsx'))
 const TemplateRoyalHeritage = lazy(() => import('./TemplateRoyalHeritage.jsx'))
 const TemplatePinkBlossom = lazy(() => import('../templates/pink-blossom/index.jsx'))
+const TemplateRajasthaniVows = lazy(() => import('../templates/rajasthani-vows/index.jsx'))
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 
 // Import Template 3 Assets for Preloading
-import template3HeroBg from '../assets/themes/template3/hero_bg.png'
-import template3MessageBg from '../assets/themes/template3/message_bg.png'
-import template3VenueBg from '../assets/themes/template3/venue_bg.png'
-import template3DesktopBg from '../assets/themes/template3/desktop_bg.png'
+import template3HeroBg from '../assets/themes/template3/hero_bg.webp'
+import template3MessageBg from '../assets/themes/template3/message_bg.webp'
+import template3VenueBg from '../assets/themes/template3/venue_bg.webp'
+import template3DesktopBg from '../assets/themes/template3/desktop_bg.webp'
 
-const logo = "/assets/logo/inviteq-logo.png"
+const logo = "/assets/logo/inviteq-logo.webp"
 import { API_URL, USE_NEW_ARCHITECTURE } from '../config'
 
 const TemplateTwilightSerenade = USE_NEW_ARCHITECTURE ? TemplateTwilightSerenadeNew : TemplateTwilightSerenadeOld;
@@ -46,6 +47,7 @@ const TEMPLATE_MAP = {
   'royal-heirloom': TemplateRoyalHeirloom,
   'royal-heritage': TemplateRoyalHeritage,
   'pink-blossom': TemplatePinkBlossom,
+  'rajasthani-vows': TemplateRajasthaniVows,
 }
 
 const TEMPLATE_ASSETS = {
@@ -78,6 +80,17 @@ const TEMPLATE_ASSETS = {
     "/assets/templates/midnight-waltz/venue-mobile.webp",
     "/assets/templates/midnight-waltz/countdown-desktop.webp",
     "/assets/templates/midnight-waltz/countdown-mobile.webp"
+  ],
+  'rajasthani-vows': [
+    "/assets/templates/rajestani-vows/hero-mobile.webp",
+    "/assets/templates/rajestani-vows/background-general.webp",
+    "/assets/templates/rajestani-vows/welcome-mobile.webp",
+    "/assets/templates/rajestani-vows/venue-mobile.webp",
+    "/assets/templates/rajestani-vows/countdown-mobile.webp",
+    "/assets/templates/rajestani-vows/cover-first-frame.webp",
+    "/assets/templates/rajestani-vows/photo-1.webp",
+    "/assets/templates/rajestani-vows/photo-2.webp",
+    "/assets/templates/rajestani-vows/photo-3.webp"
   ],
   'modernhearth': [
     "/assets/templates/modern-hearth/hero-desktop.webp",
@@ -225,15 +238,17 @@ export default function TemplateRoute() {
   const navigate = useNavigate()
   const location = useLocation()
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
+  const isCustomPreview = new URLSearchParams(location.search).get('customPreview') === 'true'
+  const isAnyPreview = isPreview || isCustomPreview
   const [inviteData, setInviteData] = useState(null)
-  const [loading, setLoading] = useState(!isPreview)
-  const [showSplash, setShowSplash] = useState(!isPreview)
+  const [loading, setLoading] = useState(!isAnyPreview)
+  const [showSplash, setShowSplash] = useState(!isAnyPreview)
 
   useEffect(() => {
     let active = true;
 
     async function loadAll() {
-      if (isPreview) {
+      if (isAnyPreview) {
         if (active) {
           setLoading(false);
           setShowSplash(false);
@@ -321,7 +336,7 @@ export default function TemplateRoute() {
   return (
     <div className="relative w-full min-h-screen">
       {/* Template Component is mounted when loading finishes or immediately in preview */}
-      {(!loading || isPreview) && (
+      {(!loading || isAnyPreview) && (
         <Suspense fallback={null}>
           <TemplateComponent savedData={inviteData} groupSlug={groupSlug} />
         </Suspense>
