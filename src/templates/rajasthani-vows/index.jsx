@@ -137,9 +137,9 @@ export default function TemplateRajasthaniVows({ savedData, groupSlug: propGroup
   // ── Fully Configurable Section Data Assembly ─────────────────
   const groomName = (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || defaultTemplateData.hero.groomName
   const brideName = (savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName) || defaultTemplateData.hero.brideName
-  const weddingDate = (savedData ? (savedData.heroData?.weddingDate || savedData.weddingDate) : draftData?.weddingDate) || defaultTemplateData.hero.weddingDate
-  const weddingMonth = (savedData ? (savedData.heroData?.weddingMonth || savedData.weddingMonth) : draftData?.weddingMonth) || defaultTemplateData.hero.weddingMonth
-  const weddingYear = (savedData ? (savedData.heroData?.weddingYear || savedData.weddingYear) : draftData?.weddingYear) || defaultTemplateData.hero.weddingYear
+  const weddingDate = (savedData ? (savedData.heroData?.weddingDate || (typeof savedData.weddingDate === 'object' ? savedData.weddingDate?.day : savedData.weddingDate)) : draftData?.weddingDate) || defaultTemplateData.hero.weddingDate
+  const weddingMonth = (savedData ? (savedData.heroData?.weddingMonth || (typeof savedData.weddingDate === 'object' ? savedData.weddingDate?.month : savedData.weddingMonth)) : draftData?.weddingMonth) || defaultTemplateData.hero.weddingMonth
+  const weddingYear = (savedData ? (savedData.heroData?.weddingYear || (typeof savedData.weddingDate === 'object' ? savedData.weddingDate?.year : savedData.weddingYear)) : draftData?.weddingYear) || defaultTemplateData.hero.weddingYear
   const weddingTime = (savedData ? (savedData.heroData?.weddingTime || savedData.weddingTime) : draftData?.weddingTime) || defaultTemplateData.hero.weddingTime
   const venueName = (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || defaultTemplateData.hero.venueName
 
@@ -314,7 +314,7 @@ export default function TemplateRajasthaniVows({ savedData, groupSlug: propGroup
       {/* Background Music Player */}
       <audio
         ref={audioRef}
-        src={data?.musicUrl || data?.music || bgMusicSrc}
+        src={savedData?.musicUrl || savedData?.music || draftData?.musicUrl || draftData?.music || bgMusicSrc}
         loop
         playsInline
         preload="auto"
