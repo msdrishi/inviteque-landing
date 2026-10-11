@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 const logo = "/assets/logo/inviteq-logo.webp"
 import { fadeUp } from '../motionVariants'
@@ -74,10 +74,10 @@ export default function PaymentConfirmation() {
       {/* Header */}
       <header className="border-b border-iqBorder bg-white/70 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-85 transition-opacity">
             <img src={logo} alt="Inviteque" className="h-8 w-auto" />
             <span className="text-sm font-bold text-iqText">{isUpdate ? 'Update' : 'Payment'} Confirmation</span>
-          </div>
+          </Link>
           <button
             onClick={() => navigate('/')}
             className="text-sm font-semibold text-iqText/60 hover:text-iqText transition-colors"

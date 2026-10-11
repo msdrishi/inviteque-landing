@@ -119,15 +119,13 @@ export default function RajasthaniVowsVenue({
           </motion.h3>
         )}
 
-        {/* Address Lines — Cinzel font */}
+        {/* Address Lines — Staggered line by line */}
         {addrParts.length > 0 && (
-          <motion.div
-            variants={lineAnim}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginBottom: 18 }}
-          >
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, marginBottom: 18 }}>
             {addrParts.map((line, i) => (
-              <p
+              <motion.p
                 key={i}
+                variants={lineAnim}
                 style={{
                   fontFamily: "'Cinzel', serif",
                   fontWeight: 600,
@@ -141,9 +139,9 @@ export default function RajasthaniVowsVenue({
                 }}
               >
                 {line}
-              </p>
+              </motion.p>
             ))}
-          </motion.div>
+          </div>
         )}
 
         {/* QR Code */}

@@ -73,29 +73,50 @@ export default function RajasthaniVowsWelcome({
           title={titleText}
         />
 
-        {/* Animated Welcome Message Body — Slow and smooth fade-in */}
+        {/* Animated Welcome Message Body — Line by Line staggered reveal */}
         {data.message && (
           <motion.div
-            initial={{ opacity: 0, y: 16, filter: 'blur(5px)' }}
-            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            viewport={{ once: false, amount: 0.25 }}
-            transition={{ duration: 1.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-2 px-2"
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: { staggerChildren: 0.22, delayChildren: 0.15 }
+              }
+            }}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: false, amount: 0.2 }}
+            className="mt-2 px-2 flex flex-col gap-2"
           >
-            <p
-              style={{
-                fontFamily: "'Cinzel', serif",
-                fontWeight: 500,
-                fontSize: isDesktop ? '15px' : (isTablet ? '16px' : '13.5px'),
-                color: '#7A1228',
-                lineHeight: 1.85,
-                letterSpacing: '0.06em',
-                margin: 0,
-                opacity: 0.92,
-              }}
-            >
-              {data.message}
-            </p>
+            {(data.message.includes('\n') 
+              ? data.message.split('\n').filter(Boolean)
+              : (data.message.match(/[^.!?]+[.!?]+/g) || [data.message])
+            ).map((line, idx) => (
+              <motion.p
+                key={idx}
+                variants={{
+                  hidden: { opacity: 0, y: 14, filter: 'blur(4px)' },
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                    filter: 'blur(0px)',
+                    transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] }
+                  }
+                }}
+                style={{
+                  fontFamily: "'Cinzel', serif",
+                  fontWeight: 500,
+                  fontSize: isDesktop ? '15px' : (isTablet ? '16px' : '13.5px'),
+                  color: '#7A1228',
+                  lineHeight: 1.85,
+                  letterSpacing: '0.06em',
+                  margin: 0,
+                  opacity: 0.92,
+                }}
+              >
+                {line.trim()}
+              </motion.p>
+            ))}
           </motion.div>
         )}
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams, useLocation, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 const logo = "/assets/logo/inviteq-logo.webp"
 import { useDraft } from '../context/DraftContext'
@@ -819,10 +819,10 @@ export default function Builder() {
       {/* Header */}
       <header className="border-b border-iqBorder bg-white/80 backdrop-blur-md sticky top-0 z-30">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2 min-w-0">
+          <Link to="/" className="flex items-center gap-2 min-w-0 hover:opacity-85 transition-opacity">
             <img src={logo} alt="Inviteque" className="h-8 w-auto flex-shrink-0" />
             <span className="text-sm md:text-lg font-bold hidden sm:inline">Builder</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-2 md:gap-4 text-xs md:text-sm font-medium overflow-x-auto">
             <span className={step >= 1 ? 'text-iqText' : 'text-iqText/30'}>Details</span>
             <div className="h-px w-2 md:w-4 bg-iqText/20 flex-shrink-0" />

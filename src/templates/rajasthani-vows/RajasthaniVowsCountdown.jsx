@@ -95,11 +95,27 @@ export default function RajasthaniVowsCountdown({
           title={data.subtitle || "THE BIG DAY"}
         />
 
-        {/* 4 Counter Boxes with Cinzel Typography */}
-        <div className="flex items-center justify-center gap-2.5 sm:gap-4 w-full mt-3">
+        {/* 4 Counter Boxes with Cinzel Typography — Staggered sequence */}
+        <motion.div
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+            }
+          }}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: false, amount: 0.2 }}
+          className="flex items-center justify-center gap-2.5 sm:gap-4 w-full mt-3"
+        >
           {boxes.map((b) => (
             <motion.div
               key={b.key}
+              variants={{
+                hidden: { opacity: 0, y: 16, scale: 0.95 },
+                show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+              }}
               whileHover={{ scale: 1.05 }}
               className="flex-1 max-w-[80px] sm:max-w-[88px] flex flex-col items-center justify-center py-3.5 px-2 rounded-xl bg-[#FAF5EB]/95 border-2 border-[#C59A4E]/50 shadow-[0_8px_24px_rgba(122,18,40,0.14)] backdrop-blur-sm"
             >
@@ -113,7 +129,7 @@ export default function RajasthaniVowsCountdown({
               )}
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </motion.div>
     </section>
   )

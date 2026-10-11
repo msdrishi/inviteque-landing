@@ -172,21 +172,26 @@ export default function RajasthaniVowsSchedule({
                   }}
                 >
                   <motion.div
-                    initial={{ opacity: 0, x: isEven ? -25 : 25, filter: 'blur(4px)' }}
-                    whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                    variants={{
+                      hidden: { opacity: 0, x: isEven ? -25 : 25, filter: 'blur(4px)' },
+                      show: {
+                        opacity: 1,
+                        x: 0,
+                        filter: 'blur(0px)',
+                        transition: { duration: 0.9, staggerChildren: 0.12, delayChildren: 0.1, ease: [0.16, 1, 0.3, 1] }
+                      }
+                    }}
+                    initial="hidden"
+                    whileInView="show"
                     viewport={{ once: false, amount: 0.2 }}
-                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                     className="flex flex-col items-center text-center cursor-pointer select-none group"
                   >
                     {/* 1. SEPARATE EVENT ICON (Outside the banner) */}
                     {ev.iconSrc && (
                       <motion.div
-                        animate={{ y: [0, -3.5, 0] }}
-                        transition={{
-                          duration: 3 + (idx % 2) * 0.5,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                          delay: idx * 0.25,
+                        variants={{
+                          hidden: { opacity: 0, scale: 0.8 },
+                          show: { opacity: 1, scale: 1, transition: { duration: 0.7 } }
                         }}
                         className="w-12 h-12 mb-2 flex items-center justify-center p-2 rounded-full bg-[#FAF5EB] border-2 border-[#C59A4E] shadow-[0_4px_14px_rgba(122,18,40,0.14)] group-hover:scale-105 transition-transform"
                       >
@@ -198,34 +203,58 @@ export default function RajasthaniVowsSchedule({
                       </motion.div>
                     )}
 
-                    {/* 2. BANNER FOR ONLY TEXT CONTENT */}
+                    {/* 2. BANNER FOR ONLY TEXT CONTENT — Staggered line by line */}
                     <div className="w-[158px] sm:w-[172px] px-3.5 py-2.5 rounded-xl bg-[#FAF5EB]/95 border border-[#C59A4E]/60 shadow-[0_8px_20px_rgba(122,18,40,0.09)] backdrop-blur-sm flex flex-col items-center text-center group-hover:shadow-[0_10px_26px_rgba(122,18,40,0.14)] transition-shadow">
-                      {/* Time — Cinzel Bold */}
+                      {/* Time — Line 1 */}
                       {ev.time && (
-                        <span className="font-['Cinzel'] text-[11px] font-bold tracking-[0.16em] uppercase text-[#8A1D33] block mb-0.5">
+                        <motion.span
+                          variants={{
+                            hidden: { opacity: 0, y: 8 },
+                            show: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+                          }}
+                          className="font-['Cinzel'] text-[11px] font-bold tracking-[0.16em] uppercase text-[#8A1D33] block mb-0.5"
+                        >
                           {ev.time}
-                        </span>
+                        </motion.span>
                       )}
 
-                      {/* Title — Cinzel Bold */}
+                      {/* Title — Line 2 */}
                       {ev.title && (
-                        <span className="font-['Cinzel'] text-[12px] sm:text-[13px] font-bold tracking-[0.06em] uppercase text-[#7A1228] block leading-tight">
+                        <motion.span
+                          variants={{
+                            hidden: { opacity: 0, y: 8 },
+                            show: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+                          }}
+                          className="font-['Cinzel'] text-[12px] sm:text-[13px] font-bold tracking-[0.06em] uppercase text-[#7A1228] block leading-tight"
+                        >
                           {ev.title}
-                        </span>
+                        </motion.span>
                       )}
 
-                      {/* Date — Cinzel Semibold */}
+                      {/* Date — Line 3 */}
                       {ev.date && (
-                        <span className="font-['Cinzel'] text-[9.5px] font-semibold tracking-[0.14em] uppercase text-[#C59A4E] block mt-1">
+                        <motion.span
+                          variants={{
+                            hidden: { opacity: 0, y: 8 },
+                            show: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+                          }}
+                          className="font-['Cinzel'] text-[9.5px] font-semibold tracking-[0.14em] uppercase text-[#C59A4E] block mt-1"
+                        >
                           {ev.date}
-                        </span>
+                        </motion.span>
                       )}
 
-                      {/* Description if present */}
+                      {/* Description — Line 4 */}
                       {ev.description && (
-                        <span className="font-['Cinzel'] text-[10px] tracking-wider text-[#8A1D33]/80 block mt-1">
+                        <motion.span
+                          variants={{
+                            hidden: { opacity: 0, y: 8 },
+                            show: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+                          }}
+                          className="font-['Cinzel'] text-[10px] tracking-wider text-[#8A1D33]/80 block mt-1"
+                        >
                           {ev.description}
-                        </span>
+                        </motion.span>
                       )}
                     </div>
                   </motion.div>

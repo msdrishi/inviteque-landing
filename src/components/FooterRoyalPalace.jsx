@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
-const logo = "/assets/logo/inviteq-watermark.webp"
+import { getWhatsAppLink } from '../config'
+const logo = "/assets/logo/inviteq-logo.webp"
 
 const stagger = {
   hidden: {},
@@ -187,7 +188,14 @@ export default function FooterRoyalPalace({ data }) {
           }}
         >
           <LeafSprig flip colors={colors} />
-          <span>Inviteque</span>
+          <a
+            href="https://www.inviteque.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: colors.primary, textDecoration: 'none' }}
+          >
+            <span>Inviteque</span>
+          </a>
           <LeafSprig colors={colors} />
         </motion.h4>
 
@@ -209,7 +217,7 @@ export default function FooterRoyalPalace({ data }) {
           <SocialIcon href="https://facebook.com/inviteque" label="Facebook" colors={colors}>
             <FacebookIcon />
           </SocialIcon>
-          <SocialIcon href="https://wa.me/91XXXXXXXXXX" label="WhatsApp" colors={colors}>
+          <SocialIcon href={getWhatsAppLink()} label="WhatsApp" colors={colors}>
             <WhatsAppIcon />
           </SocialIcon>
         </motion.div>

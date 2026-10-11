@@ -23,31 +23,64 @@ export function LotusDivider({ color = '#C59A4E' }) {
   )
 }
 
+const headerContainerAnim = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.16,
+      delayChildren: 0.05,
+    },
+  },
+}
+
+const headerLineAnim = {
+  hidden: { opacity: 0, y: 14, filter: 'blur(4px)' },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+  },
+}
+
 export function SectionHeader({ subtitle, title, description }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
-      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      viewport={{ once: false, amount: 0.25 }}
-      transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
+      variants={headerContainerAnim}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: false, amount: 0.2 }}
       className="flex flex-col items-center text-center px-4 mb-3"
     >
       {subtitle && (
-        <span className="font-['Cinzel'] text-[11.5px] sm:text-[12.5px] tracking-[0.32em] uppercase font-semibold text-[#8A1D33] mb-1">
+        <motion.span
+          variants={headerLineAnim}
+          className="font-['Cinzel'] text-[11.5px] sm:text-[12.5px] tracking-[0.32em] uppercase font-semibold text-[#8A1D33] mb-1 block"
+        >
           {subtitle}
-        </span>
+        </motion.span>
       )}
       {title && (
-        <h2 className="font-['Cinzel'] text-[24px] sm:text-[28px] font-bold tracking-[0.16em] uppercase text-[#7A1228] mb-1.5 leading-tight">
+        <motion.h2
+          variants={headerLineAnim}
+          className="font-['Cinzel'] text-[24px] sm:text-[28px] font-bold tracking-[0.16em] uppercase text-[#7A1228] mb-1.5 leading-tight block"
+        >
           {title}
-        </h2>
+        </motion.h2>
       )}
-      <LotusDivider />
+      <motion.div variants={headerLineAnim} className="w-full">
+        <LotusDivider />
+      </motion.div>
       {description && (
-        <p className="font-['Cinzel'] text-[13px] sm:text-[14px] tracking-[0.06em] text-[#8A1D33]/90 max-w-[340px] leading-relaxed mt-1">
+        <motion.p
+          variants={headerLineAnim}
+          className="font-['Cinzel'] text-[13px] sm:text-[14px] tracking-[0.06em] text-[#8A1D33]/90 max-w-[340px] leading-relaxed mt-1 block"
+        >
           {description}
-        </p>
+        </motion.p>
       )}
     </motion.div>
   )
 }
+

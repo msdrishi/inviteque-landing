@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { useDraft } from '../context/DraftContext'
 import { API_URL } from '../config'
 import { compressImageForUpload } from '../utils/imageCompression'
 import { uploadToR2 } from '../utils/r2Upload'
-const logo = "/assets/logo/inviteq-watermark.webp"
+const logo = "/assets/logo/inviteq-logo.webp"
 import { fadeUp } from '../motionVariants'
 import { templates, houseWarmingTemplates } from '../templates/templates'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
@@ -55,6 +55,7 @@ export default function Payment() {
   const isModernHearth = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
   const isMidnightWaltz = templateId === 'midnight-waltz'
   const isRoyalHeirloom = templateId === 'royal-heirloom'
+  const isRajasthaniVows = templateId === 'rajasthani-vows' || templateId === 'rajestani-vows'
   const coverImage = isSunflower
     ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.webp")
     : isTwilight 
@@ -69,7 +70,9 @@ export default function Payment() {
               ? "/assets/templates/midnight-waltz/hero-desktop.webp"
               : isRoyalHeirloom
                 ? "/assets/templates/royal-heirloom/hero-bg-mobile.webp"
-                : themeImg
+                : isRajasthaniVows
+                  ? "/assets/templates/rajestani-vows/hero-mobile.webp"
+                  : themeImg
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
     : isEverlasting
@@ -78,9 +81,11 @@ export default function Payment() {
         ? "from-[#5C0A14] via-[#8A6E1E] to-[#5C0A14]"
         : isModernHearth
           ? "from-[#4A2A0E] via-[#6B351D] to-[#4A2A0E]"
-          : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
+          : isRajasthaniVows
+            ? "from-[#5C1A0E] via-[#8B2500] to-[#5C1A0E]"
+            : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
 
-  const TEMPLATE_PRICE = template?.price || 1999 // Base price in INR based on template config
+  const TEMPLATE_PRICE = template?.price || 2499 // Base price in INR based on template config
 
   const isTemplatePaid = Boolean(
     String(draftData.status).toUpperCase() === 'PAID' || 
@@ -519,10 +524,10 @@ export default function Payment() {
       {/* Header */}
       <header className="border-b border-iqBorder bg-white/80 backdrop-blur-md sticky top-0 z-30">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-85 transition-opacity">
             <img src={logo} alt="Inviteque" className="h-8 w-auto" />
             <span className="text-sm md:text-lg font-bold">{isTemplatePaid ? 'Update' : 'Payment'}</span>
-          </div>
+          </Link>
           <button
             onClick={() => navigate(-1)}
             className="text-sm font-semibold text-iqText/60 hover:text-iqText transition-colors"

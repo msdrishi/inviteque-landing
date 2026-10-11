@@ -275,8 +275,8 @@ export default function RajasthaniVowsHero({
                 style={{
                   fontFamily: "'Modernline', 'Allura', 'Alex Brush', cursive",
                   fontSize: isDesktop
-                    ? 'clamp(2.7rem, 4.0vw, 3.4rem)'
-                    : (isTablet ? 'clamp(2.8rem, 4.6vw, 3.5rem)' : 'clamp(2.3rem, 6.2vw, 2.8rem)'),
+                    ? 'clamp(3.1rem, 4.4vw, 3.8rem)'
+                    : (isTablet ? 'clamp(3.2rem, 5.0vw, 3.9rem)' : 'clamp(2.6rem, 7.0vw, 3.2rem)'),
                   color: colors.primary,
                   lineHeight: 1.25,
                   display: 'block',
@@ -315,8 +315,8 @@ export default function RajasthaniVowsHero({
                 style={{
                   fontFamily: "'Modernline', 'Allura', 'Alex Brush', cursive",
                   fontSize: isDesktop
-                    ? 'clamp(2.7rem, 4.0vw, 3.4rem)'
-                    : (isTablet ? 'clamp(2.8rem, 4.6vw, 3.5rem)' : 'clamp(2.3rem, 6.2vw, 2.8rem)'),
+                    ? 'clamp(3.1rem, 4.4vw, 3.8rem)'
+                    : (isTablet ? 'clamp(3.2rem, 5.0vw, 3.9rem)' : 'clamp(2.6rem, 7.0vw, 3.2rem)'),
                   color: colors.primary,
                   lineHeight: 1.25,
                   display: 'block',
@@ -381,7 +381,7 @@ export default function RajasthaniVowsHero({
                   letterSpacing: '0.12em',
                 }}
               >
-                {data.weddingMonth}
+                {String(data.weddingMonth).trim().slice(0, 3).toUpperCase()}
               </span>
             )}
 

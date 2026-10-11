@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
-const logo = "/assets/logo/inviteq-watermark.webp"
+import { getWhatsAppLink } from '../config'
+const logo = "/assets/logo/inviteq-logo.webp"
 
 /* ── Animation helpers ── */
 const stagger = {
@@ -240,28 +241,42 @@ export default function Footer({ data, theme }) {
         {/* Brand name — Parisienne script + heart swash */}
         <motion.div
           variants={fadeUp}
-          style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 }}
+          style={{ marginBottom: 12 }}
         >
-          <img
-            src={logo}
-            alt="Inviteque"
-            width={60}
-            height={60}
-            style={{ width: 60, height: 60, objectFit: 'contain' }}
-            loading="lazy"
-          />
-          <span
+          <a
+            href="https://www.inviteque.com"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
-              fontFamily: "'Parisienne', cursive",
-              fontSize: 'clamp(35px, 10vw, 40px)',
-              fontWeight: 400,
-              color: colors.primaryDark,
-              lineHeight: 1,
-              letterSpacing: '0.02em',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 10,
+              textDecoration: 'none',
+              cursor: 'pointer',
             }}
           >
-            Inviteque
-          </span>
+            <img
+              src={logo}
+              alt="Inviteque"
+              width={60}
+              height={60}
+              style={{ width: 60, height: 60, objectFit: 'contain' }}
+              loading="lazy"
+            />
+            <span
+              style={{
+                fontFamily: "'Parisienne', cursive",
+                fontSize: 'clamp(35px, 10vw, 40px)',
+                fontWeight: 400,
+                color: colors.primaryDark,
+                lineHeight: 1,
+                letterSpacing: '0.02em',
+              }}
+            >
+              Inviteque
+            </span>
+          </a>
         </motion.div>
 
         {/* Tagline */}
@@ -290,7 +305,7 @@ export default function Footer({ data, theme }) {
           <SocialIcon href="https://www.instagram.com/invitequeofficial" label="Instagram" colors={colors}>
             <InstagramIcon />
           </SocialIcon>
-          <SocialIcon href="https://wa.me/inviteque" label="WhatsApp" colors={colors}>
+          <SocialIcon href={getWhatsAppLink()} label="WhatsApp" colors={colors}>
             <WhatsAppIcon />
           </SocialIcon>
         </motion.div>
