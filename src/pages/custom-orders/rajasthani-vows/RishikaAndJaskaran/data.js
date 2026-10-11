@@ -25,7 +25,7 @@ const baseWelcome = {
   brideParent: "(D/o Bindu and Ashutosh Kashyap)",
   conjunction: "With",
   groom: "Major Jaskaran",
-  groomParent: "(S/o Sukhwinder Kaur and Hon. Capt Rajinder Pal Singh (Retd) )",
+  groomParent: "(S/o Sukhwinder Kaur and\nHon. Capt Rajinder Pal Singh (Retd) )",
 };
 
 const haldiEvent = {

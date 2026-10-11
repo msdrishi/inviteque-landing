@@ -156,7 +156,7 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
           variants={lineAnim}
           style={{
             fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
-            fontSize: '25px',
+            fontSize: isDesktop ? '34px' : '29px',
             letterSpacing: '0.04em',
             color: '#7A1228',
             fontWeight: 700,
@@ -208,7 +208,7 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
           variants={lineAnim}
           style={{
             fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
-            fontSize: '25px',
+            fontSize: isDesktop ? '34px' : '29px',
             letterSpacing: '0.04em',
             color: '#7A1228',
             fontWeight: 700,
@@ -221,7 +221,7 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
           {data?.groom || "Major Jaskaran"}
         </motion.span>
 
-        {/* Line 9: (S/o Sukhwinder Kaur and Hon. Capt Rajinder Pal Singh (Retd) ) — Dark, prominent, crisp, camel case */}
+        {/* Line 9: (S/o Sukhwinder Kaur and Hon. Capt Rajinder Pal Singh (Retd) ) — Split in two lines */}
         <motion.p
           variants={lineAnim}
           style={{
@@ -230,13 +230,20 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
             letterSpacing: '0.02em',
             color: '#54121B',
             fontWeight: 600,
-            marginTop: '2px',
+            marginTop: '3px',
             maxWidth: '340px',
-            lineHeight: 1.35,
+            lineHeight: 1.4,
+            whiteSpace: 'pre-line',
             textTransform: 'none',
           }}
         >
-          {data?.groomParent || "(S/o Sukhwinder Kaur and Hon. Capt Rajinder Pal Singh (Retd) )"}
+          {(() => {
+            const text = data?.groomParent || "(S/o Sukhwinder Kaur and\nHon. Capt Rajinder Pal Singh (Retd) )";
+            if (typeof text === 'string' && !text.includes('\n') && text.includes('and Hon.')) {
+              return text.replace('and Hon.', 'and\nHon.');
+            }
+            return text;
+          })()}
         </motion.p>
       </motion.div>
     </section>

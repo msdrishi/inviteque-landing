@@ -219,157 +219,157 @@ export default function RishikaHero({
         </motion.div>
 
         {/* ── Couple Name: Exactly in 3 Lines (Bride, weds, Groom) in Refined Font with Full-Cover Glare ── */}
-        <div
-          className="relative flex flex-col items-center justify-center my-0.5 select-none w-full"
-          style={{
-            fontFamily: "'Hiragenda', serif",
-            lineHeight: 1.2,
-          }}
-        >
-          {/* Line 1: Bride Name (Rishika) — Exact same font size as Groom */}
-          <motion.div
-            variants={nameReveal}
-            style={{
-              position: 'relative',
-              display: 'inline-block',
-              whiteSpace: 'nowrap',
-              marginBottom: isDesktop ? 3 : 1,
-            }}
-          >
-            {/* Base text: 100% solid, fully visible at all times */}
-            <span
-              style={{
-                fontFamily: "'Hiragenda', serif",
-                fontSize: isDesktop
-                  ? 'clamp(2.8rem, 4.4vw, 3.8rem)'
-                  : (isTablet ? 'clamp(2.2rem, 4.6vw, 2.8rem)' : 'clamp(22px, 6.2vw, 27px)'),
-                color: colors.primary,
-                display: 'inline-block',
-                whiteSpace: 'nowrap',
-                lineHeight: 1.2,
-                letterSpacing: '0.04em',
-                textShadow: '0 2px 14px rgba(122,18,40,0.18)',
-              }}
-            >
-              {brideName}
-            </span>
+        {(() => {
+          const coupleFontSize = isDesktop
+            ? 'clamp(3.2rem, 4.8vw, 4.2rem)'
+            : (isTablet ? 'clamp(2.4rem, 4.8vw, 3.0rem)' : 'clamp(27px, 7.5vw, 33px)');
 
-            {/* Crystal reflection glare overlay — reflects strictly within font */}
-            <motion.span
-              animate={{ backgroundPosition: ['150% center', '-150% center'] }}
-              transition={{ repeat: Infinity, duration: 5.5, ease: 'linear' }}
+          return (
+            <div
+              className="relative flex flex-col items-center justify-center my-0.5 select-none w-full"
               style={{
                 fontFamily: "'Hiragenda', serif",
-                fontSize: isDesktop
-                  ? 'clamp(2.8rem, 4.4vw, 3.8rem)'
-                  : (isTablet ? 'clamp(2.2rem, 4.6vw, 2.8rem)' : 'clamp(22px, 6.2vw, 27px)'),
-                letterSpacing: '0.04em',
                 lineHeight: 1.2,
-                whiteSpace: 'nowrap',
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                width: '100%',
-                height: '100%',
-                pointerEvents: 'none',
-                background:
-                  'linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%)',
-                backgroundSize: '200% 200%',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                color: 'transparent',
-                zIndex: 2,
-                display: 'inline-block',
               }}
-              aria-hidden="true"
             >
-              {brideName}
-            </motion.span>
-          </motion.div>
+              {/* Line 1: Bride Name (Rishika) — Exact same font size as Groom */}
+              <motion.div
+                variants={nameReveal}
+                style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  whiteSpace: 'nowrap',
+                  marginBottom: isDesktop ? 3 : 1,
+                }}
+              >
+                {/* Base text: 100% solid, fully visible at all times */}
+                <span
+                  style={{
+                    fontFamily: "'Hiragenda', serif",
+                    fontSize: coupleFontSize,
+                    color: colors.primary,
+                    display: 'inline-block',
+                    whiteSpace: 'nowrap',
+                    lineHeight: 1.2,
+                    letterSpacing: '0.04em',
+                    textShadow: '0 2px 14px rgba(122,18,40,0.18)',
+                  }}
+                >
+                  {brideName}
+                </span>
 
-          {/* Line 2: weds with comfortable breathing room */}
-          <motion.div variants={fadeUp} style={{ margin: isDesktop ? '6px 0' : '4px 0', whiteSpace: 'nowrap' }}>
-            <span
-              style={{
-                fontFamily: "'Hiragenda', serif",
-                fontSize: isDesktop
-                  ? 'clamp(1.2rem, 1.5vw, 1.45rem)'
-                  : (isTablet ? 'clamp(1.1rem, 2.0vw, 1.3rem)' : 'clamp(1.0rem, 3.2vw, 1.2rem)'),
-                color: colors.primary,
-                opacity: 0.92,
-                letterSpacing: '0.12em',
-                display: 'block',
-                whiteSpace: 'nowrap',
-                textShadow: '0 1px 6px rgba(122,18,40,0.12)',
-              }}
-            >
-              weds
-            </span>
-          </motion.div>
+                {/* Crystal reflection glare overlay — reflects strictly within font */}
+                <motion.span
+                  animate={{ backgroundPosition: ['150% center', '-150% center'] }}
+                  transition={{ repeat: Infinity, duration: 5.5, ease: 'linear' }}
+                  style={{
+                    fontFamily: "'Hiragenda', serif",
+                    fontSize: coupleFontSize,
+                    letterSpacing: '0.04em',
+                    lineHeight: 1.2,
+                    whiteSpace: 'nowrap',
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    width: '100%',
+                    height: '100%',
+                    pointerEvents: 'none',
+                    background:
+                      'linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%)',
+                    backgroundSize: '200% 200%',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: 'transparent',
+                    zIndex: 2,
+                    display: 'inline-block',
+                  }}
+                  aria-hidden="true"
+                >
+                  {brideName}
+                </motion.span>
+              </motion.div>
 
-          {/* Line 3: Groom Name (Major Jaskaran) — Solid visible font with crystal glare overlay */}
-          <motion.div
-            variants={nameReveal}
-            style={{
-              position: 'relative',
-              display: 'inline-block',
-              whiteSpace: 'nowrap',
-              marginTop: isDesktop ? 3 : 1,
-            }}
-          >
-            {/* Base text: 100% solid, fully visible at all times */}
-            <span
-              style={{
-                fontFamily: "'Hiragenda', serif",
-                fontSize: isDesktop
-                  ? 'clamp(2.8rem, 4.4vw, 3.8rem)'
-                  : (isTablet ? 'clamp(2.2rem, 4.6vw, 2.8rem)' : 'clamp(22px, 6.2vw, 27px)'),
-                color: colors.primary,
-                display: 'inline-block',
-                whiteSpace: 'nowrap',
-                lineHeight: 1.2,
-                letterSpacing: '0.04em',
-                textShadow: '0 2px 14px rgba(122,18,40,0.18)',
-              }}
-            >
-              {groomName}
-            </span>
+              {/* Line 2: weds with comfortable breathing room */}
+              <motion.div variants={fadeUp} style={{ margin: isDesktop ? '6px 0' : '4px 0', whiteSpace: 'nowrap' }}>
+                <span
+                  style={{
+                    fontFamily: "'Hiragenda', serif",
+                    fontSize: isDesktop
+                      ? 'clamp(1.2rem, 1.5vw, 1.45rem)'
+                      : (isTablet ? 'clamp(1.1rem, 2.0vw, 1.3rem)' : 'clamp(1.0rem, 3.2vw, 1.2rem)'),
+                    color: colors.primary,
+                    opacity: 0.92,
+                    letterSpacing: '0.12em',
+                    display: 'block',
+                    whiteSpace: 'nowrap',
+                    textShadow: '0 1px 6px rgba(122,18,40,0.12)',
+                  }}
+                >
+                  weds
+                </span>
+              </motion.div>
 
-            {/* Crystal reflection glare overlay — reflects strictly within font */}
-            <motion.span
-              animate={{ backgroundPosition: ['150% center', '-150% center'] }}
-              transition={{ repeat: Infinity, duration: 5.5, ease: 'linear' }}
-              style={{
-                fontFamily: "'Hiragenda', serif",
-                fontSize: isDesktop
-                  ? 'clamp(2.8rem, 4.4vw, 3.8rem)'
-                  : (isTablet ? 'clamp(2.2rem, 4.6vw, 2.8rem)' : 'clamp(22px, 6.2vw, 27px)'),
-                letterSpacing: '0.04em',
-                lineHeight: 1.2,
-                whiteSpace: 'nowrap',
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                width: '100%',
-                height: '100%',
-                pointerEvents: 'none',
-                background:
-                  'linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%)',
-                backgroundSize: '200% 200%',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                color: 'transparent',
-                zIndex: 2,
-                display: 'inline-block',
-              }}
-              aria-hidden="true"
-            >
-              {groomName}
-            </motion.span>
-          </motion.div>
-        </div>
+              {/* Line 3: Groom Name (Major Jaskaran) — Exact same font size as Bride */}
+              <motion.div
+                variants={nameReveal}
+                style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  whiteSpace: 'nowrap',
+                  marginTop: isDesktop ? 3 : 1,
+                }}
+              >
+                {/* Base text: 100% solid, fully visible at all times */}
+                <span
+                  style={{
+                    fontFamily: "'Hiragenda', serif",
+                    fontSize: coupleFontSize,
+                    color: colors.primary,
+                    display: 'inline-block',
+                    whiteSpace: 'nowrap',
+                    lineHeight: 1.2,
+                    letterSpacing: '0.04em',
+                    textShadow: '0 2px 14px rgba(122,18,40,0.18)',
+                  }}
+                >
+                  {groomName}
+                </span>
+
+                {/* Crystal reflection glare overlay — reflects strictly within font */}
+                <motion.span
+                  animate={{ backgroundPosition: ['150% center', '-150% center'] }}
+                  transition={{ repeat: Infinity, duration: 5.5, ease: 'linear' }}
+                  style={{
+                    fontFamily: "'Hiragenda', serif",
+                    fontSize: coupleFontSize,
+                    letterSpacing: '0.04em',
+                    lineHeight: 1.2,
+                    whiteSpace: 'nowrap',
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    width: '100%',
+                    height: '100%',
+                    pointerEvents: 'none',
+                    background:
+                      'linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%)',
+                    backgroundSize: '200% 200%',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: 'transparent',
+                    zIndex: 2,
+                    display: 'inline-block',
+                  }}
+                  aria-hidden="true"
+                >
+                  {groomName}
+                </motion.span>
+              </motion.div>
+            </div>
+          );
+        })()}
 
         {/* Thin Ornamental Divider in Dark Ruby with generous vertical spacing */}
         <motion.div
