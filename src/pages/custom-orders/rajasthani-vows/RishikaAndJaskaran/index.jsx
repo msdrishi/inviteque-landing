@@ -36,6 +36,26 @@ export default function RishikaAndJaskaranTemplate() {
   useEffect(() => {
     const onResize = () => setIsDesktop(window.innerWidth > 1024)
     window.addEventListener('resize', onResize)
+
+    // Set page title & Open Graph tags for Rishika & Jaskaran wedding
+    document.title = "Rishika weds Major Jaskaran | Wedding Invitation"
+
+    const setMeta = (prop, content) => {
+      let el = document.querySelector(`meta[property="${prop}"]`) || document.querySelector(`meta[name="${prop}"]`)
+      if (!el) {
+        el = document.createElement('meta')
+        el.setAttribute(prop.startsWith('og:') ? 'property' : 'name', prop)
+        document.head.appendChild(el)
+      }
+      el.setAttribute('content', content)
+    }
+
+    setMeta('og:title', 'Rishika weds Major Jaskaran')
+    setMeta('og:description', 'We cordially invite you to celebrate the wedding celebrations of Rishika & Major Jaskaran. Tap to view the invitation.')
+    setMeta('og:image', 'https://inviteque.com/assets/templates/rajestani-vows/whatsapp-preview.jpg')
+    setMeta('og:image:secure_url', 'https://inviteque.com/assets/templates/rajestani-vows/whatsapp-preview.jpg')
+    setMeta('twitter:image', 'https://inviteque.com/assets/templates/rajestani-vows/whatsapp-preview.jpg')
+
     return () => window.removeEventListener('resize', onResize)
   }, [])
 

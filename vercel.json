@@ -1,6 +1,66 @@
 {
   "rewrites": [
     {
+      "source": "/template/rajasthani-vows/rishika-and-jaskaran",
+      "has": [
+        {
+          "type": "query",
+          "key": "redirected",
+          "value": "true"
+        }
+      ],
+      "destination": "/index.html"
+    },
+    {
+      "source": "/template/rajasthani-vows/rishika-and-jaskaran/:variant",
+      "has": [
+        {
+          "type": "query",
+          "key": "redirected",
+          "value": "true"
+        }
+      ],
+      "destination": "/index.html"
+    },
+    {
+      "source": "/templates/rajasthani-vows/rishika-and-jaskaran",
+      "has": [
+        {
+          "type": "query",
+          "key": "redirected",
+          "value": "true"
+        }
+      ],
+      "destination": "/index.html"
+    },
+    {
+      "source": "/templates/rajasthani-vows/rishika-and-jaskaran/:variant",
+      "has": [
+        {
+          "type": "query",
+          "key": "redirected",
+          "value": "true"
+        }
+      ],
+      "destination": "/index.html"
+    },
+    {
+      "source": "/template/rajasthani-vows/rishika-and-jaskaran",
+      "destination": "/api/rishika-meta"
+    },
+    {
+      "source": "/template/rajasthani-vows/rishika-and-jaskaran/:variant",
+      "destination": "/api/rishika-meta?variant=:variant"
+    },
+    {
+      "source": "/templates/rajasthani-vows/rishika-and-jaskaran",
+      "destination": "/api/rishika-meta"
+    },
+    {
+      "source": "/templates/rajasthani-vows/rishika-and-jaskaran/:variant",
+      "destination": "/api/rishika-meta?variant=:variant"
+    },
+    {
       "source": "/templates/:templateId/:code",
       "has": [
         {
