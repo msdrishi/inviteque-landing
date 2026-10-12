@@ -300,7 +300,11 @@ export default function RishikaAndJaskaranTemplate() {
 
         {/* 8. Countdown Section */}
         <RajasthaniVowsCountdown
-          data={{ targetDateTimeISO: "2026-12-06T16:00:00.000Z" }}
+          data={{
+            targetDateTimeISO: (versionParam === '3' || versionParam === 'hindu' || versionParam === 'sangeet-anandkaraj')
+              ? "2026-12-07T16:30:00.000Z"
+              : "2026-12-06T16:00:00.000Z"
+          }}
           isDesktop={isDesktop}
         />
 

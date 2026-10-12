@@ -164,13 +164,17 @@ export const weddingDataCustom = {
   footer: baseFooter,
 };
 
-// 3. Sangeet & Anand Karaj Invitation (/3: With Sangeet & Anand Karaj & Reception)
+// 3. Reception Only Invitation (/3: Only Sundowner Pheras & Wedding Reception)
 export const weddingDataHindu = {
-  hero: baseHero,
+  hero: {
+    ...baseHero,
+    dateLine: "7th December 2026",
+    weddingDate: "7",
+  },
   welcome: baseWelcome,
   story: baseStory,
   events: {
-    items: [sangeetEvent, anandKarajEvent, weddingReceptionEvent],
+    items: [weddingReceptionEvent],
     schedule: scheduleItems,
   },
   regards: baseRegards,

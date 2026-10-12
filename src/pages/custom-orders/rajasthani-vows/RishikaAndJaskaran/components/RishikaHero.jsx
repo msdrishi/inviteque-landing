@@ -404,7 +404,7 @@ export default function RishikaHero({
               letterSpacing: '0.14em',
             }}
           >
-            DEC
+            {data?.weddingMonth || "DEC"}
           </span>
 
           <span style={{ color: colors.primary, fontSize: '0.9rem', opacity: 0.45, fontFamily: 'serif' }}>|</span>
@@ -419,7 +419,7 @@ export default function RishikaHero({
               lineHeight: 1,
             }}
           >
-            6, 7
+            {data?.weddingDate || "6, 7"}
           </span>
 
           <span style={{ color: colors.primary, fontSize: '0.9rem', opacity: 0.45, fontFamily: 'serif' }}>|</span>
@@ -433,7 +433,7 @@ export default function RishikaHero({
               letterSpacing: '0.12em',
             }}
           >
-            2026
+            {data?.weddingYear || "2026"}
           </span>
         </motion.div>
 
@@ -485,21 +485,17 @@ export default function RishikaHero({
         </motion.div>
       </motion.div>
 
-      {/* ── Scroll Down Indicator ── */}
+      {/* ── Scroll Down Indicator Pill Banner ── */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.2, duration: 1.0 }}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.2, duration: 0.8 }}
         style={{
           position: 'absolute',
           bottom: 'clamp(8px, 1.8vh, 16px)',
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 20,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 2,
           cursor: 'pointer',
         }}
         onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
@@ -507,31 +503,43 @@ export default function RishikaHero({
       >
         <motion.div
           animate={{ y: [0, 4, 0] }}
-          transition={{ repeat: Infinity, duration: 2.0, ease: 'easeInOut' }}
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}
+          transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 7,
+            padding: '6px 16px',
+            borderRadius: 9999,
+            backgroundColor: 'rgba(255, 255, 255, 0.92)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            border: '1.5px solid rgba(122, 18, 40, 0.4)',
+            boxShadow: '0 4px 16px rgba(122, 18, 40, 0.16), 0 2px 6px rgba(0, 0, 0, 0.06)',
+          }}
         >
           <span
             style={{
               fontFamily: "'Cinzel', serif",
-              fontWeight: 600,
-              fontSize: 8.5,
-              letterSpacing: '0.24em',
+              fontWeight: 700,
+              fontSize: '10px',
+              letterSpacing: '0.22em',
               textTransform: 'uppercase',
-              color: colors.secondary,
-              opacity: 0.7,
+              color: colors.primary,
+              lineHeight: 1,
             }}
           >
-            Scroll
+            Scroll Down
           </span>
           <svg
             viewBox="0 0 18 11"
             width={11}
             height={7}
             fill="none"
-            stroke={colors.secondary}
-            strokeWidth={1.5}
+            stroke={colors.primary}
+            strokeWidth={2.2}
             strokeLinecap="round"
-            style={{ opacity: 0.7 }}
+            strokeLinejoin="round"
             aria-hidden="true"
           >
             <path d="M1 1.5 L9 9.5 L17 1.5" />
