@@ -49,7 +49,7 @@ export default function RishikaEventSection({
       opacity: 1,
       y: 0,
       filter: 'blur(0px)',
-      transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
     },
   }
 
@@ -95,7 +95,7 @@ export default function RishikaEventSection({
         viewport={{ once: false, amount: 0.25 }}
         variants={{
           hidden: {},
-          show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+          show: { transition: { staggerChildren: 0.18, delayChildren: 0.18 } },
         }}
         className="relative z-10 mx-auto text-center flex flex-col items-center py-4 px-2"
         style={{

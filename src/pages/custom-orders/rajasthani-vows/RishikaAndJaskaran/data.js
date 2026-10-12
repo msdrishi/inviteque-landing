@@ -43,6 +43,21 @@ const haldiEvent = {
   mapLink: "https://maps.app.goo.gl/1vvJdEZEcwsR2F4S8?g_st=ic",
 };
 
+const anandKarajEvent = {
+  id: "anand-karaj",
+  name: "Anand Karaj",
+  title: "Anand Karaj",
+  date: "7th December 2026",
+  dayNumber: "7",
+  ordinal: "th",
+  monthYear: "December 2026",
+  time: "10:00 AM",
+  icon: "🌸",
+  iconSrc: "/assets/templates/royal-heirloom/icons/engagement.webp",
+  venue: "Gurudwara Sahib Sardar Bazar, Delhi Cantt",
+  mapLink: "https://maps.app.goo.gl/j6neZVbWhRoXf2Av7?g_st=ic",
+};
+
 const weddingReceptionEvent = {
   id: "reception",
   name: "Sundowner Pheras & Wedding Reception",
@@ -114,7 +129,7 @@ export const weddingDataComplete = {
   welcome: baseWelcome,
   story: baseStory,
   events: {
-    items: [haldiEvent, weddingReceptionEvent],
+    items: [haldiEvent, anandKarajEvent, weddingReceptionEvent],
     schedule: scheduleItems,
   },
   regards: baseRegards,
@@ -127,7 +142,7 @@ export const weddingDataCustom = {
   welcome: baseWelcome,
   story: baseStory,
   events: {
-    items: [haldiEvent, weddingReceptionEvent],
+    items: [haldiEvent, anandKarajEvent, weddingReceptionEvent],
     schedule: scheduleItems,
   },
   regards: baseRegards,
@@ -140,7 +155,7 @@ export const weddingDataHindu = {
   welcome: baseWelcome,
   story: baseStory,
   events: {
-    items: [haldiEvent, weddingReceptionEvent],
+    items: [haldiEvent, anandKarajEvent, weddingReceptionEvent],
     schedule: scheduleItems,
   },
   regards: baseRegards,

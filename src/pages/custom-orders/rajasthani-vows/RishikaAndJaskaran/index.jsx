@@ -124,10 +124,12 @@ export default function RishikaAndJaskaranTemplate() {
   const messageBgDesktop = "/assets/templates/rajestani-vows/welcome-mobile.webp"
   const messageBgMobile = "/assets/templates/rajestani-vows/welcome-mobile.webp"
   const sangeetBg = "/assets/templates/rajestani-vows/sangeet.webp"
+  const anandKarajBg = "/assets/templates/rajestani-vows/anand karaj.webp"
   const receptionBg = "/assets/templates/rajestani-vows/reception.webp"
 
   const haldiEvent = activeData.events.items.find(e => e.id === "haldi") || activeData.events.items[0]
-  const receptionEvent = activeData.events.items.find(e => e.id === "reception") || activeData.events.items[1]
+  const anandKarajEvent = activeData.events.items.find(e => e.id === "anand-karaj" || e.name === "Anand Karaj")
+  const receptionEvent = activeData.events.items.find(e => e.id === "reception") || activeData.events.items[2] || activeData.events.items[1]
 
   return (
     <>
@@ -232,7 +234,21 @@ export default function RishikaAndJaskaranTemplate() {
           />
         )}
 
-        {/* 5. Event Section: Wedding Reception (Sundowner Pheras line 1 big + wedding reception small, with 7th superscript) */}
+        {/* 5. Event Section: Anand Karaj (below the Haldi, with 7th superscript) */}
+        {anandKarajEvent && (
+          <RishikaEventSection
+            title={anandKarajEvent.name || anandKarajEvent.title}
+            date={anandKarajEvent.date}
+            time={anandKarajEvent.time}
+            location={anandKarajEvent.venue}
+            mapLink={anandKarajEvent.mapLink}
+            bgImage={anandKarajBg}
+            position="top"
+            isDesktop={isDesktop}
+          />
+        )}
+
+        {/* 6. Event Section: Wedding Reception (Sundowner Pheras line 1 big + wedding reception small, with 7th superscript) */}
         {receptionEvent && (
           <RishikaEventSection
             titleLine1={receptionEvent.titleLine1 || "Sundowner Pheras"}

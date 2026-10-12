@@ -7,41 +7,41 @@ const desktopHeroBg = "/assets/templates/rajestani-vows/hero-mobile.webp"
 const smartphoneHeroBg = "/assets/templates/rajestani-vows/hero-mobile.webp"
 
 /* ──────────────────────────────────────────────────────────
-   Aura of Elegance Style Animation Variants
+   Aura of Elegance Style Animation Variants — Slower & Smoother
 ────────────────────────────────────────────────────────── */
 const nameReveal = {
-  hidden: { opacity: 0, y: 24, filter: 'blur(6px)' },
+  hidden: { opacity: 0, y: 26, filter: 'blur(8px)' },
   show: {
     opacity: 1,
     y: 0,
     filter: 'blur(0px)',
-    transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 2.2, ease: [0.16, 1, 0.3, 1] },
   },
 }
 
 const nameLetters = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.15 } },
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
 }
 
 const nameLetter = {
-  hidden: { opacity: 0, y: 14, x: -8, filter: 'blur(4px)' },
+  hidden: { opacity: 0, y: 16, x: -8, filter: 'blur(5px)' },
   show: {
     opacity: 1,
     y: 0,
     x: 0,
     filter: 'blur(0px)',
-    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 1.3, ease: [0.16, 1, 0.3, 1] },
   },
 }
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 16, filter: 'blur(4px)' },
+  hidden: { opacity: 0, y: 18, filter: 'blur(6px)' },
   show: {
     opacity: 1,
     y: 0,
     filter: 'blur(0px)',
-    transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
   },
 }
 
@@ -120,7 +120,7 @@ export default function RishikaHero({
         alignItems: 'center',
         justifyContent: 'flex-start',
         textAlign: 'center',
-        paddingTop: isDesktop ? '46vh' : (isTablet ? '48svh' : '49.5svh'),
+        paddingTop: isDesktop ? '46.5vh' : (isTablet ? '48.5svh' : '50svh'),
         paddingBottom: '24px',
         paddingLeft: '12px',
         paddingRight: '12px',
@@ -191,8 +191,8 @@ export default function RishikaHero({
           show: {
             opacity: 1,
             transition: {
-              staggerChildren: 0.16,
-              delayChildren: 0.2,
+              staggerChildren: 0.24,
+              delayChildren: 0.25,
             },
           },
         }}
@@ -209,27 +209,27 @@ export default function RishikaHero({
           boxSizing: 'border-box',
         }}
       >
-        {/* Sacred Ganesha Emblem */}
-        <motion.div variants={fadeUp} style={{ marginBottom: isDesktop ? 8 : 6 }}>
+        {/* Sacred Ganesha Emblem — Positioned safely below hanging umbrella tassels */}
+        <motion.div variants={fadeUp} style={{ marginBottom: isDesktop ? 7 : 4 }}>
           <img
             src={data.ganeshaLogo || defaultGaneshaLogo}
             alt="Om Ganesha"
-            className="w-7 h-7 sm:w-8 sm:h-8 object-contain opacity-95 drop-shadow-[0_2px_4px_rgba(122,18,40,0.18)]"
+            className="w-6 h-6 sm:w-7 sm:h-7 object-contain opacity-95 drop-shadow-[0_2px_4px_rgba(122,18,40,0.18)]"
           />
         </motion.div>
 
         {/* ── Couple Name: Exactly in 3 Lines (Bride, weds, Groom) in Refined Font with Full-Cover Glare ── */}
         {(() => {
           const coupleFontSize = isDesktop
-            ? 'clamp(3.2rem, 4.8vw, 4.2rem)'
-            : (isTablet ? 'clamp(2.4rem, 4.8vw, 3.0rem)' : 'clamp(27px, 7.5vw, 33px)');
+            ? 'clamp(3.4rem, 5.0vw, 4.2rem)'
+            : (isTablet ? 'clamp(2.6rem, 4.8vw, 3.2rem)' : 'clamp(31px, 8.6vw, 38px)');
 
           return (
             <div
-              className="relative flex flex-col items-center justify-center my-0.5 select-none w-full"
+              className="relative flex flex-col items-center justify-center select-none w-full"
               style={{
                 fontFamily: "'Hiragenda', serif",
-                lineHeight: 1.2,
+                lineHeight: 1.15,
               }}
             >
               {/* Line 1: Bride Name (Rishika) — Exact same font size as Groom */}
@@ -250,7 +250,7 @@ export default function RishikaHero({
                     color: colors.primary,
                     display: 'inline-block',
                     whiteSpace: 'nowrap',
-                    lineHeight: 1.2,
+                    lineHeight: 1.15,
                     letterSpacing: '0.04em',
                     textShadow: '0 2px 14px rgba(122,18,40,0.18)',
                   }}
@@ -261,12 +261,12 @@ export default function RishikaHero({
                 {/* Crystal reflection glare overlay — reflects strictly within font */}
                 <motion.span
                   animate={{ backgroundPosition: ['150% center', '-150% center'] }}
-                  transition={{ repeat: Infinity, duration: 5.5, ease: 'linear' }}
+                  transition={{ repeat: Infinity, duration: 6.5, ease: 'linear' }}
                   style={{
                     fontFamily: "'Hiragenda', serif",
                     fontSize: coupleFontSize,
                     letterSpacing: '0.04em',
-                    lineHeight: 1.2,
+                    lineHeight: 1.15,
                     whiteSpace: 'nowrap',
                     position: 'absolute',
                     left: 0,
@@ -291,7 +291,7 @@ export default function RishikaHero({
               </motion.div>
 
               {/* Line 2: weds with comfortable breathing room */}
-              <motion.div variants={fadeUp} style={{ margin: isDesktop ? '6px 0' : '4px 0', whiteSpace: 'nowrap' }}>
+              <motion.div variants={fadeUp} style={{ margin: isDesktop ? '6px 0' : '3px 0', whiteSpace: 'nowrap' }}>
                 <span
                   style={{
                     fontFamily: "'Hiragenda', serif",
@@ -328,7 +328,7 @@ export default function RishikaHero({
                     color: colors.primary,
                     display: 'inline-block',
                     whiteSpace: 'nowrap',
-                    lineHeight: 1.2,
+                    lineHeight: 1.15,
                     letterSpacing: '0.04em',
                     textShadow: '0 2px 14px rgba(122,18,40,0.18)',
                   }}
@@ -339,12 +339,12 @@ export default function RishikaHero({
                 {/* Crystal reflection glare overlay — reflects strictly within font */}
                 <motion.span
                   animate={{ backgroundPosition: ['150% center', '-150% center'] }}
-                  transition={{ repeat: Infinity, duration: 5.5, ease: 'linear' }}
+                  transition={{ repeat: Infinity, duration: 6.5, ease: 'linear' }}
                   style={{
                     fontFamily: "'Hiragenda', serif",
                     fontSize: coupleFontSize,
                     letterSpacing: '0.04em',
-                    lineHeight: 1.2,
+                    lineHeight: 1.15,
                     whiteSpace: 'nowrap',
                     position: 'absolute',
                     left: 0,
@@ -371,15 +371,15 @@ export default function RishikaHero({
           );
         })()}
 
-        {/* Thin Ornamental Divider in Dark Ruby with generous vertical spacing */}
+        {/* Thin Ornamental Divider in Dark Ruby with compact vertical spacing */}
         <motion.div
           variants={fadeUp}
           style={{
-            marginTop: isDesktop ? 22 : 18,
-            marginBottom: isDesktop ? 18 : 14,
+            marginTop: isDesktop ? 16 : 11,
+            marginBottom: isDesktop ? 14 : 9,
           }}
         >
-          <ThinDivider color={colors.primary} width={isDesktop ? 120 : (isTablet ? 110 : 95)} />
+          <ThinDivider color={colors.primary} width={isDesktop ? 130 : (isTablet ? 115 : 100)} />
         </motion.div>
 
         {/* ── Date Row: DEC | 6, 7 | 2026 (Dark colors, NOT yellow!) ── */}
@@ -389,9 +389,9 @@ export default function RishikaHero({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: isDesktop ? 14 : 11,
+            gap: isDesktop ? 14 : 10,
             lineHeight: 1,
-            marginBottom: isDesktop ? 12 : 10,
+            marginBottom: isDesktop ? 11 : 8,
           }}
         >
           <span
@@ -413,7 +413,7 @@ export default function RishikaHero({
             style={{
               fontFamily: "'Cinzel', serif",
               fontWeight: 700,
-              fontSize: isDesktop ? '1.85rem' : '1.62rem',
+              fontSize: isDesktop ? '1.85rem' : '1.65rem',
               color: colors.primary,
               letterSpacing: '0.04em',
               lineHeight: 1,
@@ -441,14 +441,14 @@ export default function RishikaHero({
         <motion.div
           variants={fadeUp}
           style={{
-            marginBottom: isDesktop ? 11 : 9,
+            marginBottom: isDesktop ? 9 : 7,
           }}
         >
           <span
             style={{
               fontFamily: "'Cinzel', serif",
               fontWeight: 600,
-              fontSize: isDesktop ? '14px' : (isTablet ? '13.5px' : '12.5px'),
+              fontSize: isDesktop ? '14px' : (isTablet ? '13px' : '12.5px'),
               letterSpacing: '0.34em',
               textTransform: 'uppercase',
               color: colors.primary,
@@ -464,15 +464,15 @@ export default function RishikaHero({
         <motion.div
           variants={fadeUp}
           style={{
-            marginTop: isDesktop ? 2 : 0,
-            marginBottom: isDesktop ? 12 : 8,
+            marginTop: 0,
+            marginBottom: isDesktop ? 10 : 6,
           }}
         >
           <span
             style={{
               fontFamily: "'Cinzel', serif",
               fontWeight: 700,
-              fontSize: isDesktop ? '13px' : (isTablet ? '12.5px' : '11.5px'),
+              fontSize: isDesktop ? '13px' : (isTablet ? '12px' : '11.5px'),
               letterSpacing: '0.28em',
               textTransform: 'uppercase',
               color: colors.primary,

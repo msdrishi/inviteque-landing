@@ -8,7 +8,7 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
       opacity: 1,
       y: 0,
       filter: 'blur(0px)',
-      transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
     },
   }
 
@@ -57,7 +57,7 @@ export default function RishikaWelcome({ data, bgImageDesktop, bgImageMobile, is
         viewport={{ once: false, amount: 0.25 }}
         variants={{
           hidden: {},
-          show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+          show: { transition: { staggerChildren: 0.2, delayChildren: 0.2 } },
         }}
         style={{
           position: 'relative',

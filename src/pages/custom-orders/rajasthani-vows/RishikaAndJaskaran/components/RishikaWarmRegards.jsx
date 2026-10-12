@@ -8,7 +8,7 @@ export default function RishikaWarmRegards({ data, isDesktop = false }) {
       opacity: 1,
       y: 0,
       filter: 'blur(0px)',
-      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
     },
   }
 
@@ -59,7 +59,7 @@ export default function RishikaWarmRegards({ data, isDesktop = false }) {
         viewport={{ once: false, amount: 0.3 }}
         variants={{
           hidden: {},
-          show: { transition: { staggerChildren: 0.16, delayChildren: 0.12 } },
+          show: { transition: { staggerChildren: 0.2, delayChildren: 0.2 } },
         }}
         className="relative z-10 mx-auto text-center flex flex-col items-center py-4 px-2"
         style={{
