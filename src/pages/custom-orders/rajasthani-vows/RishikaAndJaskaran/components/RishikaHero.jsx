@@ -485,67 +485,101 @@ export default function RishikaHero({
         </motion.div>
       </motion.div>
 
-      {/* ── Scroll Down Indicator Pill Banner ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2.2, duration: 0.8 }}
+      {/* ── Scroll Down Indicator (Guaranteed True Center + Separate Round Arrow Below) ── */}
+      <div
         style={{
           position: 'absolute',
-          bottom: 'clamp(8px, 1.8vh, 16px)',
-          left: '50%',
-          transform: 'translateX(-50%)',
+          bottom: 'clamp(6px, 1.4vh, 14px)',
+          left: 0,
+          right: 0,
+          width: '100%',
           zIndex: 20,
-          cursor: 'pointer',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pointerEvents: 'none',
         }}
-        onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
-        aria-label="Scroll down"
       >
         <motion.div
-          animate={{ y: [0, 4, 0] }}
-          transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.2, duration: 0.8 }}
           style={{
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
-            gap: 7,
-            padding: '6px 16px',
-            borderRadius: 9999,
-            backgroundColor: 'rgba(255, 255, 255, 0.92)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            border: '1.5px solid rgba(122, 18, 40, 0.4)',
-            boxShadow: '0 4px 16px rgba(122, 18, 40, 0.16), 0 2px 6px rgba(0, 0, 0, 0.06)',
+            gap: 5,
+            cursor: 'pointer',
+            pointerEvents: 'auto',
           }}
+          onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+          aria-label="Scroll down"
         >
-          <span
+          {/* Centered Scroll Down Banner Button */}
+          <div
             style={{
-              fontFamily: "'Cinzel', serif",
-              fontWeight: 700,
-              fontSize: '10px',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color: colors.primary,
-              lineHeight: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '5px 14px',
+              borderRadius: 9999,
+              backgroundColor: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              border: '1.5px solid rgba(122, 18, 40, 0.38)',
+              boxShadow: '0 4px 14px rgba(122, 18, 40, 0.14), 0 1px 3px rgba(0, 0, 0, 0.05)',
             }}
           >
-            Scroll Down
-          </span>
-          <svg
-            viewBox="0 0 18 11"
-            width={11}
-            height={7}
-            fill="none"
-            stroke={colors.primary}
-            strokeWidth={2.2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
+            <span
+              style={{
+                fontFamily: "'Cinzel', serif",
+                fontWeight: 700,
+                fontSize: '9.5px',
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                color: colors.primary,
+                lineHeight: 1,
+              }}
+            >
+              Scroll Down
+            </span>
+          </div>
+
+          {/* Separate Round Icon Below with Arrow */}
+          <motion.div
+            animate={{ y: [0, 3, 0] }}
+            transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
+            style={{
+              width: 26,
+              height: 26,
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              border: '1.5px solid rgba(122, 18, 40, 0.38)',
+              boxShadow: '0 4px 12px rgba(122, 18, 40, 0.14), 0 1px 3px rgba(0, 0, 0, 0.05)',
+            }}
           >
-            <path d="M1 1.5 L9 9.5 L17 1.5" />
-          </svg>
+            <svg
+              viewBox="0 0 14 9"
+              width={10}
+              height={6}
+              fill="none"
+              stroke={colors.primary}
+              strokeWidth={2.2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M1 1.5 L7 7.5 L13 1.5" />
+            </svg>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   )
 }
