@@ -179,7 +179,11 @@ export default function App() {
 
           {/* Custom Client Template Routes (Rishika & Jaskaran - Rajasthani Vows) */}
           <Route path="/template/rajasthani-vows/rishika-and-jaskaran" element={<CustomRajasthaniVowsRishikaAndJaskaran />} />
+          <Route path="/template/rajasthani-vows/rishika-and-jaskaran/:variant" element={<CustomRajasthaniVowsRishikaAndJaskaran />} />
           <Route path="/template/rajasthani-vows/RishikaAndJaskaran" element={<CustomRajasthaniVowsRishikaAndJaskaran />} />
+          <Route path="/template/rajasthani-vows/RishikaAndJaskaran/:variant" element={<CustomRajasthaniVowsRishikaAndJaskaran />} />
+          <Route path="/templates/rajasthani-vows/rishika-and-jaskaran" element={<CustomRajasthaniVowsRishikaAndJaskaran />} />
+          <Route path="/templates/rajasthani-vows/rishika-and-jaskaran/:variant" element={<CustomRajasthaniVowsRishikaAndJaskaran />} />
 
           {/* Custom Client Template Routes (Hemang & Jasmine - Royal Heirloom) */}
           <Route path="/template/royal-heirloom/hemang-and-jasmine" element={<CustomRoyalHeirloomHemangAndJasmine />} />

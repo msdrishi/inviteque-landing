@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { weddingDataComplete, weddingDataCustom, weddingDataHindu } from './data.js'
 
 import RajasthaniVowsCover from '../../../../templates/rajasthani-vows/RajasthaniVowsCover.jsx'
@@ -15,12 +15,19 @@ import rishikaBgMusic from './components/audio/ik-onkar-the-wedding-version_sxms
 
 export default function RishikaAndJaskaranTemplate() {
   const location = useLocation()
+  const { variant } = useParams()
   const searchParams = new URLSearchParams(location.search)
-  const version = searchParams.get('version') || 'complete'
+  const versionParam = variant || searchParams.get('version') || '1'
 
+  // Version 1 (default): Haldi + Anand Karaj + Reception
+  // Version 2 (/2): Without Anand Karaj (Haldi + Reception)
+  // Version 3 (/3): With Sangeet & Anand Karaj + Reception
   let activeData = weddingDataComplete
-  if (version === 'custom') activeData = weddingDataCustom
-  else if (version === 'hindu') activeData = weddingDataHindu
+  if (versionParam === '2' || versionParam === 'custom' || versionParam === 'without-anandkaraj') {
+    activeData = weddingDataCustom
+  } else if (versionParam === '3' || versionParam === 'hindu' || versionParam === 'sangeet-anandkaraj') {
+    activeData = weddingDataHindu
+  }
 
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== 'undefined' ? window.innerWidth > 1024 : false
@@ -127,9 +134,10 @@ export default function RishikaAndJaskaranTemplate() {
   const anandKarajBg = "/assets/templates/rajestani-vows/anand karaj.webp"
   const receptionBg = "/assets/templates/rajestani-vows/reception.webp"
 
-  const haldiEvent = activeData.events.items.find(e => e.id === "haldi") || activeData.events.items[0]
+  const haldiEvent = activeData.events.items.find(e => e.id === "haldi")
+  const sangeetEvent = activeData.events.items.find(e => e.id === "sangeet")
   const anandKarajEvent = activeData.events.items.find(e => e.id === "anand-karaj" || e.name === "Anand Karaj")
-  const receptionEvent = activeData.events.items.find(e => e.id === "reception") || activeData.events.items[2] || activeData.events.items[1]
+  const receptionEvent = activeData.events.items.find(e => e.id === "reception" || e.titleLine1 || e.titleLine2)
 
   return (
     <>
@@ -220,7 +228,7 @@ export default function RishikaAndJaskaranTemplate() {
           isDesktop={isDesktop}
         />
 
-        {/* 4. Event Section: Haldi (with 6th superscript) */}
+        {/* 4a. Event Section: Haldi (if included in version) */}
         {haldiEvent && (
           <RishikaEventSection
             title={haldiEvent.name || haldiEvent.title}
@@ -234,7 +242,21 @@ export default function RishikaAndJaskaranTemplate() {
           />
         )}
 
-        {/* 5. Event Section: Anand Karaj (below the Haldi, with 7th superscript) */}
+        {/* 4b. Event Section: Sangeet (if included in version, e.g. Version 3) */}
+        {sangeetEvent && (
+          <RishikaEventSection
+            title={sangeetEvent.name || sangeetEvent.title}
+            date={sangeetEvent.date}
+            time={sangeetEvent.time}
+            location={sangeetEvent.venue}
+            mapLink={sangeetEvent.mapLink}
+            bgImage={sangeetBg}
+            position="middle"
+            isDesktop={isDesktop}
+          />
+        )}
+
+        {/* 5. Event Section: Anand Karaj (if included in version, e.g. Version 1 & Version 3) */}
         {anandKarajEvent && (
           <RishikaEventSection
             title={anandKarajEvent.name || anandKarajEvent.title}

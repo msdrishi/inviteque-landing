@@ -43,6 +43,21 @@ const haldiEvent = {
   mapLink: "https://maps.app.goo.gl/1vvJdEZEcwsR2F4S8?g_st=ic",
 };
 
+const sangeetEvent = {
+  id: "sangeet",
+  name: "Sundowner Sangeet & Sagai",
+  title: "Sundowner Sangeet & Sagai",
+  date: "6th December 2026",
+  dayNumber: "6",
+  ordinal: "th",
+  monthYear: "December 2026",
+  time: "4:00 PM Onwards",
+  icon: "✨",
+  iconSrc: "/assets/templates/royal-heirloom/icons/bouque.webp",
+  venue: "1, Chelmsford Rd, Railway Colony, Connaught Place",
+  mapLink: "https://maps.app.goo.gl/1vvJdEZEcwsR2F4S8?g_st=ic",
+};
+
 const anandKarajEvent = {
   id: "anand-karaj",
   name: "Anand Karaj",
@@ -123,7 +138,7 @@ const baseFooter = {
   thankYouMessage: "Thank You",
 };
 
-// 1. Complete Invitation
+// 1. Complete Invitation (Default: Haldi + Anand Karaj + Reception)
 export const weddingDataComplete = {
   hero: baseHero,
   welcome: baseWelcome,
@@ -136,26 +151,26 @@ export const weddingDataComplete = {
   footer: baseFooter,
 };
 
-// 2. Customized Invitation
+// 2. Customized Invitation (/2: Without Anand Karaj)
 export const weddingDataCustom = {
   hero: baseHero,
   welcome: baseWelcome,
   story: baseStory,
   events: {
-    items: [haldiEvent, anandKarajEvent, weddingReceptionEvent],
+    items: [haldiEvent, weddingReceptionEvent],
     schedule: scheduleItems,
   },
   regards: baseRegards,
   footer: baseFooter,
 };
 
-// 3. Hindu Wedding Invitation
+// 3. Sangeet & Anand Karaj Invitation (/3: With Sangeet & Anand Karaj & Reception)
 export const weddingDataHindu = {
   hero: baseHero,
   welcome: baseWelcome,
   story: baseStory,
   events: {
-    items: [haldiEvent, anandKarajEvent, weddingReceptionEvent],
+    items: [sangeetEvent, anandKarajEvent, weddingReceptionEvent],
     schedule: scheduleItems,
   },
   regards: baseRegards,
