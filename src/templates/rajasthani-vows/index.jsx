@@ -353,8 +353,8 @@ export default function TemplateRajasthaniVows({ savedData, groupSlug: propGroup
       />
 
       {/* ── MOBILE & TABLET VIEW ── */}
-      <div className="lg:hidden flex justify-center items-start min-h-screen bg-[#F0E8D8]">
-        <div className="relative w-full max-w-[768px] min-h-[100svh] bg-[#FAF6EE] shadow-[0_0_60px_rgba(0,0,0,0.10)]">
+      <div className="lg:hidden w-full min-h-screen bg-[#FAF6EE]">
+        <div className="relative w-full min-h-[100svh] bg-[#FAF6EE]">
           <WatermarkMobile />
           <PreviewNavMobile />
 

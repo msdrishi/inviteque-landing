@@ -21,7 +21,7 @@ export default function RajasthaniVowsCover({
           className="fixed inset-0 z-50 flex items-center justify-center bg-[#FAF6EE] overflow-hidden cursor-pointer"
           onClick={handleOpenCover}
         >
-          <div className="w-full h-full max-w-[480px] md:max-w-[720px] relative overflow-hidden flex items-center justify-center shadow-2xl">
+          <div className="w-full h-full max-w-none lg:max-w-[720px] relative overflow-hidden flex items-center justify-center shadow-2xl">
             {/* Real Video Element for opening animation */}
             <video
               ref={videoRef}

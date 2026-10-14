@@ -160,10 +160,10 @@ export default function RajasthaniVowsHero({
         alignItems: 'center',
         justifyContent: 'flex-start',
         textAlign: 'center',
-        paddingTop: isDesktop ? '46vh' : (isTablet ? '48svh' : '49.5svh'),
-        paddingBottom: '28px',
-        paddingLeft: isTablet ? 28 : 16,
-        paddingRight: isTablet ? 28 : 16,
+        paddingTop: isDesktop ? '46vh' : (isTablet ? '56svh' : '49.5svh'),
+        paddingBottom: isTablet ? '54px' : '28px',
+        paddingLeft: isTablet ? 24 : 16,
+        paddingRight: isTablet ? 24 : 16,
         boxSizing: 'border-box',
         userSelect: 'none',
         backgroundColor: '#FAF6EE',
@@ -182,7 +182,7 @@ export default function RajasthaniVowsHero({
             ? {
                 clipPath: 'circle(135% at 50% 50%)',
                 opacity: 1,
-                scale: isDesktop ? 1.15 : (isTablet ? 1.04 : 1.08),
+                scale: isDesktop ? 1.15 : (isTablet ? 1.30 : 1.08),
                 filter: 'blur(0px)',
               }
             : {
@@ -212,7 +212,7 @@ export default function RajasthaniVowsHero({
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            objectPosition: 'center top',
+            objectPosition: isTablet ? 'center -14svh' : 'center top',
             display: 'block',
           }}
           loading="eager"
@@ -243,12 +243,12 @@ export default function RajasthaniVowsHero({
           flexDirection: 'column',
           alignItems: 'center',
           width: '100%',
-          maxWidth: isDesktop ? 540 : (isTablet ? 600 : 400),
+          maxWidth: isDesktop ? 540 : (isTablet ? 520 : 400),
         }}
       >
         {/* 1. Ganesha Logo — Sacred emblem with clear breathing room */}
         {(data.ganeshaLogo || defaultGaneshaLogo) && (
-          <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 10 : 8 }}>
+          <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 10 : (isTablet ? 4 : 8) }}>
             <img
               src={data.ganeshaLogo || defaultGaneshaLogo}
               alt="Om Ganesha"
@@ -276,9 +276,9 @@ export default function RajasthaniVowsHero({
                   fontFamily: "'Modernline', 'Allura', 'Alex Brush', cursive",
                   fontSize: isDesktop
                     ? 'clamp(3.1rem, 4.4vw, 3.8rem)'
-                    : (isTablet ? 'clamp(3.2rem, 5.0vw, 3.9rem)' : 'clamp(2.6rem, 7.0vw, 3.2rem)'),
+                    : (isTablet ? 'clamp(2.9rem, 4.8vw, 3.6rem)' : 'clamp(2.6rem, 7.0vw, 3.2rem)'),
                   color: colors.primary,
-                  lineHeight: 1.25,
+                  lineHeight: isTablet ? 1.2 : 1.25,
                   display: 'block',
                   filter: 'drop-shadow(0 2px 4px rgba(122,18,40,0.22))',
                 }}
@@ -301,7 +301,7 @@ export default function RajasthaniVowsHero({
                   textTransform: 'lowercase',
                   color: colors.goldDark,
                   lineHeight: 1.35,
-                  margin: isDesktop ? '8px 0' : '6px 0',
+                  margin: isDesktop ? '8px 0' : (isTablet ? '6px 0' : '6px 0'),
                   opacity: 0.95,
                 }}
               >
@@ -316,9 +316,9 @@ export default function RajasthaniVowsHero({
                   fontFamily: "'Modernline', 'Allura', 'Alex Brush', cursive",
                   fontSize: isDesktop
                     ? 'clamp(3.1rem, 4.4vw, 3.8rem)'
-                    : (isTablet ? 'clamp(3.2rem, 5.0vw, 3.9rem)' : 'clamp(2.6rem, 7.0vw, 3.2rem)'),
+                    : (isTablet ? 'clamp(2.9rem, 4.8vw, 3.6rem)' : 'clamp(2.6rem, 7.0vw, 3.2rem)'),
                   color: colors.primary,
-                  lineHeight: 1.25,
+                  lineHeight: isTablet ? 1.2 : 1.25,
                   display: 'block',
                   filter: 'drop-shadow(0 2px 4px rgba(122,18,40,0.22))',
                 }}
@@ -336,12 +336,12 @@ export default function RajasthaniVowsHero({
             style={{
               fontFamily: "'Cinzel', serif",
               fontWeight: 600,
-              fontSize: isDesktop ? 'clamp(9px, 0.85vw, 10.5px)' : (isTablet ? 'clamp(10px, 1.3vw, 12px)' : 'clamp(8.5px, 2.0vw, 10px)'),
+              fontSize: isDesktop ? 'clamp(9px, 0.85vw, 10.5px)' : (isTablet ? 'clamp(11px, 1.3vw, 12.5px)' : 'clamp(8.5px, 2.0vw, 10px)'),
               letterSpacing: '0.26em',
               textTransform: 'uppercase',
               color: colors.secondary,
-              marginTop: isDesktop ? '14px' : '10px',
-              marginBottom: isDesktop ? '10px' : '8px',
+              marginTop: isDesktop ? '14px' : (isTablet ? '10px' : '10px'),
+              marginBottom: isDesktop ? '10px' : (isTablet ? '8px' : '8px'),
               lineHeight: 1.35,
               opacity: 0.92,
             }}
@@ -352,7 +352,7 @@ export default function RajasthaniVowsHero({
 
         {/* 4. Thin Ornamental Gold Divider */}
         {hasDate && (
-          <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 12 : 9 }}>
+          <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 12 : (isTablet ? 5 : 9) }}>
             <ThinDivider color={colors.gold} width={isDesktop ? 90 : (isTablet ? 110 : 80)} />
           </motion.div>
         )}
@@ -365,9 +365,9 @@ export default function RajasthaniVowsHero({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: isDesktop ? 12 : 10,
+              gap: isDesktop ? 12 : (isTablet ? 8 : 10),
               lineHeight: 1,
-              marginBottom: isDesktop ? 10 : 8,
+              marginBottom: isDesktop ? 10 : (isTablet ? 4 : 8),
             }}
           >
             {data.weddingMonth && (
@@ -426,12 +426,12 @@ export default function RajasthaniVowsHero({
             variants={lineAnim}
             style={{
               fontFamily: "'Cinzel', serif",
-              fontSize: isDesktop ? '10px' : (isTablet ? '11.5px' : '9.5px'),
+              fontSize: isDesktop ? '10px' : (isTablet ? '11px' : '9.5px'),
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
               color: colors.secondary,
-              marginTop: isDesktop ? '4px' : '3px',
-              marginBottom: isDesktop ? '4px' : '3px',
+              marginTop: isDesktop ? '4px' : (isTablet ? '3px' : '3px'),
+              marginBottom: isDesktop ? '4px' : (isTablet ? '2px' : '3px'),
               lineHeight: 1.35,
               fontWeight: 600,
             }}
@@ -446,11 +446,11 @@ export default function RajasthaniVowsHero({
             variants={lineAnim}
             style={{
               fontFamily: "'Cinzel', serif",
-              fontSize: isDesktop ? '9.5px' : (isTablet ? '11px' : '9px'),
+              fontSize: isDesktop ? '9.5px' : (isTablet ? '10.5px' : '9px'),
               letterSpacing: '0.14em',
               color: colors.secondary,
-              marginTop: isDesktop ? '2px' : '1px',
-              marginBottom: isDesktop ? '12px' : '9px',
+              marginTop: isDesktop ? '2px' : (isTablet ? '1px' : '1px'),
+              marginBottom: isDesktop ? '12px' : (isTablet ? '8px' : '9px'),
               lineHeight: 1.35,
               fontWeight: 500,
               opacity: 0.95,
@@ -462,7 +462,7 @@ export default function RajasthaniVowsHero({
 
         {/* 8. Pin Icon */}
         {(data.venueName || (data.addressLines && data.addressLines.length > 0)) && (
-          <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 5 : 4 }}>
+          <motion.div variants={lineAnim} style={{ marginBottom: isDesktop ? 5 : (isTablet ? 2 : 4) }}>
             <svg
               viewBox="0 0 24 24"
               width={11}
@@ -484,7 +484,7 @@ export default function RajasthaniVowsHero({
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: isDesktop ? 4 : 3,
+              gap: isDesktop ? 4 : (isTablet ? 1 : 3),
               width: '100%',
               margin: '0 auto',
             }}

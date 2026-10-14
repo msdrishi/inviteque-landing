@@ -120,10 +120,10 @@ export default function RishikaHero({
         alignItems: 'center',
         justifyContent: 'flex-start',
         textAlign: 'center',
-        paddingTop: isDesktop ? '46.5vh' : (isTablet ? '48.5svh' : '50svh'),
-        paddingBottom: '24px',
-        paddingLeft: '12px',
-        paddingRight: '12px',
+        paddingTop: isDesktop ? '46.5vh' : (isTablet ? '56svh' : '50svh'),
+        paddingBottom: isTablet ? '54px' : '24px',
+        paddingLeft: isTablet ? 24 : 12,
+        paddingRight: isTablet ? 24 : 12,
         boxSizing: 'border-box',
         userSelect: 'none',
         backgroundColor: '#FAF6EE',
@@ -142,7 +142,7 @@ export default function RishikaHero({
             ? {
                 clipPath: 'circle(135% at 50% 50%)',
                 opacity: 1,
-                scale: isDesktop ? 1.15 : (isTablet ? 1.04 : 1.08),
+                scale: isDesktop ? 1.15 : (isTablet ? 1.30 : 1.08),
                 filter: 'blur(0px)',
               }
             : {
@@ -172,7 +172,7 @@ export default function RishikaHero({
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            objectPosition: 'center top',
+            objectPosition: isTablet ? 'center -14svh' : 'center top',
             display: 'block',
           }}
           loading="eager"
@@ -222,7 +222,7 @@ export default function RishikaHero({
         {(() => {
           const coupleFontSize = isDesktop
             ? 'clamp(3.4rem, 5.0vw, 4.2rem)'
-            : (isTablet ? 'clamp(2.6rem, 4.8vw, 3.2rem)' : 'clamp(31px, 8.6vw, 38px)');
+            : (isTablet ? 'clamp(2.8rem, 4.6vw, 3.5rem)' : 'clamp(31px, 8.6vw, 38px)');
 
           return (
             <div
@@ -297,7 +297,7 @@ export default function RishikaHero({
                     fontFamily: "'Hiragenda', serif",
                     fontSize: isDesktop
                       ? 'clamp(1.2rem, 1.5vw, 1.45rem)'
-                      : (isTablet ? 'clamp(1.1rem, 2.0vw, 1.3rem)' : 'clamp(1.0rem, 3.2vw, 1.2rem)'),
+                      : (isTablet ? 'clamp(0.9rem, 1.6vw, 1.1rem)' : 'clamp(1.0rem, 3.2vw, 1.2rem)'),
                     color: colors.primary,
                     opacity: 0.92,
                     letterSpacing: '0.12em',
@@ -375,8 +375,8 @@ export default function RishikaHero({
         <motion.div
           variants={fadeUp}
           style={{
-            marginTop: isDesktop ? 16 : 11,
-            marginBottom: isDesktop ? 14 : 9,
+            marginTop: isDesktop ? 16 : (isTablet ? 7 : 11),
+            marginBottom: isDesktop ? 14 : (isTablet ? 5 : 9),
           }}
         >
           <ThinDivider color={colors.primary} width={isDesktop ? 130 : (isTablet ? 115 : 100)} />
@@ -389,9 +389,9 @@ export default function RishikaHero({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: isDesktop ? 14 : 10,
+            gap: isDesktop ? 14 : (isTablet ? 8 : 10),
             lineHeight: 1,
-            marginBottom: isDesktop ? 11 : 8,
+            marginBottom: isDesktop ? 11 : (isTablet ? 5 : 8),
           }}
         >
           <span
@@ -448,7 +448,7 @@ export default function RishikaHero({
             style={{
               fontFamily: "'Cinzel', serif",
               fontWeight: 600,
-              fontSize: isDesktop ? '14px' : (isTablet ? '13px' : '12.5px'),
+              fontSize: isDesktop ? '14px' : (isTablet ? '11px' : '12.5px'),
               letterSpacing: '0.34em',
               textTransform: 'uppercase',
               color: colors.primary,
@@ -465,14 +465,14 @@ export default function RishikaHero({
           variants={fadeUp}
           style={{
             marginTop: 0,
-            marginBottom: isDesktop ? 10 : 6,
+            marginBottom: isDesktop ? 10 : (isTablet ? 3 : 6),
           }}
         >
           <span
             style={{
               fontFamily: "'Cinzel', serif",
               fontWeight: 700,
-              fontSize: isDesktop ? '13px' : (isTablet ? '12px' : '11.5px'),
+              fontSize: isDesktop ? '13px' : (isTablet ? '10px' : '11.5px'),
               letterSpacing: '0.28em',
               textTransform: 'uppercase',
               color: colors.primary,
