@@ -223,7 +223,7 @@ export default function CustomRoyalHeirloomHero({
             Veena &amp; Late ND Chopra
           </span>
           <span className="font-['Cinzel'] text-[10px] sm:text-[11px] md:text-[11.5px] tracking-[0.14em] uppercase text-[#543625] font-semibold leading-[1.7] mt-0.5">
-            Santosh &amp; Late LB Nanda
+            Santosh &amp; Late Lalit Nanda
           </span>
         </motion.div>
       </div>

@@ -9,7 +9,7 @@ export const customData = {
     title: 'With blessings of -',
     elders: [
       'Veena & Late ND Chopra',
-      'Santosh & Late LB Nanda'
+      'Santosh & Late Lalit Nanda'
     ]
   },
   heroData: {
