@@ -62,8 +62,8 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
   const savedData = customData
 
   // ── Payment / Watermark ────────────────────────────────────────
-  // User requested to keep preview watermark active across all five links
-  const showWatermark = true
+  // User requested to remove watermark from all sections
+  const showWatermark = false
 
   // ── Data resolution (same pattern as MidnightWaltz) ────────────
   const groomName = (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || 'Rohan'
@@ -183,6 +183,7 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
     if (variant === '3') return allRsvpEvents.filter(e => ['cocktail', 'wedding'].includes(e.id))
     if (variant === '4') return allRsvpEvents.filter(e => ['cocktail'].includes(e.id))
     if (variant === '5') return allRsvpEvents.filter(e => ['wedding'].includes(e.id))
+    if (variant === '6') return allRsvpEvents.filter(e => e.id !== 'pooja')
     return allRsvpEvents
   }, [variant])
 
