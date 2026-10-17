@@ -88,8 +88,16 @@ export default function FullScreenEvent({ event }) {
           {event.date}
         </motion.p>
         
-        <motion.h2 variants={fadeInUp} className="font-['Cinzel'] text-2xl sm:text-[28px] font-bold mb-1 leading-none uppercase tracking-widest text-[#4A2810]">
-          {event.title}
+        <motion.h2 variants={fadeInUp} className="font-['Cinzel'] text-2xl sm:text-[28px] font-bold mb-1 leading-tight uppercase tracking-widest text-[#4A2810]">
+          {isHaldi ? (
+            <>
+              <span>Haldi</span>
+              <span className="block text-[19px] sm:text-[22px] font-semibold my-0.5 tracking-[0.25em] text-[#8C5D38]">&amp;</span>
+              <span>Mehendi</span>
+            </>
+          ) : (
+            event.title
+          )}
         </motion.h2>
 
         <motion.p variants={fadeInUp} className="font-['Cinzel'] text-[10.5px] sm:text-[11.5px] font-bold uppercase tracking-[0.2em] mb-2 text-[#4A2810]/75">

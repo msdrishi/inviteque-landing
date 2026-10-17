@@ -15,12 +15,12 @@ const fadeInUp = {
 export default function ThankYouSection() {
   return (
     <section className="relative w-full min-h-[100svh] flex flex-col justify-center items-center px-6 py-12 bg-[#ECE3D1] overflow-hidden">
-      {/* Background Ornate Frame Mural - Zoomed in */}
+      {/* Background Ornate Frame Mural - Zoomed in more */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
       >
         <div 
-          className="w-full h-full scale-110 sm:scale-115 origin-center"
+          className="w-full h-full scale-125 sm:scale-135 origin-center"
           style={{
             backgroundImage: `url(${thanksBg})`,
             backgroundSize: 'cover',
@@ -33,7 +33,7 @@ export default function ThankYouSection() {
       {/* Falling Royal Flower Petals */}
       <FallingRoyalFlowers />
 
-      {/* Main Content inside the ornate frame */}
+      {/* Main Content inside the ornate frame - narrowed text width */}
       <motion.div 
         variants={{
           hidden: { opacity: 0 },
@@ -45,7 +45,7 @@ export default function ThankYouSection() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.25 }}
-        className="relative z-10 w-full max-w-[340px] mx-auto flex flex-col items-center text-center my-auto px-4"
+        className="relative z-10 w-full max-w-[280px] sm:max-w-[295px] mx-auto flex flex-col items-center text-center my-auto px-2"
       >
         {/* Heading: Adding Love to the Celebration */}
         <motion.h2 
