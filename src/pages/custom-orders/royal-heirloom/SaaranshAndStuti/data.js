@@ -68,7 +68,7 @@ export const customData = {
   ],
   scheduleData: {
     items: [
-      { time: "3:00 PM", title: "Assembly of Baraat", desc: "At Morbagh" },
+      { time: "3:00 PM", title: "Assembly of Baraat\nAt Morbagh", desc: "" },
       { time: "6:00 PM", title: "Wedding Vows", desc: "The sacred ceremony" },
       { time: "08:00 PM Onwards", title: "Reception Dinner", desc: "Dinner, drinks & dancing" }
     ],

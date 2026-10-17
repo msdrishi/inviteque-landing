@@ -17,7 +17,7 @@ export default function CustomSchedule({ scheduleItems, weddingDate, weddingMont
       return scheduleItems.map((item, idx) => ({
         time: item.time || "10:30 AM",
         title: item.title || item.name || "Celebration",
-        description: item.description || null,
+        description: item.description || item.desc || null,
         iconSrc: item.iconSrc || defaultIconList[idx % defaultIconList.length],
         dateStr: item.date || `${String(weddingMonth || 'Dec').slice(0, 3)} ${weddingDate || '20'}, ${weddingYear || '2026'}`
       }))
@@ -26,8 +26,8 @@ export default function CustomSchedule({ scheduleItems, weddingDate, weddingMont
     return [
       {
         time: "3:00 PM",
-        title: "Assembly of Baraat",
-        description: "At Morbagh",
+        title: "Assembly of Baraat\nAt Morbagh",
+        description: null,
         iconSrc: defaultIconList[0],
         dateStr: `${String(weddingMonth || 'Dec').slice(0, 3)} ${weddingDate || '20'}, ${weddingYear || '2026'}`
       },
@@ -174,7 +174,7 @@ export default function CustomSchedule({ scheduleItems, weddingDate, weddingMont
                     {evt.time}
                   </div>
 
-                  <h4 className="font-['Cinzel'] text-[11.5px] sm:text-[12.5px] font-semibold tracking-[0.14em] text-[#6B401D] leading-snug uppercase mb-0.5">
+                  <h4 className="font-['Cinzel'] text-[11.5px] sm:text-[12.5px] font-semibold tracking-[0.14em] text-[#6B401D] leading-snug uppercase mb-0.5 whitespace-pre-line">
                     {evt.title}
                   </h4>
 
