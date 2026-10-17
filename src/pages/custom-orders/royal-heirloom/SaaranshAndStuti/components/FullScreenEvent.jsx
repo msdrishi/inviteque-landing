@@ -153,22 +153,29 @@ export default function FullScreenEvent({ event }) {
           </motion.a>
         )}
 
-        {/* Best Regards Block - Expanded width, beautiful solid card */}
-        {event.bestRegards && (
-          <motion.div 
-            variants={fadeInUp} 
-            className="mt-2 w-full max-w-[340px] px-6 py-2.5 rounded-2xl bg-[#FAF5EB] border border-[#CBB89D]/70 shadow-[0_4px_16px_rgba(70,35,15,0.12)] text-center mx-auto"
-          >
-            <p className="font-['Cinzel'] text-[9.5px] uppercase tracking-[0.25em] text-[#8C5D38] font-bold mb-1">
-              Best Regards
-            </p>
-            <div 
-              className="font-['Cinzel'] text-[12px] sm:text-[13px] uppercase tracking-[0.16em] text-[#3A1F0D] font-bold leading-relaxed whitespace-pre-line"
+        {/* Best Regards Block - Colored to match section background and reduced width */}
+        {event.bestRegards && (() => {
+          const isHaldiEvent = event.id === 'haldi';
+          const cardBg = isHaldiEvent ? '#E0D6D0' : '#F4DDC0';
+          const borderColor = isHaldiEvent ? 'rgba(74, 40, 16, 0.18)' : 'rgba(140, 93, 56, 0.22)';
+          
+          return (
+            <motion.div 
+              variants={fadeInUp} 
+              style={{ backgroundColor: cardBg, borderColor }}
+              className="mt-2 w-auto min-w-[210px] max-w-[260px] px-5 py-2.5 rounded-2xl border shadow-[0_3px_12px_rgba(70,35,15,0.08)] text-center mx-auto"
             >
-              {event.id === 'pooja' ? 'Mamta & Anil Sachdeva' : event.bestRegards}
-            </div>
-          </motion.div>
-        )}
+              <p className="font-['Cinzel'] text-[9px] uppercase tracking-[0.25em] text-[#8C5D38] font-bold mb-1">
+                Best Regards
+              </p>
+              <div 
+                className="font-['Cinzel'] text-[11.5px] sm:text-[12.5px] uppercase tracking-[0.14em] text-[#3A1F0D] font-bold leading-snug whitespace-pre-line"
+              >
+                {event.id === 'pooja' ? 'Mamta & Anil Sachdeva' : event.bestRegards}
+              </div>
+            </motion.div>
+          );
+        })()}
       </motion.div>
 
       {/* Bottom Area Scroll Indicator - High Visibility Solid Rounded Badge */}
