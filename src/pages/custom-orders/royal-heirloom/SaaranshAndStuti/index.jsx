@@ -177,10 +177,10 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
   const filteredRsvpEvents = useMemo(() => {
     // We explicitly define the 4 core events for the RSVP dropdown
     const allRsvpEvents = [
-      { id: 'pooja', title: 'Pooja', date: '13th Dec, 2026', time: '11:30 AM' },
+      { id: 'pooja', title: 'Pooja', date: '13th Dec, 2026', time: '11:30 AM onwards' },
       { id: 'cocktail', title: 'Cocktail', date: '18th Dec, 2026', time: '8:30 PM onwards' },
       { id: 'haldi', title: 'Haldi & Mehendi', date: '19th Dec, 2026', time: '3:00 PM' },
-      { id: 'wedding', title: 'Wedding', date: '20th Dec, 2026', time: '5:00 PM' }
+      { id: 'wedding', title: 'Wedding', date: '20th Dec, 2026', time: '6:00 PM' }
     ]
 
     if (variant === '2') return allRsvpEvents.filter(e => ['pooja', 'cocktail', 'haldi'].includes(e.id))
@@ -550,6 +550,7 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
           venueTitle={venueTitle}
           venueAddress={venueAddress}
           mapUrl={mapUrl}
+          qrCodeUrl={qrCodeUrl}
           bestRegards={savedData?.venueData?.bestRegards || "Anu & Sumeet Chopra"}
         />
         )}

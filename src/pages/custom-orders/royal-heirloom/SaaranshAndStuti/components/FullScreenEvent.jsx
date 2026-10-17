@@ -145,17 +145,47 @@ export default function FullScreenEvent({ event }) {
           </motion.a>
         )}
 
-        {/* Best Regards Block */}
+        {/* Best Regards Block - Expanded width, beautiful solid card */}
         {event.bestRegards && (
-          <motion.div variants={fadeInUp} className="mt-0.5 text-center">
-            <p className="font-['Cinzel'] text-[9px] uppercase tracking-[0.25em] text-[#8C5D38] font-bold mb-0.5">
+          <motion.div 
+            variants={fadeInUp} 
+            className="mt-2 w-full max-w-[340px] px-6 py-2.5 rounded-2xl bg-[#FAF5EB] border border-[#CBB89D]/70 shadow-[0_4px_16px_rgba(70,35,15,0.12)] text-center mx-auto"
+          >
+            <p className="font-['Cinzel'] text-[9.5px] uppercase tracking-[0.25em] text-[#8C5D38] font-bold mb-1">
               Best Regards
             </p>
-            <div className="font-['Cinzel'] text-[11px] sm:text-[12px] uppercase tracking-[0.16em] text-[#4A2810] font-semibold leading-relaxed whitespace-pre-line">
-              {event.bestRegards}
+            <div 
+              className="font-['Cinzel'] text-[12px] sm:text-[13px] uppercase tracking-[0.16em] text-[#3A1F0D] font-bold leading-relaxed whitespace-pre-line"
+            >
+              {event.id === 'pooja' ? 'Mamta & Anil Sachdeva' : event.bestRegards}
             </div>
           </motion.div>
         )}
+      </motion.div>
+
+      {/* Bottom Area Scroll Indicator - High Visibility Solid Rounded Badge */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: false, amount: 0.1 }}
+        transition={{ duration: 1, delay: 0.3 }}
+        className="relative z-10 flex items-center justify-center mt-auto pb-3 pointer-events-none select-none"
+      >
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          className="w-10 h-10 rounded-full border-2 border-[#D4AF37] bg-[#3E2514] flex items-center justify-center shadow-[0_4px_14px_rgba(0,0,0,0.35)]"
+        >
+          <svg
+            className="w-4 h-4 text-[#F5D78E]"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </motion.div>
       </motion.div>
     </section>
   );

@@ -13,24 +13,22 @@ const fadeInUp = {
 }
 
 export default function ThankYouSection() {
-  const families = [
-    "Saadhvi, Sidharth, Sumiti, Sumer",
-    "Mahima, Yash, Abhinav & Pranavya",
-    "Tanisha, Vanya & Aarika"
-  ]
-
   return (
     <section className="relative w-full min-h-[100svh] flex flex-col justify-center items-center px-6 py-12 bg-[#ECE3D1] overflow-hidden">
-      {/* Background Ornate Frame Mural */}
+      {/* Background Ornate Frame Mural - Zoomed in */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center pointer-events-none"
-        style={{
-          backgroundImage: `url(${thanksBg})`,
-          backgroundSize: '100% 100%',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-        }}
-      />
+        className="absolute inset-0 z-0 pointer-events-none overflow-hidden"
+      >
+        <div 
+          className="w-full h-full scale-110 sm:scale-115 origin-center"
+          style={{
+            backgroundImage: `url(${thanksBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+      </div>
 
       {/* Falling Royal Flower Petals */}
       <FallingRoyalFlowers />
@@ -49,14 +47,6 @@ export default function ThankYouSection() {
         viewport={{ once: false, amount: 0.25 }}
         className="relative z-10 w-full max-w-[340px] mx-auto flex flex-col items-center text-center my-auto px-4"
       >
-        {/* Subtitle */}
-        <motion.span 
-          variants={fadeInUp} 
-          className="font-['Cinzel'] text-[11px] sm:text-[12px] tracking-[0.3em] uppercase text-[#8C5D38] font-bold mb-2"
-        >
-          THANK YOU
-        </motion.span>
-
         {/* Heading: Adding Love to the Celebration */}
         <motion.h2 
           variants={fadeInUp} 
@@ -76,24 +66,65 @@ export default function ThankYouSection() {
           <div className="w-10 h-[0.8px] bg-[#8C5D38]" />
         </motion.div>
 
-        {/* Three Family Groups */}
+        {/* Family Groups */}
         <div className="flex flex-col items-center gap-3 w-full my-2">
-          {families.map((group, idx) => (
-            <React.Fragment key={idx}>
-              <motion.p 
-                variants={fadeInUp}
-                className="font-['Cinzel'] text-[12px] sm:text-[13.5px] tracking-[0.14em] uppercase text-[#4A2810] font-semibold leading-relaxed"
-              >
-                {group}
-              </motion.p>
-              {idx < families.length - 1 && (
-                <motion.div 
-                  variants={fadeInUp}
-                  className="w-16 h-[0.6px] bg-[#8C5D38]/30 my-0.5" 
-                />
-              )}
-            </React.Fragment>
-          ))}
+          {/* Saadhvi's name on top in single line */}
+          <motion.p 
+            variants={fadeInUp}
+            className="font-['Cinzel'] text-[12.5px] sm:text-[14px] tracking-[0.16em] uppercase text-[#4A2810] font-bold leading-relaxed whitespace-nowrap"
+          >
+            Saadhvi
+          </motion.p>
+
+          <motion.div 
+            variants={fadeInUp}
+            className="w-16 h-[0.6px] bg-[#8C5D38]/30 my-0.5" 
+          />
+
+          {/* Rest of the names below */}
+          <motion.p 
+            variants={fadeInUp}
+            className="font-['Cinzel'] text-[12px] sm:text-[13.5px] tracking-[0.14em] uppercase text-[#4A2810] font-semibold leading-relaxed"
+          >
+            Sidharth, Sumiti &amp; Sumer
+          </motion.p>
+
+          <motion.div 
+            variants={fadeInUp}
+            className="w-16 h-[0.6px] bg-[#8C5D38]/30 my-0.5" 
+          />
+
+          <motion.p 
+            variants={fadeInUp}
+            className="font-['Cinzel'] text-[12px] sm:text-[13.5px] tracking-[0.14em] uppercase text-[#4A2810] font-semibold leading-relaxed"
+          >
+            Mahima, Yash, Abhinav &amp; Pranavya
+          </motion.p>
+
+          <motion.div 
+            variants={fadeInUp}
+            className="w-16 h-[0.6px] bg-[#8C5D38]/30 my-0.5" 
+          />
+
+          <motion.p 
+            variants={fadeInUp}
+            className="font-['Cinzel'] text-[12px] sm:text-[13.5px] tracking-[0.14em] uppercase text-[#4A2810] font-semibold leading-relaxed"
+          >
+            Tanisha, Vanya &amp; Aarika
+          </motion.p>
+
+          {/* After space - Add Chopras & Puris */}
+          <motion.div 
+            variants={fadeInUp}
+            className="w-24 h-[0.8px] bg-[#8C5D38]/50 mt-3 mb-1" 
+          />
+
+          <motion.p 
+            variants={fadeInUp}
+            className="font-['Cinzel'] text-[13px] sm:text-[14.5px] tracking-[0.2em] uppercase text-[#6B401D] font-bold leading-relaxed"
+          >
+            Chopras &amp; Puris
+          </motion.p>
         </div>
 
         {/* Heart icon accent */}

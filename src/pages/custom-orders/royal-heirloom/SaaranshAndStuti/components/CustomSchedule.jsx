@@ -25,20 +25,23 @@ export default function CustomSchedule({ scheduleItems, weddingDate, weddingMont
 
     return [
       {
-        time: "03:00 PM Onwards",
+        time: "3:00 PM",
         title: "Assembly of Baraat",
+        description: "At Morbagh",
         iconSrc: defaultIconList[0],
         dateStr: `${String(weddingMonth || 'Dec').slice(0, 3)} ${weddingDate || '20'}, ${weddingYear || '2026'}`
       },
       {
-        time: "05:00 PM Onwards",
+        time: "6:00 PM",
         title: "Wedding Vows",
+        description: "The sacred ceremony",
         iconSrc: defaultIconList[2],
         dateStr: `${String(weddingMonth || 'Dec').slice(0, 3)} ${weddingDate || '20'}, ${weddingYear || '2026'}`
       },
       {
         time: "08:00 PM Onwards",
         title: "Reception Dinner",
+        description: "Dinner, drinks & dancing",
         iconSrc: defaultIconList[4],
         dateStr: `${String(weddingMonth || 'Dec').slice(0, 3)} ${weddingDate || '20'}, ${weddingYear || '2026'}`
       }

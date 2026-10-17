@@ -35,12 +35,12 @@ export const customData = {
       id: "pooja",
       title: "Pooja",
       date: "13th Dec, 2026",
-      time: "3:00 PM Onwards",
+      time: "11:30 AM Onwards",
       message: "Auspicious start to the celebrations",
       venueName: "E-2420, Palam Vihar",
       venueCity: "Gurgaon",
       mapLink: "https://maps.app.goo.gl/5vq8cidzAw3TkDcA9?g_st=ic",
-      bestRegards: "Mamta \n&\nAnil Sachdeva"
+      bestRegards: "Mamta & Anil Sachdeva"
     },
     {
       id: "cocktail",
@@ -68,8 +68,8 @@ export const customData = {
   ],
   scheduleData: {
     items: [
-      { time: "03:00 PM Onwards", title: "Assembly of Baraat", desc: "Join us at Morbagh, Chattarpur" },
-      { time: "05:00 PM Onwards", title: "Wedding Vows", desc: "The sacred ceremony" },
+      { time: "3:00 PM", title: "Assembly of Baraat", desc: "At Morbagh" },
+      { time: "6:00 PM", title: "Wedding Vows", desc: "The sacred ceremony" },
       { time: "08:00 PM Onwards", title: "Reception Dinner", desc: "Dinner, drinks & dancing" }
     ],
     showSchedule: true,
