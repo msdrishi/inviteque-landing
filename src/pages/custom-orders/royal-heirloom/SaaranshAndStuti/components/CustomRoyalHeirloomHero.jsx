@@ -123,8 +123,8 @@ export default function CustomRoyalHeirloomHero({
           transition={{ duration: 2.0, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col items-center mb-3 sm:mb-4"
         >
-          <span className="font-['Cinzel'] text-[11px] sm:text-[12px] md:text-[13px] tracking-[0.24em] uppercase text-[#6B4330] font-semibold text-center leading-relaxed">
-            Celebrating the coming together of
+          <span className="font-['Cinzel'] text-[11px] sm:text-[12px] md:text-[13px] tracking-[0.24em] uppercase text-[#6B4330] font-semibold text-center leading-snug">
+            Celebrating the coming<br />together of
           </span>
         </motion.div>
 
