@@ -62,12 +62,8 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
   const savedData = customData
 
   // ── Payment / Watermark ────────────────────────────────────────
-  const isPaid = savedData && (
-    String(savedData.status).toUpperCase() === 'PAID' ||
-    savedData.isPaid === true ||
-    (savedData.coupleData && savedData.coupleData.isPaid === true)
-  )
-  const showWatermark = !isPaid
+  // User requested to keep preview watermark active across all five links
+  const showWatermark = true
 
   // ── Data resolution (same pattern as MidnightWaltz) ────────────
   const groomName = (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || 'Rohan'
@@ -461,11 +457,11 @@ export default function CustomRoyalHeirloomSaaranshAndStuti({ groupSlug: propGro
 
   // ── Watermark ─────────────────────────────────────────────────
   const Watermark = () => showWatermark ? (
-    <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-[100] opacity-[0.30] select-none">
-      {['8%', '50%', '92%'].map(top => (
+    <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] md:max-w-[820px] z-[100] opacity-[0.30] select-none">
+      {['8%', '32%', '56%', '80%', '94%'].map(top => (
         <span
           key={top}
-          className="absolute left-1/2 -translate-x-1/2 text-[17px] font-medium tracking-[0.2em] text-[#4A2810]"
+          className="absolute left-1/2 -translate-x-1/2 text-[16px] sm:text-[18px] font-medium tracking-[0.24em] text-[#4A2810]"
           style={{ top, fontFamily: "'Montserrat', sans-serif" }}
         >
           preview-inviteque
