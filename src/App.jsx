@@ -204,6 +204,11 @@ export default function App() {
           {/* Custom Client Template Routes (Alina & Tanmay - Pink Blossom) */}
           <Route path="/template/pink-blossom/alina-and-tanmay" element={<CustomPinkBlossomAlinaAndTanmay />} />
           <Route path="/templates/pink-blossom/alina-and-tanmay" element={<CustomPinkBlossomAlinaAndTanmay />} />
+
+          {/* Dedicated short URL for Alina & Tanmay */}
+          <Route path="/AlinaAndTanmay" element={<CustomPinkBlossomAlinaAndTanmay />} />
+          <Route path="/alinaandtanmay" element={<CustomPinkBlossomAlinaAndTanmay />} />
+
           
           {/* Standard & Multi-Link Templates */}
           <Route path="/templates/:templateId" element={<TemplateRoute />} />

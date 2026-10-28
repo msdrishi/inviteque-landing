@@ -151,18 +151,23 @@ export default function PinkBlossomHero({ data, fontStyles, sectionStyle, bgStyl
   }
   const groomName = data.hero.groomName || '';
   const brideName = data.hero.brideName || '';
-  const groomScale = Math.min(1, 10 / Math.max(1, groomName.length));
-  const brideScale = Math.min(1, 10 / Math.max(1, brideName.length));
+  const groomScale = (data.hero.coupleNameScale || 0.82) * Math.min(1, 10 / Math.max(1, groomName.length));
+  const brideScale = (data.hero.coupleNameScale || 0.82) * Math.min(1, 10 / Math.max(1, brideName.length));
   
-  const groomNameSize = isDesktop ? `calc(60px * ${groomScale})` : (isTablet ? `calc(70px * ${groomScale})` : `calc(48px * ${groomScale})`)
-  const brideNameSize = isDesktop ? `calc(60px * ${brideScale})` : (isTablet ? `calc(70px * ${brideScale})` : `calc(48px * ${brideScale})`)
+  const groomNameSize = isDesktop ? `calc(58px * ${groomScale})` : (isTablet ? `calc(66px * ${groomScale})` : `calc(46px * ${groomScale})`)
+  const brideNameSize = isDesktop ? `calc(58px * ${brideScale})` : (isTablet ? `calc(66px * ${brideScale})` : `calc(46px * ${brideScale})`)
+  const bgScale = data.hero.heroBgScale || 1.12
 
   return (
     <section style={sectionStyle}>
       <motion.img 
         src={ASSETS.heroBg} 
         alt="Hero Background" 
-        style={bgStyle} 
+        style={{
+          ...bgStyle,
+          transform: `scale(${bgScale})`,
+          transformOrigin: 'center center',
+        }} 
         initial={{ opacity: 0 }}
         animate={hasTriggeredHeroText ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 2.5, ease: "easeInOut" }}

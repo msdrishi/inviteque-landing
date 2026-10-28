@@ -77,14 +77,22 @@ export default function PinkBlossomWelcome({ data, fontStyles, isDesktop, isTabl
             <motion.div variants={lineContainer} initial="hidden" whileInView="visible" viewport={{ once: false }} style={{ marginTop: '24px' }}>
               {data.welcomeSignoff.split('\n').map((line, idx, arr) => (
                 <motion.span variants={lineAnim} key={idx} style={{ 
-                  ...(idx === 0 ? cursive : serif),
-                  fontSize: idx === 0 ? '36px' : '16px', 
+                  ...(data.welcomeSignoffUniformFont 
+                    ? serif 
+                    : (idx === 0 
+                      ? (data.welcomeSignoffStyle || { ...cursive, fontFamily: data.welcomeSignoffFontFamily || "'Pinyon Script', 'Alex Brush', cursive" }) 
+                      : serif)),
+                  fontSize: idx === 0 
+                    ? (data.welcomeSignoffFontSize || (data.welcomeSignoffUniformFont ? '17px' : '36px')) 
+                    : (data.welcomeSignoffNamesFontSize || '16px'), 
                   color: (idx > 0 && data.welcomeSignoffNamesColor) ? data.welcomeSignoffNamesColor : COLORS.primaryDark, 
-                  fontWeight: idx > 0 ? 600 : 'normal',
-                  marginTop: idx > 0 ? '4px' : '0',
+                  fontWeight: data.welcomeSignoffUniformFont ? (idx === 0 ? 500 : 600) : (idx > 0 ? 600 : 'normal'),
+                  fontStyle: data.welcomeSignoffUniformFont && idx === 0 ? (data.welcomeSignoffFirstLineStyle || 'italic') : 'normal',
+                  marginTop: idx > 0 ? '6px' : '0',
+                  marginBottom: idx === 0 && data.welcomeSignoffUniformFont ? '8px' : '0',
                   whiteSpace: 'pre-wrap', 
                   display: 'block', 
-                  lineHeight: 1.4,
+                  lineHeight: 1.5,
                   mixBlendMode: 'multiply'
                 }}>
                   {line}

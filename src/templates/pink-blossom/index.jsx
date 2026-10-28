@@ -46,7 +46,9 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
     savedData.isPaid === true ||
     (savedData.coupleData && savedData.coupleData.isPaid === true)
   )
-  const showWatermark = isPreview || isCustomPreview || !isPaid
+  const showWatermark = savedData?.showWatermark !== undefined
+    ? Boolean(savedData.showWatermark)
+    : (isPreview || isCustomPreview || !isPaid)
   const templateId = 'pink-blossom'
 
   const activeData = savedData || (isCustomPreview ? draftData : null)
@@ -78,6 +80,8 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
       weddingYear: (savedData ? (typeof savedData.heroData?.weddingDate === 'object' ? savedData.heroData?.weddingDate?.year : savedData.heroData?.weddingYear || savedData.weddingYear) : (typeof draftData?.weddingDate === 'object' ? draftData?.weddingDate?.year : draftData?.weddingYear)) || staticData.date?.year || '2024',
       mahalName: (savedData ? (savedData.venueData?.mahalName || savedData.mahalName) : draftData?.mahalName) || staticData.venue?.venueName || 'Royal Palace',
       weddingTime: (savedData ? (savedData.heroData?.weddingTime || savedData.weddingTime) : draftData?.weddingTime) || staticData.hero?.weddingTime || '09:00 AM - 10:30 AM',
+      coupleNameScale: savedData?.coupleNameScale || draftData?.coupleNameScale,
+      heroBgScale: savedData?.heroBgScale || draftData?.heroBgScale,
     },
     venue: {
       ...staticData.venue,
