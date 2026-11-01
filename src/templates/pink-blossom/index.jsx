@@ -11,6 +11,7 @@ import bgMusicSrc from '../../assets/audio/bg-music-a-thousand-years.mp3'
 import { COLORS, ASSETS, getFontStyles, sectionStyle, bgStyle } from './theme'
 import PinkBlossomCover from './PinkBlossomCover.jsx'
 import PinkBlossomHero from './PinkBlossomHero.jsx'
+import PinkBlossomFamilyInvitation from './PinkBlossomFamilyInvitation.jsx'
 import PinkBlossomStory from './PinkBlossomStory.jsx'
 import PinkBlossomWelcome from './PinkBlossomWelcome.jsx'
 import PinkBlossomSchedule from './PinkBlossomSchedule.jsx'
@@ -82,6 +83,9 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
       weddingTime: (savedData ? (savedData.heroData?.weddingTime || savedData.weddingTime) : draftData?.weddingTime) || staticData.hero?.weddingTime || '09:00 AM - 10:30 AM',
       coupleNameScale: savedData?.coupleNameScale || draftData?.coupleNameScale,
       heroBgScale: savedData?.heroBgScale || draftData?.heroBgScale,
+      heroOnlyInvite: savedData?.heroOnlyInvite ?? draftData?.heroOnlyInvite,
+      heroIntroLine1: savedData?.heroIntroLine1 || draftData?.heroIntroLine1,
+      heroIntroLine2: savedData?.heroIntroLine2 || draftData?.heroIntroLine2,
     },
     venue: {
       ...staticData.venue,
@@ -90,9 +94,13 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
       venueAddress: (savedData ? (savedData.venueData?.venueAddress || savedData.venueAddress) : draftData?.venueAddress) || staticData.venue?.location || 'Heritage Road',
       state: (savedData ? (savedData.venueData?.state || savedData.state) : draftData?.state) || 'Rajasthan',
       mapUrl: (savedData ? (savedData.venueData?.mapLink || savedData.mapLink) : draftData?.mapLink) || staticData.venue?.mapUrl || '',
+      headerOnlyVenue: savedData?.headerOnlyVenue ?? draftData?.headerOnlyVenue,
+      sectionTitle: savedData?.sectionTitle || draftData?.sectionTitle,
+      bgImage: savedData?.bgImage || draftData?.bgImage,
     },
     countdown: {
       ...staticData.countdown,
+      bgImage: savedData?.countdown?.bgImage || draftData?.countdown?.bgImage,
       targetDateTimeISO: (() => {
         const dMonth = (savedData ? (typeof savedData.heroData?.weddingDate === 'object' ? savedData.heroData?.weddingDate?.month : savedData.heroData?.weddingMonth || savedData.weddingMonth) : (typeof draftData?.weddingDate === 'object' ? draftData?.weddingDate?.month : draftData?.weddingMonth)) || staticData.date?.month || 'January'
         const dDate = (savedData ? (typeof savedData.heroData?.weddingDate === 'object' ? savedData.heroData?.weddingDate?.day : savedData.heroData?.weddingDate || savedData.weddingDate) : (typeof draftData?.weddingDate === 'object' ? draftData?.weddingDate?.day : draftData?.weddingDate)) || staticData.date?.day || '14'
@@ -355,6 +363,9 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
         hasTriggeredHeroBg={hasTriggeredHeroBg}
         hasTriggeredHeroText={hasTriggeredHeroText}
       />
+      {(data.familyInvitation || savedData?.familyInvitation) && (
+        <PinkBlossomFamilyInvitation {...commonProps} />
+      )}
       {showGallery && <PinkBlossomStory {...commonProps} />}
       {showWelcome && <PinkBlossomWelcome {...commonProps} />}
       
@@ -391,7 +402,7 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
                 JOIN OUR CELEBRATION
               </p>
               <h2 style={{ ...fontStyles.smallCaps, fontSize: '28px', color: COLORS.primaryDark, marginBottom: '16px' }}>
-                RSVP & CONTACT
+                {baseData.rsvpTitle || 'RSVP'}
               </h2>
               <p style={{ ...fontStyles.serif, fontSize: '15px', color: COLORS.textDark, maxWidth: '340px', marginBottom: '36px', lineHeight: 1.6 }}>
                 We would be absolutely thrilled to have you join us in celebrating our special day. Please confirm your presence or reach out to us below.
@@ -450,14 +461,16 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
         </a>
       )}
 
-      <Footer 
-        data={{ id: 'footer' }}
-        theme={{
-          background: COLORS.primaryDark,
-          text: COLORS.ivory,
-          border: `rgba(250, 243, 228, 0.2)`
-        }} 
-      />
+      {!(data.hideFooter || savedData?.hideFooter) && (
+        <Footer 
+          data={{ id: 'footer' }}
+          theme={{
+            background: COLORS.primaryDark,
+            text: COLORS.ivory,
+            border: `rgba(250, 243, 228, 0.2)`
+          }} 
+        />
+      )}
     </div>
   )
 }

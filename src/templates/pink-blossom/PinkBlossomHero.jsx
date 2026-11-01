@@ -183,9 +183,13 @@ export default function PinkBlossomHero({ data, fontStyles, sectionStyle, bgStyl
       >
         
         {/* Intro text */}
-        <motion.div variants={lineAnim} style={{ textAlign: 'center', marginBottom: '15px', marginTop: '-35px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          <span style={{ ...smallCaps, fontSize: '11px', letterSpacing: '0.25em', color: COLORS.textDark }}>TOGETHER</span>
-          <span style={{ ...smallCaps, fontSize: '11px', letterSpacing: '0.25em', color: COLORS.textDark }}>WITH OUR FAMILIES</span>
+        <motion.div variants={lineAnim} style={{ textAlign: 'center', marginBottom: data.hero.heroOnlyInvite ? '20px' : '15px', marginTop: '-35px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+          <span style={{ ...smallCaps, fontSize: '11px', letterSpacing: '0.25em', color: COLORS.textDark, textWrap: 'balance' }}>
+            {data.hero.heroIntroLine1 || 'TOGETHER WITH'}
+          </span>
+          <span style={{ ...smallCaps, fontSize: '11px', letterSpacing: '0.25em', color: COLORS.textDark, textWrap: 'balance' }}>
+            {data.hero.heroIntroLine2 || (data.hero.heroOnlyInvite ? 'LOVE' : 'OUR FAMILIES')}
+          </span>
         </motion.div>
 
         {/* Names */}
@@ -195,47 +199,75 @@ export default function PinkBlossomHero({ data, fontStyles, sectionStyle, bgStyl
           <span style={{ ...cursive, fontSize: '30px', color: COLORS.gold }}>&amp;</span>
         </motion.div>
         
-        <AnimatedCoupleName name={brideName} style={{ ...cursive, fontSize: brideNameSize, marginBottom: '5px' }} variants={letterContainer} />
+        <AnimatedCoupleName name={brideName} style={{ ...cursive, fontSize: brideNameSize, marginBottom: '8px' }} variants={letterContainer} />
 
-        {/* Middle text */}
-        <motion.div variants={lineAnim} style={{ textAlign: 'center', marginBottom: '10px', maxWidth: '240px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          <span style={{ ...smallCaps, fontSize: '10px', letterSpacing: '0.2em', color: COLORS.textDark, fontWeight: 'bold' }}>TWO HEARTS</span>
-          <span style={{ ...smallCaps, fontSize: '10px', letterSpacing: '0.2em', color: COLORS.textDark, fontWeight: 'bold' }}>ONE BEAUTIFUL JOURNEY</span>
-        </motion.div>
-
-        {/* Decorative separator */}
-        <motion.div variants={lineAnim} style={{ marginBottom: '10px' }}>
-          <span style={{ color: COLORS.primary, fontSize: '16px' }}>♦</span>
-        </motion.div>
-
-        {/* Date Block */}
-        <motion.div variants={lineAnim} style={{ textAlign: 'center', marginBottom: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <div style={{ ...smallCaps, fontSize: '11px', letterSpacing: '0.25em', color: COLORS.textDark }}>
-            {dayStr}
-          </div>
-          <div style={{ fontFamily: "'Cinzel', serif", fontSize: '18px', fontWeight: 'bold', letterSpacing: '0.15em', color: COLORS.primary }}>
-            {data.hero.weddingDate || '22'} {monthStr} {data.hero.weddingYear || '2026'}
-          </div>
-          <div style={{ ...smallCaps, fontSize: '10px', letterSpacing: '0.2em', color: COLORS.textDark }}>
-            AT {data.hero.weddingTime || '5:00 PM'} ONWARDS
-          </div>
-        </motion.div>
-
-        {/* Decorative separator */}
-        <motion.div variants={lineAnim} style={{ marginBottom: '10px' }}>
-          <span style={{ color: COLORS.primary, fontSize: '16px' }}>♦</span>
-        </motion.div>
-
-        {/* Venue Location */}
-        {(!data.hero.hideVenueLocation) && (
-          <motion.div variants={lineAnim} style={{ paddingBottom: '10px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <span style={{ ...smallCaps, fontSize: '12px', fontWeight: 'bold', color: COLORS.primary, letterSpacing: '0.2em' }}>
-              {data.hero.mahalName}
-            </span>
-            <span style={{ ...smallCaps, fontSize: '10px', color: COLORS.textDark, letterSpacing: '0.2em', opacity: 0.9 }}>
-              {data.venue?.venueCity}
-            </span>
+        {/* Hero-only-invite custom closing text or standard middle/date block */}
+        {data.hero.heroOnlyInvite ? (
+          <motion.div 
+            variants={lineAnim} 
+            style={{ 
+              textAlign: 'center', 
+              marginTop: '16px', 
+              width: '80%', 
+              maxWidth: '340px',
+              padding: '0 8px'
+            }}
+          >
+            <p style={{ 
+              ...serif, 
+              fontSize: '16px', 
+              lineHeight: 1.6, 
+              color: COLORS.textDark, 
+              margin: 0,
+              textWrap: 'balance',
+              fontWeight: 500
+            }}>
+              invite you to celebrate the beginning of their forever.
+            </p>
           </motion.div>
+        ) : (
+          <>
+            {/* Middle text */}
+            <motion.div variants={lineAnim} style={{ textAlign: 'center', marginBottom: '10px', maxWidth: '240px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ ...smallCaps, fontSize: '10px', letterSpacing: '0.2em', color: COLORS.textDark, fontWeight: 'bold' }}>TWO HEARTS</span>
+              <span style={{ ...smallCaps, fontSize: '10px', letterSpacing: '0.2em', color: COLORS.textDark, fontWeight: 'bold' }}>ONE BEAUTIFUL JOURNEY</span>
+            </motion.div>
+
+            {/* Decorative separator */}
+            <motion.div variants={lineAnim} style={{ marginBottom: '10px' }}>
+              <span style={{ color: COLORS.primary, fontSize: '16px' }}>♦</span>
+            </motion.div>
+
+            {/* Date Block */}
+            <motion.div variants={lineAnim} style={{ textAlign: 'center', marginBottom: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ ...smallCaps, fontSize: '11px', letterSpacing: '0.25em', color: COLORS.textDark }}>
+                {dayStr}
+              </div>
+              <div style={{ fontFamily: "'Cinzel', serif", fontSize: '18px', fontWeight: 'bold', letterSpacing: '0.15em', color: COLORS.primary }}>
+                {data.hero.weddingDate || '22'} {monthStr} {data.hero.weddingYear || '2026'}
+              </div>
+              <div style={{ ...smallCaps, fontSize: '10px', letterSpacing: '0.2em', color: COLORS.textDark }}>
+                AT {data.hero.weddingTime || '5:00 PM'} ONWARDS
+              </div>
+            </motion.div>
+
+            {/* Decorative separator */}
+            <motion.div variants={lineAnim} style={{ marginBottom: '10px' }}>
+              <span style={{ color: COLORS.primary, fontSize: '16px' }}>♦</span>
+            </motion.div>
+
+            {/* Venue Location */}
+            {(!data.hero.hideVenueLocation) && (
+              <motion.div variants={lineAnim} style={{ paddingBottom: '10px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                <span style={{ ...smallCaps, fontSize: '12px', fontWeight: 'bold', color: COLORS.primary, letterSpacing: '0.2em' }}>
+                  {data.hero.mahalName}
+                </span>
+                <span style={{ ...smallCaps, fontSize: '10px', color: COLORS.textDark, letterSpacing: '0.2em', opacity: 0.9 }}>
+                  {data.venue?.venueCity}
+                </span>
+              </motion.div>
+            )}
+          </>
         )}
 
       </motion.div>

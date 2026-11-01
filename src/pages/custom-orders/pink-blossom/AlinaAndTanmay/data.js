@@ -7,100 +7,123 @@ export const alinaTanmayData = {
   code: 'ALINA_TANMAY',
   hasRsvp: true,
 
-  // Couple names (with Chi. prefix as requested)
-  groomName: 'Chi. Tanmay',
-  brideName: 'Chi. Alina',
+  // Couple names — strictly names without 'Chi.' as requested
+  groomName: 'Tanmay',
+  brideName: 'Alina',
   weddingDate: '28',
   weddingMonth: 'February',
   weddingYear: '2027',
 
-  // Parent details (displayed in welcome signoff)
-  brideParents: 'D/O Mrs. Akhilesh Sharma & Mr. Salman Kausar',
-  groomParents: 'S/O Mrs. Sheetal & Mr. Vikas Ramchandra Deshmukh',
+  // 1. Hero Page Configuration:
+  // "Together with Love / Alina & Tanmay / invite you to celebrate the beginning of their forever."
+  // Date, time, separator, and venue removed from hero as requested
+  heroIntroLine1: 'TOGETHER WITH',
+  heroIntroLine2: 'LOVE',
+  heroOnlyInvite: true,
+  coupleNameScale: 0.9,
+  heroBgScale: 1.15,
 
-  // Main Venue (Wedding Ceremony)
+  // 2. New 2nd Page (Family Invitation directly on background without white banner):
+  familyInvitation: {
+    bgImage: '/assets/templates/pinkblossom/PinkBlossom-light-background.webp',
+    noCard: true, // removes white banner, keeps text directly on the section
+    introQuote: 'Two families, two hearts, one beautiful celebration of love.\nJoin us as we begin our forever.',
+    brideName: 'Alina',
+    brideParents: 'D/O Mrs. Akhilesh Sharma & Mr. Salman Kausar',
+    connector: 'Weds',
+    groomName: 'Tanmay',
+    groomParents: 'S/O Mrs. Sheetal and Mr. Vikas Ramchandra Deshmukh',
+    weddingDateDetails: 'SUNDAY, 28TH FEBRUARY 2027',
+    weddingTimeDetails: 'AT 12:14 PM ONWARDS',
+    venueName: 'THE BLUE ROOF CLUB',
+    venueLocation: 'Ovala, Ghodbunder Road, Thane (West) – 400 615',
+  },
+
+  // Parent details for reference
+  brideParents: 'D/O Mrs. Akhilesh Sharma & Mr. Salman Kausar',
+  groomParents: 'S/O Mrs. Sheetal and Mr. Vikas Ramchandra Deshmukh',
+
+  // 5. Main Venue Details & slide configuration:
+  // Remove "WHERE WE UNITE" etc and only keep "CELEBRATION VENUE & DIRECTIONS"
   mahalName: 'The Blue Roof Club',
   venueCity: 'Thane (West)',
   venueAddress: 'Ovala, Ghodbunder Road, Thane (West) – 400 615',
   state: 'Maharashtra',
-  mapLink: 'https://share.google/NSB9iZG2V9JIQ4DuI',
+  mapLink: 'https://maps.app.goo.gl/WPjBqwyyp7s99Lns9',
+  headerOnlyVenue: true,
+  sectionTitle: 'CELEBRATION VENUE & DIRECTIONS',
+  // Mandap background:
+  bgImage: '/assets/templates/pinkblossom/venue-mandap-refined.webp',
 
-  // Watermark preview
+  // 1. Keep preview watermark
   showWatermark: true,
 
-  // Photos for the story/photo card section
-  photos: [photo1, photo2, photo3],
+  // 6. Remove photo card section
+  photos: [],
 
-  // Invitation data — controls sections visibility and welcome message
+  // 3. 3rd Page — Welcome Note slide content & updated typography:
+  // (7. Signoff with parent names removed from welcome note)
   invitationData: {
     hasRsvp: true,
-    showGallery: true,   // enabled — photo cards will show
+    showGallery: false, // removes the photo card section
     showSchedule: true,
     showWelcome: true,
     showVenue: true,
     showCountdown: true,
-    welcomeMessage: 'We joyfully invite you to be a part of our wedding celebrations. Your presence will make this beautiful journey even more special and memorable for us.',
+    welcomeMessage: '“We joyfully invite you to be a part of the wedding celebrations of our children.\n\nYour presence will make this beautiful journey even more memorable.”',
   },
+  welcomeMessageFont: "'Cormorant Garamond', 'Spectral', serif",
+  welcomeTitleFont: "'Pinyon Script', cursive",
 
-  // Hero visual controls
-  coupleNameScale: 0.88,
-  heroBgScale: 1.15,
+  // 7. Remove parent signoff in welcome section
+  welcomeSignoff: null,
 
-  // Welcome signoff with full parent names
-  // User requested normal font style for "With love & blessings," so everything matches the parent names
-  welcomeSignoff: 'With love & blessings,\nMrs. Akhilesh Sharma & Mr. Salman Kausar\nMrs. Sheetal & Mr. Vikas Ramchandra Deshmukh',
-  welcomeSignoffUniformFont: true,
-  welcomeSignoffFontSize: '17px',
-  welcomeSignoffNamesFontSize: '16px',
-  welcomeSignoffFirstLineStyle: 'normal',
-
-  // Wedding Itinerary — exact details as provided
-  // scheduleItems is read by the Pink Blossom template engine
+  // 8. 4th Slide — Wedding Schedule:
+  // All 4 events, time formatted without space like 12:00PM
   scheduleItems: [
     {
-      time: '6:00 PM onwards',
+      time: '6:00PM ONWARDS',
       title: 'Engagement & Sangeet',
       date: '27th February 2027',
-      venue: 'The Blue Roof Club, Ovala, Ghodbunder Road, Thane (West) – 400 615',
-      description: 'Engagement & Sangeet Ceremony followed by Cocktail Party',
+      venue: 'The Blue Roof Club, Thane (West)',
       iconSrc: '/assets/templates/royal-heirloom/icons/engagement.webp',
     },
     {
-      time: '8:00 AM',
+      time: '7:00AM',
       title: 'Haldi Ceremony',
       date: '28th February 2027',
       venue: 'To be confirmed',
       iconSrc: '/assets/templates/royal-heirloom/icons/bouque.webp',
     },
     {
-      time: '12:14 PM',
+      time: '12:14PM',
       title: 'Wedding Ceremony',
       date: '28th February 2027',
-      venue: 'The Blue Roof Club, Ovala, Ghodbunder Road, Thane (West) – 400 615',
+      venue: 'The Blue Roof Club, Thane (West)',
       iconSrc: '/assets/templates/royal-heirloom/icons/dinner.webp',
     },
     {
-      time: '7:30 PM onwards',
+      time: '7:30PM ONWARDS',
       title: 'Reception',
       date: '28th February 2027',
-      venue: 'The Blue Roof Club, Ovala, Ghodbunder Road, Thane (West) – 400 615',
+      venue: 'The Blue Roof Club, Thane (West)',
       iconSrc: '/assets/templates/royal-heirloom/icons/drinks.webp',
     },
   ],
 
-  // Hero wedding time (shown on the hero slide — main wedding ceremony time)
-  weddingTime: '12:14 PM',
+  // Wedding time
+  weddingTime: '12:14PM ONWARDS',
 
-  // RSVP — replace the URL below with the actual Google Form link
-  // e.g. 'https://forms.gle/xxxxxxxxxxx'
-  rsvpUrl: 'https://forms.gle/REPLACE_WITH_ACTUAL_LINK',
-  whatsappNumber: '919876543210',
-  whatsappMessage: 'Hi! I am reaching out regarding the wedding invitation for Chi. Alina & Chi. Tanmay.',
+  // 3 & 4. RSVP Section: Keep only Google Form link (removes in-page interactive form)
+  rsvpUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSfvH3dxbYRhvQeQ8XRjLLjJ2Q562KJGBS_KzXhF_NzQ7--fuQ/viewform?usp=publish-editor',
 
-  footer: {
-    id: 'footer',
-    coupleText: 'Chi. Alina & Chi. Tanmay',
-    tagline: 'With Love & Gratitude',
-    hashtag: '#AlinaWedsTanmay',
-  },
+  // 2. Remove WhatsApp icon (both floating and in RSVP)
+  whatsappNumber: null,
+  whatsappMessage: null,
+
+  // 8. Countdown slide: keep existing template background
+  countdown: {},
+
+  // 9. 9th slide — Remove invitique logo and everything
+  hideFooter: true,
 };

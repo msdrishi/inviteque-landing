@@ -87,14 +87,14 @@ export default function PinkBlossomCountdown({ data, fontStyles, sectionStyle, b
       viewport={{ once: true, amount: 0.3 }}
       variants={sectionAnim}
     >
-      <img src={ASSETS.countdownBg} alt="Countdown Background" style={bgStyle} />
+      <img src={data?.countdown?.bgImage || ASSETS.countdownBg} alt="Countdown Background" style={bgStyle} />
       <FallingPinkPetals />
-      <motion.div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginTop: '-15vh' }}>
-        <motion.div variants={fadeAnim} style={{ textAlign: 'center', marginBottom: '35px' }}>
-          <h2 style={{ ...smallCaps, fontSize: '20px', letterSpacing: '0.25em', margin: 0, color: COLORS.primary, lineHeight: 1.4 }}>
+      <motion.div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginTop: '-22vh' }}>
+        <motion.div variants={fadeAnim} style={{ textAlign: 'center', marginBottom: '28px' }}>
+          <h2 style={{ ...smallCaps, fontSize: '15px', letterSpacing: '0.22em', margin: 0, color: COLORS.primary, lineHeight: 1.35 }}>
             THE COUNTDOWN
           </h2>
-          <h2 style={{ ...smallCaps, fontSize: '20px', letterSpacing: '0.25em', margin: 0, color: COLORS.primary, lineHeight: 1.4 }}>
+          <h2 style={{ ...smallCaps, fontSize: '15px', letterSpacing: '0.22em', margin: 0, color: COLORS.primary, lineHeight: 1.35 }}>
             BEGINS
           </h2>
         </motion.div>

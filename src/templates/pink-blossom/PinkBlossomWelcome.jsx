@@ -62,29 +62,50 @@ export default function PinkBlossomWelcome({ data, fontStyles, isDesktop, isTabl
           variants={sectionAnim}
         >
           {/* Welcome Title */}
-          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 1.2 } } }} style={{ marginBottom: '24px' }}>
-            <h2 style={{ ...cursive, margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px', fontSize: isDesktop ? '60px' : '45px', color: COLORS.primaryDark, mixBlendMode: 'multiply' }}>
-              Welcome <span style={{fontSize: '0.4em', color: COLORS.primaryDark, marginTop: '10px', mixBlendMode: 'multiply'}}>♡</span>
+          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 1.2 } } }} style={{ marginBottom: '22px' }}>
+            <h2 style={{ 
+              fontFamily: data.welcomeTitleFont || "'Pinyon Script', 'Alex Brush', cursive", 
+              margin: 0, 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '6px', 
+              fontSize: isDesktop ? '64px' : '48px', 
+              color: COLORS.primaryDark, 
+              mixBlendMode: 'multiply' 
+            }}>
+              Welcome <span style={{fontSize: '0.45em', color: COLORS.primaryDark, marginTop: '8px', mixBlendMode: 'multiply'}}>♡</span>
             </h2>
           </motion.div>
 
-          <AnimatedWordText 
-            text={data.welcomeMessage || "Your presence adds warmth and joy to our special day. We are truly delighted to have you with us as we begin this beautiful new chapter together."}
-            style={{ ...serif, fontSize: '15px', lineHeight: 1.8, color: COLORS.textDark, mixBlendMode: 'multiply', fontWeight: 500 }} 
-          />
+          <div style={{ width: '82%', maxWidth: '360px', margin: '0 auto' }}>
+            <AnimatedWordText 
+              text={data.welcomeMessage || "Your presence adds warmth and joy to our special day. We are truly delighted to have you with us as we begin this beautiful new chapter together."}
+              style={{ 
+                fontFamily: data.welcomeMessageFont || "'Cormorant Garamond', 'Spectral', serif", 
+                fontSize: isDesktop ? '17px' : '15px', 
+                lineHeight: 1.85, 
+                color: COLORS.textDark, 
+                mixBlendMode: 'multiply', 
+                fontWeight: 500,
+                textAlign: 'center',
+                textWrap: 'balance'
+              }} 
+            />
+          </div>
           
           {data.welcomeSignoff && (
-            <motion.div variants={lineContainer} initial="hidden" whileInView="visible" viewport={{ once: false }} style={{ marginTop: '24px' }}>
+            <motion.div variants={lineContainer} initial="hidden" whileInView="visible" viewport={{ once: false }} style={{ marginTop: '24px', width: '84%', maxWidth: '360px', margin: '24px auto 0' }}>
               {data.welcomeSignoff.split('\n').map((line, idx, arr) => (
                 <motion.span variants={lineAnim} key={idx} style={{ 
                   ...(data.welcomeSignoffUniformFont 
-                    ? serif 
+                    ? { fontFamily: "'Cormorant Garamond', 'Cinzel', serif" } 
                     : (idx === 0 
                       ? (data.welcomeSignoffStyle || { ...cursive, fontFamily: data.welcomeSignoffFontFamily || "'Pinyon Script', 'Alex Brush', cursive" }) 
                       : serif)),
                   fontSize: idx === 0 
                     ? (data.welcomeSignoffFontSize || (data.welcomeSignoffUniformFont ? '17px' : '36px')) 
-                    : (data.welcomeSignoffNamesFontSize || '16px'), 
+                    : (data.welcomeSignoffNamesFontSize || '15px'), 
                   color: (idx > 0 && data.welcomeSignoffNamesColor) ? data.welcomeSignoffNamesColor : COLORS.primaryDark, 
                   fontWeight: data.welcomeSignoffUniformFont ? (idx === 0 ? 500 : 600) : (idx > 0 ? 600 : 'normal'),
                   fontStyle: data.welcomeSignoffUniformFont && idx === 0 ? (data.welcomeSignoffFirstLineStyle || 'italic') : 'normal',
@@ -93,7 +114,8 @@ export default function PinkBlossomWelcome({ data, fontStyles, isDesktop, isTabl
                   whiteSpace: 'pre-wrap', 
                   display: 'block', 
                   lineHeight: 1.5,
-                  mixBlendMode: 'multiply'
+                  mixBlendMode: 'multiply',
+                  textWrap: 'balance'
                 }}>
                   {line}
                 </motion.span>

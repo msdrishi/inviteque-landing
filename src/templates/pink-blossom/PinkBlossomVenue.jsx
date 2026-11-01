@@ -27,33 +27,35 @@ export default function PinkBlossomVenue({ data, fontStyles, sectionStyle, bgSty
     >
       <img src={data.venue?.bgImage || ASSETS.venueBg} alt="Venue Background" style={bgStyle} />
       
-      <div className="relative z-10 w-full flex flex-col items-center text-center pt-10">
-        <motion.p variants={fadeAnim} style={{ ...smallCaps, marginBottom: '4px' }}>
-          {data.venue.headerSubtitle || 'WHERE WE UNITE'}
-        </motion.p>
-        <motion.h2 variants={fadeAnim} style={{ ...smallCaps, fontSize: '24px', marginBottom: '8px' }}>
-          {data.venue.headerTitle || 'OUR VENUE'}
-        </motion.h2>
-        <motion.p variants={fadeAnim} style={{ ...serif, fontSize: '16px', maxWidth: '300px', margin: '0 auto 20px' }}>
-          {data.venue.headerDescription || 'A royal architectural heritage where our vows will be celebrated.'}
-        </motion.p>
-      </div>
+      {(!data.venue?.headerOnlyVenue) && (
+        <div className="relative z-10 w-full flex flex-col items-center text-center pt-10">
+          <motion.p variants={fadeAnim} style={{ ...smallCaps, marginBottom: '4px', textWrap: 'balance' }}>
+            {data.venue.headerSubtitle || 'WHERE WE UNITE'}
+          </motion.p>
+          <motion.h2 variants={fadeAnim} style={{ ...smallCaps, fontSize: '24px', marginBottom: '8px', textWrap: 'balance' }}>
+            {data.venue.headerTitle || 'OUR VENUE'}
+          </motion.h2>
+          <motion.p variants={fadeAnim} style={{ ...serif, fontSize: '16px', maxWidth: '300px', margin: '0 auto 20px', textWrap: 'balance' }}>
+            {data.venue.headerDescription || 'A royal architectural heritage where our vows will be celebrated.'}
+          </motion.p>
+        </div>
+      )}
 
       <motion.div variants={fadeAnim} style={{
         position: 'relative', zIndex: 10, textAlign: 'center',
-        maxWidth: '340px', width: '90%', marginTop: '20px'
+        maxWidth: '340px', width: '84%', marginTop: data.venue?.headerOnlyVenue ? '50px' : '20px'
       }}>
         {data.venue.time ? (
           <p style={{ ...smallCaps, fontSize: '15px', color: COLORS.primary, fontWeight: 'bold', marginBottom: '10px' }}>
             {data.venue.time}
           </p>
         ) : (
-          <p style={{ ...smallCaps, fontSize: '13px', color: COLORS.primary, fontWeight: 'bold' }}>
-            CELEBRATION VENUE
+          <p style={{ ...smallCaps, fontSize: '14px', letterSpacing: '0.18em', color: COLORS.primary, fontWeight: 'bold', marginBottom: '8px' }}>
+            {data.venue.sectionTitle || 'CELEBRATION VENUE & DIRECTIONS'}
           </p>
         )}
-        <p style={{ ...serif, fontSize: '15px', color: COLORS.textDark, marginBottom: '25px', lineHeight: 1.8 }}>
-          <span style={{fontWeight: 'bold', display: 'block', marginBottom: '4px', ...smallCaps, fontSize: '14px'}}>{data.venue.mahalName}</span>
+        <p style={{ ...serif, fontSize: '15px', color: COLORS.textDark, marginBottom: '25px', lineHeight: 1.8, textWrap: 'balance' }}>
+          <span style={{fontWeight: 'bold', display: 'block', marginBottom: '6px', ...smallCaps, fontSize: '15px', color: COLORS.primaryDark}}>{data.venue.mahalName}</span>
           {data.venue.venueAddress}, {data.venue.venueCity}
         </p>
 
