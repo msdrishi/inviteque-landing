@@ -31,28 +31,15 @@ const letterAnim = {
   }
 }
 
-// Animated Script Name with letter-by-letter reveal
+// Animated Script Name for Family Invitation
 const AnimatedFamilyName = ({ name, style }) => {
-  const letters = Array.from(String(name || ''))
   return (
     <motion.h2 
-      variants={letterContainer} 
-      className="flex items-center justify-center overflow-visible flex-wrap text-center" 
-      style={{ ...style, width: '100%' }}
+      variants={lineAnim}
+      className="flex items-center justify-center overflow-visible text-center" 
+      style={{ ...style, width: '100%', whiteSpace: 'nowrap' }}
     >
-      {letters.map((char, i) => (
-        <motion.span
-          key={i}
-          variants={letterAnim}
-          style={{
-            display: 'inline-block',
-            whiteSpace: char === ' ' ? 'pre' : 'normal',
-            overflow: 'visible'
-          }}
-        >
-          {char}
-        </motion.span>
-      ))}
+      {name}
     </motion.h2>
   )
 }
@@ -62,27 +49,29 @@ export default function PinkBlossomFamilyInvitation({ data, fontStyles, sectionS
 
   const family = data.familyInvitation || {}
 
-  // Script name styling matching user reference image
+  // Script name styling matching user reference image with improved contrast and visibility
   const scriptNameStyle = {
     fontFamily: "'Pinyon Script', 'Alex Brush', cursive",
-    color: '#C8195E',
-    fontSize: isDesktop ? '58px' : (isTablet ? '64px' : '48px'),
+    color: '#B01050',
+    fontSize: isDesktop ? '72px' : (isTablet ? '74px' : '58px'),
     fontWeight: 'normal',
     lineHeight: 1.15,
     margin: 0,
-    textShadow: '0 1px 2px rgba(255,255,255,0.6)'
+    textShadow: '0 1px 3px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.7)',
+    filter: 'drop-shadow(0 1px 2px rgba(176,16,80,0.15))'
   }
 
-  // Parent / line styling matching user reference image
+  // Parent / line styling matching user reference image with high readability
   const parentDetailsStyle = {
-    fontFamily: "'Cinzel', 'Cormorant Garamond', serif",
-    color: '#5C381E',
-    fontSize: isDesktop ? '13px' : (isTablet ? '13px' : '11.5px'),
-    fontWeight: 600,
-    letterSpacing: '0.12em',
-    lineHeight: 1.6,
+    fontFamily: "'Cinzel', 'Playfair Display', serif",
+    color: '#2B1A0E',
+    fontSize: isDesktop ? '15px' : (isTablet ? '15px' : '13.5px'),
+    fontWeight: 700,
+    letterSpacing: '0.14em',
+    lineHeight: 1.7,
     textTransform: 'uppercase',
-    textWrap: 'balance'
+    textWrap: 'balance',
+    textShadow: '0 1px 2px rgba(255,255,255,0.85)'
   }
 
   return (
@@ -128,16 +117,17 @@ export default function PinkBlossomFamilyInvitation({ data, fontStyles, sectionS
         }}
       >
         {/* Top Flourish / Header quote */}
-        <motion.div variants={lineAnim} style={{ width: '92%', marginBottom: '22px' }}>
+        <motion.div variants={lineAnim} style={{ width: '92%', maxWidth: '340px', marginBottom: '22px' }}>
           <p
             style={{
-              ...serif,
-              fontStyle: 'italic',
-              fontSize: isDesktop ? '15.5px' : '14px',
-              color: '#4A6741',
-              lineHeight: 1.65,
+              fontFamily: "'Cormorant Garamond', 'Spectral', serif",
+              fontSize: isDesktop ? '18px' : '17px',
+              color: '#2E4427',
+              lineHeight: 1.75,
+              fontWeight: 600,
               margin: 0,
-              textWrap: 'balance'
+              textWrap: 'balance',
+              textShadow: '0 1px 2px rgba(255,255,255,0.7)'
             }}
           >
             {family.introQuote || "Two families, two hearts, one beautiful celebration of love. Join us as we begin our forever."}
@@ -145,14 +135,14 @@ export default function PinkBlossomFamilyInvitation({ data, fontStyles, sectionS
         </motion.div>
 
         {/* Delicate divider */}
-        <motion.div variants={lineAnim} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', opacity: 0.6 }}>
-          <span style={{ width: '30px', height: '1px', backgroundColor: '#C8195E' }} />
-          <span style={{ color: '#C8195E', fontSize: '11px' }}>❧</span>
-          <span style={{ width: '30px', height: '1px', backgroundColor: '#C8195E' }} />
+        <motion.div variants={lineAnim} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', opacity: 0.85 }}>
+          <span style={{ width: '40px', height: '1.5px', backgroundColor: '#B01050' }} />
+          <span style={{ color: '#B01050', fontSize: '14px' }}>❧</span>
+          <span style={{ width: '40px', height: '1.5px', backgroundColor: '#B01050' }} />
         </motion.div>
 
         {/* Bride Section */}
-        <motion.div variants={lineAnim} style={{ width: '92%', marginBottom: '14px' }}>
+        <motion.div variants={lineAnim} style={{ width: '92%', marginBottom: '16px' }}>
           <AnimatedFamilyName name={family.brideName || 'Alina'} style={scriptNameStyle} />
           <p style={{ ...parentDetailsStyle, marginTop: '4px', marginBottom: 0 }}>
             {family.brideParents || 'D/O Mrs. Akhilesh Sharma & Mr. Salman Kausar'}
@@ -171,20 +161,21 @@ export default function PinkBlossomFamilyInvitation({ data, fontStyles, sectionS
             width: '80%'
           }}
         >
-          <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(184, 150, 62, 0.35)' }} />
+          <div style={{ flex: 1, height: '1.5px', backgroundColor: 'rgba(184, 150, 62, 0.65)' }} />
           <span
             style={{
-              fontFamily: "'Cinzel', serif",
-              fontSize: '11px',
-              letterSpacing: '0.25em',
+              fontFamily: "'Cinzel', 'Playfair Display', serif",
+              fontSize: '12px',
+              letterSpacing: '0.24em',
               fontWeight: 700,
-              color: '#B8963E',
-              textTransform: 'uppercase'
+              color: '#8A6715',
+              textTransform: 'uppercase',
+              textShadow: '0 1px 2px rgba(255,255,255,0.8)'
             }}
           >
             {family.connector || 'WEDS'}
           </span>
-          <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(184, 150, 62, 0.35)' }} />
+          <div style={{ flex: 1, height: '1.5px', backgroundColor: 'rgba(184, 150, 62, 0.65)' }} />
         </motion.div>
 
         {/* Groom Section */}
@@ -199,9 +190,9 @@ export default function PinkBlossomFamilyInvitation({ data, fontStyles, sectionS
         <motion.div
           variants={lineAnim}
           style={{
-            width: '92%',
+            width: '94%',
             paddingTop: '16px',
-            borderTop: '1px solid rgba(200, 25, 94, 0.15)',
+            borderTop: '1.5px solid rgba(200, 25, 94, 0.25)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -211,9 +202,11 @@ export default function PinkBlossomFamilyInvitation({ data, fontStyles, sectionS
           <span
             style={{
               fontFamily: "'Pinyon Script', cursive",
-              fontSize: '22px',
-              color: '#C8195E',
-              lineHeight: 1
+              fontSize: '28px',
+              fontWeight: 'normal',
+              color: '#B01050',
+              lineHeight: 1,
+              textShadow: '0 1px 2px rgba(255,255,255,0.8)'
             }}
           >
             on
@@ -221,13 +214,14 @@ export default function PinkBlossomFamilyInvitation({ data, fontStyles, sectionS
 
           <p
             style={{
-              fontFamily: "'Cinzel', serif",
-              fontSize: isDesktop ? '13px' : '11.5px',
+              fontFamily: "'Cinzel', 'Playfair Display', serif",
+              fontSize: isDesktop ? '15px' : '13.5px',
               fontWeight: 700,
               color: '#C8195E',
-              letterSpacing: '0.15em',
+              letterSpacing: '0.14em',
               margin: '2px 0 0 0',
-              textWrap: 'balance'
+              textWrap: 'balance',
+              textShadow: '0 1px 2px rgba(255,255,255,0.8)'
             }}
           >
             {family.weddingDateDetails || 'SUNDAY, 28TH FEBRUARY 2027'}
@@ -235,38 +229,42 @@ export default function PinkBlossomFamilyInvitation({ data, fontStyles, sectionS
 
           <p
             style={{
-              fontFamily: "'Cinzel', serif",
-              fontSize: '10.5px',
-              fontWeight: 600,
-              letterSpacing: '0.14em',
-              color: '#5C381E',
-              margin: 0
+              fontFamily: "'Cinzel', 'Playfair Display', serif",
+              fontSize: '12px',
+              fontWeight: 700,
+              letterSpacing: '0.16em',
+              color: '#3B2210',
+              margin: 0,
+              textShadow: '0 1px 2px rgba(255,255,255,0.8)'
             }}
           >
             {family.weddingTimeDetails || 'AT 12:14 PM ONWARDS'}
           </p>
 
-          <div style={{ marginTop: '4px' }}>
+          <div style={{ marginTop: '6px' }}>
             <span
               style={{
-                fontFamily: "'Cinzel', serif",
-                fontSize: '11px',
+                fontFamily: "'Cinzel', 'Playfair Display', serif",
+                fontSize: '14px',
                 fontWeight: 700,
                 color: '#C8195E',
-                letterSpacing: '0.12em',
-                display: 'block'
+                letterSpacing: '0.14em',
+                display: 'block',
+                textShadow: '0 1px 2px rgba(255,255,255,0.8)'
               }}
             >
               {family.venueName || 'THE BLUE ROOF CLUB'}
             </span>
             <span
               style={{
-                ...serif,
-                fontSize: '12px',
-                color: '#4A6741',
-                lineHeight: 1.4,
+                fontFamily: "'Cormorant Garamond', 'Spectral', serif",
+                fontSize: isDesktop ? '17px' : '16px',
+                fontWeight: 600,
+                color: '#2E4427',
+                lineHeight: 1.55,
                 display: 'block',
-                marginTop: '2px'
+                marginTop: '3px',
+                textShadow: '0 1px 2px rgba(255,255,255,0.7)'
               }}
             >
               {family.venueLocation || 'Thane (West)'}

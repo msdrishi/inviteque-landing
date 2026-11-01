@@ -1,11 +1,23 @@
 import photo1 from './photos/photo_1_2026-10-29_00-06-56.jpg'
 import photo2 from './photos/photo_2_2026-10-29_00-06-56.jpg'
 import photo3 from './photos/photo_3_2026-10-29_00-06-56.jpg'
+import tumTakSong from './music/Tum Tak (From Raanjhanaa).mp3'
 
 export const alinaTanmayData = {
   isPaid: true,
   code: 'ALINA_TANMAY',
   hasRsvp: true,
+
+  // Custom Background Music (Tum Tak – Raanjhanaa)
+  musicSrc: tumTakSong,
+
+  // 1. Opening Screen:
+  // Text positioned below the envelope, using an elegant and readable font without underline, in a rich dark color
+  coverTapText: 'Tap to Open',
+  coverTapBelow: true,
+  coverTapFont: "'Playfair Display', 'Cinzel', serif",
+  coverTapColor: '#3B2210',
+  hideTapUnderline: true,
 
   // Couple names — strictly names without 'Chi.' as requested
   groomName: 'Tanmay',
@@ -20,7 +32,7 @@ export const alinaTanmayData = {
   heroIntroLine1: 'TOGETHER WITH',
   heroIntroLine2: 'LOVE',
   heroOnlyInvite: true,
-  coupleNameScale: 0.9,
+  coupleNameScale: 0.95,
   heroBgScale: 1.15,
 
   // 2. New 2nd Page (Family Invitation directly on background without white banner):

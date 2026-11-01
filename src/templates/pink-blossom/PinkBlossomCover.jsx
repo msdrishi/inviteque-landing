@@ -12,6 +12,11 @@ export default function PinkBlossomCover({
   handleOpenCover,
   handleTimeUpdate,
   handleVideoEnded,
+  coverTapText,
+  coverTapBelow,
+  coverTapFont,
+  coverTapColor,
+  hideTapUnderline,
 }) {
   const canvasRef = useRef(null)
   const [posterReady, setPosterReady] = useState(false)
@@ -161,35 +166,39 @@ export default function PinkBlossomCover({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.3, ease: "easeOut" } }}
                 transition={{ duration: 0.8 }}
-                className="absolute top-[20%] inset-x-0 flex flex-col items-center pointer-events-none z-20 px-6 text-center"
+                className={`absolute ${coverTapBelow ? 'bottom-[18%] sm:bottom-[22%]' : 'top-[20%]'} inset-x-0 flex flex-col items-center pointer-events-none z-20 px-6 text-center`}
               >
                 <motion.div
                   animate={{ 
-                    opacity: [0.45, 1, 0.45],
+                    opacity: [0.85, 1, 0.85],
                     scale: [0.98, 1.02, 0.98],
                   }}
                   transition={{ 
-                    duration: 1.8, 
+                    duration: 2.2, 
                     repeat: Infinity, 
                     ease: "easeInOut" 
                   }}
                   className="flex flex-col items-center gap-1.5"
                 >
                   <span 
-                    className="font-['Cinzel'] tracking-[0.38em] text-[15px] uppercase font-bold select-none"
+                    className="tracking-[0.24em] text-[15px] sm:text-[17px] uppercase font-bold select-none"
                     style={{
-                      color: COLORS.textDark,
-                      textShadow: `0 0 16px rgba(200, 25, 94, 0.6), 0 1px 1px rgba(255, 255, 255, 0.9)`,
-                      filter: `drop-shadow(0 2px 8px rgba(200, 25, 94, 0.25))`
+                      fontFamily: coverTapFont || "'Cinzel', 'Montserrat', serif",
+                      color: coverTapColor || '#2B1A0E',
+                      textShadow: `0 1px 3px rgba(255, 255, 255, 0.9), 0 0 12px rgba(255, 255, 255, 0.7)`,
+                      filter: `drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15))`,
+                      textDecoration: 'none'
                     }}
                   >
-                    Tap to Open
+                    {coverTapText || 'Tap to Open'}
                   </span>
-                  <div className="flex items-center gap-2 opacity-90">
-                    <div className="w-6 h-[0.8px]" style={{ backgroundColor: COLORS.textDark }} />
-                    <span className="text-[7px]" style={{ color: COLORS.primary }}>✦</span>
-                    <div className="w-6 h-[0.8px]" style={{ backgroundColor: COLORS.textDark }} />
-                  </div>
+                  {!hideTapUnderline && (
+                    <div className="flex items-center gap-2 opacity-90">
+                      <div className="w-6 h-[0.8px]" style={{ backgroundColor: COLORS.textDark }} />
+                      <span className="text-[7px]" style={{ color: COLORS.primary }}>✦</span>
+                      <div className="w-6 h-[0.8px]" style={{ backgroundColor: COLORS.textDark }} />
+                    </div>
+                  )}
                 </motion.div>
               </motion.div>
             )}

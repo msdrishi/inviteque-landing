@@ -78,16 +78,16 @@ export default function PinkBlossomWelcome({ data, fontStyles, isDesktop, isTabl
             </h2>
           </motion.div>
 
-          <div style={{ width: '82%', maxWidth: '360px', margin: '0 auto' }}>
+          <div style={{ width: '84%', maxWidth: '380px', margin: '0 auto' }}>
             <AnimatedWordText 
               text={data.welcomeMessage || "Your presence adds warmth and joy to our special day. We are truly delighted to have you with us as we begin this beautiful new chapter together."}
               style={{ 
                 fontFamily: data.welcomeMessageFont || "'Cormorant Garamond', 'Spectral', serif", 
-                fontSize: isDesktop ? '17px' : '15px', 
-                lineHeight: 1.85, 
-                color: COLORS.textDark, 
+                fontSize: isDesktop ? '18px' : '16.5px', 
+                lineHeight: 1.8, 
+                color: '#243B1E', 
                 mixBlendMode: 'multiply', 
-                fontWeight: 500,
+                fontWeight: 600,
                 textAlign: 'center',
                 textWrap: 'balance'
               }} 

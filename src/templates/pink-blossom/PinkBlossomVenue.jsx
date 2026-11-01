@@ -50,14 +50,45 @@ export default function PinkBlossomVenue({ data, fontStyles, sectionStyle, bgSty
             {data.venue.time}
           </p>
         ) : (
-          <p style={{ ...smallCaps, fontSize: '14px', letterSpacing: '0.18em', color: COLORS.primary, fontWeight: 'bold', marginBottom: '8px' }}>
+          <p style={{ 
+            fontFamily: "'Cinzel', serif", 
+            fontSize: '12px', 
+            letterSpacing: '0.24em', 
+            color: '#8B1848', 
+            fontWeight: 700, 
+            marginBottom: '10px',
+            textTransform: 'uppercase'
+          }}>
             {data.venue.sectionTitle || 'CELEBRATION VENUE & DIRECTIONS'}
           </p>
         )}
-        <p style={{ ...serif, fontSize: '15px', color: COLORS.textDark, marginBottom: '25px', lineHeight: 1.8, textWrap: 'balance' }}>
-          <span style={{fontWeight: 'bold', display: 'block', marginBottom: '6px', ...smallCaps, fontSize: '15px', color: COLORS.primaryDark}}>{data.venue.mahalName}</span>
-          {data.venue.venueAddress}, {data.venue.venueCity}
-        </p>
+        <div style={{ marginBottom: '25px' }}>
+          <h3 style={{
+            fontFamily: "'Cinzel', 'Playfair Display', serif",
+            fontWeight: 700,
+            display: 'block',
+            marginBottom: '10px',
+            fontSize: '24px',
+            letterSpacing: '0.1em',
+            color: '#C8195E',
+            textShadow: '0 1px 3px rgba(255,255,255,0.8)'
+          }}>
+            {data.venue.mahalName}
+          </h3>
+          <p style={{
+            fontFamily: "'Cormorant Garamond', 'Spectral', serif",
+            fontSize: '17px',
+            color: '#2E4427',
+            lineHeight: 1.75,
+            fontWeight: 600,
+            margin: '0 auto',
+            maxWidth: '310px',
+            textWrap: 'balance',
+            textShadow: '0 1px 2px rgba(255,255,255,0.7)'
+          }}>
+            {data.venue.venueAddress}, {data.venue.venueCity}
+          </p>
+        </div>
 
         {data.venue.mapUrl && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
