@@ -86,6 +86,8 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
       heroOnlyInvite: savedData?.heroOnlyInvite ?? draftData?.heroOnlyInvite,
       heroIntroLine1: savedData?.heroIntroLine1 || draftData?.heroIntroLine1,
       heroIntroLine2: savedData?.heroIntroLine2 || draftData?.heroIntroLine2,
+      reverseNames: savedData?.reverseNames ?? draftData?.reverseNames ?? savedData?.hero?.reverseNames,
+      brideFirst: savedData?.brideFirst ?? draftData?.brideFirst ?? savedData?.hero?.brideFirst,
     },
     venue: {
       ...staticData.venue,
@@ -338,6 +340,7 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
         coverTapFont={baseData.coverTapFont}
         coverTapColor={baseData.coverTapColor}
         hideTapUnderline={baseData.hideTapUnderline}
+        coverTapAsPill={baseData.coverTapAsPill}
       />
       
       {/* Background Music Player */}

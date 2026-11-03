@@ -17,6 +17,7 @@ export default function PinkBlossomCover({
   coverTapFont,
   coverTapColor,
   hideTapUnderline,
+  coverTapAsPill,
 }) {
   const canvasRef = useRef(null)
   const [posterReady, setPosterReady] = useState(false)
@@ -170,29 +171,40 @@ export default function PinkBlossomCover({
               >
                 <motion.div
                   animate={{ 
-                    opacity: [0.85, 1, 0.85],
-                    scale: [0.98, 1.02, 0.98],
+                    opacity: [0.88, 1, 0.88],
+                    scale: [0.97, 1.03, 0.97],
                   }}
                   transition={{ 
                     duration: 2.2, 
                     repeat: Infinity, 
                     ease: "easeInOut" 
                   }}
-                  className="flex flex-col items-center gap-1.5"
+                  className={`flex flex-col items-center gap-1.5 ${
+                    coverTapAsPill
+                      ? 'px-7 py-2.5 rounded-full backdrop-blur-md bg-white/75 border border-[#B01050]/25 shadow-[0_8px_24px_rgba(59,34,16,0.18),inset_0_1px_1px_rgba(255,255,255,0.9)]'
+                      : ''
+                  }`}
                 >
-                  <span 
-                    className="tracking-[0.24em] text-[15px] sm:text-[17px] uppercase font-bold select-none"
-                    style={{
-                      fontFamily: coverTapFont || "'Cinzel', 'Montserrat', serif",
-                      color: coverTapColor || '#2B1A0E',
-                      textShadow: `0 1px 3px rgba(255, 255, 255, 0.9), 0 0 12px rgba(255, 255, 255, 0.7)`,
-                      filter: `drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15))`,
-                      textDecoration: 'none'
-                    }}
-                  >
-                    {coverTapText || 'Tap to Open'}
-                  </span>
-                  {!hideTapUnderline && (
+                  {(() => {
+                    const isScriptFont = coverTapFont && (coverTapFont.includes('Pinyon') || coverTapFont.includes('cursive') || coverTapFont.includes('Script'));
+                    return (
+                      <span 
+                        className={`select-none ${isScriptFont ? 'text-[24px] sm:text-[28px] font-normal tracking-wide' : 'tracking-[0.24em] text-[15px] sm:text-[17px] uppercase font-bold'}`}
+                        style={{
+                          fontFamily: coverTapFont || "'Cinzel', 'Montserrat', serif",
+                          color: coverTapColor || '#2B1A0E',
+                          textShadow: `0 1px 2px rgba(255, 255, 255, 0.9)`,
+                          filter: `drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08))`,
+                          textDecoration: 'none',
+                          textTransform: isScriptFont ? 'none' : 'uppercase',
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        {coverTapText || 'Tap to Open'}
+                      </span>
+                    );
+                  })()}
+                  {!hideTapUnderline && !coverTapAsPill && (
                     <div className="flex items-center gap-2 opacity-90">
                       <div className="w-6 h-[0.8px]" style={{ backgroundColor: COLORS.textDark }} />
                       <span className="text-[7px]" style={{ color: COLORS.primary }}>✦</span>

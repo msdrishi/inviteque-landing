@@ -149,13 +149,15 @@ export default function PinkBlossomHero({ data, fontStyles, sectionStyle, bgStyl
     dayStr = dateObj.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase()
     monthStr = dateObj.toLocaleDateString('en-US', { month: 'long' }).toUpperCase()
   }
-  const groomName = data.hero.groomName || '';
-  const brideName = data.hero.brideName || '';
-  const groomScale = (data.hero.coupleNameScale || 0.82) * Math.min(1, 10 / Math.max(1, groomName.length));
-  const brideScale = (data.hero.coupleNameScale || 0.82) * Math.min(1, 10 / Math.max(1, brideName.length));
+  const isBrideFirst = data.hero.brideFirst || data.hero.reverseNames || false;
+  const firstName = isBrideFirst ? (data.hero.brideName || '') : (data.hero.groomName || '');
+  const secondName = isBrideFirst ? (data.hero.groomName || '') : (data.hero.brideName || '');
+
+  const firstScale = (data.hero.coupleNameScale || 0.82) * Math.min(1, 10 / Math.max(1, firstName.length));
+  const secondScale = (data.hero.coupleNameScale || 0.82) * Math.min(1, 10 / Math.max(1, secondName.length));
   
-  const groomNameSize = isDesktop ? `calc(58px * ${groomScale})` : (isTablet ? `calc(66px * ${groomScale})` : `calc(46px * ${groomScale})`)
-  const brideNameSize = isDesktop ? `calc(58px * ${brideScale})` : (isTablet ? `calc(66px * ${brideScale})` : `calc(46px * ${brideScale})`)
+  const firstNameSize = isDesktop ? `calc(58px * ${firstScale})` : (isTablet ? `calc(66px * ${firstScale})` : `calc(46px * ${firstScale})`)
+  const secondNameSize = isDesktop ? `calc(58px * ${secondScale})` : (isTablet ? `calc(66px * ${secondScale})` : `calc(46px * ${secondScale})`)
   const bgScale = data.hero.heroBgScale || 1.12
 
   return (
@@ -193,13 +195,13 @@ export default function PinkBlossomHero({ data, fontStyles, sectionStyle, bgStyl
         </motion.div>
 
         {/* Names */}
-        <AnimatedCoupleName name={groomName} style={{ ...cursive, fontSize: groomNameSize }} variants={letterContainer} />
+        <AnimatedCoupleName name={firstName} style={{ ...cursive, fontSize: firstNameSize }} variants={letterContainer} />
         
         <motion.div variants={lineAnim} style={{ margin: '2px 0' }}>
           <span style={{ ...cursive, fontSize: '30px', color: COLORS.gold }}>&amp;</span>
         </motion.div>
         
-        <AnimatedCoupleName name={brideName} style={{ ...cursive, fontSize: brideNameSize, marginBottom: '8px' }} variants={letterContainer} />
+        <AnimatedCoupleName name={secondName} style={{ ...cursive, fontSize: secondNameSize, marginBottom: '8px' }} variants={letterContainer} />
 
         {/* Hero-only-invite custom closing text or standard middle/date block */}
         {data.hero.heroOnlyInvite ? (

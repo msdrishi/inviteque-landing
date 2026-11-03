@@ -71,6 +71,7 @@ export default function PinkBlossomFamilyInvitation({ data, fontStyles, sectionS
     lineHeight: 1.7,
     textTransform: 'uppercase',
     textWrap: 'balance',
+    whiteSpace: 'pre-line',
     textShadow: '0 1px 2px rgba(255,255,255,0.85)'
   }
 

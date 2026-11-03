@@ -12,10 +12,12 @@ export const alinaTanmayData = {
   musicSrc: tumTakSong,
 
   // 1. Opening Screen:
-  // Text positioned below the envelope, using an elegant and readable font without underline, in a rich dark color
+  // Text positioned below the envelope, using an elegant cursive script font matching the parchment "Welcome" section
+  // Presented inside a stylish rounded pill button
   coverTapText: 'Tap to Open',
   coverTapBelow: true,
-  coverTapFont: "'Playfair Display', 'Cinzel', serif",
+  coverTapAsPill: true,
+  coverTapFont: "'Pinyon Script', 'Alex Brush', cursive",
   coverTapColor: '#3B2210',
   hideTapUnderline: true,
 
@@ -27,8 +29,9 @@ export const alinaTanmayData = {
   weddingYear: '2027',
 
   // 1. Hero Page Configuration:
-  // "Together with Love / Alina & Tanmay / invite you to celebrate the beginning of their forever."
-  // Date, time, separator, and venue removed from hero as requested
+  // Couple names reversed: Alina & Tanmay
+  reverseNames: true,
+  brideFirst: true,
   heroIntroLine1: 'TOGETHER WITH',
   heroIntroLine2: 'LOVE',
   heroOnlyInvite: true,
@@ -44,16 +47,16 @@ export const alinaTanmayData = {
     brideParents: 'D/O Mrs. Akhilesh Sharma & Mr. Salman Kausar',
     connector: 'Weds',
     groomName: 'Tanmay',
-    groomParents: 'S/O Mrs. Sheetal and Mr. Vikas Ramchandra Deshmukh',
+    groomParents: 'S/O Mrs. Sheetal and\n& Mr. Vikas Ramchandra Deshmukh',
     weddingDateDetails: 'SUNDAY, 28TH FEBRUARY 2027',
-    weddingTimeDetails: 'AT 12:14 PM ONWARDS',
+    weddingTimeDetails: '12:14PM ONWARDS',
     venueName: 'THE BLUE ROOF CLUB',
     venueLocation: 'Ovala, Ghodbunder Road, Thane (West) – 400 615',
   },
 
   // Parent details for reference
   brideParents: 'D/O Mrs. Akhilesh Sharma & Mr. Salman Kausar',
-  groomParents: 'S/O Mrs. Sheetal and Mr. Vikas Ramchandra Deshmukh',
+  groomParents: 'S/O Mrs. Sheetal and\n& Mr. Vikas Ramchandra Deshmukh',
 
   // 5. Main Venue Details & slide configuration:
   // Remove "WHERE WE UNITE" etc and only keep "CELEBRATION VENUE & DIRECTIONS"
