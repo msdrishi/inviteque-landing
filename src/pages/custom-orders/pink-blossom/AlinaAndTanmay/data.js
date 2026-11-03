@@ -64,7 +64,7 @@ export const alinaTanmayData = {
   venueCity: 'Thane (West)',
   venueAddress: 'Ovala, Ghodbunder Road, Thane (West) – 400 615',
   state: 'Maharashtra',
-  mapLink: 'https://maps.app.goo.gl/WPjBqwyyp7s99Lns9',
+  mapLink: 'https://maps.app.goo.gl/xkDJ3STW4eR5oqnq9',
   headerOnlyVenue: true,
   sectionTitle: 'CELEBRATION VENUE & DIRECTIONS',
   // Mandap background:
