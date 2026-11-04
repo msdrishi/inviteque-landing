@@ -237,6 +237,26 @@ export default function InviteQRSVP({
           checkCircle: 'bg-[#4A3E20] text-white',
           uncheckCircle: 'border-[#4A3E20]/30 text-transparent',
         }
+      case 'southern-serenade':
+        return {
+          fontFamily: "'Religath', 'Cinzel', serif",
+          bodyFont: "'Cormorant Garamond', serif",
+          cardBg: 'bg-[#FAF4EB] border border-[#C5A059]/50 shadow-[0_16px_40px_rgba(115,25,36,0.08)]',
+          headerText: 'text-[#731924]',
+          bodyText: 'text-[#731924]/85',
+          accentText: 'text-[#731924]',
+          accentBtn: 'bg-[#731924] text-[#FDFBF7] hover:bg-[#5C131C] shadow-md font-bold tracking-wider',
+          secondaryBtn: 'border-[#C5A059]/60 text-[#731924] hover:bg-[#731924]/10 bg-[#FAF4EB]',
+          activeChoice: 'bg-[#731924] text-white border-[#731924]',
+          inactiveChoice: 'bg-[#F3EAE0] text-[#731924]/90 border-[#C5A059]/40 hover:border-[#731924]',
+          inputBg: 'bg-[#FAF4EB] border-[#C5A059]/45 focus:border-[#731924] text-[#731924]',
+          eventSelected: 'border-[#731924] bg-[#F3EAE0] shadow-sm',
+          eventUnselected: 'border-[#C5A059]/35 bg-[#FAF4EB] hover:border-[#731924]/50',
+          divider: 'bg-[#C5A059]/35',
+          badgeBg: 'bg-[#731924]/10 text-[#731924]',
+          checkCircle: 'bg-[#731924] text-white',
+          uncheckCircle: 'border-[#C5A059]/60 text-transparent',
+        }
       case 'everlasting': // Everlasting Vows
         return {
           fontFamily: "'Cinzel', serif",
@@ -618,7 +638,7 @@ export default function InviteQRSVP({
                               key={evt.id}
                               onClick={() => toggleEvent(evt.id)}
                               className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
-                                isSelected ? 'border-[#3D5236] bg-white shadow-sm' : 'border-[#3D5236]/20 bg-white/60 hover:border-[#3D5236]/40'
+                                isSelected ? (themeStyles.eventSelected || 'border-[#3D5236] bg-white shadow-sm') : (themeStyles.eventUnselected || 'border-[#3D5236]/20 bg-white/60 hover:border-[#3D5236]/40')
                               }`}
                             >
                               <div>

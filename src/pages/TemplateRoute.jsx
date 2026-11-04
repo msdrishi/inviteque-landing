@@ -14,6 +14,7 @@ const TemplateRoyalHeirloom = lazy(() => import('./TemplateRoyalHeirloom.jsx'))
 const TemplateRoyalHeritage = lazy(() => import('./TemplateRoyalHeritage.jsx'))
 const TemplatePinkBlossom = lazy(() => import('../templates/pink-blossom/index.jsx'))
 const TemplateRajasthaniVows = lazy(() => import('../templates/rajasthani-vows/index.jsx'))
+const TemplateSouthernSerenade = lazy(() => import('../templates/southern-serenade/index.jsx'))
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
 import everlastingVowsMapping from '../everlastingVowsCloudinaryMapping.json'
 
@@ -48,9 +49,17 @@ const TEMPLATE_MAP = {
   'royal-heritage': TemplateRoyalHeritage,
   'pink-blossom': TemplatePinkBlossom,
   'rajasthani-vows': TemplateRajasthaniVows,
+  'southern-serenade': TemplateSouthernSerenade,
 }
 
 const TEMPLATE_ASSETS = {
+  'southern-serenade': [
+    "/assets/templates/southern-serenade/hero-mobile.webp",
+    "/assets/templates/southern-serenade/plain-bg.webp",
+    "/assets/templates/southern-serenade/venue-mobile.webp",
+    "/assets/templates/southern-serenade/countdown-mobile.webp",
+  ],
+
   'royal-heirloom': [
     "/assets/templates/royal-heirloom/cover-first-frame.webp",
     "/assets/templates/royal-heirloom/hero-bg-mobile.webp",

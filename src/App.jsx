@@ -32,6 +32,7 @@ const CustomRoyalHeirloomSaaranshAndStuti = lazy(() => import('./pages/custom-or
 const CustomRoyalHeritageNaveenAndPreena = lazy(() => import('./pages/custom-orders/royal-heritage/NaveenAndPreena/index.jsx'))
 const CustomPinkBlossomAlinaAndTanmay = lazy(() => import('./pages/custom-orders/pink-blossom/AlinaAndTanmay/index.jsx'))
 const CustomRajasthaniVowsRishikaAndJaskaran = lazy(() => import('./pages/custom-orders/rajasthani-vows/RishikaAndJaskaran/index.jsx'))
+const CustomSouthernSerenadeRajeshAndSahithya = lazy(() => import('./pages/custom-orders/southern-serenade/RajeshAndSahithya/index.jsx'))
 
 const PageLoader = () => (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#FDFCFB]">
@@ -208,6 +209,14 @@ export default function App() {
           {/* Dedicated short URL for Alina & Tanmay */}
           <Route path="/AlinaAndTanmay" element={<CustomPinkBlossomAlinaAndTanmay />} />
           <Route path="/alinaandtanmay" element={<CustomPinkBlossomAlinaAndTanmay />} />
+
+          {/* Custom Client Template Routes (Rajesh & Sahithya - Southern Serenade) */}
+          <Route path="/template/southern-serenade/rajesh-and-sahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/template/southern-serenade/RajeshAndSahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/templates/southern-serenade/rajesh-and-sahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/templates/southern-serenade/RajeshAndSahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/RajeshAndSahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/rajeshandsahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
 
           
           {/* Standard & Multi-Link Templates */}

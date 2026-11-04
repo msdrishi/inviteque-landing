@@ -14,6 +14,19 @@ const t12 = "/assets/templates/previews/template-12-coastal.webp"
 
 export const templates = [
   {
+    id: 'southern-serenade',
+    isNew: true,
+    name: 'Southern Serenade',
+    description: 'A divine South Indian wedding invitation inspired by sacred traditions, temple architecture, and timeless elegance.',
+    price: 2499,
+    priceLabel: '₹2499',
+    thumbnail: '/assets/templates/southern-serenade/thumbnail.webp',
+    href: '/templates/southern-serenade',
+    available: true,
+    popular: true,
+  },
+
+  {
     id: 'rajasthani-vows',
     isNew: true,
     name: 'Rajasthani Vows',
