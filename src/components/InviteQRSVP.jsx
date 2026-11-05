@@ -53,9 +53,10 @@ const fireCelebrationPoppers = () => {
  * attending toggles, headcount stepper, event cards, and wishes note.
  */
 export default function InviteQRSVP({
-  weddingCode,
+  weddingCode: propWeddingCode,
+  code: propCode,
   groupSlug,
-  isPreview = false,
+  isPreview: propIsPreview = false,
   events: propEvents,
   config: propConfig,
   theme = 'green',
@@ -63,9 +64,22 @@ export default function InviteQRSVP({
   subtitle: propSubtitle,
   hideEvents = false,
 }) {
+  const weddingCode = propWeddingCode || propCode
+  const isPreview = propIsPreview || (typeof window !== 'undefined' && (new URLSearchParams(window.location.search).get('preview') === 'true' || new URLSearchParams(window.location.search).get('customPreview') === 'true'))
   const [loadingConfig, setLoadingConfig] = useState(!propConfig && !isPreview)
   const [config, setConfig] = useState(propConfig || null)
-  const [eventsList, setEventsList] = useState(propEvents || [])
+  const [eventsList, setEventsList] = useState(() => {
+    if (propEvents) {
+      return Array.isArray(propEvents) ? propEvents : (propEvents.items || [])
+    }
+    return []
+  })
+
+  useEffect(() => {
+    if (propEvents) {
+      setEventsList(Array.isArray(propEvents) ? propEvents : (propEvents.items || []))
+    }
+  }, [propEvents])
   
   // Form State
   const [guestName, setGuestName] = useState('')
@@ -82,15 +96,19 @@ export default function InviteQRSVP({
 
   // Resolved list of events
   const resolvedEvents = useMemo(() => {
-    if (eventsList && eventsList.length > 0) {
-      return eventsList.map((e, idx) => ({
+    const activeList = (propEvents && (Array.isArray(propEvents) ? propEvents.length > 0 : propEvents.items?.length > 0))
+      ? (Array.isArray(propEvents) ? propEvents : propEvents.items)
+      : eventsList;
+    const list = Array.isArray(activeList) ? activeList : (activeList?.items || [])
+    if (list && list.length > 0) {
+      return list.map((e, idx) => ({
         id: e.id || `evt_${idx}`,
         name: typeof e === 'string' ? e.toUpperCase() : (e.title || e.name || `EVENT ${idx + 1}`).toUpperCase(),
         time: typeof e === 'object' && e.time ? e.time : ''
       }))
     }
     return defaultSampleEvents
-  }, [eventsList, defaultSampleEvents])
+  }, [propEvents, eventsList, defaultSampleEvents])
 
   const [selectedEvents, setSelectedEvents] = useState(() => resolvedEvents.map(e => e.id))
 

@@ -153,7 +153,7 @@ export default function Builder() {
   const { templateId } = useParams()
   const [searchParams] = useSearchParams()
   const location = useLocation()
-  const editCode = searchParams.get('code')
+  const editCode = searchParams.get('code') || searchParams.get('edit')
   const navigate = useNavigate()
   const { draftData, updateDraft, resetDraft } = useDraft()
   const isHouseWarmingDefault = templateId === 'modernhearth' || templateId === 'modern-hearth' || templateId === 'house-warming-1'
@@ -238,6 +238,7 @@ export default function Builder() {
     showCountdown: true,
     welcomeMessage: '',
     hasRsvp: false,
+    templateId: templateId || 'twilight-serenade',
     _pendingPhotoFiles: {},
     _pendingFamilyPhotoFile: null,
   }
@@ -291,6 +292,20 @@ export default function Builder() {
       status: draftData.status || 'DRAFT',
       amountPaid: draftData.amountPaid || 0,
       hasRsvp: draftData.hasRsvp || false,
+      wasRsvpPaid: Boolean(
+        draftData.wasRsvpPaid ||
+        draftData.isRsvpPaid ||
+        draftData.rsvpData?.isPaid ||
+        draftData.invitationData?.isRsvpPaid ||
+        (String(draftData.status).toUpperCase() === 'PAID' && Number(draftData.amountPaid) >= 2999 && (draftData.rsvpData?.enabled || draftData.hasRsvp || draftData.invitationData?.hasRsvp))
+      ),
+      isRsvpPaid: Boolean(
+        draftData.isRsvpPaid ||
+        draftData.rsvpData?.isPaid ||
+        draftData.invitationData?.isRsvpPaid ||
+        draftData.wasRsvpPaid ||
+        (String(draftData.status).toUpperCase() === 'PAID' && Number(draftData.amountPaid) >= 2999 && (draftData.rsvpData?.enabled || draftData.hasRsvp || draftData.invitationData?.hasRsvp))
+      ),
       showFamilySection: draftData.showFamilySection !== undefined ? draftData.showFamilySection : false,
       familyMessage: draftData.familyMessage || '',
       familyPhoto: draftData.familyPhoto || null,
@@ -305,6 +320,7 @@ export default function Builder() {
       showVenue: draftData.showVenue !== undefined ? draftData.showVenue : true,
       showCountdown: draftData.showCountdown !== undefined ? draftData.showCountdown : true,
       welcomeMessage: draftData.welcomeMessage || '',
+      templateId: templateId || draftData.templateId || 'twilight-serenade',
       _pendingPhotoFiles: draftData._pendingPhotoFiles || {},
       _pendingFamilyPhotoFile: draftData._pendingFamilyPhotoFile || null
     }
@@ -393,8 +409,8 @@ export default function Builder() {
   }, [shouldStartFresh, resetDraft])
 
   useEffect(() => {
-    // If we have an editCode in the URL AND (we haven't loaded it yet OR it's different from what's in memory)
-    if (editCode && (draftData.code !== editCode) && user?.token) {
+    // If we have an editCode in the URL AND (we haven't loaded it yet OR it's different from what's in memory OR formData is empty)
+    if (editCode && user?.token && (draftData.code !== editCode || !formData.groomName || formData.code !== editCode)) {
       setLoading(true)
       // Fetch existing data for editing
       fetch(`${API_URL}/api/invites/${editCode}`, {
@@ -405,22 +421,33 @@ export default function Builder() {
         .then(res => res.json())
         .then(data => {
           if (data) {
+            const resolvedTemplate = data.templateId || templateId
+            if (data.templateId && data.templateId !== templateId) {
+              const newParams = new URLSearchParams(searchParams)
+              newParams.set('code', data.code || editCode)
+              navigate(`/builder/${data.templateId}?${newParams.toString()}`, { replace: true })
+              return
+            }
+
             const mappedData = {
-              groomName: data.coupleData?.groomName || '',
-              brideName: data.coupleData?.brideName || '',
-              weddingDate: data.heroData?.weddingDate || '',
-              weddingMonth: data.heroData?.weddingMonth || '',
-              weddingYear: data.heroData?.weddingYear || '',
-              weddingTime: data.heroData?.weddingTime || '',
-              mahalName: data.venueData?.mahalName || '',
-              venueAddress: data.venueData?.venueAddress || '',
-              venueCity: data.venueData?.venueCity || '',
-              state: data.venueData?.state || '',
-              mapLink: data.venueData?.mapLink || '',
+              id: data.id,
+              code: data.code || editCode,
+              templateId: resolvedTemplate,
+              groomName: data.coupleData?.groomName || data.groomName || '',
+              brideName: data.coupleData?.brideName || data.brideName || '',
+              weddingDate: data.heroData?.weddingDate || (typeof data.weddingDate === 'string' ? data.weddingDate : data.weddingDate?.day) || '',
+              weddingMonth: data.heroData?.weddingMonth || data.weddingDate?.month || '',
+              weddingYear: data.heroData?.weddingYear || data.weddingDate?.year || '',
+              weddingTime: data.heroData?.weddingTime || data.weddingTime || '',
+              mahalName: data.venueData?.mahalName || data.mahalName || '',
+              venueAddress: data.venueData?.venueAddress || data.venueAddress || '',
+              venueCity: data.venueData?.venueCity || data.venueCity || '',
+              state: data.venueData?.state || data.state || '',
+              mapLink: data.venueData?.mapLink || data.mapLink || '',
               showGallery: data.scheduleData?.showGallery !== undefined ? data.scheduleData?.showGallery : true,
               showSchedule: data.scheduleData?.showSchedule !== undefined ? data.scheduleData?.showSchedule : true,
-              photos: data.storyData?.photos || [null, null, null],
-              scheduleItems: data.scheduleData?.items || (isHouseWarmingDefault
+              photos: data.storyData?.photos || data.photos || [null, null, null],
+              scheduleItems: data.scheduleData?.items || data.eventSchedule || (isHouseWarmingDefault
                 ? [
                     { time: '09:00 AM', title: 'Pooja & Homam' },
                     { time: '11:00 AM', title: 'House Warming Ceremony' },
@@ -431,11 +458,25 @@ export default function Builder() {
                     { time: '04:00 PM', title: 'Wedding Vows' },
                     { time: '07:00 PM', title: 'Grand Reception' }
                   ]),
-              code: data.code,
               status: data.status,
               amountPaid: data.amountPaid || 0,
-              hasRsvp: Boolean(data.rsvpData?.enabled || data.hasRsvp),
-              wasRsvpPaid: Boolean(data.status === 'PAID' && (data.rsvpData?.enabled || data.hasRsvp)),
+              hasRsvp: Boolean(data.hasRsvp ?? data.invitationData?.hasRsvp ?? data.rsvpData?.enabled ?? false),
+              wasRsvpPaid: Boolean(
+                data.hasRsvp ||
+                data.isRsvpPaid ||
+                data.rsvpData?.isPaid ||
+                data.invitationData?.isRsvpPaid ||
+                data.wasRsvpPaid ||
+                (String(data.status).toUpperCase() === 'PAID' && Number(data.amountPaid) >= 2999)
+              ),
+              isRsvpPaid: Boolean(
+                data.hasRsvp ||
+                data.isRsvpPaid ||
+                data.rsvpData?.isPaid ||
+                data.invitationData?.isRsvpPaid ||
+                data.wasRsvpPaid ||
+                (String(data.status).toUpperCase() === 'PAID' && Number(data.amountPaid) >= 2999)
+              ),
               showFamilySection: data.invitationData?.showFamilySection !== undefined ? data.invitationData.showFamilySection : false,
               familyMessage: data.invitationData?.familyMessage || '',
               familyPhoto: data.invitationData?.familyPhoto || null,
@@ -462,7 +503,7 @@ export default function Builder() {
           setLoading(false)
         })
     }
-  }, [editCode, draftData.code, updateDraft, user])
+  }, [editCode, draftData.code, templateId, updateDraft, user])
 
   useEffect(() => {
     if (loading || authLoading) return
@@ -529,7 +570,7 @@ export default function Builder() {
 
   const validateStep2 = () => {
     const newErrors = {}
-    if (formData.showSchedule && Array.isArray(formData.scheduleItems)) {
+    if ((formData.showSchedule || formData.hasRsvp) && Array.isArray(formData.scheduleItems)) {
       formData.scheduleItems.forEach((item, index) => {
         if (!item.title?.trim()) {
           newErrors[`scheduleItem_${index}_title`] = 'Event name is required'
@@ -740,6 +781,14 @@ export default function Builder() {
         updateDraft(newFormData)
 
         const resolvedDraft = { ...draftData, ...newFormData }
+        const isPaidStatus = resolvedDraft.status === 'PAID'
+        const effectiveRsvpPaid = Boolean(
+          resolvedDraft.wasRsvpPaid ||
+          resolvedDraft.isRsvpPaid ||
+          resolvedDraft.rsvpData?.isPaid ||
+          resolvedDraft.invitationData?.isRsvpPaid ||
+          (isPaidStatus && Number(resolvedDraft.amountPaid) >= 2999 && (resolvedDraft.rsvpData?.enabled || resolvedDraft.hasRsvp || resolvedDraft.invitationData?.hasRsvp))
+        )
         const inviteRequest = {
           templateId,
           code: editCode,
@@ -768,6 +817,8 @@ export default function Builder() {
           storyData: {
             photos: resolvedDraft.photos
           },
+          isRsvpPaid: effectiveRsvpPaid,
+          wasRsvpPaid: effectiveRsvpPaid,
           invitationData: {
             showGallery: resolvedDraft.showGallery !== undefined ? resolvedDraft.showGallery : true,
             showSchedule: resolvedDraft.showSchedule !== undefined ? resolvedDraft.showSchedule : true,
@@ -776,6 +827,7 @@ export default function Builder() {
             showCountdown: resolvedDraft.showCountdown !== undefined ? resolvedDraft.showCountdown : true,
             welcomeMessage: resolvedDraft.welcomeMessage,
             hasRsvp: Boolean(resolvedDraft.hasRsvp),
+            isRsvpPaid: effectiveRsvpPaid,
             showFamilySection: resolvedDraft.showFamilySection,
             familyMessage: resolvedDraft.familyMessage,
             familyPhoto: resolvedDraft.familyPhoto,
@@ -788,7 +840,8 @@ export default function Builder() {
             customSectionPosition: resolvedDraft.customSectionPosition
           },
           rsvpData: {
-            enabled: Boolean(resolvedDraft.hasRsvp),
+            enabled: Boolean(resolvedDraft.hasRsvp && effectiveRsvpPaid),
+            isPaid: effectiveRsvpPaid,
             allowGuestCount: true,
             allowEventSelection: true,
             allowMessage: true,
@@ -798,7 +851,7 @@ export default function Builder() {
         }
         await saveInvitation(inviteRequest)
       } else {
-        updateDraft(formData)
+        updateDraft({ ...formData, templateId: templateId || formData.templateId })
       }
       window.scrollTo(0, 0)
       if (editCode) {
@@ -809,6 +862,70 @@ export default function Builder() {
     } catch (err) {
       console.error('Save failed:', err)
       alert(err.message || 'Failed to save changes. Please try again.')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+
+  const handleUpgradeRsvp = async () => {
+    setIsSaving(true)
+    try {
+      // 1. Process pending image uploads if any
+      const resolvedPhotos = [...(formData.photos || [null, null, null])]
+      const pendingFiles = formData._pendingPhotoFiles || {}
+      
+      const photoUploadPromises = Object.entries(pendingFiles).map(async ([index, file]) => {
+        if (file && (file instanceof Blob || file instanceof File)) {
+          const compressed = await compressImageForUpload(file)
+          const resultUrl = await uploadToR2(compressed)
+          if (resultUrl) {
+            resolvedPhotos[Number(index)] = resultUrl
+          }
+        }
+      })
+
+      let resolvedFamilyPhoto = formData.familyPhoto || null
+      if (formData._pendingFamilyPhotoFile && (formData._pendingFamilyPhotoFile instanceof Blob || formData._pendingFamilyPhotoFile instanceof File)) {
+        const compressedFamily = await compressImageForUpload(formData._pendingFamilyPhotoFile)
+        const familyResultUrl = await uploadToR2(compressedFamily)
+        if (familyResultUrl) {
+          resolvedFamilyPhoto = familyResultUrl
+        }
+      }
+
+      await Promise.all(photoUploadPromises)
+
+      const finalPhotos = resolvedPhotos.map(p => (p && typeof p === 'string' && p.startsWith('blob:') ? null : p))
+      const finalFamilyPhoto = resolvedFamilyPhoto && typeof resolvedFamilyPhoto === 'string' && resolvedFamilyPhoto.startsWith('blob:') 
+        ? null 
+        : resolvedFamilyPhoto
+
+      const resolvedTemplateId = formData.templateId || templateId || draftData?.templateId || 'twilight-serenade'
+      const resolvedCode = editCode || formData.code || draftData?.code
+
+      const newFormData = { 
+        ...formData, 
+        photos: finalPhotos, 
+        familyPhoto: finalFamilyPhoto,
+        code: resolvedCode,
+        templateId: resolvedTemplateId,
+        hasRsvp: true
+      }
+      delete newFormData._pendingPhotoFiles
+      delete newFormData._pendingFamilyPhotoFile
+
+      updateDraft(newFormData)
+      navigate(`/payment?templateId=${encodeURIComponent(resolvedTemplateId)}${resolvedCode ? `&code=${encodeURIComponent(resolvedCode)}` : ''}`, {
+        state: {
+          draftData: newFormData,
+          templateId: resolvedTemplateId,
+          isRsvpUpgrade: true
+        }
+      })
+    } catch (err) {
+      console.error('Upgrade to RSVP failed:', err)
+      alert('Failed to proceed to payment. Please try again.')
     } finally {
       setIsSaving(false)
     }
@@ -1244,8 +1361,18 @@ export default function Builder() {
                         <p className="text-xs text-iqText/50">{isHouseWarming ? 'List your house warming event timings.' : 'List your ceremony timelines.'}</p>
                       </div>
                     </label>
-                    {formData.showSchedule && (
-                      <div className="ml-0 md:ml-9 space-y-3 md:space-y-4">
+                    {!formData.showSchedule && (
+                      <div className="ml-0 md:ml-9 rounded-xl bg-amber-50/90 border border-amber-200/70 p-3.5 text-xs text-amber-900 flex items-start gap-2.5">
+                        <span className="text-base leading-none">ℹ️</span>
+                        <div className="space-y-1">
+                          <p className="font-semibold text-amber-950">Visual Schedule Section is Hidden on Invitation</p>
+                          <p className="text-amber-800/90 leading-relaxed">
+                            The visual schedule timeline will not appear on your invitation, but the events below will still be used in your <strong>RSVP section</strong> so guests can select which events they will attend.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    <div className="ml-0 md:ml-9 space-y-3 md:space-y-4">
                         {formData.scheduleItems.length === 0 ? (
                           <div className="text-center py-8 border border-dashed border-iqBorder rounded-2xl bg-white text-sm text-iqText/40 font-medium">
                             No events added yet. Add events to display them in the schedule.
@@ -1395,7 +1522,6 @@ export default function Builder() {
                           + Add More Event
                         </button>
                       </div>
-                    )}
                   </div>
 
                   {/* Family Message / Picture Section (Housewarming Specific) */}
@@ -1764,47 +1890,79 @@ export default function Builder() {
                       <span className="font-bold text-green-600">Enabled ({formData.customSectionTitle || 'Custom Info'})</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between items-center text-sm">
                     <span className="opacity-50">RSVP &amp; Guest Management</span>
-                    <span className={`font-bold ${formData.hasRsvp ? 'text-emerald-700' : 'opacity-40'}`}>
-                      {formData.hasRsvp ? 'Enabled (+₹500)' : 'Disabled'}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`font-semibold ${formData.hasRsvp ? 'text-emerald-700' : 'opacity-40'}`}>
+                        {formData.hasRsvp ? 'Enabled' : 'Disabled'}
+                      </span>
+                      {formData.hasRsvp && formData.status === 'PAID' && !formData.wasRsvpPaid && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                          Upgrade: ₹500
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                <div className="pt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                {/* RSVP Upgrade Banner (if pending) */}
+                {editCode && formData.status === 'PAID' && formData.hasRsvp && !formData.wasRsvpPaid && (
+                  <div className="rounded-2xl border border-amber-200 bg-amber-50/80 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left shadow-sm">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-800 text-base flex-shrink-0">
+                        ⚡
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-amber-950">RSVP Add-on Selected (+₹500)</p>
+                        <p className="text-xs text-amber-800/80">Activate guest attendance tracking and dashboard on your live link</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleUpgradeRsvp}
+                      disabled={isSaving}
+                      className="self-start sm:self-auto px-5 py-2.5 rounded-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-1.5 flex-shrink-0 whitespace-nowrap"
+                    >
+                      💳 Pay ₹500 &amp; Activate
+                    </button>
+                  </div>
+                )}
+
+                {/* Navigation and Action Buttons */}
+                <div className="pt-4 flex flex-col sm:flex-row items-center gap-3">
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="flex-1 rounded-full border border-iqBorder py-3 md:py-4 text-sm font-bold transition hover:bg-iqText/5"
+                    className="w-full sm:w-36 py-3.5 rounded-full border border-iqBorder bg-white text-sm font-bold text-iqText transition hover:bg-iqText/5 flex items-center justify-center flex-shrink-0"
                   >
                     Back
                   </button>
 
                   {editCode ? (
-                    <>
+                    <div className="w-full flex-1 flex flex-col sm:flex-row gap-3">
                       <button
                         type="button"
                         onClick={() => {
                           updateDraft(formData)
                           window.open(`/templates/${templateId}/${editCode}?preview=true`, '_blank')
                         }}
-                        className="flex-1 rounded-full border border-neutral-300 bg-white py-3 md:py-4 text-sm font-bold text-neutral-800 shadow-sm transition hover:bg-neutral-50"
+                        className="flex-1 py-3.5 rounded-full border border-neutral-300 bg-white text-sm font-bold text-neutral-800 shadow-sm transition hover:bg-neutral-50 flex items-center justify-center gap-2"
                       >
-                        👁️ Preview Live
+                        <span>👁️</span>
+                        <span>Preview Live</span>
                       </button>
                       <button
                         type="submit"
                         disabled={isSaving}
-                        className="flex-[2] rounded-full bg-emerald-600 hover:bg-emerald-700 py-3 md:py-4 text-sm font-bold text-white shadow-xl transition disabled:opacity-50 flex items-center justify-center gap-2"
+                        className="flex-[2] py-3.5 rounded-full bg-black hover:bg-neutral-800 text-sm font-bold text-white shadow-xl transition disabled:opacity-50 flex items-center justify-center gap-2"
                       >
-                        {isSaving ? 'Saving Changes...' : '💾 Save & Update Invitation'}
+                        {isSaving ? 'Saving Changes...' : '💾 Save Changes'}
                       </button>
-                    </>
+                    </div>
                   ) : (
                     <button
                       type="submit"
-                      className="flex-[2] rounded-full bg-black py-3 md:py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90"
+                      className="w-full sm:flex-1 py-3.5 rounded-full bg-black text-sm font-bold text-white shadow-xl transition hover:opacity-90 flex items-center justify-center"
                     >
                       View Preview
                     </button>

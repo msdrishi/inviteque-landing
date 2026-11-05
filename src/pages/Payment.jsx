@@ -27,14 +27,74 @@ export default function Payment() {
   const [couponSuccess, setCouponSuccess] = useState('')
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false)
 
-  // Resolve draftData and templateId safely from location.state OR DraftContext
-  // React Router location.state serialization drops File objects, so we merge them back from contextDraft
+  // URL & Location queries
+  const searchParams = new URLSearchParams(location.search)
+  const queryTemplateId = searchParams.get('templateId')
+  const queryCode = searchParams.get('code')
+  const effectiveCode = location.state?.draftData?.code || queryCode || location.state?.code
+
+  // Loaded invite from API if code is present but draft data is missing or stale
+  const [loadedInvite, setLoadedInvite] = useState(null)
+  const [loadingInvite, setLoadingInvite] = useState(false)
+
+  useEffect(() => {
+    // If an invitation code exists and we don't have couple data in location.state
+    if (effectiveCode && user?.token && (!location.state?.draftData?.groomName || location.state?.draftData?.code !== effectiveCode)) {
+      setLoadingInvite(true)
+      fetch(`${API_URL}/api/invites/${effectiveCode}`, {
+        headers: { 'Authorization': `Bearer ${user.token}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data && (data.code || data.id)) {
+            setLoadedInvite(data)
+          }
+        })
+        .catch(err => console.error('Failed to load invite in payment:', err))
+        .finally(() => setLoadingInvite(false))
+    }
+  }, [effectiveCode, user?.token, location.state])
+
+  const baseFromLoaded = loadedInvite ? {
+    id: loadedInvite.id,
+    code: loadedInvite.code,
+    templateId: loadedInvite.templateId,
+    groomName: loadedInvite.coupleData?.groomName || loadedInvite.groomName || '',
+    brideName: loadedInvite.coupleData?.brideName || loadedInvite.brideName || '',
+    weddingDate: loadedInvite.heroData?.weddingDate || (typeof loadedInvite.weddingDate === 'string' ? loadedInvite.weddingDate : loadedInvite.weddingDate?.day) || '',
+    weddingMonth: loadedInvite.heroData?.weddingMonth || loadedInvite.weddingDate?.month || '',
+    weddingYear: loadedInvite.heroData?.weddingYear || loadedInvite.weddingDate?.year || '',
+    weddingTime: loadedInvite.heroData?.weddingTime || loadedInvite.weddingTime || '',
+    mahalName: loadedInvite.venueData?.mahalName || loadedInvite.mahalName || '',
+    venueAddress: loadedInvite.venueData?.venueAddress || loadedInvite.venueAddress || '',
+    venueCity: loadedInvite.venueData?.venueCity || loadedInvite.venueCity || '',
+    state: loadedInvite.venueData?.state || loadedInvite.state || '',
+    mapLink: loadedInvite.venueData?.mapLink || loadedInvite.mapLink || '',
+    showGallery: loadedInvite.scheduleData?.showGallery !== undefined ? loadedInvite.scheduleData?.showGallery : true,
+    showSchedule: loadedInvite.scheduleData?.showSchedule !== undefined ? loadedInvite.scheduleData?.showSchedule : true,
+    photos: loadedInvite.storyData?.photos || loadedInvite.photos || [null, null, null],
+    scheduleItems: loadedInvite.scheduleData?.items || loadedInvite.eventSchedule || [],
+    status: loadedInvite.status,
+    amountPaid: loadedInvite.amountPaid || 0,
+    hasRsvp: location.state?.isRsvpUpgrade ? true : Boolean(loadedInvite.hasRsvp ?? loadedInvite.invitationData?.hasRsvp ?? loadedInvite.rsvpData?.enabled ?? false),
+    wasRsvpPaid: Boolean(loadedInvite.hasRsvp || loadedInvite.isRsvpPaid || loadedInvite.rsvpData?.isPaid || (Number(loadedInvite.amountPaid) >= 2999)),
+    isRsvpPaid: Boolean(loadedInvite.hasRsvp || loadedInvite.isRsvpPaid || loadedInvite.rsvpData?.isPaid || (Number(loadedInvite.amountPaid) >= 2999)),
+  } : null
+
+  const resolvedDraftSource = location.state?.draftData || baseFromLoaded || contextDraft || {}
   const draftData = { 
-    ...(location.state?.draftData || contextDraft || {}),
+    ...resolvedDraftSource,
+    hasRsvp: location.state?.isRsvpUpgrade ? true : (resolvedDraftSource.hasRsvp !== undefined ? resolvedDraftSource.hasRsvp : false),
     _pendingPhotoFiles: contextDraft?._pendingPhotoFiles || location.state?.draftData?._pendingPhotoFiles || {},
     _pendingFamilyPhotoFile: contextDraft?._pendingFamilyPhotoFile || location.state?.draftData?._pendingFamilyPhotoFile || null
   }
-  const templateId = location.state?.templateId || draftData?.templateId || new URLSearchParams(location.search).get('templateId') || 'twilight-serenade'
+
+  const templateId = location.state?.templateId || 
+                     location.state?.draftData?.templateId || 
+                     loadedInvite?.templateId ||
+                     queryTemplateId || 
+                     draftData?.templateId || 
+                     'twilight-serenade'
 
   // Get template details — search both wedding and house warming with safe fallback
   const template = templates.find(t => t.id === templateId) || 
@@ -56,6 +116,11 @@ export default function Payment() {
   const isMidnightWaltz = templateId === 'midnight-waltz'
   const isRoyalHeirloom = templateId === 'royal-heirloom'
   const isRajasthaniVows = templateId === 'rajasthani-vows' || templateId === 'rajestani-vows'
+  const isSouthernSerenade = templateId === 'southern-serenade'
+  const isRoyalHeritage = templateId === 'royal-heritage'
+  const isPinkBlossom = templateId === 'pink-blossom'
+  const isAuraOfElegance = templateId === 'aura-of-elegance' || templateId === 'template-1'
+
   const coverImage = isSunflower
     ? (royalPalaceMapping['hero-first-frame-desktop.jpg'] || "/backgrounds/Sunflower-template/frames/desktop/desktop-view.webp")
     : isTwilight 
@@ -72,7 +137,14 @@ export default function Payment() {
                 ? "/assets/templates/royal-heirloom/hero-bg-mobile.webp"
                 : isRajasthaniVows
                   ? "/assets/templates/rajestani-vows/hero-mobile.webp"
-                  : themeImg
+                  : isSouthernSerenade
+                    ? "/assets/templates/southern-serenade/hero_bg.webp"
+                    : isRoyalHeritage
+                      ? "/assets/templates/royal-heritage/royal-heritage-thumbnail.webp"
+                      : isPinkBlossom
+                        ? "/assets/templates/pinkblossom/PinkBlossom-landing-thumbnail.webp"
+                        : template?.thumbnail || themeImg
+
   const headerGradient = isTwilight
     ? "from-[#2d3a28] via-[#3D5236] to-[#2d3a28]"
     : isEverlasting
@@ -83,9 +155,35 @@ export default function Payment() {
           ? "from-[#4A2A0E] via-[#6B351D] to-[#4A2A0E]"
           : isRajasthaniVows
             ? "from-[#5C1A0E] via-[#8B2500] to-[#5C1A0E]"
-            : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
+            : isMidnightWaltz
+              ? "from-[#1a1c29] via-[#2c2f42] to-[#1a1c29]"
+              : isSouthernSerenade
+                ? "from-[#4A1521] via-[#6B2232] to-[#4A1521]"
+                : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
 
-  const TEMPLATE_PRICE = template?.price || 2499 // Base price in INR based on template config
+  const defaultTemplatePrice = template?.price || 2499 // Base price in INR based on template config
+  const [liveTemplatePrice, setLiveTemplatePrice] = useState(defaultTemplatePrice)
+
+  // Dynamically synchronize live configured template price from backend database
+  useEffect(() => {
+    if (templateId) {
+      fetch(`${API_URL}/api/templates/${encodeURIComponent(templateId)}`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && (data.priceInRupees || data.priceInPaise)) {
+            const fetchedPrice = data.priceInRupees || (data.priceInPaise / 100)
+            if (fetchedPrice > 0) {
+              setLiveTemplatePrice(fetchedPrice)
+            }
+          }
+        })
+        .catch(() => {
+          // Gracefully fallback to static catalog template price
+        })
+    }
+  }, [templateId])
+
+  const TEMPLATE_PRICE = liveTemplatePrice || defaultTemplatePrice
 
   const isTemplatePaid = Boolean(
     String(draftData.status).toUpperCase() === 'PAID' || 
@@ -93,14 +191,14 @@ export default function Payment() {
     (draftData.coupleData && draftData.coupleData.isPaid === true) ||
     Number(draftData.amountPaid) > 0
   )
-  const wasRsvpPaid = Boolean(isTemplatePaid && (draftData.wasRsvpPaid || draftData.rsvpData?.enabled || draftData.invitationData?.hasRsvp))
+  const wasRsvpPaid = Boolean(isTemplatePaid && (draftData.isRsvpPaid || draftData.rsvpData?.isPaid || draftData.invitationData?.isRsvpPaid || draftData.wasRsvpPaid || (Number(draftData.amountPaid) >= 2999 && (draftData.rsvpData?.enabled || draftData.hasRsvp || draftData.invitationData?.hasRsvp))))
   const wantsRsvp = Boolean(draftData.hasRsvp)
 
   // Is this an RSVP add-on upgrade for an invitation that was already paid?
   const isRsvpUpgrade = isTemplatePaid && wantsRsvp && !wasRsvpPaid
   const isAlreadyFullyPaid = isTemplatePaid && (!wantsRsvp || wasRsvpPaid)
 
-  if (authLoading) {
+  if (authLoading || loadingInvite) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-iqBg">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
@@ -221,6 +319,7 @@ export default function Payment() {
         : resolvedFamilyPhoto
 
       // Use the resolved (uploaded) URLs for the rest of the flow
+      const willHaveRsvpPaid = Boolean(wasRsvpPaid || (wantsRsvp && (isRsvpUpgrade || !isTemplatePaid)))
       const resolvedDraft = {
         ...draftData,
         photos: finalPhotos,
@@ -234,7 +333,8 @@ export default function Payment() {
 
       // 1. Prepare backend request matching our JSONB columns
       const inviteRequest = {
-        code: resolvedDraft.code, // VERY IMPORTANT: Pass code to update instead of creating new
+        id: draftData.id || loadedInvite?.id || location.state?.draftData?.id,
+        code: resolvedDraft.code || effectiveCode, // VERY IMPORTANT: Pass code to update instead of creating new
         templateId,
         coupleNames: `${resolvedDraft.groomName || ''} & ${resolvedDraft.brideName || ''}`.trim(),
         coupleData: {
@@ -290,6 +390,7 @@ export default function Payment() {
           showVenue: resolvedDraft.showVenue !== undefined ? resolvedDraft.showVenue : true,
           showCountdown: resolvedDraft.showCountdown !== undefined ? resolvedDraft.showCountdown : true,
           hasRsvp: Boolean(resolvedDraft.hasRsvp),
+          isRsvpPaid: willHaveRsvpPaid,
           welcomeMessage: resolvedDraft.welcomeMessage,
           showFamilySection: resolvedDraft.showFamilySection,
           familyMessage: resolvedDraft.familyMessage,
@@ -302,8 +403,11 @@ export default function Payment() {
           customSectionContent: resolvedDraft.customSectionContent,
           customSectionPosition: resolvedDraft.customSectionPosition
         },
+        isRsvpPaid: willHaveRsvpPaid,
+        wasRsvpPaid: willHaveRsvpPaid,
         rsvpData: {
-          enabled: Boolean(resolvedDraft.hasRsvp),
+          enabled: Boolean(resolvedDraft.hasRsvp && willHaveRsvpPaid),
+          isPaid: willHaveRsvpPaid,
           allowGuestCount: true,
           allowEventSelection: true,
           allowMessage: true,
@@ -349,7 +453,7 @@ export default function Payment() {
             inviteCode: savedInvite.code,
             amountPaid: 0,
             couponCode: appliedCoupon ? appliedCoupon.code : null,
-            inviteRequest: { ...inviteRequest, status: 'PAID', code: savedInvite.code, couponCode: appliedCoupon ? appliedCoupon.code : null }
+            inviteRequest: { ...inviteRequest, status: 'PAID', code: savedInvite.code, isRsvpPaid: willHaveRsvpPaid, wasRsvpPaid: willHaveRsvpPaid, couponCode: appliedCoupon ? appliedCoupon.code : null }
           })
         })
 
@@ -382,7 +486,9 @@ export default function Payment() {
         body: JSON.stringify({
           code: savedInvite.code,
           discountPercentage: appliedCoupon ? appliedCoupon.discountPercentage : null,
-          amount: finalPrice
+          amount: finalPrice,
+          wantsRsvp: Boolean(draftData.hasRsvp),
+          couponCode: appliedCoupon ? appliedCoupon.code : null
         })
       })
 
@@ -404,7 +510,7 @@ export default function Payment() {
           body: JSON.stringify({
             inviteCode: savedInvite.code,
             amountPaid: (draftData.amountPaid || 0) + finalPrice,
-            inviteRequest: { ...inviteRequest, status: 'PAID', code: savedInvite.code }
+            inviteRequest: { ...inviteRequest, status: 'PAID', code: savedInvite.code, isRsvpPaid: willHaveRsvpPaid, wasRsvpPaid: willHaveRsvpPaid }
           })
         })
 
@@ -472,7 +578,7 @@ export default function Payment() {
                 razorpaySignature: response.razorpay_signature,
                 amountPaid: finalPrice,
                 couponCode: appliedCoupon ? appliedCoupon.code : null,
-                inviteRequest: { ...inviteRequest, status: 'PAID', code: savedInvite.code, couponCode: appliedCoupon ? appliedCoupon.code : null }
+                inviteRequest: { ...inviteRequest, status: 'PAID', code: savedInvite.code, isRsvpPaid: willHaveRsvpPaid, wasRsvpPaid: willHaveRsvpPaid, couponCode: appliedCoupon ? appliedCoupon.code : null }
               })
             })
 
@@ -608,18 +714,20 @@ export default function Payment() {
                 </div>
 
                 {/* Feature Status */}
-                <div className="grid grid-cols-3 gap-3 pb-6">
-                  <div className="rounded-2xl bg-iqBg/50 p-3.5 border border-iqBorder text-center">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">Gallery</span>
-                    <span className="text-xs font-bold">{draftData.showGallery ? '✅ Enabled' : '❌ Disabled'}</span>
+                <div className="grid grid-cols-3 gap-2.5 pb-4">
+                  <div className="rounded-xl bg-iqBg/50 p-2.5 border border-iqBorder text-center">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-iqText/40 block mb-0.5">Gallery</span>
+                    <span className="text-xs font-semibold">{draftData.showGallery ? 'Enabled' : 'Disabled'}</span>
                   </div>
-                  <div className="rounded-2xl bg-iqBg/50 p-3.5 border border-iqBorder text-center">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">Schedule</span>
-                    <span className="text-xs font-bold">{draftData.showSchedule ? '✅ Enabled' : '❌ Disabled'}</span>
+                  <div className="rounded-xl bg-iqBg/50 p-2.5 border border-iqBorder text-center">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-iqText/40 block mb-0.5">Schedule</span>
+                    <span className="text-xs font-semibold">{draftData.showSchedule ? 'Enabled' : 'Disabled'}</span>
                   </div>
-                  <div className="rounded-2xl bg-iqBg/50 p-3.5 border border-iqBorder text-center">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-iqText/40 block mb-1">RSVP Subsystem</span>
-                    <span className="text-xs font-bold">{draftData.hasRsvp ? '✅ Enabled' : '❌ Disabled'}</span>
+                  <div className="rounded-xl bg-iqBg/50 p-2.5 border border-iqBorder text-center">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-iqText/40 block mb-0.5">RSVP Subsystem</span>
+                    <span className={`text-xs font-semibold ${draftData.hasRsvp ? 'text-emerald-700' : 'text-iqText/60'}`}>
+                      {draftData.hasRsvp ? 'Enabled' : 'Disabled'}
+                    </span>
                   </div>
                 </div>
 
@@ -698,7 +806,7 @@ export default function Payment() {
 
                     <div className="flex justify-between items-end pt-3 border-t border-dashed border-iqBorder">
                       <span className="font-bold">{isRsvpUpgrade ? 'Total Due to Upgrade' : 'Total Amount'}</span>
-                      <span className="text-3xl font-bold text-iqText">₹{finalPrice.toFixed(2)}</span>
+                      <span className="text-2xl md:text-3xl font-bold text-iqText">₹{finalPrice.toFixed(2)}</span>
                     </div>
                     <p className="text-[10px] text-iqText/40 text-center uppercase tracking-widest font-bold">Inclusive of all taxes</p>
                   </div>
@@ -717,21 +825,21 @@ export default function Payment() {
             {/* Info Box */}
             <motion.div
               variants={fadeUp}
-              className={`rounded-2xl p-6 space-y-3 ${isAlreadyFullyPaid ? 'bg-blue-50 border border-blue-100' : isRsvpUpgrade ? 'bg-amber-50 border border-amber-100' : 'bg-iqBg/50 border border-iqBorder'}`}
+              className={`rounded-2xl p-4 space-y-1.5 ${isAlreadyFullyPaid ? 'bg-blue-50/80 border border-blue-100' : isRsvpUpgrade ? 'bg-amber-50/70 border border-amber-200/70' : 'bg-iqBg/50 border border-iqBorder'}`}
             >
-              <h3 className={`font-bold text-sm ${isAlreadyFullyPaid ? 'text-blue-900' : isRsvpUpgrade ? 'text-amber-950' : 'text-iqText'}`}>
+              <h3 className={`font-bold text-xs uppercase tracking-wider ${isAlreadyFullyPaid ? 'text-blue-900' : isRsvpUpgrade ? 'text-amber-900' : 'text-iqText'}`}>
                 {isAlreadyFullyPaid
-                  ? '✨ Free Updates Enabled'
+                  ? 'Free Updates Enabled'
                   : isRsvpUpgrade
-                    ? '🎉 RSVP Subsystem Activation'
-                    : '🎁 What happens next?'}
+                    ? 'RSVP Activation'
+                    : 'What happens next?'}
               </h3>
-              <p className={`text-xs leading-relaxed ${isAlreadyFullyPaid ? 'text-blue-800/70' : isRsvpUpgrade ? 'text-amber-900/80' : 'text-iqText/60'}`}>
+              <p className={`text-xs leading-relaxed ${isAlreadyFullyPaid ? 'text-blue-800/80' : isRsvpUpgrade ? 'text-amber-900/80' : 'text-iqText/60'}`}>
                 {isAlreadyFullyPaid
-                  ? 'As a premium user, you can update your wedding details as many times as you like. Your live link will be refreshed instantly once you click update.'
+                  ? 'Your live link will be updated instantly with your latest wedding details.'
                   : isRsvpUpgrade
-                    ? 'By completing this ₹500 RSVP upgrade, the interactive RSVP section and your private RSVP dashboard will be enabled on your live wedding invitation!'
-                    : 'After a successful payment, you will receive your unique digital invitation link. You can share this link with your guests instantly via WhatsApp or Email.'}
+                    ? 'Once payment is confirmed, the interactive RSVP section will be activated on your live link.'
+                    : 'After payment, your wedding invitation link will be activated for sharing.'}
               </p>
             </motion.div>
           </div>
@@ -739,41 +847,32 @@ export default function Payment() {
           {/* Payment Actions */}
           <motion.div
             variants={fadeUp}
-            className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-iqBorder"
+            className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-iqBorder"
           >
             <button
               onClick={() => navigate(-1)}
-              className="flex-1 rounded-full border border-iqBorder bg-white py-4 text-sm font-bold text-iqText transition hover:bg-iqText/5"
+              className="flex-1 rounded-full border border-iqBorder bg-white py-3 text-sm font-semibold text-iqText transition hover:bg-iqText/5"
             >
-              Continue Editing
+              Back to Edit
             </button>
             <button
               onClick={handlePaymentClick}
               disabled={isProcessing}
-              className={`flex-1 rounded-full bg-black py-4 text-sm font-bold text-white shadow-xl transition hover:opacity-90 flex items-center justify-center gap-2 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`flex-[2] rounded-full bg-black py-3 text-sm font-semibold text-white shadow-md transition hover:bg-neutral-800 flex items-center justify-center gap-2 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {isProcessing ? (
                 <>
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  Saving...
+                  Processing...
                 </>
               ) : (
                 <>
                   {isAlreadyFullyPaid ? (
-                    <>
-                      <span>💾</span>
-                      Update Invitation
-                    </>
+                    'Update Invitation'
                   ) : isRsvpUpgrade ? (
-                    <>
-                      <span>💳</span>
-                      Pay ₹{finalPrice.toFixed(2)} &amp; Enable RSVP
-                    </>
+                    `Pay ₹${finalPrice.toFixed(0)} • Activate RSVP`
                   ) : (
-                    <>
-                      <span>💳</span>
-                      Pay ₹{finalPrice.toFixed(2)}
-                    </>
+                    `Pay ₹${finalPrice.toFixed(0)} • Complete Order`
                   )}
                 </>
               )}

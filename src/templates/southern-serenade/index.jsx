@@ -13,6 +13,8 @@ import SouthernSerenadeCountdown from './SouthernSerenadeCountdown.jsx'
 import SouthernSerenadeEventSection from './SouthernSerenadeEventSection.jsx'
 import InviteQRSVP from '../../components/InviteQRSVP.jsx'
 import Footer from '../../components/Footer.jsx'
+import { resolveInvitationFeatures } from '../../utils/invitationFeatures.js'
+import TemplatePreviewBar from '../../components/TemplatePreviewBar.jsx'
 import { ASSETS } from './theme.jsx'
 
 export default function TemplateSouthernSerenade({ savedData, groupSlug: propGroupSlug }) {
@@ -24,14 +26,6 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const draftData = isCustomPreview ? (_rawDraft || {}) : {}
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
-
-  const isPaid = savedData && (
-    String(savedData.status).toUpperCase() === 'PAID' ||
-    savedData.isPaid === true ||
-    (savedData.coupleData && savedData.coupleData.isPaid === true)
-  )
-  const showWatermark = isPreview || isCustomPreview || !isPaid
-  const activeData = savedData || (isCustomPreview ? draftData : null)
 
   // Standard synchronized default events: Haldi, Wedding, Reception
   const defaultEvents = useMemo(() => [
@@ -173,20 +167,23 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
     },
   }
 
-  const userPhotos = savedData
-    ? (savedData.storyData?.photos || savedData.photos || [])
-    : (draftData?.photos || [])
-
   const customEvents = activeData?.customEvents || savedData?.customEvents || null
-  const showPhotoCards = !(activeData?.hidePhotoCards || savedData?.hidePhotoCards)
-  const showVenue = !(activeData?.hideVenue || savedData?.hideVenue || customEvents)
-  const showSchedule = !(activeData?.hideSchedule || savedData?.hideSchedule || customEvents)
-  const showRsvp = savedData 
-    ? (savedData.invitationData?.hasRsvp !== undefined 
-        ? Boolean(savedData.invitationData.hasRsvp) 
-        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
-    : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
-  const effectiveShowRsvp = showRsvp && !(activeData?.hideRsvp || savedData?.hideRsvp || customEvents)
+
+  // Centralized, dynamic feature & visibility resolution across all templates
+  const {
+    showWatermark,
+    showRsvp: effectiveShowRsvp,
+    showPhotoCards,
+    showSchedule,
+    showVenue,
+    photos: userPhotos,
+  } = resolveInvitationFeatures({
+    savedData,
+    draftData,
+    isCustomPreview,
+    isPreview,
+    customEvents,
+  })
 
   // ── Preview Watermarks ─────────────────────────────────────────
   const WatermarkMobile = () => showWatermark ? (
@@ -213,43 +210,6 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
     </div>
   ) : null
 
-  // ── Builder Preview Navigation ────────────────────────────────
-  const PreviewNavMobile = () => isCustomPreview ? (
-    <div className="fixed bottom-6 left-1/2 z-[110] -translate-x-1/2 px-6 w-full max-w-[400px]">
-      <div className="flex gap-3">
-        <button
-          onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
-          className="flex-1 flex items-center justify-center gap-2 rounded-full border border-[#731924]/20 bg-white/95 backdrop-blur-md py-3.5 text-sm font-bold text-[#731924] shadow-xl hover:scale-105 active:scale-95"
-        >
-          Back
-        </button>
-        <button
-          onClick={() => navigate('/payment', { state: { draftData, templateId } })}
-          className="flex-1 flex items-center justify-center gap-3 rounded-full bg-[#731924] py-3.5 text-sm font-bold text-[#FDFBF7] shadow-xl hover:scale-105 active:scale-95"
-        >
-          Proceed
-        </button>
-      </div>
-    </div>
-  ) : null
-
-  const PreviewNavDesktop = () => isCustomPreview ? (
-    <div className="fixed bottom-8 right-8 z-[110] flex gap-4">
-      <button
-        onClick={() => navigate(`/builder/${templateId}?step=4`, { state: { step: 4 } })}
-        className="px-8 py-3.5 rounded-full border border-[#731924]/25 bg-white/95 backdrop-blur-md text-sm font-bold text-[#731924] shadow-xl hover:scale-105 active:scale-95"
-      >
-        ← Back to Edit
-      </button>
-      <button
-        onClick={() => navigate('/payment', { state: { draftData, templateId } })}
-        className="px-10 py-3.5 rounded-full bg-[#731924] text-sm font-bold text-[#FDFBF7] shadow-xl hover:scale-105 active:scale-95"
-      >
-        Proceed →
-      </button>
-    </div>
-  ) : null
-
   // ── Render Template Sections ──────────────────────────────────
   return (
     <div className="relative min-h-screen bg-[#F8F3EA] text-[#352520]">
@@ -257,7 +217,9 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
       <div className="lg:hidden flex justify-center items-start min-h-screen bg-[#F0E8D8]">
         <div className="relative w-full max-w-[768px] min-h-[100svh] bg-[#F8F3EA] shadow-[0_0_60px_rgba(0,0,0,0.10)]">
           <WatermarkMobile />
-          <PreviewNavMobile />
+          {isCustomPreview && (
+            <TemplatePreviewBar templateId="southern-serenade" draftData={draftData} primaryColor="#731924" />
+          )}
 
           {/* 1. Hero Section */}
           <SouthernSerenadeHero data={data.hero} isDesktop={false} />
@@ -331,7 +293,9 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
       {/* ── DESKTOP VIEW ── */}
       <div className="hidden lg:block w-full min-h-screen bg-[#F8F3EA] relative">
         <WatermarkDesktop />
-        <PreviewNavDesktop />
+        {isCustomPreview && (
+          <TemplatePreviewBar templateId="southern-serenade" draftData={draftData} primaryColor="#731924" />
+        )}
 
         {/* 1. Hero Section */}
         <SouthernSerenadeHero data={data.hero} isDesktop={true} />

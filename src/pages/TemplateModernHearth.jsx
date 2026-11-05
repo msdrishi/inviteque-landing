@@ -101,7 +101,7 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
 
   const isGalleryView = !activeData;
   const showGallery = isGalleryView ? true : (savedData ? (savedData.invitationData?.showGallery ?? savedData.showGallery ?? true) : (draftData?.showGallery ?? true));
-  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
+  const showSchedule = isGalleryView ? true : (savedData ? (savedData.invitationData?.showSchedule ?? savedData.scheduleData?.showSchedule ?? savedData.showSchedule ?? true) : (draftData?.showSchedule ?? true));
   const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
   const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
   const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
@@ -113,11 +113,29 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
     ? (activeData.familyPhoto || activeData.invitationData?.familyPhoto)
     : null
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
-  const showRsvp = savedData 
-    ? (savedData.invitationData?.hasRsvp !== undefined 
-        ? Boolean(savedData.invitationData.hasRsvp) 
-        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp)) 
+    const isRsvpPaid = Boolean(
+    savedData?.isRsvpPaid ||
+    savedData?.rsvpData?.isPaid ||
+    savedData?.invitationData?.isRsvpPaid ||
+    savedData?.wasRsvpPaid ||
+    (String(savedData?.status).toUpperCase() === 'PAID' && Number(savedData?.amountPaid) >= 2999 && (savedData?.rsvpData?.enabled || savedData?.invitationData?.hasRsvp || savedData?.hasRsvp))
+  )
+
+  const isPreviewMode = Boolean(
+    (typeof isCustomPreview !== 'undefined' && isCustomPreview) ||
+    (typeof isPreview !== 'undefined' && isPreview) ||
+    (typeof window !== 'undefined' && (new URLSearchParams(window.location.search).get('preview') === 'true' || new URLSearchParams(window.location.search).get('customPreview') === 'true'))
+  )
+
+  const wantsRsvp = savedData
+    ? (savedData.invitationData?.hasRsvp !== undefined
+        ? Boolean(savedData.invitationData.hasRsvp)
+        : Boolean(savedData.rsvpData?.enabled || savedData.hasRsvp))
     : (draftData?.hasRsvp !== undefined ? Boolean(draftData.hasRsvp) : true)
+
+  const showRsvp = isPreviewMode
+    ? wantsRsvp
+    : (savedData ? (isRsvpPaid && wantsRsvp) : Boolean(draftData?.hasRsvp ?? true))
 
   const data = useMemo(() => {
     if (!activeData) return staticData
