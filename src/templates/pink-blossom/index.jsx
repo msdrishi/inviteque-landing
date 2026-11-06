@@ -10,7 +10,6 @@ import bgMusicSrc from '../../assets/audio/bg-music-a-thousand-years.mp3'
 // Import Pink Blossom section components (all self-contained in this folder)
 import { COLORS, ASSETS, getFontStyles, sectionStyle, bgStyle } from './theme'
 import PinkBlossomCover from './PinkBlossomCover.jsx'
-import PinkBlossomLoader from './PinkBlossomLoader.jsx'
 import PinkBlossomHero from './PinkBlossomHero.jsx'
 import PinkBlossomFamilyInvitation from './PinkBlossomFamilyInvitation.jsx'
 import PinkBlossomStory from './PinkBlossomStory.jsx'
