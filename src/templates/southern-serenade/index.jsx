@@ -26,6 +26,7 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
   const isPreview = new URLSearchParams(location.search).get('preview') === 'true'
   const draftData = isCustomPreview ? (_rawDraft || {}) : {}
   const groupSlug = propGroupSlug || new URLSearchParams(location.search).get('group')
+  const activeData = savedData || (isCustomPreview ? draftData : null)
 
   // Standard synchronized default events: Haldi, Wedding, Reception
   const defaultEvents = useMemo(() => [

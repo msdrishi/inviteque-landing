@@ -35,7 +35,8 @@ export function resolveInvitationFeatures({
     ))
   );
 
-  const activeData = savedData || (isPreviewMode ? draftData : null);
+  const hasDraftContent = draftData && typeof draftData === 'object' && Object.keys(draftData).length > 0;
+  const activeData = savedData || (isCustomPreview && hasDraftContent ? draftData : null);
   const isGalleryView = !activeData; // direct catalog demo preview without user customizations
 
   // 1. Payment status & RSVP Entitlement
