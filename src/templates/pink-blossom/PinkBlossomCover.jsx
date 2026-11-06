@@ -1,11 +1,10 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { COLORS } from './theme'
 
 export default function PinkBlossomCover({
   hasOpened,
   isPlaying,
-  isVideoReady,
   videoRef,
   coverVideoSrc,
   coverPosterSrc,
@@ -19,61 +18,6 @@ export default function PinkBlossomCover({
   hideTapUnderline,
   coverTapAsPill,
 }) {
-  const canvasRef = useRef(null)
-  const [posterReady, setPosterReady] = useState(false)
-  const [posterDataUrl, setPosterDataUrl] = useState(null)
-
-  // Pre-capture frame safely without interfering with playback
-  useEffect(() => {
-    const vid = videoRef.current
-    if (!vid || isPlaying || hasOpened) return
-
-    const captureFirstFrame = () => {
-      if (isPlaying || hasOpened) return
-      try {
-        const canvas = canvasRef.current
-        if (!canvas || posterReady) return
-
-        canvas.width = vid.videoWidth || 1080
-        canvas.height = vid.videoHeight || 1920
-        const ctx = canvas.getContext('2d')
-        ctx.drawImage(vid, 0, 0, canvas.width, canvas.height)
-        
-        const dataUrl = canvas.toDataURL('image/webp', 0.9)
-        setPosterDataUrl(dataUrl)
-        setPosterReady(true)
-      } catch (e) {
-        setPosterReady(true)
-      }
-    }
-
-    const onLoadedData = () => {
-      if (!isPlaying && !hasOpened) {
-        try {
-          vid.currentTime = 0.001
-        } catch (_) {}
-      }
-    }
-
-    const onSeeked = () => {
-      captureFirstFrame()
-    }
-
-    if (vid.readyState >= 2 && !isPlaying) {
-      try {
-        vid.currentTime = 0.001
-      } catch (_) {}
-    }
-
-    vid.addEventListener('loadeddata', onLoadedData)
-    vid.addEventListener('seeked', onSeeked)
-
-    return () => {
-      vid.removeEventListener('loadeddata', onLoadedData)
-      vid.removeEventListener('seeked', onSeeked)
-    }
-  }, [videoRef, posterReady, isPlaying, hasOpened])
-
   return (
     <AnimatePresence>
       {!hasOpened && (
@@ -82,28 +26,15 @@ export default function PinkBlossomCover({
           initial={{ opacity: 1, scale: 1 }}
           exit={{ 
             opacity: 0, 
-            scale: 1.05, 
-            transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] } 
+            scale: 1.04, 
+            transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
           }}
           style={{ pointerEvents: hasOpened ? 'none' : 'auto' }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A0A12] max-w-[480px] md:max-w-[820px] mx-auto overflow-hidden cursor-pointer select-none"
           onClick={handleOpenCover}
         >
           <div className="w-full h-full relative overflow-hidden">
-            {/* Hidden canvas for first frame capture */}
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
-
-            {/* Poster image — remains visible until video actually starts producing frames */}
-            {(!isPlaying || !isVideoReady) && (
-              <img
-                src={posterDataUrl || coverPosterSrc}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none scale-[1.04] z-[1] transition-opacity duration-300"
-                style={{ opacity: 1 }}
-              />
-            )}
-
-            {/* Video element — always mounted for instant readiness */}
+            {/* Directly mounted video element with poster for instant playback */}
             <video
               ref={videoRef}
               src={coverVideoSrc}
@@ -117,29 +48,19 @@ export default function PinkBlossomCover({
               onTimeUpdate={handleTimeUpdate}
               onEnded={handleVideoEnded}
               onError={handleVideoEnded}
-              onStalled={() => {
-                // If video stalls while playing, don't leave user stuck
-                if (isPlaying) {
-                  setTimeout(() => handleVideoEnded(), 800)
-                }
-              }}
               className="w-full h-full object-cover select-none pointer-events-none scale-[1.04]"
-              style={{ 
-                opacity: isPlaying && isVideoReady ? 1 : 0,
-                position: isPlaying ? 'relative' : 'absolute',
-                top: 0,
-                left: 0,
-                zIndex: isPlaying ? 2 : 0,
+              style={{
+                display: 'block',
               }}
             />
 
-            {/* Floating star animations */}
+            {/* Floating star decorations (only visible prior to tap) */}
             <AnimatePresence>
               {!isPlaying && (
                 <motion.div 
                   initial={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
                   className="absolute inset-0 pointer-events-none flex items-center justify-center z-20"
                 >
                   {[...Array(6)].map((_, idx) => (
@@ -169,13 +90,13 @@ export default function PinkBlossomCover({
             </AnimatePresence>
           </div>
 
-          {/* Tap to open overlay */}
+          {/* Tap to open overlay (disappears immediately upon tap for lag-free video start) */}
           <AnimatePresence>
             {!isPlaying && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.3, ease: "easeOut" } }}
+                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15, ease: "easeOut" } }}
                 transition={{ duration: 0.8 }}
                 className={`absolute ${coverTapBelow ? 'bottom-[18%] sm:bottom-[22%]' : 'top-[20%]'} inset-x-0 flex flex-col items-center pointer-events-none z-20 px-6 text-center`}
               >

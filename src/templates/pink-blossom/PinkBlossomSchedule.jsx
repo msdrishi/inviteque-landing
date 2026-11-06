@@ -3,9 +3,9 @@ import { motion } from 'framer-motion'
 import { COLORS, ASSETS } from './theme'
 import ScrollDownIndicator from './ScrollDownIndicator'
 
-// ─── Crisp Vector Event Icons for Indian Wedding Traditions ───
+// ─── Crisp Vector Event Icons for Indian Wedding Traditions (Increased Size) ───
 const HaldiIcon = () => (
-  <svg viewBox="0 0 36 36" width="28" height="28" fill="none" className="drop-shadow-sm">
+  <svg viewBox="0 0 36 36" width="38" height="38" fill="none" className="drop-shadow-sm">
     <ellipse cx="18" cy="27" rx="11" ry="3" fill="#D4AF37" opacity="0.3" />
     <path d="M9 19 C9 26, 27 26, 27 19 L25 15 L11 15 Z" fill="#E6A117" stroke="#B87B08" strokeWidth="1.2" strokeLinejoin="round" />
     <path d="M11 15 Q18 10 25 15 Z" fill="#FFC93C" stroke="#B87B08" strokeWidth="1" />
@@ -21,7 +21,7 @@ const HaldiIcon = () => (
 )
 
 const EngagementSangeetIcon = () => (
-  <svg viewBox="0 0 36 36" width="28" height="28" fill="none" className="drop-shadow-sm">
+  <svg viewBox="0 0 36 36" width="38" height="38" fill="none" className="drop-shadow-sm">
     <circle cx="14" cy="20" r="7.5" stroke="#B8963E" strokeWidth="1.8" fill="none" />
     <circle cx="21" cy="19" r="7.5" stroke="#C8195E" strokeWidth="1.8" fill="none" />
     <path d="M14 12 L12 8 L16 8 Z" fill="#EBDCB9" stroke="#B8963E" strokeWidth="0.8" />
@@ -33,7 +33,7 @@ const EngagementSangeetIcon = () => (
 )
 
 const WeddingMandapIcon = () => (
-  <svg viewBox="0 0 36 36" width="28" height="28" fill="none" className="drop-shadow-sm">
+  <svg viewBox="0 0 36 36" width="38" height="38" fill="none" className="drop-shadow-sm">
     <path d="M6 30 L30 30" stroke="#B8963E" strokeWidth="1.8" strokeLinecap="round" />
     <path d="M8 30 L8 14" stroke="#B8963E" strokeWidth="1.8" strokeLinecap="round" />
     <path d="M28 30 L28 14" stroke="#B8963E" strokeWidth="1.8" strokeLinecap="round" />
@@ -47,7 +47,7 @@ const WeddingMandapIcon = () => (
 )
 
 const ReceptionIcon = () => (
-  <svg viewBox="0 0 36 36" width="28" height="28" fill="none" className="drop-shadow-sm">
+  <svg viewBox="0 0 36 36" width="38" height="38" fill="none" className="drop-shadow-sm">
     <path d="M11 7 L16 16 C16 18, 13 19, 11 18 L11 7 Z" fill="#EBDCB9" stroke="#B8963E" strokeWidth="1.2" strokeLinejoin="round" />
     <path d="M13.5 17.5 L11.5 27" stroke="#B8963E" strokeWidth="1.5" strokeLinecap="round" />
     <path d="M8 27 L15 27" stroke="#B8963E" strokeWidth="1.5" strokeLinecap="round" />
@@ -60,7 +60,7 @@ const ReceptionIcon = () => (
 )
 
 const MehendiIcon = () => (
-  <svg viewBox="0 0 36 36" width="28" height="28" fill="none" className="drop-shadow-sm">
+  <svg viewBox="0 0 36 36" width="38" height="38" fill="none" className="drop-shadow-sm">
     <circle cx="18" cy="18" r="10" stroke="#8B1848" strokeWidth="1.5" strokeDasharray="3 2" fill="none" />
     <circle cx="18" cy="18" r="6" stroke="#B8963E" strokeWidth="1.2" fill="#EBDCB9" />
     <circle cx="18" cy="18" r="2.5" fill="#C8195E" />
@@ -128,8 +128,8 @@ export default function PinkBlossomSchedule({ scheduleItems, weddingDate, weddin
   }, [scheduleItems, weddingDate, weddingMonth, weddingYear])
 
   const n = events.length
-  const itemRowHeight = 155
-  const svgHeight = Math.max(400, n * itemRowHeight)
+  const itemRowHeight = 175
+  const svgHeight = Math.max(420, n * itemRowHeight)
 
   const { pathD, dotPoints } = useMemo(() => {
     if (n === 0) return { pathD: "", dotPoints: [] }
@@ -137,7 +137,7 @@ export default function PinkBlossomSchedule({ scheduleItems, weddingDate, weddin
     if (n === 1) return { pathD: "", dotPoints: dots }
     
     let d = `M 200 ${dots[0].y} `
-    const bowDepth = 45 
+    const bowDepth = 48 
     for (let i = 0; i < n - 1; i++) {
       const isLeft = i % 2 === 0
       const currentY = dots[i].y
@@ -233,12 +233,13 @@ export default function PinkBlossomSchedule({ scheduleItems, weddingDate, weddin
                 style={{ minHeight: `${itemRowHeight}px` }}
                 className={`relative flex items-center w-full ${isLeft ? 'justify-start pl-1 sm:pl-2' : 'justify-end pr-1 sm:pr-2'}`}
               >
-                <div className="flex flex-col items-center text-center w-[138px] sm:w-[148px] select-none">
+                <div className="flex flex-col items-center text-center w-[148px] sm:w-[160px] select-none">
+                  {/* Enlarged Icon Badge */}
                   <motion.div 
                     animate={{ y: [0, -4, 0], rotate: isLeft ? [-2, 2, -2] : [2, -2, 2] }}
                     transition={{ duration: 3.2 + (idx % 3) * 0.4, repeat: Infinity, ease: "easeInOut", delay: idx * 0.3 }}
-                    className="mb-1.5 flex items-center justify-center w-12 h-12 rounded-full shadow-sm p-2 backdrop-blur-sm"
-                    style={{ backgroundColor: `${COLORS.ivory}F4`, border: `1.2px solid rgba(200,25,94,0.22)` }}
+                    className="mb-2 flex items-center justify-center w-[60px] h-[60px] sm:w-[68px] sm:h-[68px] rounded-full shadow-md p-2.5 backdrop-blur-sm"
+                    style={{ backgroundColor: `${COLORS.ivory}F6`, border: `1.5px solid rgba(200,25,94,0.25)` }}
                   >
                     {renderEventIcon(evt)}
                   </motion.div>

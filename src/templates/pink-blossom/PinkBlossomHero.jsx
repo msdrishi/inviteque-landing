@@ -3,25 +3,25 @@ import { motion } from 'framer-motion'
 import { COLORS, ASSETS } from './theme'
 import ScrollDownIndicator from './ScrollDownIndicator'
 
-// ─── Animation Variants ───────────────────────────────────────
+// ─── Animation Variants: Start Slowly & Gracefully Upon Landing ───
 const lineAnim = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const letterContainer = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.04, delayChildren: 0.05 } }
+  visible: { opacity: 1, transition: { staggerChildren: 0.07, delayChildren: 0.2 } }
 }
 
 const letterAnim = {
-  hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.2, 0.65, 0.3, 0.9] } },
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1.3, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const sectionAnim = {
   hidden: { },
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } }
+  visible: { transition: { staggerChildren: 0.45, delayChildren: 0.55 } }
 }
 
 // ─── Letter-by-Letter Couple Name ─────────────────────────────

@@ -10,6 +10,7 @@ import bgMusicSrc from '../../assets/audio/bg-music-a-thousand-years.mp3'
 // Import Pink Blossom section components (all self-contained in this folder)
 import { COLORS, ASSETS, getFontStyles, sectionStyle, bgStyle } from './theme'
 import PinkBlossomCover from './PinkBlossomCover.jsx'
+import PinkBlossomLoader from './PinkBlossomLoader.jsx'
 import PinkBlossomHero from './PinkBlossomHero.jsx'
 import PinkBlossomFamilyInvitation from './PinkBlossomFamilyInvitation.jsx'
 import PinkBlossomStory from './PinkBlossomStory.jsx'
@@ -157,6 +158,38 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
     typeof window !== 'undefined' ? window.innerWidth : 768
   )
 
+  // Video pre-download & loader state
+  const [isVideoDownloaded, setIsVideoDownloaded] = useState(false)
+  const [videoBlobUrl, setVideoBlobUrl] = useState(null)
+
+  useEffect(() => {
+    let active = true
+    fetch(ASSETS.coverVideo)
+      .then(res => {
+        if (!res.ok) throw new Error('Video fetch failed')
+        return res.blob()
+      })
+      .then(blob => {
+        if (!active) return
+        const localUrl = URL.createObjectURL(blob)
+        setVideoBlobUrl(localUrl)
+        setIsVideoDownloaded(true)
+      })
+      .catch(err => {
+        console.warn('Video preload fallback triggered:', err)
+        if (active) setIsVideoDownloaded(true)
+      })
+
+    const timer = setTimeout(() => {
+      if (active) setIsVideoDownloaded(true)
+    }, 3500)
+
+    return () => {
+      active = false
+      clearTimeout(timer)
+    }
+  }, [])
+
   // Cover opening & splash state
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasOpened, setHasOpened] = useState(false)
@@ -246,9 +279,10 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
     }
 
     if (safetyTimeoutRef.current) clearTimeout(safetyTimeoutRef.current)
+    // Safety fallback: only if video completely fails or hangs without ending (10 seconds)
     safetyTimeoutRef.current = setTimeout(() => {
       triggerSmoothOpen()
-    }, 3200)
+    }, 10000)
   }
 
   const handleTimeUpdate = () => {
@@ -257,7 +291,8 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
       if (vid.currentTime > 0.05 && !isVideoReady) {
         setIsVideoReady(true)
       }
-      if (vid.duration && vid.currentTime > 0.4 && vid.currentTime >= vid.duration - 0.2) {
+      // Only trigger if video reports ended or reached absolute end
+      if (vid.duration && vid.duration > 1 && vid.currentTime >= vid.duration - 0.05) {
         triggerSmoothOpen()
       }
     }
@@ -362,9 +397,9 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
       <PinkBlossomCover
         hasOpened={hasOpened}
         isPlaying={isPlaying}
-        isVideoReady={isVideoReady}
+        isVideoReady={true}
         videoRef={videoRef}
-        coverVideoSrc={ASSETS.coverVideo}
+        coverVideoSrc={videoBlobUrl || ASSETS.coverVideo}
         coverPosterSrc={ASSETS.coverPoster}
         handleOpenCover={handleOpenCover}
         handleTimeUpdate={handleTimeUpdate}

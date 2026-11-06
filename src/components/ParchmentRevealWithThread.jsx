@@ -136,7 +136,7 @@ export default function ParchmentRevealWithThread({ children, ornamentImage = nu
         {/* ═══ Decorative Thread hanging from the top ═══ */}
         {!isRevealed && (
           <motion.div
-            className="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-auto z-50 touch-none pt-2 sm:pt-4"
+            className="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-auto z-50 touch-none pt-0 sm:pt-1"
             style={{ y: dragY }}
             drag="y"
             dragConstraints={{ top: 0, bottom: maxDrag }}
@@ -151,13 +151,13 @@ export default function ParchmentRevealWithThread({ children, ornamentImage = nu
               className="flex flex-col items-center cursor-grab active:cursor-grabbing"
               onClick={triggerOpenParchment}
             >
-              {/* Thick, clearly visible braided gold & maroon thread line */}
+              {/* Thick, prominent braided gold & maroon thread cord */}
               <div
-                className="w-[5px] sm:w-[6px] shadow-[0_6px_14px_rgba(0,0,0,0.35)] z-10"
+                className="w-[6px] sm:w-[8px] shadow-[0_8px_18px_rgba(0,0,0,0.4)] z-10"
                 style={{
                   height: '420px',
-                  marginTop: '-320px', // Leaves ~100px of visible braided thread
-                  background: 'repeating-linear-gradient(45deg, #B8963E, #B8963E 3px, #C8195E 3px, #C8195E 7px, #8B1848 7px, #8B1848 10px)',
+                  marginTop: '-335px', // Kept positioned above the parchment
+                  background: 'repeating-linear-gradient(45deg, #B8963E, #B8963E 3.5px, #C8195E 3.5px, #C8195E 7.5px, #8B1848 7.5px, #8B1848 11px)',
                   borderRadius: '999px',
                 }}
               />
@@ -167,23 +167,23 @@ export default function ParchmentRevealWithThread({ children, ornamentImage = nu
                   className="z-10 cursor-grab flex flex-col items-center justify-center"
                   animate={{ y: [0, 6, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ filter: 'drop-shadow(0px 10px 16px rgba(0,0,0,0.30))', marginTop: '-8px' }}
+                  style={{ filter: 'drop-shadow(0px 12px 20px rgba(0,0,0,0.35))', marginTop: '-10px' }}
                 >
                   <img 
                     src={ornamentImage} 
                     alt="Pull down to unroll" 
-                    className="w-[150px] sm:w-[185px] object-contain pointer-events-none" 
+                    className="w-[170px] sm:w-[210px] object-contain pointer-events-none" 
                   />
                 </motion.div>
               ) : (
                 <motion.div
-                  className="mt-2 flex items-center justify-center z-10 cursor-grab bg-[#FAF3E4]/95 backdrop-blur-md w-16 h-16 rounded-full shadow-[0_6px_22px_rgba(200,25,94,0.45)] relative"
+                  className="mt-2 flex items-center justify-center z-10 cursor-grab bg-[#FAF3E4]/95 backdrop-blur-md w-18 h-18 rounded-full shadow-[0_6px_24px_rgba(200,25,94,0.45)] relative"
                   animate={{ opacity: [0.85, 1, 0.85], y: [0, 8, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
                   style={{ border: '2px solid rgba(200,25,94,0.7)' }}
                 >
                   <div className="absolute inset-[3px] rounded-full border border-[#d4af37]/70 pointer-events-none" />
-                  <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8 mt-0.5" stroke="#C8195E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg viewBox="0 0 24 24" fill="none" className="w-9 h-9 mt-0.5" stroke="#C8195E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
                 </motion.div>
@@ -195,30 +195,30 @@ export default function ParchmentRevealWithThread({ children, ornamentImage = nu
                   y: [0, 5, 0],
                   scale: [0.98, 1.02, 0.98],
                   boxShadow: [
-                    '0 4px 16px rgba(200,25,94,0.30), 0 0 0 1px rgba(184,150,62,0.4)',
-                    '0 8px 24px rgba(200,25,94,0.50), 0 0 0 2px rgba(184,150,62,0.7)',
-                    '0 4px 16px rgba(200,25,94,0.30), 0 0 0 1px rgba(184,150,62,0.4)',
+                    '0 4px 18px rgba(200,25,94,0.35), 0 0 0 1px rgba(184,150,62,0.5)',
+                    '0 8px 26px rgba(200,25,94,0.55), 0 0 0 2px rgba(184,150,62,0.8)',
+                    '0 4px 18px rgba(200,25,94,0.35), 0 0 0 1px rgba(184,150,62,0.5)',
                   ]
                 }}
                 transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                className="mt-1 px-4 py-1.5 rounded-full flex items-center gap-1.5 cursor-pointer backdrop-blur-md select-none pointer-events-auto"
+                className="mt-1 px-5 py-2 rounded-full flex items-center gap-2 cursor-pointer backdrop-blur-md select-none pointer-events-auto"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.96), rgba(250,243,228,0.94))',
-                  border: '1.5px solid #C8195E',
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.97), rgba(250,243,228,0.95))',
+                  border: '1.8px solid #C8195E',
                 }}
               >
                 <motion.svg
                   animate={{ y: [0, 3, 0] }}
                   transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
                   viewBox="0 0 14 14"
-                  width="13"
-                  height="13"
+                  width="14"
+                  height="14"
                   fill="none"
                 >
                   <path d="M7 1v9M3 7l4 4 4-4" stroke="#C8195E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </motion.svg>
                 <span
-                  className="text-[10.5px] sm:text-[11.5px] uppercase font-bold tracking-[0.22em] text-[#C8195E]"
+                  className="text-[11.5px] sm:text-[12.5px] uppercase font-bold tracking-[0.24em] text-[#C8195E]"
                   style={{ fontFamily: "'Cinzel', serif" }}
                 >
                   PULL DOWN
@@ -227,8 +227,8 @@ export default function ParchmentRevealWithThread({ children, ornamentImage = nu
                   animate={{ y: [0, 3, 0] }}
                   transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
                   viewBox="0 0 14 14"
-                  width="13"
-                  height="13"
+                  width="14"
+                  height="14"
                   fill="none"
                 >
                   <path d="M7 1v9M3 7l4 4 4-4" stroke="#C8195E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
