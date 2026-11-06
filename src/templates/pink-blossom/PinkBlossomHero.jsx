@@ -4,36 +4,28 @@ import { COLORS, ASSETS } from './theme'
 
 // ─── Animation Variants ───────────────────────────────────────
 const lineAnim = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
 }
 
 const letterContainer = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.3 } }
+  visible: { opacity: 1, transition: { staggerChildren: 0.04, delayChildren: 0.05 } }
 }
 
 const letterAnim = {
-  hidden: { opacity: 0, y: 20, rotateX: 90 },
-  visible: { opacity: 1, y: 0, rotateX: 0, transition: { duration: 1.2, ease: [0.2, 0.65, 0.3, 0.9] } },
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.2, 0.65, 0.3, 0.9] } },
 }
 
 const sectionAnim = {
   hidden: { },
-  visible: { transition: { staggerChildren: 0.4, delayChildren: 2.0 } }
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } }
 }
 
-// ─── Letter-by-Letter Couple Name with glassy glare sweep ─────
+// ─── Letter-by-Letter Couple Name ─────────────────────────────
 const AnimatedCoupleName = ({ name, style, variants }) => {
   const letters = Array.from(String(name || ''))
-  const [showGlare, setShowGlare] = React.useState(false)
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowGlare(true)
-    }, (0.3 + letters.length * 0.1 + 1.2) * 1000)
-    return () => clearTimeout(timer)
-  }, [letters.length])
 
   return (
     <div className="relative inline-flex items-center justify-center select-none overflow-visible px-4 my-0 w-full flex-wrap text-center">
@@ -54,42 +46,6 @@ const AnimatedCoupleName = ({ name, style, variants }) => {
           </motion.span>
         ))}
       </motion.span>
-
-      {showGlare && (
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ 
-            opacity: 1,
-            backgroundPosition: ['200% center', '-200% center'] 
-          }}
-          transition={{ 
-            opacity: { duration: 1.0 },
-            backgroundPosition: { repeat: Infinity, duration: 4.5, ease: 'easeInOut', repeatDelay: 2.0 }
-          }}
-          aria-hidden="true"
-          style={{
-            ...style,
-            position: 'absolute',
-            inset: 0,
-            pointerEvents: 'none',
-            zIndex: 20,
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            overflow: 'visible',
-            width: '100%',
-            background: `linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.85) 47%, rgba(255,200,220,0.95) 50%, rgba(255,255,255,0.85) 53%, transparent 75%)`,
-            backgroundSize: '300% 100%',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
-        >
-          {name}
-        </motion.span>
-      )}
     </div>
   )
 }
@@ -110,8 +66,14 @@ const FallingPinkPetals = () => (
     {petalConfig.map((p, i) => (
       <motion.div
         key={i}
-        className="absolute -top-8"
-        style={{ left: `${p.left}%`, width: p.size, height: p.size * 1.35, opacity: 0.85 }}
+        className="absolute -top-8 pointer-events-none"
+        style={{ 
+          left: `${p.left}%`, 
+          width: p.size, 
+          height: p.size * 1.35, 
+          opacity: 0.85,
+          willChange: 'transform' 
+        }}
         initial={{ y: '-10vh', opacity: 0 }}
         animate={{
           y: ['0vh', '110vh'],
@@ -121,7 +83,7 @@ const FallingPinkPetals = () => (
         }}
         transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'linear' }}
       >
-        <svg viewBox="0 0 24 32" width="100%" height="100%" fill="none" style={{ filter: `drop-shadow(0 2px 4px rgba(200,25,94,0.3))` }}>
+        <svg viewBox="0 0 24 32" width="100%" height="100%" fill="none">
           <path
             d="M12 2 C6 7, 3 17, 12 30 C21 17, 18 7, 12 2 Z"
             fill={COLORS.primary}
@@ -158,29 +120,70 @@ export default function PinkBlossomHero({ data, fontStyles, sectionStyle, bgStyl
   
   const firstNameSize = isDesktop ? `calc(58px * ${firstScale})` : (isTablet ? `calc(66px * ${firstScale})` : `calc(46px * ${firstScale})`)
   const secondNameSize = isDesktop ? `calc(58px * ${secondScale})` : (isTablet ? `calc(66px * ${secondScale})` : `calc(46px * ${secondScale})`)
-  const bgScale = data.hero.heroBgScale || 1.12
+  const bgScale = data.hero.heroBgScale || 1.08
 
   return (
-    <section style={sectionStyle}>
-      <motion.img 
-        src={ASSETS.heroBg} 
-        alt="Hero Background" 
+    <section 
+      style={{
+        ...sectionStyle,
+        position: 'relative',
+        width: '100%',
+        minHeight: isDesktop ? '100vh' : '100svh',
+        height: isDesktop ? '100vh' : '100svh',
+        overflow: 'hidden',
+        backgroundColor: COLORS.ivory,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        userSelect: 'none',
+      }}
+    >
+      {/* Background Image Container */}
+      <motion.div
         style={{
-          ...bgStyle,
-          transform: `scale(${bgScale})`,
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+          willChange: 'opacity',
           transformOrigin: 'center center',
-        }} 
+          pointerEvents: 'none',
+        }}
         initial={{ opacity: 0 }}
         animate={hasTriggeredHeroText ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 2.5, ease: "easeInOut" }}
-      />
+        transition={{ duration: 1.0, ease: "easeOut" }}
+      >
+        <img 
+          src={ASSETS.heroBg} 
+          alt="Hero Background" 
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center center',
+            transform: `scale(${bgScale})`,
+            display: 'block',
+          }}
+          loading="eager"
+        />
+      </motion.div>
+
       <FallingPinkPetals />
       
       <motion.div 
-        style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', padding: '0 20px', paddingTop: '8vh' }}
+        style={{ 
+          position: 'relative', 
+          zIndex: 10, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          width: '100%', 
+          padding: '0 20px', 
+          paddingTop: '6vh',
+          pointerEvents: 'auto'
+        }}
         initial="hidden"
         animate={hasTriggeredHeroText ? "visible" : "hidden"}
-        viewport={{ amount: 0.3 }}
         variants={sectionAnim}
       >
         

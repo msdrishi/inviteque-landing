@@ -46,11 +46,13 @@ export default function PinkBlossomWelcome({ data, fontStyles, isDesktop, isTabl
   const { cursive, serif } = fontStyles
 
   return (
-    <section style={{ position: 'relative', width: '100%', backgroundColor: 'transparent' }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
-        <div style={{ position: 'sticky', top: 0, width: '100%', height: '100vh', overflow: 'hidden' }}>
-          <img src={ASSETS.welcomeBg} alt="Welcome Background" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(2px) brightness(0.85)' }} />
-        </div>
+    <section style={{ position: 'relative', width: '100%', minHeight: '100svh', backgroundColor: COLORS.ivory, overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <img 
+          src={ASSETS.welcomeBg} 
+          alt="Welcome Background" 
+          style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(1.5px) brightness(0.88)' }} 
+        />
       </div>
       
       <ParchmentRevealWithThread ornamentImage={ASSETS.ornament}>

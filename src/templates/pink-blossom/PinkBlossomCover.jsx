@@ -82,7 +82,8 @@ export default function PinkBlossomCover({
         <motion.section
           key="cover-splash"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] } }}
+          exit={{ opacity: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }}
+          style={{ pointerEvents: hasOpened ? 'none' : 'auto' }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A0A12] max-w-[480px] md:max-w-[820px] mx-auto overflow-hidden cursor-pointer"
           onClick={handleOpenCover}
         >

@@ -1907,33 +1907,34 @@ export default function Builder() {
 
                 {/* RSVP Upgrade Banner (if pending) */}
                 {editCode && formData.status === 'PAID' && formData.hasRsvp && !formData.wasRsvpPaid && (
-                  <div className="rounded-2xl border border-amber-200 bg-amber-50/80 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left shadow-sm">
+                  <div className="w-full rounded-2xl border border-amber-200 bg-amber-50/90 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left shadow-sm">
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-800 text-base flex-shrink-0">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-800 text-lg flex-shrink-0">
                         ⚡
                       </span>
                       <div className="min-w-0">
                         <p className="text-sm font-bold text-amber-950">RSVP Add-on Selected (+₹500)</p>
-                        <p className="text-xs text-amber-800/80">Activate guest attendance tracking and dashboard on your live link</p>
+                        <p className="text-xs text-amber-800/80 mt-0.5">Activate guest attendance tracking and dashboard on your live link</p>
                       </div>
                     </div>
                     <button
                       type="button"
                       onClick={handleUpgradeRsvp}
                       disabled={isSaving}
-                      className="self-start sm:self-auto px-5 py-2.5 rounded-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-1.5 flex-shrink-0 whitespace-nowrap"
+                      className="self-start sm:self-auto px-5 h-10 rounded-xl bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-semibold text-xs shadow-sm transition-all flex items-center justify-center gap-2 flex-shrink-0 whitespace-nowrap"
                     >
-                      💳 Pay ₹500 &amp; Activate
+                      <span>💳</span>
+                      <span>Pay ₹500 &amp; Activate</span>
                     </button>
                   </div>
                 )}
 
                 {/* Navigation and Action Buttons */}
-                <div className="pt-4 flex flex-col sm:flex-row items-center gap-3">
+                <div className="w-full pt-4 flex flex-col sm:flex-row items-center gap-3">
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="w-full sm:w-36 py-3.5 rounded-full border border-iqBorder bg-white text-sm font-bold text-iqText transition hover:bg-iqText/5 flex items-center justify-center flex-shrink-0"
+                    className="w-full sm:w-32 h-12 rounded-xl border border-neutral-300 bg-white text-sm font-semibold text-neutral-700 hover:bg-neutral-50 hover:text-black transition-all flex items-center justify-center flex-shrink-0 shadow-sm"
                   >
                     Back
                   </button>
@@ -1946,23 +1947,24 @@ export default function Builder() {
                           updateDraft(formData)
                           window.open(`/templates/${templateId}/${editCode}?preview=true`, '_blank')
                         }}
-                        className="flex-1 py-3.5 rounded-full border border-neutral-300 bg-white text-sm font-bold text-neutral-800 shadow-sm transition hover:bg-neutral-50 flex items-center justify-center gap-2"
+                        className="w-full sm:flex-1 h-12 rounded-xl border border-neutral-300 bg-white text-sm font-semibold text-neutral-800 shadow-sm transition-all hover:bg-neutral-50 flex items-center justify-center gap-2"
                       >
-                        <span>👁️</span>
+                        <span className="text-base leading-none">👁️</span>
                         <span>Preview Live</span>
                       </button>
                       <button
                         type="submit"
                         disabled={isSaving}
-                        className="flex-[2] py-3.5 rounded-full bg-black hover:bg-neutral-800 text-sm font-bold text-white shadow-xl transition disabled:opacity-50 flex items-center justify-center gap-2"
+                        className="w-full sm:flex-[1.5] h-12 rounded-xl bg-black hover:bg-neutral-800 text-sm font-semibold text-white shadow-md transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                       >
-                        {isSaving ? 'Saving Changes...' : '💾 Save Changes'}
+                        <span>💾</span>
+                        <span>{isSaving ? 'Saving Changes...' : 'Save Changes'}</span>
                       </button>
                     </div>
                   ) : (
                     <button
                       type="submit"
-                      className="w-full sm:flex-1 py-3.5 rounded-full bg-black text-sm font-bold text-white shadow-xl transition hover:opacity-90 flex items-center justify-center"
+                      className="w-full sm:flex-1 h-12 rounded-xl bg-black text-sm font-semibold text-white shadow-md transition-all hover:bg-neutral-800 flex items-center justify-center"
                     >
                       View Preview
                     </button>
