@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { COLORS, ASSETS } from './theme'
+import ScrollDownIndicator from './ScrollDownIndicator'
 
 const sectionAnim = {
   hidden: {},
@@ -274,6 +275,9 @@ export default function PinkBlossomFamilyInvitation({ data, fontStyles, sectionS
         </motion.div>
 
       </div>
+
+      {/* Scroll Down Indicator */}
+      <ScrollDownIndicator />
     </motion.section>
   )
 }

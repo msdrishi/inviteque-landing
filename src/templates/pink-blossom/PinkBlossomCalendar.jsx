@@ -2,6 +2,7 @@ import { motion, useInView } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import Confetti from 'react-confetti'
 import { COLORS, ASSETS } from './theme'
+import ScrollDownIndicator from './ScrollDownIndicator'
 
 const fadeAnim = {
   hidden: { opacity: 0, y: 30 },
@@ -238,6 +239,9 @@ export default function PinkBlossomCalendar({ calendarData, fontStyles, sectionS
       </motion.div>
         </div>
       </div>
+
+      {/* Scroll Down Indicator */}
+      <ScrollDownIndicator />
     </section>
   )
 }

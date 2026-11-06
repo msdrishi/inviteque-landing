@@ -164,6 +164,17 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
   const [hasTriggeredHeroBg, setHasTriggeredHeroBg] = useState(false)
   const [isVideoReady, setIsVideoReady] = useState(false)
   const videoRef = React.useRef(null)
+  const safetyTimeoutRef = React.useRef(null)
+
+  const triggerSmoothOpen = React.useCallback(() => {
+    if (safetyTimeoutRef.current) {
+      clearTimeout(safetyTimeoutRef.current)
+      safetyTimeoutRef.current = null
+    }
+    setHasOpened(true)
+    setHasTriggeredHeroBg(true)
+    setHasTriggeredHeroText(true)
+  }, [])
 
   // Music state — support custom song from savedData or fallback to default
   const activeMusicSrc = savedData?.musicSrc || bgMusicSrc
@@ -221,34 +232,39 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
     }
     const vid = videoRef.current
     if (vid) {
-      vid.currentTime = 0
+      try {
+        vid.currentTime = 0
+      } catch (_) {}
       const playPromise = vid.play()
       if (playPromise !== undefined) {
-        playPromise.catch(() => {})
+        playPromise.catch(() => {
+          triggerSmoothOpen()
+        })
       }
+    } else {
+      triggerSmoothOpen()
     }
+
+    if (safetyTimeoutRef.current) clearTimeout(safetyTimeoutRef.current)
+    safetyTimeoutRef.current = setTimeout(() => {
+      triggerSmoothOpen()
+    }, 3200)
   }
 
   const handleTimeUpdate = () => {
     const vid = videoRef.current
     if (vid) {
-      if (vid.currentTime > 0.1 && !isVideoReady) {
+      if (vid.currentTime > 0.05 && !isVideoReady) {
         setIsVideoReady(true)
       }
-      if (vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
-        if (!hasOpened) {
-          setHasOpened(true)
-          setHasTriggeredHeroBg(true)
-          setHasTriggeredHeroText(true)
-        }
+      if (vid.duration && vid.currentTime > 0.4 && vid.currentTime >= vid.duration - 0.2) {
+        triggerSmoothOpen()
       }
     }
   }
 
   const handleVideoEnded = () => {
-    setHasOpened(true)
-    setHasTriggeredHeroBg(true)
-    setHasTriggeredHeroText(true)
+    triggerSmoothOpen()
   }
 
   const isDesktop = windowWidth > 1024

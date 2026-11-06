@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { COLORS, ASSETS } from './theme'
+import ScrollDownIndicator from './ScrollDownIndicator'
 
 // ─── Animation Variants ───────────────────────────────────────
 const lineAnim = {
@@ -276,6 +277,9 @@ export default function PinkBlossomHero({ data, fontStyles, sectionStyle, bgStyl
         )}
 
       </motion.div>
+
+      {/* Scroll Down Indicator */}
+      <ScrollDownIndicator />
     </section>
   )
 }

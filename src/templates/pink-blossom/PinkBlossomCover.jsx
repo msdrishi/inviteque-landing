@@ -23,12 +23,13 @@ export default function PinkBlossomCover({
   const [posterReady, setPosterReady] = useState(false)
   const [posterDataUrl, setPosterDataUrl] = useState(null)
 
-  // Capture the first frame of the video onto a canvas as soon as it loads
+  // Pre-capture frame safely without interfering with playback
   useEffect(() => {
     const vid = videoRef.current
-    if (!vid) return
+    if (!vid || isPlaying || hasOpened) return
 
     const captureFirstFrame = () => {
+      if (isPlaying || hasOpened) return
       try {
         const canvas = canvasRef.current
         if (!canvas || posterReady) return
@@ -38,33 +39,30 @@ export default function PinkBlossomCover({
         const ctx = canvas.getContext('2d')
         ctx.drawImage(vid, 0, 0, canvas.width, canvas.height)
         
-        // Convert to data URL for the poster image
         const dataUrl = canvas.toDataURL('image/webp', 0.9)
         setPosterDataUrl(dataUrl)
         setPosterReady(true)
-        
-        // Pause and reset after capturing frame
-        vid.pause()
-        vid.currentTime = 0
       } catch (e) {
-        // Fallback: use the static poster image
         setPosterReady(true)
       }
     }
 
-    // Try to capture when video data is loaded enough
     const onLoadedData = () => {
-      // Seek to the very start to ensure first frame is rendered
-      vid.currentTime = 0.001
+      if (!isPlaying && !hasOpened) {
+        try {
+          vid.currentTime = 0.001
+        } catch (_) {}
+      }
     }
 
     const onSeeked = () => {
       captureFirstFrame()
     }
 
-    // If video is already loaded (cached), try immediately
-    if (vid.readyState >= 2) {
-      vid.currentTime = 0.001
+    if (vid.readyState >= 2 && !isPlaying) {
+      try {
+        vid.currentTime = 0.001
+      } catch (_) {}
     }
 
     vid.addEventListener('loadeddata', onLoadedData)
@@ -74,37 +72,41 @@ export default function PinkBlossomCover({
       vid.removeEventListener('loadeddata', onLoadedData)
       vid.removeEventListener('seeked', onSeeked)
     }
-  }, [videoRef, posterReady])
+  }, [videoRef, posterReady, isPlaying, hasOpened])
 
   return (
     <AnimatePresence>
       {!hasOpened && (
         <motion.section
           key="cover-splash"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }}
+          initial={{ opacity: 1, scale: 1 }}
+          exit={{ 
+            opacity: 0, 
+            scale: 1.05, 
+            transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] } 
+          }}
           style={{ pointerEvents: hasOpened ? 'none' : 'auto' }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A0A12] max-w-[480px] md:max-w-[820px] mx-auto overflow-hidden cursor-pointer"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A0A12] max-w-[480px] md:max-w-[820px] mx-auto overflow-hidden cursor-pointer select-none"
           onClick={handleOpenCover}
         >
           <div className="w-full h-full relative overflow-hidden">
             {/* Hidden canvas for first frame capture */}
             <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-            {/* First frame poster image — shown until video plays */}
-            {!isPlaying && (
+            {/* Poster image — remains visible until video actually starts producing frames */}
+            {(!isPlaying || !isVideoReady) && (
               <img
                 src={posterDataUrl || coverPosterSrc}
                 alt=""
-                className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none scale-[1.04] z-[1]"
+                className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none scale-[1.04] z-[1] transition-opacity duration-300"
                 style={{ opacity: 1 }}
               />
             )}
 
-            {/* Video element — always mounted for preloading, shown when playing */}
+            {/* Video element — always mounted for instant readiness */}
             <video
               ref={videoRef}
-              src={`${coverVideoSrc}#t=0.001`}
+              src={coverVideoSrc}
               playsInline
               webkit-playsinline="true"
               x5-playsinline="true"
@@ -114,9 +116,16 @@ export default function PinkBlossomCover({
               poster={coverPosterSrc}
               onTimeUpdate={handleTimeUpdate}
               onEnded={handleVideoEnded}
+              onError={handleVideoEnded}
+              onStalled={() => {
+                // If video stalls while playing, don't leave user stuck
+                if (isPlaying) {
+                  setTimeout(() => handleVideoEnded(), 800)
+                }
+              }}
               className="w-full h-full object-cover select-none pointer-events-none scale-[1.04]"
               style={{ 
-                opacity: isPlaying ? 1 : 0,
+                opacity: isPlaying && isVideoReady ? 1 : 0,
                 position: isPlaying ? 'relative' : 'absolute',
                 top: 0,
                 left: 0,
@@ -182,7 +191,7 @@ export default function PinkBlossomCover({
                   }}
                   className={`flex flex-col items-center gap-1.5 ${
                     coverTapAsPill
-                      ? 'px-7 py-2.5 rounded-full backdrop-blur-md bg-white/75 border border-[#B01050]/25 shadow-[0_8px_24px_rgba(59,34,16,0.18),inset_0_1px_1px_rgba(255,255,255,0.9)]'
+                      ? 'px-7 py-2.5 rounded-full backdrop-blur-md bg-white/80 border border-[#B01050]/25 shadow-[0_8px_24px_rgba(59,34,16,0.18),inset_0_1px_1px_rgba(255,255,255,0.9)]'
                       : ''
                   }`}
                 >

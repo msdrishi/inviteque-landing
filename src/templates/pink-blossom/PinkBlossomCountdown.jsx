@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { COLORS, ASSETS } from './theme'
+import ScrollDownIndicator from './ScrollDownIndicator'
 
 const fadeAnim = {
   hidden: { opacity: 0, y: 30 },
@@ -114,6 +115,9 @@ export default function PinkBlossomCountdown({ data, fontStyles, sectionStyle, b
           ))}
         </motion.div>
       </motion.div>
+
+      {/* Scroll Down Indicator */}
+      <ScrollDownIndicator />
     </motion.section>
   )
 }

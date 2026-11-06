@@ -1,15 +1,15 @@
 import photo1 from './photos/photo_1_2026-10-29_00-06-56.jpg'
 import photo2 from './photos/photo_2_2026-10-29_00-06-56.jpg'
 import photo3 from './photos/photo_3_2026-10-29_00-06-56.jpg'
-import tumTakSong from './music/Tum Tak (From Raanjhanaa).mp3'
+import bgMusicAudio from './music/ReelAudio-10740.mp3'
 
 export const alinaTanmayData = {
   isPaid: true,
   code: 'ALINA_TANMAY',
   hasRsvp: true,
 
-  // Custom Background Music (Tum Tak – Raanjhanaa)
-  musicSrc: tumTakSong,
+  // Custom Background Music
+  musicSrc: bgMusicAudio,
 
   // 1. Opening Screen:
   // Text positioned below the envelope, using an elegant cursive script font matching the parchment "Welcome" section
@@ -101,28 +101,24 @@ export const alinaTanmayData = {
       title: 'Engagement & Sangeet',
       date: '27th February 2027',
       venue: 'The Blue Roof Club, Thane (West)',
-      iconSrc: '/assets/templates/royal-heirloom/icons/engagement.webp',
     },
     {
       time: '7:00AM',
       title: 'Haldi Ceremony',
       date: '28th February 2027',
       venue: 'To be confirmed',
-      iconSrc: '/assets/templates/royal-heirloom/icons/bouque.webp',
     },
     {
       time: '12:14PM',
       title: 'Wedding Ceremony',
       date: '28th February 2027',
       venue: 'The Blue Roof Club, Thane (West)',
-      iconSrc: '/assets/templates/royal-heirloom/icons/dinner.webp',
     },
     {
       time: '7:30PM ONWARDS',
       title: 'Reception',
       date: '28th February 2027',
       venue: 'The Blue Roof Club, Thane (West)',
-      iconSrc: '/assets/templates/royal-heirloom/icons/drinks.webp',
     },
   ],
 

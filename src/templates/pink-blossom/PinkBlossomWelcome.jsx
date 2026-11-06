@@ -2,6 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { COLORS, ASSETS } from './theme'
 import ParchmentRevealWithThread from '../../components/ParchmentRevealWithThread'
+import ScrollDownIndicator from './ScrollDownIndicator'
 
 const sectionAnim = {
   hidden: { },
@@ -126,6 +127,9 @@ export default function PinkBlossomWelcome({ data, fontStyles, isDesktop, isTabl
           )}
         </motion.div>
       </ParchmentRevealWithThread>
+
+      {/* Scroll Down Indicator */}
+      <ScrollDownIndicator />
     </section>
   )
 }
