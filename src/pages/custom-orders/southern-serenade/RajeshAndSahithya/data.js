@@ -28,6 +28,7 @@ export const rajeshSahithyaData = {
       id: 'engagement',
       title: 'Engagement & Lagna Patrika',
       date: '11th Nov 2026',
+      time: '11 AM - 2 PM',
       venue: 'Sai Brundavan Grand, Siddipet',
       description:
         'The two families come together and the priest writes the official invitation letter.',
@@ -38,6 +39,7 @@ export const rajeshSahithyaData = {
       id: 'pelli-koduku',
       title: 'Pelli Koduku Ceremony',
       date: '22nd Nov 2026',
+      time: '12 PM to 5 PM',
       venue: 'Rain Tree Park, Flat No 503, Block 5 (Malaysian Township)',
       description:
         'A traditional Telugu pre-wedding ritual where the groom is prepared and blessed, with turmeric, oil, a ceremonial bath, new clothes and blessings from family.',
@@ -48,6 +50,7 @@ export const rajeshSahithyaData = {
       id: 'pelli-kuthuru',
       title: 'Pelli Kuthuru Ceremony',
       date: '22nd Nov 2026',
+      time: '12 PM - 5 PM',
       venue: "Bride's House, Siddipet",
       description:
         'A traditional Telugu pre-wedding ritual where the bride is prepared and blessed, with turmeric, oil, a ceremonial bath, new clothes and blessings from family.',
@@ -58,6 +61,7 @@ export const rajeshSahithyaData = {
       id: 'mehendi',
       title: 'Mehendi',
       date: '23rd Nov 2026',
+      time: '6 PM on wards',
       venue: 'Rain Tree Park, Flat No 503, Block 5 (Malaysian Township)',
       description:
         "A pre-wedding celebration where a henna artist applies henna to the bride's and groom's hands.",
@@ -68,6 +72,7 @@ export const rajeshSahithyaData = {
       id: 'wedding',
       title: 'Wedding',
       date: '25th Nov 2026',
+      time: '8 AM to 1 PM . Muhurtham is at 9:28 AM',
       venue: 'VSS Convention, Siddipet',
       description: null,
       mapUrl: 'https://maps.app.goo.gl/EbhaGiMBrfYCLCDM7?g_st=ic',
@@ -75,8 +80,9 @@ export const rajeshSahithyaData = {
     },
     {
       id: 'satyanarayan-pooja',
-      title: 'Satyanarayan Swamy Pooja',
+      title: 'Satyanarayan Swamy Vratham',
       date: '26th Nov 2026',
+      time: '12 PM - 2 PM',
       venue: 'Rain Tree Park, Flat No 503, Block 5 (Malaysian Township)',
       description: null,
       mapUrl: 'https://maps.app.goo.gl/zJ2NzuKmxhLJHsUNA',
@@ -86,6 +92,7 @@ export const rajeshSahithyaData = {
       id: 'reception',
       title: 'Reception',
       date: '28th Nov 2026',
+      time: '6 PM to 10 PM',
       venue: 'Tavaro Resorts, Kokapet, Hyderabad',
       description: null,
       mapUrl: 'https://maps.app.goo.gl/VjWo3Qx9oTqsp6RS8?g_st=ic',

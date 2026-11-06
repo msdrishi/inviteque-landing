@@ -212,11 +212,17 @@ export default function App() {
 
           {/* Custom Client Template Routes (Rajesh & Sahithya - Southern Serenade) */}
           <Route path="/template/southern-serenade/rajesh-and-sahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/template/southern-serenade/rajesh-and-sahithya/:variant" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
           <Route path="/template/southern-serenade/RajeshAndSahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/template/southern-serenade/RajeshAndSahithya/:variant" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
           <Route path="/templates/southern-serenade/rajesh-and-sahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/templates/southern-serenade/rajesh-and-sahithya/:variant" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
           <Route path="/templates/southern-serenade/RajeshAndSahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/templates/southern-serenade/RajeshAndSahithya/:variant" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
           <Route path="/RajeshAndSahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/RajeshAndSahithya/:variant" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
           <Route path="/rajeshandsahithya" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
+          <Route path="/rajeshandsahithya/:variant" element={<CustomSouthernSerenadeRajeshAndSahithya />} />
 
           
           {/* Standard & Multi-Link Templates */}

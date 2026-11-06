@@ -144,7 +144,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             letterSpacing: '0.30em',
             textTransform: 'uppercase',
             color: COLORS.secondary,
-            margin: '0 0 4px 0',
+            margin: '0 0 2px 0',
             fontWeight: 700,
           }}
         >
@@ -152,7 +152,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
         </motion.p>
 
         {/* 2. Delicate Winged Lotus Divider */}
-        <motion.div variants={slowLineAnim} style={{ marginBottom: 4 }}>
+        <motion.div variants={slowLineAnim} style={{ marginBottom: 2 }}>
           <LotusDivider color={COLORS.gold} width={isDesktop ? 130 : 110} />
         </motion.div>
 
@@ -168,7 +168,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
             color: COLORS.primary,
-            lineHeight: 1.05,
+            lineHeight: 1.0,
             position: 'relative',
             width: '100%',
             padding: '0 6px',
@@ -212,7 +212,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             alignItems: 'center',
             justifyContent: 'center',
             gap: 14,
-            margin: '2px 0',
+            margin: '0',
             width: '100%',
           }}
         >
@@ -243,7 +243,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
             color: COLORS.primary,
-            lineHeight: 1.05,
+            lineHeight: 1.0,
             position: 'relative',
             width: '100%',
             padding: '0 6px',
@@ -288,7 +288,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             letterSpacing: '0.30em',
             textTransform: 'uppercase',
             color: COLORS.secondary,
-            margin: '6px 0 6px 0',
+            margin: '3px 0 2px 0',
             fontWeight: 700,
           }}
         >
@@ -296,7 +296,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
         </motion.p>
 
         {/* 7. Subtle Lotus Accent */}
-        <motion.div variants={slowLineAnim} style={{ marginBottom: 6 }}>
+        <motion.div variants={slowLineAnim} style={{ marginBottom: 2 }}>
           <LotusDivider color={COLORS.gold} width={isDesktop ? 120 : 100} />
         </motion.div>
 
@@ -308,7 +308,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '2px 0 6px 0',
+            margin: '1px 0 2px 0',
             width: '100%',
             maxWidth: 320,
           }}
@@ -322,7 +322,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
               textTransform: 'uppercase',
               color: COLORS.secondary,
               fontWeight: 700,
-              marginBottom: 4,
+              marginBottom: 2,
             }}
           >
             {dateParts.month}
@@ -358,7 +358,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             <span
               style={{
                 width: 1,
-                height: 26,
+                height: 20,
                 background: COLORS.gold,
                 opacity: 0.65,
               }}
@@ -368,7 +368,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             <span
               style={{
                 fontFamily: FONTS.heading,
-                fontSize: isDesktop ? '2.6rem' : '2.3rem',
+                fontSize: isDesktop ? '2.5rem' : '2.15rem',
                 color: COLORS.primary,
                 fontWeight: 700,
                 lineHeight: 1,
@@ -382,7 +382,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             <span
               style={{
                 width: 1,
-                height: 26,
+                height: 20,
                 background: COLORS.gold,
                 opacity: 0.65,
               }}
@@ -410,11 +410,11 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             <span
               style={{
                 fontFamily: FONTS.body,
-                fontSize: isDesktop ? '15px' : '14px',
+                fontSize: isDesktop ? '14px' : '13px',
                 letterSpacing: '0.16em',
                 textTransform: 'uppercase',
                 color: COLORS.secondary,
-                marginTop: 4,
+                marginTop: 2,
                 fontWeight: 600,
               }}
             >
@@ -423,12 +423,7 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
           )}
         </motion.div>
 
-        {/* 9. Subtle Lotus Accent */}
-        <motion.div variants={slowLineAnim} style={{ margin: '4px 0 6px 0' }}>
-          <LotusDivider color={COLORS.gold} width={isDesktop ? 120 : 100} />
-        </motion.div>
-
-        {/* 10. VENUE (Strictly Centered) */}
+        {/* 9. VENUE (Strictly Centered — divider above address removed per request) */}
         <motion.div
           variants={slowLineAnim}
           style={{
@@ -436,22 +431,22 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
             flexDirection: 'column',
             alignItems: 'center',
             textAlign: 'center',
-            margin: '2px 0',
+            margin: '2px 0 0 0',
             maxWidth: '92%',
           }}
         >
-          <div style={{ marginBottom: 3 }}>
-            <PinIcon size={15} color={COLORS.secondary} />
+          <div style={{ marginBottom: 2 }}>
+            <PinIcon size={14} color={COLORS.secondary} />
           </div>
           <p
             style={{
               fontFamily: FONTS.heading,
-              fontSize: isDesktop ? '1.25rem' : '1.15rem',
+              fontSize: isDesktop ? '1.2rem' : '1.1rem',
               letterSpacing: '0.06em',
               textTransform: 'uppercase',
               color: COLORS.primary,
-              margin: '0 0 2px 0',
-              lineHeight: 1.2,
+              margin: '0 0 1px 0',
+              lineHeight: 1.15,
               fontWeight: 600,
             }}
           >
@@ -460,12 +455,12 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
           <p
             style={{
               fontFamily: FONTS.label,
-              fontSize: isDesktop ? '11px' : '10.5px',
+              fontSize: isDesktop ? '10.5px' : '10px',
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
               color: COLORS.secondary,
               margin: 0,
-              lineHeight: 1.2,
+              lineHeight: 1.15,
               fontWeight: 700,
             }}
           >
