@@ -66,14 +66,56 @@ export default function PinkBlossomSchedule({ scheduleItems, weddingDate, weddin
 
   return (
     <section 
-      className="relative w-full flex flex-col items-center justify-center px-4 pt-4 pb-12 overflow-hidden -mt-8"
-      style={{ backgroundColor: 'transparent' }}
+      style={{
+        position: 'relative',
+        width: '100%',
+        minHeight: '100svh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        backgroundColor: COLORS.ivory,
+        paddingTop: '72px',
+        paddingBottom: '72px',
+        paddingLeft: '16px',
+        paddingRight: '16px',
+        boxSizing: 'border-box',
+      }}
+      className="relative w-full flex flex-col items-center justify-center select-none"
     >
-      <div className="relative z-10 w-full flex flex-col items-center text-center pt-2">
-        <motion.p initial="hidden" whileInView="visible" variants={fadeAnim} viewport={{amount: 0.3}} style={{ ...smallCaps, marginBottom: '4px' }}>
+      {/* Background with texture / subtle light illustration */}
+      <img 
+        src={ASSETS.scheduleBg} 
+        alt="Schedule Background" 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: 0,
+          pointerEvents: 'none',
+        }} 
+      />
+
+      <div className="relative z-10 w-full flex flex-col items-center text-center mb-6">
+        <motion.p 
+          initial="hidden" 
+          whileInView="visible" 
+          variants={fadeAnim} 
+          viewport={{ once: false, amount: 0.3 }} 
+          style={{ ...smallCaps, marginBottom: '6px', letterSpacing: '0.24em' }}
+        >
           TIMELINE OF EVENTS
         </motion.p>
-        <motion.h2 initial="hidden" whileInView="visible" variants={fadeAnim} viewport={{amount: 0.3}} style={{ ...smallCaps, fontSize: '24px', marginBottom: '8px' }}>
+        <motion.h2 
+          initial="hidden" 
+          whileInView="visible" 
+          variants={fadeAnim} 
+          viewport={{ once: false, amount: 0.3 }} 
+          style={{ ...smallCaps, fontSize: '24px', margin: 0, letterSpacing: '0.18em' }}
+        >
           WEDDING SCHEDULE
         </motion.h2>
       </div>

@@ -98,7 +98,7 @@ export default function PinkBlossomCalendar({ calendarData, fontStyles, sectionS
   return (
     <section 
       ref={sectionRef}
-      style={{...sectionStyle, minHeight: '100vh', position: 'relative', overflow: 'hidden'}}
+      style={{...sectionStyle, minHeight: '100svh', position: 'relative', overflow: 'hidden'}}
       className="flex flex-col items-center justify-center px-5 py-12"
     >
       <img 

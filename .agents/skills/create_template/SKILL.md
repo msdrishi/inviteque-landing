@@ -136,6 +136,15 @@ This document outlines the standard architecture, file organization, styling rul
       `MON`, `TUE`, `WED`, `THU`, `FRI`, `SAT`, `SUN`
     - **Never use full day names** like `THURSDAY`, `MONDAY`, etc.
 
+14. **Full Screen Mobile Viewport For Every Section (`min-h-[100svh]`) (CRITICAL)**:
+    - **Every section in the template MUST be full screen to mobile size**:
+      * Every root `<section>` component must include `min-h-[100svh]` (or `minHeight: '100svh'`).
+      * Root container standard pattern: `className="w-full min-h-[100svh] flex flex-col items-center justify-center relative overflow-hidden"`.
+    - **NEVER use negative margins between sections**:
+      * Never use negative margins (e.g. `-mt-8`, `-mt-12`) on section root elements. Negative margins pull the section upwards and force titles/text to overlap the preceding section's borders or artwork.
+      * Give all section headers ample top breathing room (e.g. `pt-16` or `paddingTop: '64px'–'72px'`) to prevent visual collision with previous section content.
+      * Content inside the section should be vertically centered using `my-auto` or `justify-center` so that on mobile screens of any height (e.g. iPhone, Pixel, Samsung), the content is positioned in the focal center of the screen.
+
 ---
 
 ## 2. Step-by-Step Implementation Workflow
@@ -153,13 +162,13 @@ This document outlines the standard architecture, file organization, styling rul
 ### Step 3: Build Ambient Effect (`FallingPetals.jsx`)
 - Create floating flower petals / ambient accents.
 
-### Step 4: Build Individual Section Components
-- `[TemplateName]Hero.jsx` (adjust `paddingTop` to prevent illustration overlap)
-- `[TemplateName]PhotoCards.jsx` (cards start at `100vh` with `opacity: 0` so Card 2 is never seen prematurely)
-- `[TemplateName]Welcome.jsx` (direct typography on artwork, no div banner)
-- `[TemplateName]Venue.jsx` (direct typography on artwork, no div banner)
-- `[TemplateName]Schedule.jsx` (Royal Heirloom S-curve, Haldi/Wedding/Reception, no images)
-- `[TemplateName]Countdown.jsx` (direct typography on artwork, FallingPetals, no div banner)
+### Step 4: Build Individual Section Components (All Full Screen: `min-h-[100svh]`)
+- `[TemplateName]Hero.jsx` (`min-h-[100svh]`, adjust `paddingTop` to prevent illustration overlap)
+- `[TemplateName]PhotoCards.jsx` (`min-h-[100svh]`, cards start at `100vh` with `opacity: 0` so Card 2 is never seen prematurely)
+- `[TemplateName]Welcome.jsx` (`min-h-[100svh]`, direct typography on artwork, no div banner)
+- `[TemplateName]Venue.jsx` (`min-h-[100svh]`, direct typography on artwork, no div banner)
+- `[TemplateName]Schedule.jsx` (`min-h-[100svh]`, Royal Heirloom S-curve, Haldi/Wedding/Reception, no negative margins, no images)
+- `[TemplateName]Countdown.jsx` (`min-h-[100svh]`, direct typography on artwork, FallingPetals, no div banner)
 
 ### Step 5: Assemble in `index.jsx`
 - Use `resolveInvitationFeatures` from `src/utils/invitationFeatures.js` to control visibility for all sections.
