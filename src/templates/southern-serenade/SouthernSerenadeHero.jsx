@@ -12,7 +12,7 @@ import {
   slowContainerAnim,
 } from './theme'
 
-export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
+export default function SouthernSerenadeHero({ data = {}, isDesktop = false, hasOpened = true }) {
   const { scrollY } = useScroll()
   const rawY = useTransform(scrollY, [0, 800], ['0%', '-4%'])
   const bgY = useSpring(rawY, { stiffness: 55, damping: 18 })
@@ -122,7 +122,8 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false }) {
       {/* ── Content Container: Strictly 100% Center-Aligned & Regal ── */}
       <motion.div
         initial="hidden"
-        whileInView="show"
+        animate={hasOpened ? "show" : "hidden"}
+        whileInView={hasOpened ? "show" : undefined}
         viewport={{ once: false, amount: 0.15 }}
         variants={slowContainerAnim}
         style={{

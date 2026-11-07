@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { useDraft } from '../../context/DraftContext.jsx'
 import { weddingData as staticData } from '../../weddingData.js'
 
@@ -11,11 +12,27 @@ import SouthernSerenadeVenue from './SouthernSerenadeVenue.jsx'
 import SouthernSerenadeSchedule from './SouthernSerenadeSchedule.jsx'
 import SouthernSerenadeCountdown from './SouthernSerenadeCountdown.jsx'
 import SouthernSerenadeEventSection from './SouthernSerenadeEventSection.jsx'
+import SouthernSerenadeEnvelopeCover from './SouthernSerenadeEnvelopeCover.jsx'
 import InviteQRSVP from '../../components/InviteQRSVP.jsx'
 import Footer from '../../components/Footer.jsx'
 import { resolveInvitationFeatures } from '../../utils/invitationFeatures.js'
 import TemplatePreviewBar from '../../components/TemplatePreviewBar.jsx'
 import { ASSETS } from './theme.jsx'
+import bgMusicSrc from '../../assets/audio/tamil-temple-bgm.mp3'
+
+// ── Music Icons ──────────────────────────────────────────────────
+const MusicOnIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z" />
+    <path d="M15.932 7.757a.75.75 0 0 1 1.061 0 6 6 0 0 1 0 8.486.75.75 0 0 1-1.06-1.061 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.06Z" />
+  </svg>
+)
+
+const MusicOffIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+    <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM17.78 9.22a.75.75 0 1 0-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 1 0 1.06-1.06L20.56 12l1.72-1.72a.75.75 0 1 0-1.06-1.06l-1.72 1.72-1.72-1.72Z" />
+  </svg>
+)
 
 export default function TemplateSouthernSerenade({ savedData, groupSlug: propGroupSlug }) {
   const location = useLocation()
@@ -170,6 +187,55 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
 
   const customEvents = activeData?.customEvents || savedData?.customEvents || null
 
+  // ── Envelope Opening & Audio State ─────────────────────────────
+  const [hasOpened, setHasOpened] = useState(false)
+  const [isMusicMuted, setIsMusicMuted] = useState(false)
+  const audioRef = useRef(null)
+
+  const activeMusicSrc = savedData?.musicSrc || bgMusicSrc
+
+  useEffect(() => {
+    if (!hasOpened) {
+      window.scrollTo(0, 0)
+      document.body.style.overflow = 'hidden'
+    } else {
+      window.scrollTo(0, 0)
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [hasOpened])
+
+  const handleOpenCover = () => {
+    // Unlock and warm up audio in the user gesture
+    if (audioRef.current && !isMusicMuted) {
+      audioRef.current.muted = true
+      audioRef.current.play().catch(() => {})
+    }
+  }
+
+  const handleCompleteCover = () => {
+    setHasOpened(true)
+    if (audioRef.current && !isMusicMuted) {
+      audioRef.current.muted = false
+      audioRef.current.volume = 1
+      if (audioRef.current.paused) {
+        audioRef.current.play().catch(() => {})
+      }
+    }
+  }
+
+  const toggleMusic = () => {
+    setIsMusicMuted(!isMusicMuted)
+    if (audioRef.current) {
+      if (isMusicMuted) {
+        audioRef.current.muted = false
+        audioRef.current.play().catch(() => {})
+      } else {
+        audioRef.current.pause()
+      }
+    }
+  }
+
   // Centralized, dynamic feature & visibility resolution across all templates
   const {
     showWatermark,
@@ -214,6 +280,42 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
   // ── Render Template Sections ──────────────────────────────────
   return (
     <div className="relative min-h-screen bg-[#F8F3EA] text-[#352520]">
+      {/* ── Realistic Interactive Envelope Cover ── */}
+      <SouthernSerenadeEnvelopeCover
+        hasOpened={hasOpened}
+        onOpen={handleOpenCover}
+        onComplete={handleCompleteCover}
+        heroBg={ASSETS.heroBg}
+      />
+
+      {/* Background Music Player */}
+      <audio
+        ref={audioRef}
+        src={activeMusicSrc}
+        loop
+        playsInline
+        preload="auto"
+      />
+
+      {/* Floating Music Button */}
+      {hasOpened && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          onClick={toggleMusic}
+          className="fixed bottom-6 right-4 z-50 p-3 rounded-full backdrop-blur-sm shadow-[0_4px_15px_rgba(0,0,0,0.4)] transition-all hover:scale-105 active:scale-95"
+          style={{ 
+            backgroundColor: `#731924EE`, 
+            color: '#F8F3EA', 
+            border: `1px solid rgba(197, 160, 89, 0.45)` 
+          }}
+          aria-label="Toggle Music"
+        >
+          {isMusicMuted ? <MusicOffIcon /> : <MusicOnIcon />}
+        </motion.button>
+      )}
+
       {/* ── MOBILE & TABLET VIEW ── */}
       <div className="lg:hidden flex justify-center items-start min-h-screen bg-[#F0E8D8]">
         <div className="relative w-full max-w-[768px] min-h-[100svh] bg-[#F8F3EA] shadow-[0_0_60px_rgba(0,0,0,0.10)]">
@@ -223,7 +325,7 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
           )}
 
           {/* 1. Hero Section */}
-          <SouthernSerenadeHero data={data.hero} isDesktop={false} />
+          <SouthernSerenadeHero data={data.hero} isDesktop={false} hasOpened={hasOpened} />
 
           {/* 2. Photo Cards Section */}
           {showPhotoCards && (
@@ -299,7 +401,7 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
         )}
 
         {/* 1. Hero Section */}
-        <SouthernSerenadeHero data={data.hero} isDesktop={true} />
+        <SouthernSerenadeHero data={data.hero} isDesktop={true} hasOpened={hasOpened} />
 
         {/* 2. Photo Cards Section */}
         {showPhotoCards && (

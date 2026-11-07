@@ -220,10 +220,14 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
       })
     }
     
-    // Unlock and warm up audio in the user gesture
-    if (audioRef.current) {
-      audioRef.current.muted = true
-      audioRef.current.play().catch(() => {})
+    // Start audio immediately with full volume on user tap along with the video
+    if (audioRef.current && !isMusicMuted) {
+      audioRef.current.muted = false
+      audioRef.current.volume = 1
+      audioRef.current.currentTime = 0
+      audioRef.current.play().catch(err => {
+        console.warn('Audio play prevented on cover open:', err)
+      })
     }
 
     if (safetyTimeoutRef.current) clearTimeout(safetyTimeoutRef.current)

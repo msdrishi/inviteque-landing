@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 const logo = "/assets/logo/inviteq-logo.webp"
+import InvitequeLoader from '../components/InvitequeLoader.jsx'
 import { fadeUp, staggerChildren } from '../motionVariants'
 import { API_URL } from '../config'
 
@@ -109,7 +110,7 @@ export default function Account() {
 
             {loading ? (
               <div className="flex h-64 items-center justify-center rounded-3xl border border-dashed border-iqBorder bg-white/50">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-iqText border-t-transparent" />
+                <InvitequeLoader fullScreen={false} size="sm" />
               </div>
             ) : invites.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

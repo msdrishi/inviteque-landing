@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { API_URL } from '../config.js'
 
 const logo = "/assets/logo/inviteq-logo.webp"
+import InvitequeLoader from '../components/InvitequeLoader.jsx'
 
 export default function CustomerRsvpDashboard() {
   const { templateId, code: paramCode } = useParams()
@@ -209,12 +210,7 @@ export default function CustomerRsvpDashboard() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center font-saas">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent mb-4" />
-        <p className="text-sm font-semibold text-neutral-600">Loading RSVP Dashboard...</p>
-      </div>
-    )
+    return <InvitequeLoader fullScreen={true} size="md" text="Loading RSVP Dashboard..." />
   }
 
   if (error) {

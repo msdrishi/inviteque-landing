@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { API_URL } from '../config.js'
 
 const logo = "/assets/logo/inviteq-logo.webp"
+import InvitequeLoader from '../components/InvitequeLoader.jsx'
 
 export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
   const { templateId, code: paramCode } = useParams()
@@ -209,12 +210,7 @@ export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center font-saas">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent mb-4" />
-        <p className="text-sm font-semibold text-neutral-600">Loading RSVP Dashboard...</p>
-      </div>
-    )
+    return <InvitequeLoader fullScreen={true} size="md" text="Loading RSVP Dashboard..." />
   }
 
   if (error) {
@@ -378,11 +374,10 @@ export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
                 <button
                   key={tab.id}
                   onClick={() => setSelectedStatus(tab.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    selectedStatus === tab.id
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${selectedStatus === tab.id
                       ? 'bg-white text-neutral-900 shadow-sm'
                       : 'text-neutral-500 hover:text-neutral-900'
-                  }`}
+                    }`}
                 >
                   {tab.label}
                 </button>
@@ -446,16 +441,16 @@ export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
                       <th className="py-3.5 px-4">Status</th>
                       <th className="py-3.5 px-4">Headcount</th>
                       <th className="py-3.5 px-4">Guest Wish / Note</th>
-                      
+
                       <th className="py-3.5 px-4">Submitted</th>
-                      
+
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-100 text-sm font-medium">
                     {filteredRsvps.map((rsvp) => {
                       const isAttending = rsvp.attendanceStatus?.toLowerCase() === 'yes'
                       const isDeclined = rsvp.attendanceStatus?.toLowerCase() === 'no'
-                      
+
 
                       return (
                         <tr
@@ -474,13 +469,12 @@ export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
 
                           <td className="py-4 px-4">
                             <span
-                              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${
-                                isAttending
+                              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${isAttending
                                   ? 'bg-emerald-100 text-emerald-800'
                                   : isDeclined
-                                  ? 'bg-neutral-100 text-neutral-600'
-                                  : 'bg-amber-100 text-amber-800'
-                              }`}
+                                    ? 'bg-neutral-100 text-neutral-600'
+                                    : 'bg-amber-100 text-amber-800'
+                                }`}
                             >
                               {isAttending ? '✓ Attending' : isDeclined ? 'Declined' : 'Maybe'}
                             </span>
@@ -504,16 +498,16 @@ export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
                             )}
                           </td>
 
-                          
+
 
                           <td className="py-4 px-4 text-xs text-neutral-400">
                             {rsvp.submittedAt
                               ? new Date(rsvp.submittedAt).toLocaleDateString('en-US', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                })
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })
                               : 'Recent'}
                           </td>
 
@@ -540,7 +534,7 @@ export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
                 {filteredRsvps.map((rsvp) => {
                   const isAttending = rsvp.attendanceStatus?.toLowerCase() === 'yes'
                   const isDeclined = rsvp.attendanceStatus?.toLowerCase() === 'no'
-                  
+
 
                   return (
                     <div
@@ -556,19 +550,18 @@ export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
                           </span>
                         </div>
                         <span
-                          className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                            isAttending
+                          className={`px-2.5 py-1 rounded-full text-xs font-bold ${isAttending
                               ? 'bg-emerald-100 text-emerald-800'
                               : isDeclined
-                              ? 'bg-neutral-100 text-neutral-600'
-                              : 'bg-amber-100 text-amber-800'
-                          }`}
+                                ? 'bg-neutral-100 text-neutral-600'
+                                : 'bg-amber-100 text-amber-800'
+                            }`}
                         >
                           {isAttending ? '✓ Attending' : isDeclined ? 'Declined' : 'Maybe'}
                         </span>
                       </div>
 
-                      
+
 
                       {rsvp.message && (
                         <p className="text-xs text-neutral-700 bg-neutral-50 p-2.5 rounded-xl italic">
@@ -580,7 +573,7 @@ export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
                         <span>
                           {rsvp.submittedAt ? new Date(rsvp.submittedAt).toLocaleDateString() : 'Recent'}
                         </span>
-                        
+
                       </div>
                     </div>
                   )
@@ -642,11 +635,10 @@ export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
                       >
                         <span className="font-semibold text-neutral-800">{er.eventName}</span>
                         <span
-                          className={`font-bold px-2 py-0.5 rounded-full ${
-                            er.response?.toLowerCase() === 'yes'
+                          className={`font-bold px-2 py-0.5 rounded-full ${er.response?.toLowerCase() === 'yes'
                               ? 'bg-emerald-100 text-emerald-800'
                               : 'bg-neutral-200 text-neutral-600'
-                          }`}
+                            }`}
                         >
                           {er.response?.toLowerCase() === 'yes' ? '✓ Attending' : 'Not Attending'}
                         </span>
@@ -727,7 +719,7 @@ export default function CustomRsvpDashboard({ weddingCode, coupleName }) {
               {/* Active Links List */}
               <div className="space-y-2.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-neutral-500 block">Existing Invitation Links</label>
-                
+
                 {/* Default Main Link */}
                 <div className="p-3 rounded-2xl border border-neutral-200 bg-neutral-50/50 flex items-center justify-between gap-3">
                   <div className="truncate">

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate, useSearchParams, useLocation, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 const logo = "/assets/logo/inviteq-logo.webp"
+import InvitequeLoader from '../components/InvitequeLoader.jsx'
 import { useDraft } from '../context/DraftContext'
 import { templates, houseWarmingTemplates } from '../templates/templates'
 
@@ -531,11 +532,7 @@ export default function Builder() {
   const template = templates.find(t => t.id === templateId) || houseWarmingTemplates.find(t => t.id === templateId)
 
   if (loading || authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FDFCFB]">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#D4AF37] border-t-transparent"></div>
-      </div>
-    )
+    return <InvitequeLoader fullScreen={true} size="md" />
   }
 
   if (!user) return null

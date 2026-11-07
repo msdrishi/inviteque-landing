@@ -7,6 +7,7 @@ import { templates, houseWarmingTemplates } from '../templates/templates'
 import ExpenseTracker from '../components/admin/ExpenseTracker'
 
 const logo = "/assets/logo/inviteq-logo.webp"
+import InvitequeLoader from '../components/InvitequeLoader.jsx'
 
 const CANONICAL_TEMPLATE_ID = (id) => {
   if (!id) return null
@@ -1162,14 +1163,7 @@ Inviteque Team ❤️`
   const deviceStats = summary?.deviceDistribution || { desktop: 64, mobile: 36 }
 
   if (loading && !summary) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 font-saas">
-        <div className="text-center space-y-4">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-900 border-t-transparent mx-auto" />
-          <p className="text-sm font-semibold text-slate-500">Loading console analytics...</p>
-        </div>
-      </div>
-    )
+    return <InvitequeLoader fullScreen={true} size="md" text="Loading console analytics..." />
   }
 
   return (
@@ -2513,8 +2507,7 @@ Inviteque Team ❤️`
 
               {usersLoading ? (
                 <div className="py-16 text-center text-xs font-semibold text-slate-400">
-                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-900 border-t-transparent mx-auto mb-3" />
-                  Loading registered members...
+                  <InvitequeLoader fullScreen={false} size="sm" text="Loading members..." />
                 </div>
               ) : (
                 <>

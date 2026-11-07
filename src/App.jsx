@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext.jsx'
 import { DraftProvider } from './context/DraftContext.jsx'
 import Landing from './pages/Landing.jsx'
 import { API_URL } from './config'
+import InvitequeLoader from './components/InvitequeLoader.jsx'
 
 // Lazy load major pages
 const TemplateRoute = lazy(() => import('./pages/TemplateRoute.jsx'))
@@ -34,14 +35,7 @@ const CustomPinkBlossomAlinaAndTanmay = lazy(() => import('./pages/custom-orders
 const CustomRajasthaniVowsRishikaAndJaskaran = lazy(() => import('./pages/custom-orders/rajasthani-vows/RishikaAndJaskaran/index.jsx'))
 const CustomSouthernSerenadeRajeshAndSahithya = lazy(() => import('./pages/custom-orders/southern-serenade/RajeshAndSahithya/index.jsx'))
 
-const PageLoader = () => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#FDFCFB]">
-    <div className="relative h-12 w-12">
-      <div className="absolute inset-0 rounded-full border-[3px] border-[#D4AF37]/20"></div>
-      <div className="absolute inset-0 rounded-full border-t-[3px] border-[#D4AF37] animate-spin"></div>
-    </div>
-  </div>
-)
+const PageLoader = () => <InvitequeLoader fullScreen={true} size="md" />
 
 function ScrollToTop() {
   const { pathname } = useLocation()

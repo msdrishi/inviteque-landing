@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import InvitequeLoader from '../components/InvitequeLoader.jsx'
 const logo = "/assets/logo/inviteq-watermark.webp"
 import { fadeUp } from '../motionVariants'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
@@ -115,11 +116,7 @@ export default function InviteDetails() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-iqBg">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-iqText border-t-transparent" />
-      </div>
-    )
+    return <InvitequeLoader fullScreen={true} size="md" />
   }
 
   if (!invite) return null

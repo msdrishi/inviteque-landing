@@ -7,6 +7,7 @@ import { API_URL } from '../config'
 import { compressImageForUpload } from '../utils/imageCompression'
 import { uploadToR2 } from '../utils/r2Upload'
 const logo = "/assets/logo/inviteq-logo.webp"
+import InvitequeLoader from '../components/InvitequeLoader.jsx'
 import { fadeUp } from '../motionVariants'
 import { templates, houseWarmingTemplates } from '../templates/templates'
 import royalPalaceMapping from '../royalPalaceCloudinaryMapping.json'
@@ -199,11 +200,7 @@ export default function Payment() {
   const isAlreadyFullyPaid = isTemplatePaid && (!wantsRsvp || wasRsvpPaid)
 
   if (authLoading || loadingInvite) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-iqBg">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-      </div>
-    )
+    return <InvitequeLoader fullScreen={true} size="md" />
   }
 
   if (!user) return null

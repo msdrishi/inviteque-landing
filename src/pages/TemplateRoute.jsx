@@ -25,6 +25,7 @@ import template3VenueBg from '../assets/themes/template3/venue_bg.webp'
 import template3DesktopBg from '../assets/themes/template3/desktop_bg.webp'
 
 const logo = "/assets/logo/inviteq-logo.webp"
+import InvitequeLoader from '../components/InvitequeLoader.jsx'
 import { API_URL, USE_NEW_ARCHITECTURE } from '../config'
 
 const TemplateTwilightSerenade = USE_NEW_ARCHITECTURE ? TemplateTwilightSerenadeNew : TemplateTwilightSerenadeOld;
@@ -54,10 +55,19 @@ const TEMPLATE_MAP = {
 
 const TEMPLATE_ASSETS = {
   'southern-serenade': [
+    "/assets/templates/southern-serenade/envelope-cover.webp",
     "/assets/templates/southern-serenade/hero-mobile.webp",
+    "/assets/templates/southern-serenade/thumbnail.webp",
     "/assets/templates/southern-serenade/plain-bg.webp",
     "/assets/templates/southern-serenade/venue-mobile.webp",
     "/assets/templates/southern-serenade/countdown-mobile.webp",
+    "/assets/templates/southern-serenade/welcome-tray.webp",
+    "/assets/templates/southern-serenade/engagement.webp",
+    "/assets/templates/southern-serenade/pelli-koduku.webp",
+    "/assets/templates/southern-serenade/pelli-koothuru.webp",
+    "/assets/templates/southern-serenade/mehndi.webp",
+    "/assets/templates/southern-serenade/wedding.webp",
+    "/assets/templates/southern-serenade/reception.webp",
   ],
 
   'royal-heirloom': [
@@ -271,7 +281,7 @@ export default function TemplateRoute() {
           const res = await fetch(`${API_URL}/api/invites/${code}`);
           if (res.ok) {
             fetchedData = await res.json();
-            
+
             // Enforce that the URL template ID matches the purchased/saved template theme
             if (fetchedData.templateId && fetchedData.templateId.toLowerCase() !== templateId.toLowerCase()) {
               if (active) {
@@ -303,14 +313,14 @@ export default function TemplateRoute() {
 
         const assetsPromise = preloadAssets(allAssets);
         const fontsPromise = document.fonts.ready;
-        const delayPromise = new Promise(resolve => setTimeout(resolve, 1000));
+        const delayPromise = new Promise(resolve => setTimeout(resolve, 2000));
         const timeoutPromise = new Promise(resolve => setTimeout(resolve, 4000)); // 4 seconds max wait
 
         await Promise.race([
           Promise.all([assetsPromise, fontsPromise, delayPromise]),
           timeoutPromise
         ]);
-        
+
         if (active) {
           setLoading(false);
         }
@@ -352,38 +362,7 @@ export default function TemplateRoute() {
       )}
 
       {/* Splash Screen overlay (fixed on top, fades out when loading finishes) */}
-      {showSplash && (
-        <div 
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#FDFCFB] transition-opacity duration-500 ease-in-out"
-          style={{ 
-            opacity: loading ? 1 : 0,
-            pointerEvents: loading ? 'all' : 'none'
-          }}
-        >
-          <div className="relative flex flex-col items-center">
-            {/* Circular Loading Halo around Logo */}
-            <div className="relative h-15 w-15 flex items-center justify-center">
-              <div className="absolute inset-0 rounded-full border-[5px] border-[#D4AF37]/10"></div>
-              <div className="absolute inset-0 rounded-full border-t-[5px] border-[#D4AF37] animate-spin"></div>
-
-              <img
-                src={logo}
-                alt="Inviteque"
-                className="h-14 w-14 object-contain rounded-full relative z-10"
-              />
-            </div>
-
-            {/* Premium Text under Logo */}
-            <div className="mt-2 text-center">
-              <h2 className="font-parisienne text-2xl font-normal text-iqText opacity-80">Inviteque</h2>
-            </div>
-          </div>
-
-          {/* Decorative corner accents */}
-          <div className="fixed top-10 left-10 h-16 w-16 border-t border-l border-[#D4AF37]/10 rounded-tl-2xl"></div>
-          <div className="fixed bottom-10 right-10 h-16 w-16 border-b border-r border-[#D4AF37]/10 rounded-br-2xl"></div>
-        </div>
-      )}
+      {showSplash && loading && <InvitequeLoader fullScreen={true} size="md" />}
     </div>
   )
 }

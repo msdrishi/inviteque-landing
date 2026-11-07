@@ -70,8 +70,8 @@ export const alinaTanmayData = {
   // Mandap background:
   bgImage: '/assets/templates/pinkblossom/venue-mandap-refined.webp',
 
-  // 1. Keep preview watermark
-  showWatermark: true,
+  // Preview watermark removed
+  showWatermark: false,
 
   // 6. Remove photo card section
   photos: [],
