@@ -157,56 +157,11 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
     typeof window !== 'undefined' ? window.innerWidth : 768
   )
 
-  // Video pre-download & loader state
-  const [isVideoDownloaded, setIsVideoDownloaded] = useState(false)
-  const [videoBlobUrl, setVideoBlobUrl] = useState(null)
-
-  useEffect(() => {
-    let active = true
-    fetch(ASSETS.coverVideo)
-      .then(res => {
-        if (!res.ok) throw new Error('Video fetch failed')
-        return res.blob()
-      })
-      .then(blob => {
-        if (!active) return
-        const localUrl = URL.createObjectURL(blob)
-        setVideoBlobUrl(localUrl)
-        setIsVideoDownloaded(true)
-      })
-      .catch(err => {
-        console.warn('Video preload fallback triggered:', err)
-        if (active) setIsVideoDownloaded(true)
-      })
-
-    const timer = setTimeout(() => {
-      if (active) setIsVideoDownloaded(true)
-    }, 3500)
-
-    return () => {
-      active = false
-      clearTimeout(timer)
-    }
-  }, [])
-
-  // Cover opening & splash state
+  // Cover opening & splash state (Midnight Waltz flow)
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasOpened, setHasOpened] = useState(false)
-  const [hasTriggeredHeroText, setHasTriggeredHeroText] = useState(false)
-  const [hasTriggeredHeroBg, setHasTriggeredHeroBg] = useState(false)
-  const [isVideoReady, setIsVideoReady] = useState(false)
   const videoRef = React.useRef(null)
   const safetyTimeoutRef = React.useRef(null)
-
-  const triggerSmoothOpen = React.useCallback(() => {
-    if (safetyTimeoutRef.current) {
-      clearTimeout(safetyTimeoutRef.current)
-      safetyTimeoutRef.current = null
-    }
-    setHasOpened(true)
-    setHasTriggeredHeroBg(true)
-    setHasTriggeredHeroText(true)
-  }, [])
 
   // Music state — support custom song from savedData or fallback to default
   const activeMusicSrc = savedData?.musicSrc || bgMusicSrc
@@ -256,49 +211,49 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
     if (hasOpened || isPlaying) return
     setIsPlaying(true)
     
-    // Play music immediately on tap / click
-    if (audioRef.current) {
-      audioRef.current.muted = false
-      audioRef.current.volume = 1
-      audioRef.current.play().catch(() => {})
+    // Play video directly on user tap
+    if (videoRef.current) {
+      videoRef.current.play().catch(err => {
+        console.error('Video play error:', err)
+        // If device strictly blocks video, fallback smoothly
+        setTimeout(() => setHasOpened(true), 400)
+      })
     }
-    const vid = videoRef.current
-    if (vid) {
-      try {
-        vid.currentTime = 0
-      } catch (_) {}
-      const playPromise = vid.play()
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          triggerSmoothOpen()
-        })
-      }
-    } else {
-      triggerSmoothOpen()
+    
+    // Unlock and warm up audio in the user gesture
+    if (audioRef.current) {
+      audioRef.current.muted = true
+      audioRef.current.play().catch(() => {})
     }
 
     if (safetyTimeoutRef.current) clearTimeout(safetyTimeoutRef.current)
-    // Safety fallback: only if video completely fails or hangs without ending (10 seconds)
     safetyTimeoutRef.current = setTimeout(() => {
-      triggerSmoothOpen()
-    }, 10000)
+      setHasOpened(true)
+    }, 8000)
   }
 
   const handleTimeUpdate = () => {
     const vid = videoRef.current
     if (vid) {
-      if (vid.currentTime > 0.05 && !isVideoReady) {
-        setIsVideoReady(true)
-      }
-      // Only trigger if video reports ended or reached absolute end
-      if (vid.duration && vid.duration > 1 && vid.currentTime >= vid.duration - 0.05) {
-        triggerSmoothOpen()
+      // Begin smooth 1.4s crossfade right before video finishes
+      if (vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
+        if (!hasOpened) {
+          if (safetyTimeoutRef.current) {
+            clearTimeout(safetyTimeoutRef.current)
+            safetyTimeoutRef.current = null
+          }
+          setHasOpened(true)
+        }
       }
     }
   }
 
   const handleVideoEnded = () => {
-    triggerSmoothOpen()
+    if (safetyTimeoutRef.current) {
+      clearTimeout(safetyTimeoutRef.current)
+      safetyTimeoutRef.current = null
+    }
+    setHasOpened(true)
   }
 
   const isDesktop = windowWidth > 1024
@@ -398,7 +353,7 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
         isPlaying={isPlaying}
         isVideoReady={true}
         videoRef={videoRef}
-        coverVideoSrc={videoBlobUrl || ASSETS.coverVideo}
+        coverVideoSrc={ASSETS.coverVideo}
         coverPosterSrc={ASSETS.coverPoster}
         handleOpenCover={handleOpenCover}
         handleTimeUpdate={handleTimeUpdate}
@@ -440,8 +395,7 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
 
       <PinkBlossomHero 
         {...commonProps} 
-        hasTriggeredHeroBg={hasTriggeredHeroBg}
-        hasTriggeredHeroText={hasTriggeredHeroText}
+        hasTriggeredHeroText={hasOpened}
       />
       {(data.familyInvitation || savedData?.familyInvitation) && (
         <PinkBlossomFamilyInvitation {...commonProps} />

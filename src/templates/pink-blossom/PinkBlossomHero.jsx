@@ -3,25 +3,25 @@ import { motion } from 'framer-motion'
 import { COLORS, ASSETS } from './theme'
 import ScrollDownIndicator from './ScrollDownIndicator'
 
-// ─── Animation Variants: Start Slowly & Gracefully Upon Landing ───
+// ─── Animation Variants: Start Slowly & Gracefully Upon Landing (Midnight Waltz style) ───
 const lineAnim = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 2.0, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const letterContainer = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.07, delayChildren: 0.2 } }
+  visible: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.2 } }
 }
 
 const letterAnim = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1.3, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] } },
 }
 
 const sectionAnim = {
-  hidden: { },
-  visible: { transition: { staggerChildren: 0.45, delayChildren: 0.55 } }
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.18, delayChildren: 0.4 } }
 }
 
 // ─── Letter-by-Letter Couple Name ─────────────────────────────
@@ -140,19 +140,15 @@ export default function PinkBlossomHero({ data, fontStyles, sectionStyle, bgStyl
         userSelect: 'none',
       }}
     >
-      {/* Background Image Container */}
-      <motion.div
+      {/* Background Image Container — rendered immediately so it seamlessly reveals as cover fades */}
+      <div
         style={{
           position: 'absolute',
           inset: 0,
           zIndex: 0,
-          willChange: 'opacity',
           transformOrigin: 'center center',
           pointerEvents: 'none',
         }}
-        initial={{ opacity: 0 }}
-        animate={hasTriggeredHeroText ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 1.0, ease: "easeOut" }}
       >
         <img 
           src={ASSETS.heroBg} 
@@ -167,7 +163,7 @@ export default function PinkBlossomHero({ data, fontStyles, sectionStyle, bgStyl
           }}
           loading="eager"
         />
-      </motion.div>
+      </div>
 
       <FallingPinkPetals />
       

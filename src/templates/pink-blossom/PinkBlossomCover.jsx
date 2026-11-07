@@ -23,35 +23,26 @@ export default function PinkBlossomCover({
       {!hasOpened && (
         <motion.section
           key="cover-splash"
-          initial={{ opacity: 1, scale: 1 }}
-          exit={{ 
-            opacity: 0, 
-            scale: 1.04, 
-            transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
-          }}
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] } }}
           style={{ pointerEvents: hasOpened ? 'none' : 'auto' }}
           className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A0A12] max-w-[480px] md:max-w-[820px] mx-auto overflow-hidden cursor-pointer select-none"
           onClick={handleOpenCover}
         >
           <div className="w-full h-full relative overflow-hidden">
-            {/* Directly mounted video element with poster for instant playback */}
+            {/* Always mounted video element for immediate playback */}
             <video
               ref={videoRef}
-              src={coverVideoSrc}
+              src={`${coverVideoSrc}#t=0.001`}
               playsInline
               webkit-playsinline="true"
               x5-playsinline="true"
               preload="auto"
               muted
               controls={false}
-              poster={coverPosterSrc}
               onTimeUpdate={handleTimeUpdate}
               onEnded={handleVideoEnded}
-              onError={handleVideoEnded}
               className="w-full h-full object-cover select-none pointer-events-none scale-[1.04]"
-              style={{
-                display: 'block',
-              }}
             />
 
             {/* Floating star decorations (only visible prior to tap) */}
@@ -60,7 +51,7 @@ export default function PinkBlossomCover({
                 <motion.div 
                   initial={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                   className="absolute inset-0 pointer-events-none flex items-center justify-center z-20"
                 >
                   {[...Array(6)].map((_, idx) => (
@@ -90,13 +81,13 @@ export default function PinkBlossomCover({
             </AnimatePresence>
           </div>
 
-          {/* Tap to open overlay (disappears immediately upon tap for lag-free video start) */}
+          {/* Tap to open overlay */}
           <AnimatePresence>
             {!isPlaying && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15, ease: "easeOut" } }}
+                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.3, ease: "easeOut" } }}
                 transition={{ duration: 0.8 }}
                 className={`absolute ${coverTapBelow ? 'bottom-[18%] sm:bottom-[22%]' : 'top-[20%]'} inset-x-0 flex flex-col items-center pointer-events-none z-20 px-6 text-center`}
               >

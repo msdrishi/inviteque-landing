@@ -145,6 +145,32 @@ This document outlines the standard architecture, file organization, styling rul
       * Give all section headers ample top breathing room (e.g. `pt-16` or `paddingTop: '64px'–'72px'`) to prevent visual collision with previous section content.
       * Content inside the section should be vertically centered using `my-auto` or `justify-center` so that on mobile screens of any height (e.g. iPhone, Pixel, Samsung), the content is positioned in the focal center of the screen.
 
+15. **Smooth "Tap to Open" Cover & Video Flow (Midnight Waltz Architecture) (CRITICAL)**:
+    - For templates with a "Tap to Open" cover/envelope video opening flow, strictly adhere to the proven Midnight Waltz architecture:
+      * **Direct Asset with `#t=0.001` (Never `fetch()` / `blob:`)**:
+        - Point `<video>` directly to the video URL with `#t=0.001`: `src={`${coverVideoSrc}#t=0.001`}`.
+        - `#t=0.001` prompts mobile browsers (iOS/Android) to decode and render frame 0 immediately upon mount without needing a separate poster image, preventing blank flashes or frame desync.
+        - **NEVER use background `fetch()` / blob URL preloading**. Replacing the `<video>` src dynamically resets the element and aborts pending playback requests (`AbortError`), causing the video to freeze or fail to start.
+      * **Audio Unlocking During User Gesture**:
+        - Unlock audio inside the tap handler: `audioRef.current.muted = true; audioRef.current.play().catch(...)`.
+        - When `hasOpened` becomes `true`, unmute audio: `audioRef.current.muted = false; audioRef.current.volume = 1;` so music starts cleanly right as the hero section begins revealing.
+      * **1.4s Cross-Fade Exit (`duration: 1.4, ease: [0.22, 1, 0.36, 1]`)**:
+        - The cover overlay must dissolve out with:
+          ```jsx
+          <motion.section
+            key="cover-splash"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] } }}
+            ...
+          >
+          ```
+        - The Hero background image must be mounted eagerly underneath (`loading="eager"`) without `initial={{ opacity: 0 }}` so it is instantly visible as the cover fades.
+        - Stagger hero typography with `delayChildren: 0.4`, `staggerChildren: 0.18`, and line duration `2.0s–2.2s`.
+      * **Trigger Timing & Safety Fallbacks**:
+        - In `onTimeUpdate`, trigger `setHasOpened(true)` at `vid.currentTime >= vid.duration - 0.25` so the dissolve begins smoothly as the video reaches its final frames.
+        - Support `onEnded={handleVideoEnded}`.
+        - Catch errors on `video.play()` and provide a 7–8 second safety fallback so users never get stuck if a mobile browser blocks playback.
+
 ---
 
 ## 2. Step-by-Step Implementation Workflow
