@@ -166,38 +166,88 @@ export default function SouthernSerenadeEventSection({ event, isDesktop = false 
           </motion.p>
         )}
 
-        {/* 6. Get Directions Action Button */}
-        {event.mapUrl && (
-          <motion.a
-            variants={slowLineAnim}
-            href={event.mapUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              padding: '11px 26px',
-              borderRadius: 30,
-              background: COLORS.primary,
-              color: '#FDFBF7',
-              fontFamily: FONTS.label,
-              fontSize: '11.5px',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              textDecoration: 'none',
-              fontWeight: 700,
-              boxShadow: '0 6px 18px rgba(115, 25, 36, 0.25)',
-              marginTop: 4,
-            }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-          >
-            <PinIcon size={14} color="#FDFBF7" />
-            GET DIRECTIONS
-          </motion.a>
-        )}
+        {/* 6. Action Buttons: Directions & Optional Live Stream */}
+        <motion.div
+          variants={slowLineAnim}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+            flexWrap: 'wrap',
+            marginTop: 4,
+          }}
+        >
+          {event.mapUrl && (
+            <motion.a
+              href={event.mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                padding: '11px 24px',
+                borderRadius: 30,
+                background: COLORS.primary,
+                color: '#FDFBF7',
+                fontFamily: FONTS.label,
+                fontSize: '11.5px',
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                fontWeight: 700,
+                boxShadow: '0 6px 18px rgba(115, 25, 36, 0.25)',
+              }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+            >
+              <PinIcon size={14} color="#FDFBF7" />
+              GET DIRECTIONS
+            </motion.a>
+          )}
+
+          {event.hasLiveLink && (
+            <motion.a
+              href={event.liveUrl || '#'}
+              target={event.liveUrl ? '_blank' : undefined}
+              rel={event.liveUrl ? 'noopener noreferrer' : undefined}
+              onClick={(e) => {
+                if (!event.liveUrl) {
+                  e.preventDefault()
+                }
+              }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                padding: '11px 22px',
+                borderRadius: 30,
+                background: 'rgba(253, 251, 247, 0.95)',
+                color: COLORS.primary,
+                border: `1.5px solid ${COLORS.primary}`,
+                fontFamily: FONTS.label,
+                fontSize: '11px',
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                fontWeight: 700,
+                boxShadow: '0 4px 14px rgba(115, 25, 36, 0.15)',
+                cursor: event.liveUrl ? 'pointer' : 'default',
+              }}
+              whileHover={event.liveUrl ? { scale: 1.04 } : undefined}
+              whileTap={event.liveUrl ? { scale: 0.96 } : undefined}
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
+              </span>
+              LIVE LINK
+            </motion.a>
+          )}
+        </motion.div>
       </motion.div>
     </section>
   )

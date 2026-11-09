@@ -1,4 +1,7 @@
+import rajeshMusicSrc from './audio/ReelAudio-66671.mp3'
+
 export const rajeshSahithyaData = {
+  musicSrc: rajeshMusicSrc,
   coupleData: {
     groomName: 'Rajesh',
     brideName: 'Sahithya',
@@ -13,7 +16,7 @@ export const rajeshSahithyaData = {
   },
   invitationData: {
     welcomeMessage:
-      'With the divine blessings of our elders and the Almighty, we cordially invite you and your family to celebrate the sacred wedding celebrations of Rajesh & Sahithya. Your presence and blessings will make our joyous union truly auspicious.',
+      'With the divine grace of Lord Venkateswara and the blessings of our elders, we warmly invite you and your family to celebrate the wedding of Rajesh & Sahithya.\n\nAs two families unite and begin this sacred chapter together, your presence and heartfelt blessings will make their union truly auspicious and complete.\n\nJoin us to celebrate, cherish beautiful moments, and shower the couple with love.',
     hasRsvp: false,
   },
   countdown: {
@@ -30,8 +33,7 @@ export const rajeshSahithyaData = {
       date: '11th Nov 2026',
       time: '11 AM - 2 PM',
       venue: 'Sai Brundavan Grand, Siddipet',
-      description:
-        'The two families come together and the priest writes the official invitation letter.',
+      description: null,
       mapUrl: 'https://maps.app.goo.gl/cqY5wappoxhT7hVQ9?g_st=ic',
       bgImage: '/assets/templates/southern-serenade/engagement.webp',
     },
@@ -76,6 +78,8 @@ export const rajeshSahithyaData = {
       venue: 'VSS Convention, Siddipet',
       description: null,
       mapUrl: 'https://maps.app.goo.gl/EbhaGiMBrfYCLCDM7?g_st=ic',
+      hasLiveLink: true,
+      liveUrl: null, // Will be updated later with actual stream URL
       bgImage: '/assets/templates/southern-serenade/venue-mobile.webp',
     },
     {
@@ -96,6 +100,8 @@ export const rajeshSahithyaData = {
       venue: 'Tavaro Resorts, Kokapet, Hyderabad',
       description: null,
       mapUrl: 'https://maps.app.goo.gl/VjWo3Qx9oTqsp6RS8?g_st=ic',
+      hasLiveLink: true,
+      liveUrl: null, // Will be updated later with actual stream URL
       bgImage: '/assets/templates/southern-serenade/reception.webp',
     },
   ],

@@ -107,12 +107,13 @@ export default function SouthernSerenadeWelcome({ data = {}, isDesktop = false }
           variants={slowLineAnim}
           style={{
             fontFamily: FONTS.body,
-            fontSize: isDesktop ? '19.5px' : '17px',
+            fontSize: isDesktop ? '18px' : '15.5px',
             lineHeight: 1.65,
             color: COLORS.darkText,
-            margin: '18px auto',
+            margin: '16px auto',
             maxWidth: '96%',
             fontWeight: 500,
+            whiteSpace: 'pre-line',
           }}
         >
           {welcomeMessage}

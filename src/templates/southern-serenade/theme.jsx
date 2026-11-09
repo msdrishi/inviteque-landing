@@ -26,6 +26,8 @@ export const ASSETS = {
   thumbnail: '/assets/templates/southern-serenade/thumbnail.webp',
   rosePetal: '/assets/decorations/midnight-waltz-rosePetal.webp',
   welcomeTray: '/assets/templates/southern-serenade/welcome-tray.webp',
+  coverPoster: '/assets/templates/southern-serenade/envelope-poster.webp',
+  coverVideo: '/assets/templates/southern-serenade/cover-video.mp4',
 }
 
 // ── Shared Slow Line Animation (Duration: 2.2s) ─────────────────

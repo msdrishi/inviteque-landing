@@ -55,7 +55,7 @@ const TEMPLATE_MAP = {
 
 const TEMPLATE_ASSETS = {
   'southern-serenade': [
-    "/assets/templates/southern-serenade/envelope-cover.webp",
+    "/assets/templates/southern-serenade/envelope-poster.webp",
     "/assets/templates/southern-serenade/hero-mobile.webp",
     "/assets/templates/southern-serenade/thumbnail.webp",
     "/assets/templates/southern-serenade/plain-bg.webp",

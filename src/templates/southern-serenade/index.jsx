@@ -12,7 +12,7 @@ import SouthernSerenadeVenue from './SouthernSerenadeVenue.jsx'
 import SouthernSerenadeSchedule from './SouthernSerenadeSchedule.jsx'
 import SouthernSerenadeCountdown from './SouthernSerenadeCountdown.jsx'
 import SouthernSerenadeEventSection from './SouthernSerenadeEventSection.jsx'
-import SouthernSerenadeEnvelopeCover from './SouthernSerenadeEnvelopeCover.jsx'
+import SouthernSerenadeCover from './SouthernSerenadeCover.jsx'
 import InviteQRSVP from '../../components/InviteQRSVP.jsx'
 import Footer from '../../components/Footer.jsx'
 import { resolveInvitationFeatures } from '../../utils/invitationFeatures.js'
@@ -187,9 +187,11 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
 
   const customEvents = activeData?.customEvents || savedData?.customEvents || null
 
-  // ── Envelope Opening & Audio State ─────────────────────────────
+  // ── Envelope Opening & Audio State (Midnight Waltz Architecture) ──
   const [hasOpened, setHasOpened] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
   const [isMusicMuted, setIsMusicMuted] = useState(false)
+  const videoRef = useRef(null)
   const audioRef = useRef(null)
 
   const activeMusicSrc = savedData?.musicSrc || bgMusicSrc
@@ -205,23 +207,50 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
     return () => { document.body.style.overflow = '' }
   }, [hasOpened])
 
-  const handleOpenCover = () => {
-    // Unlock and warm up audio in the user gesture
-    if (audioRef.current && !isMusicMuted) {
-      audioRef.current.muted = true
-      audioRef.current.play().catch(() => {})
-    }
-  }
-
-  const handleCompleteCover = () => {
-    setHasOpened(true)
-    if (audioRef.current && !isMusicMuted) {
+  useEffect(() => {
+    if (hasOpened && audioRef.current && !isMusicMuted) {
       audioRef.current.muted = false
       audioRef.current.volume = 1
       if (audioRef.current.paused) {
         audioRef.current.play().catch(() => {})
       }
     }
+  }, [hasOpened, isMusicMuted])
+
+  const handleOpenCover = () => {
+    if (hasOpened || isPlaying) return
+    setIsPlaying(true)
+    if (videoRef.current) {
+      videoRef.current.play().catch(console.error)
+    }
+    // Song plays immediately right after tap to open along with the video
+    if (audioRef.current && !isMusicMuted) {
+      audioRef.current.muted = false
+      audioRef.current.volume = 1
+      audioRef.current.play().catch(() => {})
+    }
+    // Safety fallback: if video playback freezes or fails, transition after 7 seconds
+    setTimeout(() => {
+      setHasOpened((prev) => {
+        if (!prev) return true
+        return prev
+      })
+    }, 7000)
+  }
+
+  const handleTimeUpdate = () => {
+    const vid = videoRef.current
+    if (vid) {
+      if (vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
+        if (!hasOpened) {
+          setHasOpened(true)
+        }
+      }
+    }
+  }
+
+  const handleVideoEnded = () => {
+    setHasOpened(true)
   }
 
   const toggleMusic = () => {
@@ -280,12 +309,16 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
   // ── Render Template Sections ──────────────────────────────────
   return (
     <div className="relative min-h-screen bg-[#F8F3EA] text-[#352520]">
-      {/* ── Realistic Interactive Envelope Cover ── */}
-      <SouthernSerenadeEnvelopeCover
+      {/* ── Realistic Interactive Envelope Cover Video (Midnight Waltz Architecture) ── */}
+      <SouthernSerenadeCover
         hasOpened={hasOpened}
-        onOpen={handleOpenCover}
-        onComplete={handleCompleteCover}
-        heroBg={ASSETS.heroBg}
+        isPlaying={isPlaying}
+        videoRef={videoRef}
+        coverVideoSrc={ASSETS.coverVideo}
+        coverPosterSrc={ASSETS.coverPoster}
+        handleOpenCover={handleOpenCover}
+        handleTimeUpdate={handleTimeUpdate}
+        handleVideoEnded={handleVideoEnded}
       />
 
       {/* Background Music Player */}
@@ -316,9 +349,9 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
         </motion.button>
       )}
 
-      {/* ── MOBILE & TABLET VIEW ── */}
-      <div className="lg:hidden flex justify-center items-start min-h-screen bg-[#F0E8D8]">
-        <div className="relative w-full max-w-[768px] min-h-[100svh] bg-[#F8F3EA] shadow-[0_0_60px_rgba(0,0,0,0.10)]">
+      {/* ── STRICT MOBILE VIEW FRAME ON DESKTOP ── */}
+      <div className="flex justify-center items-start min-h-screen bg-[#EBDCB9]">
+        <div className="relative w-full max-w-[440px] min-h-[100svh] bg-[#F8F3EA] shadow-[0_0_80px_rgba(40,10,15,0.25)]">
           <WatermarkMobile />
           {isCustomPreview && (
             <TemplatePreviewBar templateId="southern-serenade" draftData={draftData} primaryColor="#731924" />
@@ -391,81 +424,6 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
           {/* 8. InviteQue Footer */}
           <Footer data={data.footer} theme="traditional" isDesktop={false} />
         </div>
-      </div>
-
-      {/* ── DESKTOP VIEW ── */}
-      <div className="hidden lg:block w-full min-h-screen bg-[#F8F3EA] relative">
-        <WatermarkDesktop />
-        {isCustomPreview && (
-          <TemplatePreviewBar templateId="southern-serenade" draftData={draftData} primaryColor="#731924" />
-        )}
-
-        {/* 1. Hero Section */}
-        <SouthernSerenadeHero data={data.hero} isDesktop={true} hasOpened={hasOpened} />
-
-        {/* 2. Photo Cards Section */}
-        {showPhotoCards && (
-          <SouthernSerenadePhotoCards
-            groomName={data.hero.groomName}
-            brideName={data.hero.brideName}
-            photos={userPhotos}
-            isDesktop={true}
-          />
-        )}
-
-        {/* 3. Welcome Section */}
-        <SouthernSerenadeWelcome data={data.invitation} isDesktop={true} />
-
-        {/* Dedicated Custom Event Sections (if provided) */}
-        {customEvents && customEvents.map((event) => (
-          <SouthernSerenadeEventSection key={event.id} event={event} isDesktop={true} />
-        ))}
-
-        {/* 4. Venue Section */}
-        {showVenue && (
-          <SouthernSerenadeVenue data={data.venue} isDesktop={true} />
-        )}
-
-        {/* 5. Wedding Schedule */}
-        {showSchedule && (
-          <SouthernSerenadeSchedule data={data.events} isDesktop={true} />
-        )}
-
-        {/* 6. Default RSVP */}
-        {effectiveShowRsvp && (
-          <div className="relative w-full overflow-hidden py-10">
-            <img
-              src={ASSETS.plainBg}
-              alt=""
-              aria-hidden="true"
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                zIndex: 0,
-              }}
-            />
-            <div className="relative z-10 w-full max-w-2xl mx-auto">
-              <InviteQRSVP
-                events={data?.events?.items || defaultEvents}
-                weddingCode={savedData?.code}
-                groupSlug={groupSlug}
-                isPreview={!savedData}
-                theme="southern-serenade"
-                config={savedData?.rsvpData}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* 7. Countdown Section */}
-        <SouthernSerenadeCountdown data={data.countdown} isDesktop={true} />
-
-        {/* 8. InviteQue Footer */}
-        <Footer data={data.footer} theme="traditional" isDesktop={true} />
       </div>
     </div>
   )

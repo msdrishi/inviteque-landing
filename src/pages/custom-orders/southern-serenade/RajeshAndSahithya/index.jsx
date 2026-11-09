@@ -13,7 +13,10 @@ export default function CustomRajeshAndSahithya() {
   }, [])
 
   const currentData = useMemo(() => {
-    if (String(activeVariant).trim() === '1') {
+    const v = String(activeVariant || '').trim()
+
+    // Variant 1: Without Pelli Kuthuru
+    if (v === '1') {
       return {
         ...rajeshSahithyaData,
         customEvents: rajeshSahithyaData.customEvents.filter(
@@ -23,6 +26,21 @@ export default function CustomRajeshAndSahithya() {
         ),
       }
     }
+
+    // Variant 2 or 'wedding-reception': Only Wedding and Reception (without Engagement, Pellikuthuru, Mehendi, Satyanarayan Pooja)
+    if (v === '2' || v === 'wedding-reception') {
+      return {
+        ...rajeshSahithyaData,
+        customEvents: rajeshSahithyaData.customEvents.filter(
+          (evt) =>
+            evt.id === 'wedding' ||
+            evt.id === 'reception' ||
+            evt.title?.toLowerCase().includes('wedding') ||
+            evt.title?.toLowerCase().includes('reception')
+        ),
+      }
+    }
+
     return rajeshSahithyaData
   }, [activeVariant])
 

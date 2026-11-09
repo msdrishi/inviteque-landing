@@ -27,7 +27,8 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false, has
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const isTablet = !isDesktop && windowWidth >= 600 && windowWidth <= 1024
+  // Frame is strictly mobile sized (max-w-[440px])
+  const isTablet = false
 
   // Fallback defaults matching the template
   const groomName = data.groomName || 'Abhishek'
