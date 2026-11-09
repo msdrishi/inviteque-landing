@@ -5,8 +5,13 @@ import bgMusicAudio from './music/ReelAudio-10740.mp3'
 
 export const alinaTanmayData = {
   isPaid: true,
-  code: 'ALINA_TANMAY',
+  isRsvpPaid: true,
   hasRsvp: true,
+  rsvpData: {
+    isPaid: true,
+    enabled: true,
+  },
+  code: 'ALINA_TANMAY',
 
   // Custom Background Music
   musicSrc: bgMusicAudio,
@@ -80,6 +85,7 @@ export const alinaTanmayData = {
   // (7. Signoff with parent names removed from welcome note)
   invitationData: {
     hasRsvp: true,
+    isRsvpPaid: true,
     showGallery: false, // removes the photo card section
     showSchedule: true,
     showWelcome: true,

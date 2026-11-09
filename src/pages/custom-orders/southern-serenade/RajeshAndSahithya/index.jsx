@@ -15,8 +15,30 @@ export default function CustomRajeshAndSahithya() {
   const currentData = useMemo(() => {
     const v = String(activeVariant || '').trim()
 
-    // Variant 1: Without Pelli Kuthuru
+    // Variant 1: Pelli Koduku, Wedding, Vratham, Reception only
     if (v === '1') {
+      const allowedIds = ['pelli-koduku', 'wedding', 'satyanarayan-pooja', 'reception']
+      return {
+        ...rajeshSahithyaData,
+        customEvents: rajeshSahithyaData.customEvents.filter((evt) =>
+          allowedIds.includes(evt.id)
+        ),
+      }
+    }
+
+    // Variant 2: Wedding and Reception only
+    if (v === '2' || v === 'wedding-reception') {
+      const allowedIds = ['wedding', 'reception']
+      return {
+        ...rajeshSahithyaData,
+        customEvents: rajeshSahithyaData.customEvents.filter((evt) =>
+          allowedIds.includes(evt.id)
+        ),
+      }
+    }
+
+    // Variant 3: All events except Pelli kuthuru
+    if (v === '3') {
       return {
         ...rajeshSahithyaData,
         customEvents: rajeshSahithyaData.customEvents.filter(
@@ -27,20 +49,18 @@ export default function CustomRajeshAndSahithya() {
       }
     }
 
-    // Variant 2 or 'wedding-reception': Only Wedding and Reception (without Engagement, Pellikuthuru, Mehendi, Satyanarayan Pooja)
-    if (v === '2' || v === 'wedding-reception') {
+    // Variant 4: Pelli Kuthuru and Wedding only
+    if (v === '4') {
+      const allowedIds = ['pelli-kuthuru', 'wedding']
       return {
         ...rajeshSahithyaData,
-        customEvents: rajeshSahithyaData.customEvents.filter(
-          (evt) =>
-            evt.id === 'wedding' ||
-            evt.id === 'reception' ||
-            evt.title?.toLowerCase().includes('wedding') ||
-            evt.title?.toLowerCase().includes('reception')
+        customEvents: rajeshSahithyaData.customEvents.filter((evt) =>
+          allowedIds.includes(evt.id)
         ),
       }
     }
 
+    // Default: Full events
     return rajeshSahithyaData
   }, [activeVariant])
 

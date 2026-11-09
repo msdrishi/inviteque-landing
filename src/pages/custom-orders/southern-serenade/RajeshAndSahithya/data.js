@@ -42,7 +42,7 @@ export const rajeshSahithyaData = {
       title: 'Pelli Koduku Ceremony',
       date: '22nd Nov 2026',
       time: '12 PM to 5 PM',
-      venue: 'Rain Tree Park, Flat No 503, Block 5 (Malaysian Township)',
+      venue: 'Club house 1 - Rain tree park (Malaysian Township)',
       description:
         'A traditional Telugu pre-wedding ritual where the groom is prepared and blessed, with turmeric, oil, a ceremonial bath, new clothes and blessings from family.',
       mapUrl: 'https://maps.app.goo.gl/zJ2NzuKmxhLJHsUNA',

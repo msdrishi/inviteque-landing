@@ -134,7 +134,8 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
     savedData?.rsvpData?.isPaid ||
     savedData?.invitationData?.isRsvpPaid ||
     savedData?.wasRsvpPaid ||
-    (String(savedData?.status).toUpperCase() === 'PAID' && Number(savedData?.amountPaid) >= 2999 && (savedData?.rsvpData?.enabled || savedData?.invitationData?.hasRsvp || savedData?.hasRsvp))
+    (savedData?.isPaid && (savedData?.hasRsvp || savedData?.invitationData?.hasRsvp)) ||
+    (String(savedData?.status).toUpperCase() === 'PAID' && (Number(savedData?.amountPaid) >= 2999 || savedData?.hasRsvp) && (savedData?.rsvpData?.enabled || savedData?.invitationData?.hasRsvp || savedData?.hasRsvp))
   )
 
   const isPreviewMode = Boolean(
