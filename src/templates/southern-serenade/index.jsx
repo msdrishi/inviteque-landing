@@ -78,6 +78,8 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
     ...staticData,
     hero: {
       ...staticData.hero,
+      hideWeddingOf: Boolean(savedData?.hideWeddingOf || savedData?.heroData?.hideWeddingOf || draftData?.hideWeddingOf || draftData?.heroData?.hideWeddingOf),
+      headerText: savedData?.heroData?.headerText ?? savedData?.headerText ?? (draftData?.heroData?.headerText ?? draftData?.headerText),
       groomName: (savedData ? (savedData.coupleData?.groomName || savedData.groomName) : draftData?.groomName) || 'Abhishek',
       brideName: (savedData ? (savedData.coupleData?.brideName || savedData.brideName) : draftData?.brideName) || 'Anaya',
       dateLine: (() => {
@@ -282,7 +284,9 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
   })
 
   // ── Preview Watermarks ─────────────────────────────────────────
-  const WatermarkMobile = () => showWatermark ? (
+  const effectiveShowWatermark = savedData?.showWatermark === false ? false : showWatermark
+
+  const WatermarkMobile = () => effectiveShowWatermark ? (
     <div className="pointer-events-none fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[100] opacity-[0.28] select-none">
       {['8%', '50%', '92%'].map(top => (
         <span
@@ -296,7 +300,7 @@ export default function TemplateSouthernSerenade({ savedData, groupSlug: propGro
     </div>
   ) : null
 
-  const WatermarkDesktop = () => showWatermark ? (
+  const WatermarkDesktop = () => effectiveShowWatermark ? (
     <div className="pointer-events-none fixed inset-0 z-[100] opacity-[0.16] select-none flex flex-col justify-around items-center text-[#731924]">
       {['preview-inviteque', 'preview-inviteque'].map((t, i) => (
         <span key={i} className="text-[30px] font-medium tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}>

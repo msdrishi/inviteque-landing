@@ -1,12 +1,18 @@
 import rajeshMusicSrc from './audio/ReelAudio-66671.mp3'
 
 export const rajeshSahithyaData = {
+  isPaid: true,
+  status: 'PAID',
+  showWatermark: false,
+  hideWeddingOf: true,
   musicSrc: rajeshMusicSrc,
   coupleData: {
     groomName: 'Rajesh',
     brideName: 'Sahithya',
+    isPaid: true,
   },
   heroData: {
+    hideWeddingOf: true,
     weddingDate: '25',
     weddingMonth: 'NOV',
     weddingYear: '2026',

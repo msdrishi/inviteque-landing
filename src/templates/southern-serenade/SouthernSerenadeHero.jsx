@@ -137,21 +137,23 @@ export default function SouthernSerenadeHero({ data = {}, isDesktop = false, has
           maxWidth: isDesktop ? 540 : (isTablet ? 480 : 360),
         }}
       >
-        {/* 1. Auspicious Header: THE WEDDING OF */}
-        <motion.p
-          variants={slowLineAnim}
-          style={{
-            fontFamily: FONTS.label,
-            fontSize: isDesktop ? '12px' : '11px',
-            letterSpacing: '0.30em',
-            textTransform: 'uppercase',
-            color: COLORS.secondary,
-            margin: '0 0 2px 0',
-            fontWeight: 700,
-          }}
-        >
-          THE WEDDING OF
-        </motion.p>
+        {/* 1. Auspicious Header: THE WEDDING OF (optional) */}
+        {!data.hideWeddingOf && data.headerText !== null && (
+          <motion.p
+            variants={slowLineAnim}
+            style={{
+              fontFamily: FONTS.label,
+              fontSize: isDesktop ? '12px' : '11px',
+              letterSpacing: '0.30em',
+              textTransform: 'uppercase',
+              color: COLORS.secondary,
+              margin: '0 0 2px 0',
+              fontWeight: 700,
+            }}
+          >
+            {data.headerText || 'THE WEDDING OF'}
+          </motion.p>
+        )}
 
         {/* 2. Delicate Winged Lotus Divider */}
         <motion.div variants={slowLineAnim} style={{ marginBottom: 2 }}>

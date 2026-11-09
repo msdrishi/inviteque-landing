@@ -163,7 +163,9 @@ export function resolveInvitationFeatures({
     : (isCountdownEnabled && !(activeData?.hideCountdown || savedData?.hideCountdown));
 
   // 7. Watermark visibility (active in any preview or when invite has not been paid)
-  const showWatermark = isPreviewMode || !isPaid;
+  const showWatermark = savedData?.showWatermark === false
+    ? false
+    : (isPreviewMode || !isPaid);
 
   // 8. Synchronized Events
   const rawEvents =
