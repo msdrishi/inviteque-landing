@@ -34,7 +34,7 @@ const MusicOffIcon = () => (
 )
 
 // ─── Main Template Orchestrator ───────────────────────────────
-export default function TemplatePinkBlossom({ savedData, groupSlug }) {
+export default function TemplatePinkBlossom({ savedData, groupSlug, customHeroComponent: CustomHero }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { draftData: _rawDraft } = useDraft()
@@ -398,10 +398,17 @@ export default function TemplatePinkBlossom({ savedData, groupSlug }) {
         </motion.button>
       )}
 
-      <PinkBlossomHero 
-        {...commonProps} 
-        hasTriggeredHeroText={hasOpened}
-      />
+      {CustomHero ? (
+        <CustomHero
+          {...commonProps}
+          hasTriggeredHeroText={hasOpened}
+        />
+      ) : (
+        <PinkBlossomHero 
+          {...commonProps} 
+          hasTriggeredHeroText={hasOpened}
+        />
+      )}
       {(data.familyInvitation || savedData?.familyInvitation) && (
         <PinkBlossomFamilyInvitation {...commonProps} />
       )}
