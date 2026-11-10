@@ -797,38 +797,24 @@ export default function Landing() {
           viewport={viewportOnce}
           className="mx-auto max-w-5xl px-5 text-center"
         >
-          <motion.div variants={fadeUp} className="mb-4 inline-flex items-center gap-2 rounded-full border border-iqBorder bg-white/80 backdrop-blur px-4 py-1.5 text-xs font-semibold text-iqText/80 shadow-xs">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>#1 Rated Wedding Invite Digital Website Platform</span>
-          </motion.div>
           <motion.h1
             variants={fadeUp}
             className="text-balance text-4xl font-bold tracking-tight text-iqText md:text-6xl lg:text-7xl"
           >
-            Create Your Dream <br className="hidden md:block" />
-            <span className="text-iqAccent font-serif italic">Wedding Invite Digital Website</span>
+            Beautiful Wedding <br className="hidden md:block" /> Websites in Minutes
           </motion.h1>
           <motion.p
             variants={fadeUp}
-            className="mt-6 text-pretty text-lg font-medium leading-relaxed text-iqText/70 md:text-xl max-w-2xl mx-auto"
+            className="mt-6 text-pretty text-lg font-medium leading-relaxed text-iqText/60 md:text-xl"
           >
-            Breathtaking animated invitation websites with live RSVP tracking, Google Maps directions, and your love story timeline. Share effortlessly on WhatsApp in minutes.
+            Choose a template, add your details, and share <br className="hidden sm:block" /> your love story instantly.
           </motion.p>
-          <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <motion.div variants={fadeUp} className="mt-8">
             <a
               href="#templates"
               className="inline-flex h-14 items-center justify-center rounded-full bg-black px-10 text-base font-semibold text-white transition-all hover:scale-105 hover:bg-black/90 active:scale-95 shadow-xl"
             >
               Explore Templates
-            </a>
-            <a
-              href={getWhatsAppLink("Hello Inviteque! I'd like to ask a question about creating a wedding invite website.")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-14 items-center justify-center gap-2.5 rounded-full border border-iqBorder bg-white px-7 text-base font-semibold text-iqText transition-all hover:bg-iqBg active:scale-95 shadow-sm"
-            >
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.22-1.632A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 01-5.042-1.378l-.361-.214-3.742.981.999-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.53 6.53 2.106 12 2.106c5.471 0 9.894 4.424 9.894 9.894 0 5.471-4.423 9.894-9.894 9.894z" /></svg>
-              <span>Chat with Us</span>
             </a>
           </motion.div>
         </motion.div>
