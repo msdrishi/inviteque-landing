@@ -123,8 +123,30 @@ const TEMPLATE_ASSETS = {
     "/assets/templates/modern-hearth/countdown-desktop.webp",
     "/assets/templates/modern-hearth/countdown-mobile.webp"
   ],
-  'modern-hearth': [],
-  'house-warming-1': [],
+  'modern-hearth': [
+    "/assets/templates/modern-hearth/hero-desktop.webp",
+    "/assets/templates/modern-hearth/hero-mobile.webp",
+    "/assets/templates/modern-hearth/welcome-desktop.webp",
+    "/assets/templates/modern-hearth/welcome-house-warming.webp",
+    "/assets/templates/modern-hearth/location-desktop.webp",
+    "/assets/templates/modern-hearth/location-mobile.webp",
+    "/assets/templates/modern-hearth/schedule-desktop.webp",
+    "/assets/templates/modern-hearth/schedule-mobile.webp",
+    "/assets/templates/modern-hearth/countdown-desktop.webp",
+    "/assets/templates/modern-hearth/countdown-mobile.webp"
+  ],
+  'house-warming-1': [
+    "/assets/templates/modern-hearth/hero-desktop.webp",
+    "/assets/templates/modern-hearth/hero-mobile.webp",
+    "/assets/templates/modern-hearth/welcome-desktop.webp",
+    "/assets/templates/modern-hearth/welcome-house-warming.webp",
+    "/assets/templates/modern-hearth/location-desktop.webp",
+    "/assets/templates/modern-hearth/location-mobile.webp",
+    "/assets/templates/modern-hearth/schedule-desktop.webp",
+    "/assets/templates/modern-hearth/schedule-mobile.webp",
+    "/assets/templates/modern-hearth/countdown-desktop.webp",
+    "/assets/templates/modern-hearth/countdown-mobile.webp"
+  ],
   'twilight-serenade': [
     "/assets/templates/twilight-serenade/hero-desktop.webp",
     "/assets/templates/twilight-serenade/hero-mobile.webp",

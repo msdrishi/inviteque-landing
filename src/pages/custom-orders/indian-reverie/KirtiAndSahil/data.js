@@ -91,8 +91,8 @@ export const customData = {
   
   contact: {
     title: "Need Help?",
-    whatsappLink: "#",
-    phoneLink: "#"
+    whatsappLink: "https://wa.me/918148865180?text=Hello%20Inviteque!%20I'm%20reaching%20out%20regarding%20the%20wedding%20invitation.",
+    phoneLink: "tel:8148865180"
   },
   
   closing: {

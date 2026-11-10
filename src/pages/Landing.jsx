@@ -532,6 +532,73 @@ function ComingSoonPill() {
   )
 }
 
+const testimonials = [
+  {
+    name: 'Rishika & Jaskaran',
+    initials: 'RJ',
+    location: 'Jaipur & Delhi',
+    template: 'Rajasthani Vows',
+    rating: 5,
+    quote: "Our royal palace wedding invite was the highlight of our wedding announcement! Guests couldn't stop praising the music, animations, and how easy Google Maps directions were.",
+  },
+  {
+    name: 'Pavitra & Srihari',
+    initials: 'PS',
+    location: 'Chennai & Bangalore',
+    template: 'Southern Serenade',
+    rating: 5,
+    quote: 'The South Serenade template captured the exact temple elegance we wanted! The traditional music and seamless WhatsApp sharing made sending invites so joyful.',
+  },
+  {
+    name: 'Sahil & Kirti',
+    initials: 'SK',
+    location: 'Mumbai & Udaipur',
+    template: 'Indian Reverie',
+    rating: 5,
+    quote: 'Inviteque made our wedding website look like a luxury Vogue magazine. The RSVP tracking saved us endless phone calls and coordination headaches.',
+  },
+  {
+    name: 'Alina & Tanmay',
+    initials: 'AT',
+    location: 'London & Pune',
+    template: 'Blossom Whisper',
+    rating: 5,
+    quote: 'Minimal, modern, and absolutely aesthetic. All our NRI guests in the UK opened it on their phones effortlessly. Best wedding invite digital website platform!',
+  },
+  {
+    name: 'Rohit & Manpreet',
+    initials: 'RM',
+    location: 'Chandigarh & Amritsar',
+    template: 'Royal Heirloom',
+    rating: 5,
+    quote: 'We customized our Anand Karaj schedule with 4 different events. Guests loved being able to add events directly to Google Calendar and RSVP in 10 seconds.',
+  },
+  {
+    name: 'Karthik & Deepa',
+    initials: 'KD',
+    location: 'Hyderabad',
+    template: 'Modern Hearth (Griha Pravesh)',
+    rating: 5,
+    quote: 'We used the housewarming template for our Griha Pravesh. The interactive ribbon cutting animation surprised all our relatives! Super elegant and unique.',
+  },
+  {
+    name: 'Saaransh & Stuti',
+    initials: 'SS',
+    location: 'Kolkata & Bangalore',
+    template: 'Aura of Elegance',
+    rating: 5,
+    quote: 'The polaroid photo album and wax seal details were breathtaking. Much more affordable and impactful than sending 400 paper cards by courier.',
+  },
+  {
+    name: 'Hemang & Jasmine',
+    initials: 'HJ',
+    location: 'Ahmedabad & Goa',
+    template: 'Sunflowers Fields',
+    rating: 5,
+    quote: 'Customer support on WhatsApp was prompt and helped us customize our venue map within minutes. Highly recommend Inviteque to every modern couple!',
+  },
+]
+
 export default function Landing() {
   const [displayCount, setDisplayCount] = useState(null)
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
@@ -730,24 +797,38 @@ export default function Landing() {
           viewport={viewportOnce}
           className="mx-auto max-w-5xl px-5 text-center"
         >
+          <motion.div variants={fadeUp} className="mb-4 inline-flex items-center gap-2 rounded-full border border-iqBorder bg-white/80 backdrop-blur px-4 py-1.5 text-xs font-semibold text-iqText/80 shadow-xs">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>#1 Rated Wedding Invite Digital Website Platform</span>
+          </motion.div>
           <motion.h1
             variants={fadeUp}
             className="text-balance text-4xl font-bold tracking-tight text-iqText md:text-6xl lg:text-7xl"
           >
-            Beautiful Wedding <br className="hidden md:block" /> Websites in Minutes
+            Create Your Dream <br className="hidden md:block" />
+            <span className="text-iqAccent font-serif italic">Wedding Invite Digital Website</span>
           </motion.h1>
           <motion.p
             variants={fadeUp}
-            className="mt-6 text-pretty text-lg font-medium leading-relaxed text-iqText/60 md:text-xl"
+            className="mt-6 text-pretty text-lg font-medium leading-relaxed text-iqText/70 md:text-xl max-w-2xl mx-auto"
           >
-            Choose a template, add your details, and share <br className="hidden sm:block" /> your love story instantly.
+            Breathtaking animated invitation websites with live RSVP tracking, Google Maps directions, and your love story timeline. Share effortlessly on WhatsApp in minutes.
           </motion.p>
-          <motion.div variants={fadeUp} className="mt-8">
+          <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <a
               href="#templates"
               className="inline-flex h-14 items-center justify-center rounded-full bg-black px-10 text-base font-semibold text-white transition-all hover:scale-105 hover:bg-black/90 active:scale-95 shadow-xl"
             >
               Explore Templates
+            </a>
+            <a
+              href={getWhatsAppLink("Hello Inviteque! I'd like to ask a question about creating a wedding invite website.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-14 items-center justify-center gap-2.5 rounded-full border border-iqBorder bg-white px-7 text-base font-semibold text-iqText transition-all hover:bg-iqBg active:scale-95 shadow-sm"
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.22-1.632A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 01-5.042-1.378l-.361-.214-3.742.981.999-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.53 6.53 2.106 12 2.106c5.471 0 9.894 4.424 9.894 9.894 0 5.471-4.423 9.894-9.894 9.894z" /></svg>
+              <span>Chat with Us</span>
             </a>
           </motion.div>
         </motion.div>
@@ -1069,7 +1150,20 @@ export default function Landing() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto justify-center">
+            <div className="flex flex-col sm:flex-row flex-wrap items-center gap-4 w-full md:w-auto justify-center">
+              <a
+                href={getWhatsAppLink("Hello Inviteque! I'm interested in creating a custom bespoke wedding template.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-7 py-4 text-base font-bold text-white shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-[#20bd5a]"
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.22-1.632A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 01-5.042-1.378l-.361-.214-3.742.981.999-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.53 6.53 2.106 12 2.106c5.471 0 9.894 4.424 9.894 9.894 0 5.471-4.423 9.894-9.894 9.894z" />
+                </svg>
+                <span>WhatsApp Us</span>
+              </a>
+
               <a
                 href="https://www.instagram.com/invitequeofficial"
                 target="_blank"
@@ -1283,6 +1377,94 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* 4c) Client Testimonials & Reviews - Continuous Left-to-Right Auto-Scroll */}
+      <section id="testimonials" aria-label="Customer Reviews for Wedding Invite Digital Website" className="border-t border-iqBorder bg-gradient-to-b from-[#FFFDFB] via-[#FFF9F5] to-white py-20 md:py-24 overflow-hidden">
+        <div className="mx-auto w-full max-w-6xl px-5 text-center">
+          <motion.div
+            variants={staggerChildren}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            className="mx-auto max-w-3xl"
+          >
+            <motion.div variants={fadeUp}>
+              <SectionLabel>Client Love & Reviews</SectionLabel>
+            </motion.div>
+            <motion.h2 variants={fadeUp} className="mt-6 text-3xl font-bold md:text-5xl text-iqText tracking-tight">
+              Loved by Over 1,200+ Happy Couples
+            </motion.h2>
+            <motion.p variants={fadeUp} className="mt-4 text-sm md:text-base text-iqText/70 max-w-2xl mx-auto">
+              See why couples and families trust Inviteque as the #1 wedding invite digital website for modern, memorable celebrations.
+            </motion.p>
+
+            {/* Rating summary badge */}
+            <motion.div variants={fadeUp} className="mt-6 inline-flex flex-wrap items-center justify-center gap-3 rounded-full border border-[#D4AF37]/30 bg-white/95 px-6 py-2.5 shadow-sm">
+              <div className="flex items-center gap-1 text-[#D4AF37] text-lg leading-none">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
+              <span className="text-sm font-extrabold text-iqText">4.9 / 5.0 Rating</span>
+              <span className="hidden sm:inline text-xs text-iqText/40">•</span>
+              <span className="text-xs font-semibold text-iqText/70">Over 1,200+ Verified Celebrations</span>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Continuous Left-to-Right Marquee Carousel */}
+        <div className="relative mt-14 w-full overflow-hidden">
+          {/* Subtle gradient fades on left and right for seamless edge look */}
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-16 sm:w-28 md:w-40 bg-gradient-to-r from-[#FFFDFB] via-[#FFFDFB]/80 to-transparent" />
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-16 sm:w-28 md:w-40 bg-gradient-to-l from-white via-white/80 to-transparent" />
+
+          <div className="animate-marquee-ltr py-4 flex gap-6">
+            {[...testimonials, ...testimonials].map((review, idx) => (
+              <div
+                key={`${review.name}-${idx}`}
+                className="w-[310px] sm:w-[360px] md:w-[400px] flex-shrink-0 rounded-[2rem] border border-iqBorder/80 bg-white/95 p-6 md:p-7 shadow-[0_10px_35px_rgba(0,0,0,0.04)] hover:shadow-[0_15px_45px_rgba(212,175,55,0.14)] transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <div className="flex items-center gap-1 text-[#D4AF37] text-sm">
+                      {Array.from({ length: review.rating || 5 }).map((_, starI) => (
+                        <span key={starI}>★</span>
+                      ))}
+                    </div>
+                    <span className="text-[11px] font-bold text-[#8A6E1E] bg-[#FFF8E7] border border-[#D4AF37]/30 px-2.5 py-0.5 rounded-full">
+                      {review.template}
+                    </span>
+                  </div>
+
+                  <p className="text-sm md:text-[14.5px] leading-relaxed text-iqText/80 font-normal">
+                    “{review.quote}”
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-iqBorder/60 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#8A1A24] to-[#C4974A] flex items-center justify-center text-white text-xs font-bold shadow-xs">
+                      {review.initials}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-iqText leading-tight">{review.name}</h4>
+                      <p className="text-[11px] text-iqText/50 font-medium">{review.location}</p>
+                    </div>
+                  </div>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
+                    Verified
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <p className="text-xs text-iqText/50 font-medium">
+            ✦ Hover over any review card to pause auto-scroll
+          </p>
+        </div>
+      </section>
+
       {/* 5) Pricing */}
       <section id="pricing" className="border-t border-iqBorder bg-white">
         <div className="mx-auto w-full max-w-6xl px-5 py-20 md:py-24">
@@ -1384,8 +1566,12 @@ export default function Landing() {
           >
             {[
               {
-                q: 'How do I create and customize my wedding website on Inviteque?',
-                a: 'It is incredibly simple! Just choose a premium template you love, log in, and enter your details (couple names, wedding date, story milestones, event schedule, and venue details). Our intuitive real-time builder shows you all changes instantly as you type. Once you are satisfied, pay the one-time activation fee to make it go live.',
+                q: 'What is a wedding invite digital website and how do I create one on Inviteque?',
+                a: 'A wedding invite digital website is an interactive, mobile-optimized online celebration invitation that replaces or elevates paper cards. It combines your ceremony schedule, Google Maps venue directions, love story gallery, and instant RSVP tracking into one shareable link. Creating one on Inviteque takes just minutes: choose a premium template, personalize your details with our live editor, and publish your website to share directly on WhatsApp.',
+              },
+              {
+                q: 'Why should I choose a wedding invite digital website over traditional paper invitations?',
+                a: 'A wedding invite digital website offers interactive Google Maps directions so guests never get lost, 1-click calendar reminders, instant RSVP tracking, background music, and unlimited live updates if venue timing changes—all without expensive printing or courier delivery fees.',
               },
               {
                 q: 'Can I make changes to my website after it is published and shared?',
@@ -1564,6 +1750,25 @@ export default function Landing() {
           </svg>
         </div>
       </footer>
+
+      {/* Floating WhatsApp Support Action Button */}
+      <a
+        href={getWhatsAppLink("Hello Inviteque! I'm interested in your digital invitation templates and would like to know more.")}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-full bg-[#25D366] px-4 py-3 text-white shadow-[0_10px_25px_rgba(37,211,102,0.45)] transition-all duration-300 hover:scale-105 hover:bg-[#20bd5a] hover:shadow-[0_15px_30px_rgba(37,211,102,0.6)] active:scale-95 group"
+        aria-label="Chat with Inviteque Support on WhatsApp"
+      >
+        <span className="relative flex h-3 w-3">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
+          <span className="relative inline-flex h-3 w-3 rounded-full bg-white" />
+        </span>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.22-1.632A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 01-5.042-1.378l-.361-.214-3.742.981.999-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.53 6.53 2.106 12 2.106c5.471 0 9.894 4.424 9.894 9.894 0 5.471-4.423 9.894-9.894 9.894z" />
+        </svg>
+        <span className="hidden sm:inline text-sm font-bold tracking-wide">WhatsApp Support</span>
+      </a>
     </main>
   )
 }

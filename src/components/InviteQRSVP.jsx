@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import confetti from 'canvas-confetti'
 import { API_URL } from '../config'
+import { useDraft } from '../context/DraftContext.jsx'
 
 // Party Popper Celebration Effect
 const fireCelebrationPoppers = () => {
@@ -66,6 +67,8 @@ export default function InviteQRSVP({
 }) {
   const weddingCode = propWeddingCode || propCode
   const isPreview = propIsPreview || (typeof window !== 'undefined' && (new URLSearchParams(window.location.search).get('preview') === 'true' || new URLSearchParams(window.location.search).get('customPreview') === 'true'))
+  const draftContext = useDraft()
+  const draftData = draftContext?.draftData
   const [loadingConfig, setLoadingConfig] = useState(!propConfig && !isPreview)
   const [config, setConfig] = useState(propConfig || null)
   const [eventsList, setEventsList] = useState(() => {
@@ -96,10 +99,44 @@ export default function InviteQRSVP({
 
   // Resolved list of events
   const resolvedEvents = useMemo(() => {
-    const activeList = (propEvents && (Array.isArray(propEvents) ? propEvents.length > 0 : propEvents.items?.length > 0))
-      ? (Array.isArray(propEvents) ? propEvents : propEvents.items)
-      : eventsList;
-    const list = Array.isArray(activeList) ? activeList : (activeList?.items || [])
+    let list = []
+
+    // 1. Check if propEvents has items
+    if (propEvents) {
+      if (Array.isArray(propEvents) && propEvents.length > 0) {
+        list = propEvents
+      } else if (Array.isArray(propEvents.items) && propEvents.items.length > 0) {
+        list = propEvents.items
+      }
+    }
+
+    // 2. In preview mode, accurately reflect the specific events the user entered in the preview form
+    if (isPreview) {
+      const draftItems = Array.isArray(draftData?.scheduleItems) ? draftData.scheduleItems : []
+      if (draftItems.length > 0) {
+        list = draftItems
+      } else if (typeof window !== 'undefined') {
+        try {
+          const pathParts = window.location.pathname.split('/').filter(Boolean)
+          const tId = pathParts[1] || 'default'
+          const raw = localStorage.getItem(`inviteque_draft_${tId}`) || localStorage.getItem('inviteque_draft_data')
+          if (raw) {
+            const parsed = JSON.parse(raw)
+            if (Array.isArray(parsed.scheduleItems) && parsed.scheduleItems.length > 0) {
+              list = parsed.scheduleItems
+            }
+          }
+        } catch (e) {
+          // Ignore localStorage errors
+        }
+      }
+    }
+
+    // 3. Fallback to eventsList if loaded from API
+    if ((!list || list.length === 0) && eventsList && eventsList.length > 0) {
+      list = eventsList
+    }
+
     if (list && list.length > 0) {
       return list.map((e, idx) => ({
         id: e.id || `evt_${idx}`,
@@ -108,9 +145,16 @@ export default function InviteQRSVP({
       }))
     }
     return defaultSampleEvents
-  }, [propEvents, eventsList, defaultSampleEvents])
+  }, [propEvents, eventsList, defaultSampleEvents, isPreview, draftData])
 
   const [selectedEvents, setSelectedEvents] = useState(() => resolvedEvents.map(e => e.id))
+
+  // Synchronize selected events whenever resolved events update
+  useEffect(() => {
+    if (resolvedEvents && resolvedEvents.length > 0) {
+      setSelectedEvents(resolvedEvents.map(e => e.id))
+    }
+  }, [resolvedEvents])
 
   const toggleEvent = (eventId) => {
     setSelectedEvents(prev => 

@@ -105,12 +105,13 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
   const showWelcome = isGalleryView ? true : (savedData ? (savedData.invitationData?.showWelcome ?? savedData.showWelcome ?? true) : (draftData?.showWelcome ?? true));
   const showVenue = isGalleryView ? true : (savedData ? (savedData.invitationData?.showVenue ?? savedData.showVenue ?? true) : (draftData?.showVenue ?? true));
   const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
+  const showFamily = isGalleryView ? true : (savedData ? (savedData.invitationData?.showFamilySection ?? savedData.showFamilySection ?? savedData.invitationData?.showWelcome ?? true) : (draftData?.showFamilySection ?? draftData?.showWelcome ?? true));
 
   const familyMessage = activeData 
-    ? (savedData ? savedData.invitationData?.welcomeMessage : draftData?.welcomeMessage) || (activeData.familyMessage || activeData.invitationData?.familyMessage || '')
+    ? (savedData ? (savedData.invitationData?.familyMessage || savedData.invitationData?.welcomeMessage) : (draftData?.familyMessage || draftData?.welcomeMessage)) || (activeData.familyMessage || activeData.invitationData?.familyMessage || '')
     : ''
   const familyPhoto = activeData 
-    ? (activeData.familyPhoto || activeData.invitationData?.familyPhoto)
+    ? (activeData.familyPhoto || activeData.invitationData?.familyPhoto || draftData?.familyPhoto)
     : null
   const customSectionData = savedData ? (savedData.invitationData || {}) : draftData
     const isRsvpPaid = Boolean(
@@ -420,12 +421,12 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
         </section>
 
         {/* Custom Section */}
-        {showStory && (
+        {Boolean(customSectionData?.showCustomSection) && (
   <CustomSection photoBgDesktop={scheduleBgDesktop} photoBgMobile={scheduleBgMobile} data={customSectionData} />
 )}
 
         {/* Family Section */}
-        {showWelcome && (
+        {showFamily && (
           <>
             <div className="xl:hidden">
               <HW1FamilySection message={familyMessage} photo={familyPhoto} bgImage={scheduleBgMobile} />
@@ -478,7 +479,7 @@ export default function TemplateModernHearth({ savedData, groupSlug: propGroupSl
         {showRsvp && (
           <div className="w-full">
             <InviteQRSVP
-            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
+            events={data?.events?.items || data?.events || []}
               weddingCode={savedData?.code}
               groupSlug={groupSlug}
               isPreview={!savedData}
@@ -600,6 +601,13 @@ function RibbonOverlay({ onCutComplete }) {
   const canvasRef = useRef(null)
 
   // Confetti Physics simulation
+  const handleCut = (startX, startY) => {
+    if (isCut) return
+    setIsCut(true)
+    onCutComplete()
+    triggerExplosion(startX || window.innerWidth / 2, startY || window.innerHeight / 2)
+  }
+
   const triggerExplosion = (startX, startY) => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -722,37 +730,56 @@ function RibbonOverlay({ onCutComplete }) {
       )}
 
 
-      {/* Draggable Scissor Element (Repositioned to the bottom area) */}
+      {/* Center Ribbon Bow Clickable Target */}
       {!isCut && (
-        <motion.div
-          drag
-          dragConstraints={containerRef}
-          dragElastic={0.15}
-          onDrag={(event, info) => {
-            if (containerRef.current) {
-              const rect = containerRef.current.getBoundingClientRect()
-              const ribbonY = rect.height / 2
-              const scissorY = info.point.y - rect.top
-              const scissorX = info.point.x - rect.left
+        <button
+          type="button"
+          onClick={() => handleCut()}
+          aria-label="Cut the Ribbon"
+          className="absolute z-40 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full cursor-pointer opacity-0 hover:opacity-20 bg-white transition-opacity"
+          title="Click to cut ribbon"
+        />
+      )}
 
-              // If scissor touches the center bow area, slice the ribbon!
-              if (Math.abs(scissorY - ribbonY) < 45 && Math.abs(scissorX - rect.width / 2) < 45) {
-                setIsCut(true)
-                onCutComplete()
-                triggerExplosion(rect.width / 2, ribbonY)
+      {/* Draggable & Tappable Scissor Element */}
+      {!isCut && (
+        <div className="absolute z-50 flex flex-col items-center" style={{ bottom: '12%', left: 'calc(50% - 48px)' }}>
+          <motion.div
+            drag
+            dragConstraints={containerRef}
+            dragElastic={0.15}
+            onClick={() => handleCut()}
+            onDrag={(event, info) => {
+              if (containerRef.current) {
+                const rect = containerRef.current.getBoundingClientRect()
+                const ribbonY = rect.height / 2
+                const scissorY = info.point.y - rect.top
+                const scissorX = info.point.x - rect.left
+
+                // If scissor touches the center bow area, slice the ribbon!
+                if (Math.abs(scissorY - ribbonY) < 75 && Math.abs(scissorX - rect.width / 2) < 75) {
+                  handleCut(rect.width / 2, ribbonY)
+                }
               }
-            }
-          }}
-          className="absolute z-50 w-24 h-24 cursor-grab active:cursor-grabbing flex flex-col items-center justify-center"
-          style={{ bottom: '15%', left: 'calc(50% - 48px)' }}
-          whileHover={{ scale: 1.1 }}
-          whileDrag={{ scale: 1.15 }}
-        >
-          <img src={scissorPng} alt="Scissor" className="w-[84px] h-[84px] drop-shadow-[0_6px_14px_rgba(0,0,0,0.3)] pointer-events-none" />
-          <div className="absolute top-[-28px] whitespace-nowrap bg-[#6B351D] text-[#FFFDF5] text-[9px] px-2.5 py-0.5 rounded font-montserrat font-bold tracking-widest shadow-md border border-[#D3A34A]/30 animate-pulse">
-            DRAG ME TO BOW
-          </div>
-        </motion.div>
+            }}
+            className="w-24 h-24 cursor-grab active:cursor-grabbing flex flex-col items-center justify-center"
+            whileHover={{ scale: 1.1 }}
+            whileDrag={{ scale: 1.15 }}
+          >
+            <img src={scissorPng} alt="Scissor" className="w-[84px] h-[84px] drop-shadow-[0_6px_14px_rgba(0,0,0,0.3)] pointer-events-none" />
+            <div className="absolute top-[-28px] whitespace-nowrap bg-[#6B351D] text-[#FFFDF5] text-[9px] px-2.5 py-0.5 rounded font-montserrat font-bold tracking-widest shadow-md border border-[#D3A34A]/30 animate-pulse">
+              DRAG OR TAP TO CUT
+            </div>
+          </motion.div>
+
+          <button
+            type="button"
+            onClick={() => handleCut()}
+            className="mt-2 text-[10px] font-bold text-[#6B351D] bg-[#FFFDF5]/90 border border-[#D3A34A]/40 px-3.5 py-1 rounded-full shadow-sm hover:bg-[#F5E8C8] transition-all"
+          >
+            ✂️ Tap to Cut Ribbon
+          </button>
+        </div>
       )}
     </motion.div>
   )

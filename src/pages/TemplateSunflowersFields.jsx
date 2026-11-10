@@ -1782,7 +1782,7 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
           )}
           {showRsvp && (
             <InviteQRSVP
-            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
+            events={data?.events?.items || data?.events || []}
               weddingCode={savedData?.code}
               groupSlug={groupSlug}
               isPreview={!savedData}
@@ -1871,7 +1871,7 @@ export default function TemplateSunflowersFields({ savedData, groupSlug: propGro
         {showRsvp && (
           <div className="w-full">
             <InviteQRSVP
-            events={typeof scheduleItems !== "undefined" ? scheduleItems : (typeof data !== "undefined" && data?.events ? data.events : [])}
+            events={data?.events?.items || data?.events || []}
               weddingCode={savedData?.code}
               groupSlug={groupSlug}
               isPreview={!savedData}
