@@ -32,9 +32,11 @@ export default function RoyalHeirloomStoryText({ brideName, groomName, welcomeMe
     return pts
   }, [])
 
-  const finalMessage = welcomeMessage !== undefined && welcomeMessage !== null
+  const defaultStory = "“What started as an ordinary afternoon turned into a timeless bond. Through quiet shared laughter, heartfelt conversations over endless cups of chai, and unspoken understanding, we realized that home was never a place — it was each other.”"
+
+  const finalMessage = (welcomeMessage && typeof welcomeMessage === 'string' && welcomeMessage.trim().length > 0)
     ? welcomeMessage
-    : "“What started as an ordinary afternoon turned into a timeless bond. Through quiet shared laughter, heartfelt conversations over endless cups of chai, and unspoken understanding, we realized that home was never a place — it was each other.”"
+    : defaultStory
 
   return (
     <section 

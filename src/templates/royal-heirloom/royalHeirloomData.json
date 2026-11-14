@@ -1,0 +1,66 @@
+{
+  "couple": {
+    "groomName": "Rohan",
+    "brideName": "Ananya"
+  },
+  "hero": {
+    "groomName": "Rohan",
+    "brideName": "Ananya",
+    "weddingDate": "28",
+    "weddingMonth": "November",
+    "weddingYear": "2026",
+    "weddingTime": "09:00 AM - 10:30 AM"
+  },
+  "story": {
+    "title": "THE BEGINNING",
+    "message": "“What started as an ordinary afternoon turned into a timeless bond. Through quiet shared laughter, heartfelt conversations over endless cups of chai, and unspoken understanding, we realized that home was never a place — it was each other.”"
+  },
+  "welcome": {
+    "title": "THE BEGINNING",
+    "message": "“What started as an ordinary afternoon turned into a timeless bond. Through quiet shared laughter, heartfelt conversations over endless cups of chai, and unspoken understanding, we realized that home was never a place — it was each other.”"
+  },
+  "venue": {
+    "mahalName": "The Taj Mahal Palace",
+    "venueAddress": "Apollo Bunder, Colaba",
+    "venueCity": "Mumbai",
+    "state": "Maharashtra 400001",
+    "mapLink": "https://maps.google.com/?q=The+Taj+Mahal+Palace,+Apollo+Bunder,+Colaba,+Mumbai"
+  },
+  "schedule": [
+    {
+      "time": "11:00 AM",
+      "title": "Haldi Ceremony",
+      "iconSrc": "/assets/templates/royal-heirloom/icons/bouque.webp",
+      "date": "27th Nov, 2026"
+    },
+    {
+      "time": "04:00 PM",
+      "title": "Mehndi & Sangeet",
+      "iconSrc": "/assets/templates/royal-heirloom/icons/engagement.webp",
+      "date": "27th Nov, 2026"
+    },
+    {
+      "time": "07:00 PM",
+      "title": "Cocktail Evening",
+      "iconSrc": "/assets/templates/royal-heirloom/icons/drinks.webp",
+      "date": "27th Nov, 2026"
+    },
+    {
+      "time": "10:00 AM",
+      "title": "Wedding Vows",
+      "iconSrc": "/assets/templates/royal-heirloom/icons/photo-session.webp",
+      "date": "28th Nov, 2026"
+    },
+    {
+      "time": "07:30 PM",
+      "title": "Grand Reception",
+      "iconSrc": "/assets/templates/royal-heirloom/icons/dinner.webp",
+      "date": "28th Nov, 2026"
+    }
+  ],
+  "photos": [
+    "/assets/templates/royal-heirloom/photo-1.webp",
+    "/assets/templates/royal-heirloom/photo-2.webp",
+    "/assets/templates/royal-heirloom/photo-3.webp"
+  ]
+}

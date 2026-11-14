@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 export default function RoyalHeirloomCover({
   hasOpened,
   isPlaying,
-  isVideoReady,
   videoRef,
   coverVideoSrc,
   coverPosterSrc,
@@ -17,15 +16,20 @@ export default function RoyalHeirloomCover({
         <motion.section
           key="cover-splash"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] } }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A1412] max-w-[480px] md:max-w-[820px] mx-auto overflow-hidden cursor-pointer"
+          exit={{ 
+            opacity: 0, 
+            transition: { duration: 1.4, ease: [0.22, 1, 0.36, 1] } 
+          }}
+          style={{ pointerEvents: hasOpened ? 'none' : 'auto' }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A1412] overflow-hidden cursor-pointer select-none"
           onClick={handleOpenCover}
         >
-          <div className="w-full h-full relative overflow-hidden">
+          {/* Centered Phone / Mobile Frame */}
+          <div className="relative w-full max-w-[440px] md:max-w-[480px] h-full overflow-hidden shadow-[0_0_80px_rgba(40,10,15,0.25)] flex items-center justify-center bg-[#1A1412]">
             {/* Always mounted video element for immediate playback */}
             <video
               ref={videoRef}
-              src={coverVideoSrc}
+              src={`${coverVideoSrc}#t=0.001`}
               poster={coverPosterSrc}
               playsInline
               webkit-playsinline="true"
@@ -35,26 +39,8 @@ export default function RoyalHeirloomCover({
               controls={false}
               onTimeUpdate={handleTimeUpdate}
               onEnded={handleVideoEnded}
-              className="w-full h-full object-cover select-none pointer-events-none scale-[1.04]"
+              className="w-full h-full object-cover select-none pointer-events-none scale-[1.01]"
             />
-
-            {/* First frame floating poster - removed when video starts rendering */}
-            <AnimatePresence>
-              {!isVideoReady && (
-                <motion.img
-                  key="floating-poster"
-                  src={coverPosterSrc}
-                  onError={(e) => {
-                    e.currentTarget.src = "/assets/templates/royal-heirloom/cover-first-frame.jpg"
-                  }}
-                  alt="Wedding Invitation Cover"
-                  initial={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none scale-[1.04] z-10"
-                />
-              )}
-            </AnimatePresence>
 
             {/* Restored exact original 6-star animation and styling */}
             <AnimatePresence>

@@ -15,6 +15,7 @@ import RoyalHeirloomVenue from '../templates/royal-heirloom/RoyalHeirloomVenue.j
 import RoyalHeirloomSchedule from '../templates/royal-heirloom/RoyalHeirloomSchedule.jsx'
 import RoyalHeirloomCalendar from '../templates/royal-heirloom/RoyalHeirloomCalendar.jsx'
 import RoyalHeirloomCountdown from '../templates/royal-heirloom/RoyalHeirloomCountdown.jsx'
+import royalHeirloomData from '../templates/royal-heirloom/royalHeirloomData.json'
 import bgMusicSrc from '../assets/audio/bg-music-a-thousand-years.mp3'
 
 // Simple SVG icon for Music On
@@ -150,7 +151,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const showCountdown = isGalleryView ? true : (savedData ? (savedData.invitationData?.showCountdown ?? savedData.showCountdown ?? true) : (draftData?.showCountdown ?? true));
   const showHero = isGalleryView ? true : (savedData ? (savedData.invitationData?.showHero ?? savedData.showHero ?? true) : (draftData?.showHero ?? true));
   const showStory = isGalleryView ? true : (savedData ? (savedData.invitationData?.showStory ?? savedData.showStory ?? true) : (draftData?.showStory ?? true));
-  const welcomeMessage = isGalleryView ? '' : (savedData ? (savedData.invitationData?.welcomeMessage || savedData.welcomeMessage || '') : (draftData?.welcomeMessage || ''));
+  const welcomeMessage = (savedData ? (savedData.invitationData?.welcomeMessage || savedData.welcomeMessage) : draftData?.welcomeMessage) || royalHeirloomData.story?.message || royalHeirloomData.welcome?.message || "“What started as an ordinary afternoon turned into a timeless bond. Through quiet shared laughter, heartfelt conversations over endless cups of chai, and unspoken understanding, we realized that home was never a place — it was each other.”";
 
 
     const isRsvpPaid = Boolean(
@@ -184,7 +185,6 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
   const [hasOpened, setHasOpened] = useState(false)
   const [hasTriggeredHeroText, setHasTriggeredHeroText] = useState(false)
   const [hasTriggeredHeroBg, setHasTriggeredHeroBg] = useState(false)
-  const [isVideoReady, setIsVideoReady] = useState(false)
   const videoRef = useRef(null)
 
   // Music state
@@ -338,25 +338,16 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
     setActiveStoryIdx(prev => (prev === storyPhotos.length - 1 ? 0 : prev + 1))
   }
 
-  // Handle Cover Opening Tap — start audio MUTED during tap gesture for iOS autoplay
+  // Handle Cover Opening Tap — immediate video playback & synced music (Southern Serenade architecture)
   const handleOpenCover = () => {
     if (hasOpened || isPlaying) return
     setIsPlaying(true)
 
-    // Start audio muted immediately during the user gesture
-    // This "reserves" the audio playback token on iOS/Android
-    if (audioRef.current) {
-      audioRef.current.muted = true
-      audioRef.current.play().catch(() => {})
-    }
-
-    const vid = videoRef.current
-    if (vid) {
-      const playPromise = vid.play()
+    if (videoRef.current) {
+      const playPromise = videoRef.current.play()
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
           console.warn("Video play interrupted/prevented:", err)
-          // Only skip forcefully if it's a fatal error like NotSupportedError
           if (err.name !== 'AbortError') {
             setHasOpened(true)
             setHasTriggeredHeroBg(true)
@@ -364,20 +355,35 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
           }
         })
       }
-      // Removed the 5.5s hardcoded timeout to guarantee 100% video flow
     } else {
       setHasTriggeredHeroText(true)
       setHasTriggeredHeroBg(true)
       setHasOpened(true)
     }
+
+    // Audio starts playing along with video on the user tap gesture
+    if (audioRef.current && !isMusicMuted) {
+      audioRef.current.muted = false
+      audioRef.current.volume = 1
+      audioRef.current.play().catch(() => {})
+    }
+
+    // Safety fallback: if video playback freezes or fails, transition after 6.5s
+    setTimeout(() => {
+      setHasOpened((prev) => {
+        if (!prev) {
+          setHasTriggeredHeroBg(true)
+          setHasTriggeredHeroText(true)
+          return true
+        }
+        return prev
+      })
+    }, 6500)
   }
 
   const handleTimeUpdate = () => {
     const vid = videoRef.current
     if (vid) {
-      if (vid.currentTime > 0.1 && !isVideoReady) {
-        setIsVideoReady(true)
-      }
       if (vid.duration && vid.currentTime > 0.5 && vid.currentTime >= vid.duration - 0.25) {
         if (!hasOpened) {
           setHasOpened(true)
@@ -438,7 +444,6 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
         <RoyalHeirloomCover 
           hasOpened={hasOpened}
           isPlaying={isPlaying}
-          isVideoReady={isVideoReady}
           videoRef={videoRef}
           coverVideoSrc={coverVideoSrc}
           coverPosterSrc={coverPosterSrc}

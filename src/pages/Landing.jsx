@@ -532,73 +532,6 @@ function ComingSoonPill() {
   )
 }
 
-const testimonials = [
-  {
-    name: 'Rishika & Jaskaran',
-    initials: 'RJ',
-    location: 'Jaipur & Delhi',
-    template: 'Rajasthani Vows',
-    rating: 5,
-    quote: "Our royal palace wedding invite was the highlight of our wedding announcement! Guests couldn't stop praising the music, animations, and how easy Google Maps directions were.",
-  },
-  {
-    name: 'Pavitra & Srihari',
-    initials: 'PS',
-    location: 'Chennai & Bangalore',
-    template: 'Southern Serenade',
-    rating: 5,
-    quote: 'The South Serenade template captured the exact temple elegance we wanted! The traditional music and seamless WhatsApp sharing made sending invites so joyful.',
-  },
-  {
-    name: 'Sahil & Kirti',
-    initials: 'SK',
-    location: 'Mumbai & Udaipur',
-    template: 'Indian Reverie',
-    rating: 5,
-    quote: 'Inviteque made our wedding website look like a luxury Vogue magazine. The RSVP tracking saved us endless phone calls and coordination headaches.',
-  },
-  {
-    name: 'Alina & Tanmay',
-    initials: 'AT',
-    location: 'London & Pune',
-    template: 'Blossom Whisper',
-    rating: 5,
-    quote: 'Minimal, modern, and absolutely aesthetic. All our NRI guests in the UK opened it on their phones effortlessly. Best wedding invite digital website platform!',
-  },
-  {
-    name: 'Rohit & Manpreet',
-    initials: 'RM',
-    location: 'Chandigarh & Amritsar',
-    template: 'Royal Heirloom',
-    rating: 5,
-    quote: 'We customized our Anand Karaj schedule with 4 different events. Guests loved being able to add events directly to Google Calendar and RSVP in 10 seconds.',
-  },
-  {
-    name: 'Karthik & Deepa',
-    initials: 'KD',
-    location: 'Hyderabad',
-    template: 'Modern Hearth (Griha Pravesh)',
-    rating: 5,
-    quote: 'We used the housewarming template for our Griha Pravesh. The interactive ribbon cutting animation surprised all our relatives! Super elegant and unique.',
-  },
-  {
-    name: 'Saaransh & Stuti',
-    initials: 'SS',
-    location: 'Kolkata & Bangalore',
-    template: 'Aura of Elegance',
-    rating: 5,
-    quote: 'The polaroid photo album and wax seal details were breathtaking. Much more affordable and impactful than sending 400 paper cards by courier.',
-  },
-  {
-    name: 'Hemang & Jasmine',
-    initials: 'HJ',
-    location: 'Ahmedabad & Goa',
-    template: 'Sunflowers Fields',
-    rating: 5,
-    quote: 'Customer support on WhatsApp was prompt and helped us customize our venue map within minutes. Highly recommend Inviteque to every modern couple!',
-  },
-]
-
 export default function Landing() {
   const [displayCount, setDisplayCount] = useState(null)
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
@@ -1132,7 +1065,7 @@ export default function Landing() {
                 Let’s Bring Your Vision to Life
               </h3>
               <p className="mt-2 text-sm md:text-base text-iqText/70 leading-relaxed">
-                Have a reference design, invitation card, or dream theme in mind? Send us a DM on Instagram or reach out to our support email to discuss your requirements.
+                Have a reference design, invitation card, or dream theme in mind? Connect with us on WhatsApp or send us a DM on Instagram to discuss your requirements.
               </p>
             </div>
 
@@ -1162,17 +1095,6 @@ export default function Landing() {
                   <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
                 </svg>
                 <span>DM Us on Instagram</span>
-              </a>
-
-              <a
-                href="mailto:inviteque.support@gmail.com"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full border border-iqBorder bg-white px-7 py-4 text-sm font-bold text-iqText shadow-sm transition hover:bg-iqText hover:text-white"
-              >
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                  <polyline points="22,6 12,13 2,6" />
-                </svg>
-                <span>Email Support</span>
               </a>
             </div>
           </motion.div>
@@ -1360,94 +1282,6 @@ export default function Landing() {
               <p className="text-sm text-iqText/70">Adjust timing, venue map, or details anytime—changes are synced live for your guests in real-time.</p>
             </motion.article>
           </motion.div>
-        </div>
-      </section>
-
-      {/* 4c) Client Testimonials & Reviews - Continuous Left-to-Right Auto-Scroll */}
-      <section id="testimonials" aria-label="Customer Reviews for Wedding Invite Digital Website" className="border-t border-iqBorder bg-gradient-to-b from-[#FFFDFB] via-[#FFF9F5] to-white py-20 md:py-24 overflow-hidden">
-        <div className="mx-auto w-full max-w-6xl px-5 text-center">
-          <motion.div
-            variants={staggerChildren}
-            initial="hidden"
-            whileInView="show"
-            viewport={viewportOnce}
-            className="mx-auto max-w-3xl"
-          >
-            <motion.div variants={fadeUp}>
-              <SectionLabel>Client Love & Reviews</SectionLabel>
-            </motion.div>
-            <motion.h2 variants={fadeUp} className="mt-6 text-3xl font-bold md:text-5xl text-iqText tracking-tight">
-              Loved by Over 1,200+ Happy Couples
-            </motion.h2>
-            <motion.p variants={fadeUp} className="mt-4 text-sm md:text-base text-iqText/70 max-w-2xl mx-auto">
-              See why couples and families trust Inviteque as the #1 wedding invite digital website for modern, memorable celebrations.
-            </motion.p>
-
-            {/* Rating summary badge */}
-            <motion.div variants={fadeUp} className="mt-6 inline-flex flex-wrap items-center justify-center gap-3 rounded-full border border-[#D4AF37]/30 bg-white/95 px-6 py-2.5 shadow-sm">
-              <div className="flex items-center gap-1 text-[#D4AF37] text-lg leading-none">
-                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-              </div>
-              <span className="text-sm font-extrabold text-iqText">4.9 / 5.0 Rating</span>
-              <span className="hidden sm:inline text-xs text-iqText/40">•</span>
-              <span className="text-xs font-semibold text-iqText/70">Over 1,200+ Verified Celebrations</span>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Continuous Left-to-Right Marquee Carousel */}
-        <div className="relative mt-14 w-full overflow-hidden">
-          {/* Subtle gradient fades on left and right for seamless edge look */}
-          <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-16 sm:w-28 md:w-40 bg-gradient-to-r from-[#FFFDFB] via-[#FFFDFB]/80 to-transparent" />
-          <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-16 sm:w-28 md:w-40 bg-gradient-to-l from-white via-white/80 to-transparent" />
-
-          <div className="animate-marquee-ltr py-4 flex gap-6">
-            {[...testimonials, ...testimonials].map((review, idx) => (
-              <div
-                key={`${review.name}-${idx}`}
-                className="w-[310px] sm:w-[360px] md:w-[400px] flex-shrink-0 rounded-[2rem] border border-iqBorder/80 bg-white/95 p-6 md:p-7 shadow-[0_10px_35px_rgba(0,0,0,0.04)] hover:shadow-[0_15px_45px_rgba(212,175,55,0.14)] transition-all duration-300 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <div className="flex items-center gap-1 text-[#D4AF37] text-sm">
-                      {Array.from({ length: review.rating || 5 }).map((_, starI) => (
-                        <span key={starI}>★</span>
-                      ))}
-                    </div>
-                    <span className="text-[11px] font-bold text-[#8A6E1E] bg-[#FFF8E7] border border-[#D4AF37]/30 px-2.5 py-0.5 rounded-full">
-                      {review.template}
-                    </span>
-                  </div>
-
-                  <p className="text-sm md:text-[14.5px] leading-relaxed text-iqText/80 font-normal">
-                    “{review.quote}”
-                  </p>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-iqBorder/60 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#8A1A24] to-[#C4974A] flex items-center justify-center text-white text-xs font-bold shadow-xs">
-                      {review.initials}
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-iqText leading-tight">{review.name}</h4>
-                      <p className="text-[11px] text-iqText/50 font-medium">{review.location}</p>
-                    </div>
-                  </div>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                    Verified
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-8 text-center">
-          <p className="text-xs text-iqText/50 font-medium">
-            ✦ Hover over any review card to pause auto-scroll
-          </p>
         </div>
       </section>
 
