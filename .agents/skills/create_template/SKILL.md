@@ -114,7 +114,7 @@ This document outlines the standard architecture, file organization, styling rul
    7. **Countdown**
    8. **InviteQue Footer** (`<Footer theme="..." />`)
 
-10. **Asset Hygiene (Clean & Compressed WebP Only)**:
+10. **Asset Hygiene (Clean & Compressed WebP Only - Always Remove Originals)**:
     - Convert all original images to compressed `.webp` using `sharp` (quality 80-85).
     - Delete all source `.png` files and duplicate files with spaces.
     - Use clean, standardized filenames: `hero-mobile.webp`, `venue-mobile.webp`, `countdown-mobile.webp`, `plain-bg.webp`, `thumbnail.webp`.

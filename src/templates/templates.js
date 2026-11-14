@@ -14,6 +14,18 @@ const t12 = "/assets/templates/previews/template-12-coastal.webp"
 
 export const templates = [
   {
+    id: 'eternal-covenant',
+    isNew: true,
+    name: 'Eternal Covenant',
+    description: 'A timeless Christian wedding invitation inspired by holy matrimony, cathedral elegance, and sacred vows of love and faith.',
+    price: 2499,
+    priceLabel: '₹2499',
+    thumbnail: '/assets/templates/eternal-covenant/thumbnail.webp',
+    href: '/templates/eternal-covenant',
+    available: true,
+    popular: true,
+  },
+  {
     id: 'southern-serenade',
     isNew: true,
     name: 'Southern Serenade',

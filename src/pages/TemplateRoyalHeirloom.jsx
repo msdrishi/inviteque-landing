@@ -530,7 +530,7 @@ export default function TemplateRoyalHeirloom({ savedData, groupSlug: propGroupS
         {/* ── SECTION 7: RSVP (via shared InviteQRSVP component) ── */}
         {showRsvp && (
           <InviteQRSVP
-            events={scheduleItems || data?.events?.items || data?.events || []}
+            events={scheduleItems || []}
             weddingCode={savedData?.code}
             groupSlug={groupSlug}
             isPreview={!savedData}

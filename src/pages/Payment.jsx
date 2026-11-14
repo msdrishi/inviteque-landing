@@ -118,6 +118,7 @@ export default function Payment() {
   const isRoyalHeirloom = templateId === 'royal-heirloom'
   const isRajasthaniVows = templateId === 'rajasthani-vows' || templateId === 'rajestani-vows'
   const isSouthernSerenade = templateId === 'southern-serenade'
+  const isEternalCovenant = templateId === 'eternal-covenant'
   const isRoyalHeritage = templateId === 'royal-heritage'
   const isPinkBlossom = templateId === 'pink-blossom'
   const isAuraOfElegance = templateId === 'aura-of-elegance' || templateId === 'template-1'
@@ -138,6 +139,8 @@ export default function Payment() {
                 ? "/assets/templates/royal-heirloom/hero-bg-mobile.webp"
                 : isRajasthaniVows
                   ? "/assets/templates/rajestani-vows/hero-mobile.webp"
+                  : isEternalCovenant
+                    ? "/assets/templates/eternal-covenant/thumbnail.webp"
                   : isSouthernSerenade
                     ? "/assets/templates/southern-serenade/hero_bg.webp"
                     : isRoyalHeritage
@@ -158,6 +161,8 @@ export default function Payment() {
             ? "from-[#5C1A0E] via-[#8B2500] to-[#5C1A0E]"
             : isMidnightWaltz
               ? "from-[#1a1c29] via-[#2c2f42] to-[#1a1c29]"
+              : isEternalCovenant
+                ? "from-[#1B2A4A] via-[#2D426E] to-[#1B2A4A]"
               : isSouthernSerenade
                 ? "from-[#4A1521] via-[#6B2232] to-[#4A1521]"
                 : "from-[#5C0A14] via-[#7B0F1A] to-[#5C0A14]"
