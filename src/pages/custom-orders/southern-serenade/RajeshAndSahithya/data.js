@@ -85,7 +85,7 @@ export const rajeshSahithyaData = {
       description: null,
       mapUrl: 'https://maps.app.goo.gl/EbhaGiMBrfYCLCDM7?g_st=ic',
       hasLiveLink: true,
-      liveUrl: null, // Will be updated later with actual stream URL
+      liveUrl: 'https://meghaevents.in/RajeshwedsSahithya',
       bgImage: '/assets/templates/southern-serenade/venue-mobile.webp',
     },
     {
@@ -107,7 +107,7 @@ export const rajeshSahithyaData = {
       description: null,
       mapUrl: 'https://maps.app.goo.gl/VjWo3Qx9oTqsp6RS8?g_st=ic',
       hasLiveLink: true,
-      liveUrl: null, // Will be updated later with actual stream URL
+      liveUrl: 'https://meghaevents.in/RajeshwedsSahithya',
       bgImage: '/assets/templates/southern-serenade/reception.webp',
     },
   ],
